@@ -11,6 +11,7 @@ import MapTraffic from './MapTraffic';
 // Mapbox access token (public default)
 mapboxgl.accessToken = 'pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ';
 
+//https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 const Map = () => {
 /**  ------------------- useRef / useState   -------------------   **/
   //initialize map, lng, lat, zoom lvl
@@ -69,7 +70,7 @@ const validFileType = (file) => {
     alert("Invalid file type. Please drop GeoJSON, Shapefile (.zip), or KML file.");
     return false;
   }
-  return true;
+  return;
 };
 
 //file size check for json
@@ -130,7 +131,7 @@ const handleShpKml = (file, reader) => {
     const reader = new FileReader();
 
     //if it's not a valid file type, just return
-    if (!validFileType(file.name)) return;
+    if (validFileType(file)) return;
   
     //handle json file (.json or .geojson file format)
     if (file.name.endsWith('.json') || file.name.endsWith('.geojson')) {
@@ -163,7 +164,7 @@ const handleShpKml = (file, reader) => {
           'line-color': '#088',
           'line-opacity': 0.8
         }
-      }, 'custom-marker-layer');
+      });
     }
   };
   
