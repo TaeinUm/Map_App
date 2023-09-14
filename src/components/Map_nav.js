@@ -167,6 +167,13 @@ const Map_nav = () => {
       }
       getRoute(coords);
     });
+
+    map.current.on("move", () => {
+      setLng(map.current.getCenter().lng.toFixed(4));
+      setLat(map.current.getCenter().lat.toFixed(4));
+      setZoom(map.current.getZoom().toFixed(2));
+    });
+    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
   }, [bounds, lat, lng, zoom]);
 
   return (
