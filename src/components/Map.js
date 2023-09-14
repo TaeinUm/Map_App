@@ -1,19 +1,20 @@
-import React, { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import Dropzone from 'react-dropzone';
-import toGeoJSON from 'togeojson';
-import shp from 'shpjs/dist/shp';
+import React, { useRef, useEffect, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import Dropzone from "react-dropzone";
+import toGeoJSON from "togeojson";
+import shp from "shpjs/dist/shp";
 
-import '../App.css';
+import "../App.css";
 
-import MapTraffic from './MapTraffic';
+import MapTraffic from "./MapTraffic";
 
 // Mapbox access token (public default)
-mapboxgl.accessToken = 'pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ';
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
 //https://docs.mapbox.com/help/tutorials/use-mapbox-gl-js-with-react/
 const Map = () => {
-/**  ------------------- useRef / useState   -------------------   **/
+  /**  ------------------- useRef / useState   -------------------   **/
   //initialize map, lng, lat, zoom lvl
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -21,26 +22,26 @@ const Map = () => {
   const [lat, setLat] = useState(40.785091); // NY central park
   const [zoom, setZoom] = useState(12);
 
-/** ------------------- useEffect  -------------------  **/
+  /** ------------------- useEffect  -------------------  **/
   useEffect(() => {
     if (map.current) return; // initialize map only once
 
     //set map
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12', //latest style URL
+      style: "mapbox://styles/mapbox/streets-v12", //latest style URL
       center: [lng, lat],
-      zoom: zoom
+      zoom: zoom,
     });
-    map.current.on('move', () => {
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
     });
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
+    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
   }, [lat, lng, zoom]);
 
-/** ------------------- functions for processing kml file format  ------------------- **/
+  /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -49,10 +50,11 @@ const Map = () => {
       reader.readAsText(file);
     });
   };
-  
-  const readKML = async (kmlFiles) => { //read kml file and convert into geojson format
+
+  const readKML = async (kmlFiles) => {
+    //read kml file and convert into geojson format
     let gj = { type: "FeatureCollection", features: [] };
-  
+
     for (let file of kmlFiles) {
       let text = await read(file);
       let dom = new DOMParser().parseFromString(text, "application/xml");
@@ -63,112 +65,119 @@ const Map = () => {
     return gj;
   };
 
-/**  ------------------- helper functions -------------------  **/
-//check if the file type is valid
-const validFileType = (file) => {
-  if  (!file.name.endsWith('.json') && !file.name.endsWith('.geojson') && !file.name.endsWith('.zip') && !file.name.endsWith('.kml')) {
-    alert("Invalid file type. Please drop GeoJSON, Shapefile (.zip), or KML file.");
-    return false;
-  }
-  return;
-};
-
-//file size check for json
-const parseJsonData = (readerResult) => {
-  try {
-    const geojsonData = JSON.parse(readerResult);
-    if (JSON.stringify(geojsonData).size > 5 * 1024 * 1024) {
-      alert("file size exceeds limit. Use a file less than 5MB.");
-      return;
+  /**  ------------------- helper functions -------------------  **/
+  //check if the file type is valid
+  const validFileType = (file) => {
+    if (
+      !file.name.endsWith(".json") &&
+      !file.name.endsWith(".geojson") &&
+      !file.name.endsWith(".zip") &&
+      !file.name.endsWith(".kml")
+    ) {
+      alert(
+        "Invalid file type. Please drop GeoJSON, Shapefile (.zip), or KML file."
+      );
+      return false;
     }
-    return geojsonData;
-  } catch (e) {
-    console.error('Error parsing JSON data.', e);
-    return null;
-  }
-};
-
-//handle json & geojson files
-const handleJsonFile = (file, reader) => {
-  reader.onload = async () => {
-    const geojsonData = parseJsonData(reader.result);
-    if (geojsonData) {
-      updateMapWithData(geojsonData);
-    }
+    return;
   };
-  reader.onerror = () => console.error('Error reading the JSON file.');
-  reader.readAsText(file);
-};
 
-//handle shapefile (.zip) and kml files
-const handleShpKml = (file, reader) => {
-  reader.onload = async () => {
-    let geojsonData;
-    const result = reader.result;
-
-    if (file.name.endsWith('.zip')) {
-      geojsonData = await shp(result);
-    } else if (file.name.endsWith('.kml')) {
-      geojsonData = await readKML([file]);
-    }
-
-    if (geojsonData) {
+  //file size check for json
+  const parseJsonData = (readerResult) => {
+    try {
+      const geojsonData = JSON.parse(readerResult);
       if (JSON.stringify(geojsonData).size > 5 * 1024 * 1024) {
         alert("file size exceeds limit. Use a file less than 5MB.");
+        return;
       }
-      updateMapWithData(geojsonData);
-    } else {
-      console.error('Could not parse geojsonData.');
+      return geojsonData;
+    } catch (e) {
+      console.error("Error parsing JSON data.", e);
+      return null;
     }
   };
-  reader.onerror = () => console.error('Error reading the file.');
-  reader.readAsArrayBuffer(file);
-};
-  
-/**  ------------------- functions for updating the map using files (json, geojson, zip, kml) -------------------  **/
+
+  //handle json & geojson files
+  const handleJsonFile = (file, reader) => {
+    reader.onload = async () => {
+      const geojsonData = parseJsonData(reader.result);
+      if (geojsonData) {
+        updateMapWithData(geojsonData);
+      }
+    };
+    reader.onerror = () => console.error("Error reading the JSON file.");
+    reader.readAsText(file);
+  };
+
+  //handle shapefile (.zip) and kml files
+  const handleShpKml = (file, reader) => {
+    reader.onload = async () => {
+      let geojsonData;
+      const result = reader.result;
+
+      if (file.name.endsWith(".zip")) {
+        geojsonData = await shp(result);
+      } else if (file.name.endsWith(".kml")) {
+        geojsonData = await readKML([file]);
+      }
+
+      if (geojsonData) {
+        if (JSON.stringify(geojsonData).size > 5 * 1024 * 1024) {
+          alert("file size exceeds limit. Use a file less than 5MB.");
+        }
+        updateMapWithData(geojsonData);
+      } else {
+        console.error("Could not parse geojsonData.");
+      }
+    };
+    reader.onerror = () => console.error("Error reading the file.");
+    reader.readAsArrayBuffer(file);
+  };
+
+  /**  ------------------- functions for updating the map using files (json, geojson, zip, kml) -------------------  **/
   const handleFileDrop = async (files) => {
     const file = files[0];
     const reader = new FileReader();
 
     //if it's not a valid file type, just return
     if (validFileType(file)) return;
-  
+
     //handle json file (.json or .geojson file format)
-    if (file.name.endsWith('.json') || file.name.endsWith('.geojson')) {
+    if (file.name.endsWith(".json") || file.name.endsWith(".geojson")) {
       handleJsonFile(file, reader);
 
-    //handle zip or kml file
-    } else if (file.name.endsWith('.zip') || file.name.endsWith('.kml')) {
+      //handle zip or kml file
+    } else if (file.name.endsWith(".zip") || file.name.endsWith(".kml")) {
       handleShpKml(file, reader);
     }
   };
-  
-  //update map 
+
+  //update map
   const updateMapWithData = (geojsonData) => {
-    const sourceId = 'uploadedGeoSource';
-    const layerId = 'uploaded-data-layer';
-  
+    const sourceId = "uploadedGeoSource";
+    const layerId = "uploaded-data-layer";
+
     if (map.current.getSource(sourceId)) {
       map.current.getSource(sourceId).setData(geojsonData);
     } else {
       map.current.addSource(sourceId, {
-        type: 'geojson',
-        data: geojsonData
+        type: "geojson",
+        data: geojsonData,
       });
-  
+
       map.current.addLayer({
         id: layerId,
-        type: 'line',
+        type: "line",
         source: sourceId,
         paint: {
-          'line-color': '#088',
-          'line-opacity': 0.8
-        }
+          "line-color": "#088",
+          "line-opacity": 0.8,
+        },
       });
     }
   };
-  
-/**  -----------------------------------------------------------  **/
+
+  /**  -----------------------------------------------------------  **/
 
   return (
     <div id="dropzone" className="container">
@@ -189,7 +198,7 @@ const handleShpKml = (file, reader) => {
             id="map"
             ref={mapContainer}
             className="map-container"
-            style={{ top: 0, bottom: 0, width: '400px', height: '400px' }}
+            style={{ top: 0, bottom: 0, width: "400px", height: "400px" }}
           />
         </div>
         <MapTraffic />
@@ -199,4 +208,3 @@ const handleShpKml = (file, reader) => {
 };
 
 export default Map;
-
