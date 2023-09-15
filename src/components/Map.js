@@ -137,6 +137,7 @@ const Map = () => {
                   "cannot get features from your zip files: ",
                   shpDbf
                 );
+                return;
               }
             }
           }
@@ -225,6 +226,7 @@ const Map = () => {
             <input {...getInputProps()} />
             Drop GeoJSON, Shapefile (in .zip format), or KML file here. (Click)
             <p>Your layer will show up on the Street Map</p>
+            <p>KML files or large size files can take a long time to process</p>
           </button>
         )}
       </Dropzone>
