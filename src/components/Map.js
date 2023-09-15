@@ -20,7 +20,7 @@ const Map = () => {
   const map = useRef(null);
   const [lng, setLng] = useState(-73.968285);
   const [lat, setLat] = useState(40.785091); // NY central park
-  const [zoom, setZoom] = useState(12);
+  const [zoom, setZoom] = useState(4);
 
   /** ------------------- useEffect  -------------------  **/
   useEffect(() => {
@@ -119,9 +119,31 @@ const Map = () => {
         //shapefile
         try {
           // functionality to handle error from zip files (no shapefile than error msg)
-          geojsonData = await shp(result);
+          const files = await shp.parseZip(result); //get all files in zip
+          if (!Array.isArray(files)) {
+            // 1 shp & dbf file?
+            geojsonData = files;
+          } else {
+            geojsonData = {
+              type: "FeatureCollection",
+              features: [],
+            };
+            for (const shpDbf of files) {
+              if (shpDbf.features && Array.isArray(shpDbf.features)) {
+                geojsonData.features.push(...shpDbf.features);
+              } else {
+                alert("Too many shapefiles in your zip file.");
+                console.error(
+                  "cannot get features from your zip files: ",
+                  shpDbf
+                );
+              }
+            }
+          }
         } catch (e) {
-          alert("Your shapefile (.zip) has to contain both .shp & .dbf files.");
+          alert(
+            "Your shapefile (.zip) has to contain both one .shp & one .dbf files."
+          );
           console.error("Invalid Shapefile ", e);
           return;
         }
@@ -149,6 +171,8 @@ const Map = () => {
     const file = files[0];
     const reader = new FileReader();
 
+    //Start Loading
+    document.getElementById("mapLoadingOverlay").style.display = "block";
     //if it's not a valid file type, just return
     if (validFileType(file)) return;
 
@@ -185,6 +209,10 @@ const Map = () => {
         },
       });
     }
+    map.current.once("idle", () => {
+      //Finish Loading!
+      document.getElementById("mapLoadingOverlay").style.display = "none";
+    });
   };
 
   /**  -----------------------------------------------------------  **/
@@ -211,6 +239,9 @@ const Map = () => {
             className="map-container"
             style={{ top: 0, bottom: 0, width: "400px", height: "400px" }}
           />
+          <div className="map-loading" id="mapLoadingOverlay">
+            Loading...
+          </div>
         </div>
         <MapTraffic />
       </div>
