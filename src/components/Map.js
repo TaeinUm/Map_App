@@ -116,14 +116,24 @@ const Map = () => {
       const result = reader.result;
 
       if (file.name.endsWith(".zip")) {
-        geojsonData = await shp(result);
+        //shapefile
+        try {
+          // functionality to handle error from zip files (no shapefile than error msg)
+          geojsonData = await shp(result);
+        } catch (e) {
+          alert("Your shapefile (.zip) has to contain both .shp & .dbf files.");
+          console.error("Invalid Shapefile ", e);
+          return;
+        }
       } else if (file.name.endsWith(".kml")) {
+        //kml file
         geojsonData = await readKML([file]);
       }
 
       if (geojsonData) {
+        //before updating the map, check if the size valid for mapbox
         if (JSON.stringify(geojsonData).size > 5 * 1024 * 1024) {
-          alert("file size exceeds limit. Use a file less than 5MB.");
+          alert("file size exceeds limit.");
         }
         updateMapWithData(geojsonData);
       } else {
@@ -186,6 +196,7 @@ const Map = () => {
           <button className="dropzone" {...getRootProps()}>
             <input {...getInputProps()} />
             Drop GeoJSON, Shapefile (in .zip format), or KML file here. (Click)
+            <p>Your layer will show up on the Street Map</p>
           </button>
         )}
       </Dropzone>
