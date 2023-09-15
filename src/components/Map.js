@@ -142,9 +142,7 @@ const Map = () => {
             }
           }
         } catch (e) {
-          alert(
-            "Your shapefile (.zip) has to contain both .shp & one .dbf files."
-          );
+          alert("Your shapefile (.zip) has to contain both .shp & .dbf files.");
           console.error("Invalid Shapefile ", e);
           return;
         }
