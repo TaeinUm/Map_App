@@ -143,7 +143,7 @@ const Map = () => {
           }
         } catch (e) {
           alert(
-            "Your shapefile (.zip) has to contain both one .shp & one .dbf files."
+            "Your shapefile (.zip) has to contain both .shp & one .dbf files."
           );
           console.error("Invalid Shapefile ", e);
           return;
