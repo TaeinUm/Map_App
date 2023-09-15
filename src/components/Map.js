@@ -185,7 +185,7 @@ const Map = () => {
         {({ getRootProps, getInputProps }) => (
           <button className="dropzone" {...getRootProps()}>
             <input {...getInputProps()} />
-            Drop GeoJSON, Shapefile, or KML file here. (Click)
+            Drop GeoJSON, Shapefile (in .zip format), or KML file here. (Click)
           </button>
         )}
       </Dropzone>
