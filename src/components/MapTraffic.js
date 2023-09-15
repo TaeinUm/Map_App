@@ -1,17 +1,17 @@
-import React, { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import React, { useRef, useEffect, useState } from "react";
+import mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
-import '../App.css';
+import "../App.css";
 
-
+//Juyee
 //access token
 // mapboxgl.accessToken = 'sk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3OHNjdzBlNjgza253bGZhMGxub3MifQ.d6s6zC37DI-Mc-osExr2sg';
-mapboxgl.accessToken = 'pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ';
-
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
 function MapTraffic() {
-/**  ------------------- useRef / useState   -------------------   **/
+  /**  ------------------- useRef / useState   -------------------   **/
   //initialize map, lng, lat, zoom lvl
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -19,67 +19,77 @@ function MapTraffic() {
   const [lat, setLat] = useState(40.785091);
   const [zoom, setZoom] = useState(10);
 
-/** ------------------- useEffect  -------------------  **/
+  /** ------------------- useEffect  -------------------  **/
 
   useEffect(() => {
     if (map.current) return;
 
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v12',
+      style: "mapbox://styles/mapbox/streets-v12",
       center: [lng, lat],
-      zoom: zoom
+      zoom: zoom,
     });
 
     //button for zoom-in & zoom-out
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right'); // top-left, bottom-right
+    map.current.addControl(new mapboxgl.NavigationControl(), "top-right"); // top-left, bottom-right
 
-    map.current.on('load', () => {
-
+    map.current.on("load", () => {
       // Add traffic source from mapbox - updated every 8 min
-      map.current.addSource('mapbox-traffic', {
-        url: 'mapbox://mapbox.mapbox-traffic-v1',
-        type: 'vector'
+      map.current.addSource("mapbox-traffic", {
+        url: "mapbox://mapbox.mapbox-traffic-v1",
+        type: "vector",
       });
 
       // traffic layers
-      map.current.addLayer({
-        id: 'traffic',
-        source: 'mapbox-traffic',
-        'source-layer': 'traffic',
-        type: 'line',
-        paint: {
-          'line-width': 1.5,
-          'line-color': [
-            'case',
-            ['==', 'low', ['get', 'congestion']], '#aab7ef',
-            ['==', 'moderate', ['get', 'congestion']], '#4264fb',
-            ['==', 'heavy', ['get', 'congestion']], '#ee4e8b',
-            ['==', 'severe', ['get', 'congestion']], '#b43b71',
-            '#000000'
-          ]
-        }
-      }, 'road-label'); // this places the traffic layer below the road labels
+      map.current.addLayer(
+        {
+          id: "traffic",
+          source: "mapbox-traffic",
+          "source-layer": "traffic",
+          type: "line",
+          paint: {
+            "line-width": 1.5,
+            "line-color": [
+              "case",
+              ["==", "low", ["get", "congestion"]],
+              "#aab7ef",
+              ["==", "moderate", ["get", "congestion"]],
+              "#4264fb",
+              ["==", "heavy", ["get", "congestion"]],
+              "#ee4e8b",
+              ["==", "severe", ["get", "congestion"]],
+              "#b43b71",
+              "#000000",
+            ],
+          },
+        },
+        "road-label"
+      ); // this places the traffic layer below the road labels
 
-      map.current.addLayer({
-        id: 'traffic-circle',
-        type: 'circle',
-        source: 'mapbox-traffic',
-        'source-layer': 'traffic',
-        filter: ['in', 'congestion', 'heavy', 'severe'],
-        paint: {
-          'circle-radius': 6,
-          'circle-color': [
-            'case',
-            ['==', 'heavy', ['get', 'congestion']], '#ee4e8b',
-            '#b43b71'
-          ],
-          'circle-opacity': 0.8
-        }
-      }, 'road-label');
+      map.current.addLayer(
+        {
+          id: "traffic-circle",
+          type: "circle",
+          source: "mapbox-traffic",
+          "source-layer": "traffic",
+          filter: ["in", "congestion", "heavy", "severe"],
+          paint: {
+            "circle-radius": 6,
+            "circle-color": [
+              "case",
+              ["==", "heavy", ["get", "congestion"]],
+              "#ee4e8b",
+              "#b43b71",
+            ],
+            "circle-opacity": 0.8,
+          },
+        },
+        "road-label"
+      );
     });
 
-    map.current.on('move', () => {
+    map.current.on("move", () => {
       setLng(map.current.getCenter().lng.toFixed(4));
       setLat(map.current.getCenter().lat.toFixed(4));
       setZoom(map.current.getZoom().toFixed(2));
@@ -88,11 +98,11 @@ function MapTraffic() {
     const geocoder = new MapboxGeocoder({
       accessToken: mapboxgl.accessToken,
       mapboxgl: mapboxgl,
-      marker: false
+      marker: false,
     });
 
-    map.current.addControl(geocoder, 'top-left');
-    geocoder.on('result', (e) => {
+    map.current.addControl(geocoder, "top-left");
+    geocoder.on("result", (e) => {
       const [lng, lat] = e.result.geometry.coordinates;
       setLng(lng);
       setLat(lat);
@@ -106,12 +116,19 @@ function MapTraffic() {
     //How to make a demo-version of navigation
   }, [lat, lng, zoom]);
 
-/**  -----------------------------------------------------------  **/
+  /**  -----------------------------------------------------------  **/
 
   return (
-    <div className='d-flex flex-column'>
-      <div className="sidebar">Real-time traffic: Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}</div>
-      <div id="map" ref={mapContainer} className='map-container' style={{ top: 0, bottom: 0, width: '400px', height: '400px' }} />
+    <div className="d-flex flex-column">
+      <div className="sidebar">
+        Real-time traffic: Longitude: {lng} | Latitude: {lat} | Zoom: {zoom}
+      </div>
+      <div
+        id="map"
+        ref={mapContainer}
+        className="map-container"
+        style={{ top: 0, bottom: 0, width: "400px", height: "400px" }}
+      />
     </div>
   );
 }
