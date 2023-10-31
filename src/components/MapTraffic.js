@@ -4,7 +4,6 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 import "../App.css";
 
-//Juyee
 //access token
 // mapboxgl.accessToken = 'sk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3OHNjdzBlNjgza253bGZhMGxub3MifQ.d6s6zC37DI-Mc-osExr2sg';
 mapboxgl.accessToken =
