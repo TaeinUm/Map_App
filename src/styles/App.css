@@ -10,18 +10,21 @@
   background: linear-gradient(#465065, #282c34);
   width: 100%;
   height: 122px;
-  padding: 0 40px;
+  padding: 1rem 2rem;
 }
 
 .logo {
-  font-size: 30px;
+  font-size: 1.5rem;
   pointer-events: cursor;
 }
 
 .navbar {
-  gap: 20px;
-  font-size: 50px;
+  color:#FAFAFA;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out;
+  gap: 2rem;
   font-weight: regular;
+  font-size: 120%;
 }
 
 .navbar a {
@@ -31,28 +34,120 @@
 }
 
 .navbar a:hover {
-  color: #CCCCCC;
+  color: grey;
 }
 
 .user-section {
-  gap: 10px;
+  gap: 1rem;
 }
 
 .user-section button {
-  width: 200px;
-  height: 77px;
-  font-size: 30px;
+  padding: 0.5rem 1rem;
   color: #282c34;
-  padding: 10px 20px;
+  border: none;
   border-radius: 10px;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.3s ease-in-out;
   cursor: pointer;
 }
 
 .user-section button:hover {
   background-color: #465065;
-  color: #FAFAFA;
   border: none;
+}
+
+.user-section a {
+  color: black;
+  text-decoration: none;
+}
+
+.hamburger-menu {
+  font-size: 4rem;
+  cursor: pointer;
+  display: none;
+  margin-left: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.hamburger-menu.rotate {
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.mobile-nav.active {
+  display: block;
+}
+
+.mobile-nav a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #000;
+  border-bottom: 1px solid #e1e1e1;
+}
+
+.mobile-nav a:last-child {
+  border-bottom: none;
+}
+
+.mobile-nav .auth-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 15px;
+}
+
+.mobile-nav a:hover {
+  background-color: #465065;
+  color: #282c34;
+}
+
+@media (max-width: 768px) {
+  header nav a, header .user-section button {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  .mobile-nav {
+    position: absolute;
+    justify-content: space-between;
+    width:100%;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    width: 200px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  .mobile-nav a {
+    display: block;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #000;
+  }
+
+  .mobile-nav a:hover {
+    background-color: #f1f1f1;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-nav {
+    display: none;
+  }
 }
 
 /**********               Footer                        ***********/
@@ -100,131 +195,4 @@
   border-radius: 5px;
   z-index: 1;
   display: none; 
-}
-
-/**********               Home                        ***********/
-/*Trending Map Graphics*/
-.main-page {
-  font-family: 'Arial';
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.trending-map-graphics h2 {
-  font-size: 80px;
-  color: #FAFAFA;
-  margin-bottom: 20px;
-  margin-left: 40px;
-}
-
-.map-images {
-  gap: 10px;
-  margin-left: 40px;
-  overflow: hidden;
-  transition: transform 0.5s;
-}
-
-.imgblank {
-  width: 650px;
-  height: 500px;
-  background-color: grey;
-}
-
-/*Instruction*/
-.map-vision {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.map-vision h2 {
-  font-size: 28px;
-  margin-bottom: 30px;
-  color: #D32F2F; /* 제목 색상은 이미지의 빨간색을 기반으로 함 */
-}
-
-.vision-content {
-  display: flex;
-  gap: 40px; /* 내용 사이의 간격 */
-}
-
-.vision-left, .vision-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.vision-content img {
-  width: 100%;
-  max-width: 300px; /* 이미지 최대 너비 */
-  height: auto;
-}
-
-.vision-content p {
-  font-size: 18px;
-  text-align: center;
-}
-
-
-
-
-
-/*********        SignIn        ***********/
-.signin-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.signin-form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.signin-form h2 {
-  margin-bottom: 20px;
-  font-size: 24px;
-}
-
-.signin-form input {
-  width: 250px;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.signin-form .forgot {
-  align-self: flex-end;
-}
-
-.signin-form button {
-  width: 250px;
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  background-color: #333;
-  color: #fff;
-  cursor: pointer;
-}
-
-.signin-image {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.signin-image img {
-  max-width: 100%;
-  height: auto;
 }
