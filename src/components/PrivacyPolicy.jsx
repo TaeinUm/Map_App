@@ -2,11 +2,7 @@ import React from "react";
 import "../App.css";
 
 function PrivacyPolicy() {
-    return(
-
-        <div>
-            privacy
-        </div>
-    );
+  return <div class="container">privacy</div>;
 }
 export default PrivacyPolicy;
+
