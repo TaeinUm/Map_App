@@ -5,6 +5,7 @@
 }
 
 /**********               Header                        ***********/
+
 .hdr {
   color: #FAFAFA;
   background: linear-gradient(#465065, #282c34);
@@ -21,10 +22,10 @@
 .navbar {
   color:#FAFAFA;
   text-decoration: none;
+  gap: 1rem;
   transition: color 0.3s ease-in-out;
-  gap: 2rem;
   font-weight: regular;
-  font-size: 120%;
+  font-size: 150%;
 }
 
 .navbar a {
@@ -42,10 +43,11 @@
 }
 
 .user-section button {
-  padding: 0.5rem 1rem;
+  width: 100px;
+  height: 40px;
   color: #282c34;
   border: none;
-  border-radius: 10px;
+  border-radius: 5px;
   transition: background-color 0.3s ease-in-out;
   cursor: pointer;
 }
@@ -195,4 +197,9 @@
   border-radius: 5px;
   z-index: 1;
   display: none; 
+}
+
+/**********               Indicator                        ***********/
+a.active {
+  text-decoration: underline;
 }

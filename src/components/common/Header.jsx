@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../../styles/App.css";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,22 +26,99 @@ function Header() {
       </div>
       {isOpen && (
         <div className="mobile-nav active">
-          <Link to="/">Home</Link>
-          <Link to="/map">Map</Link>
-          <Link to="/community">Community</Link>
-          <Link to="/termsconditions">Terms and Conditions</Link>
-          <Link to="/privacypolicy">Privacy Policy</Link>
-          <Link to="/contact">Contact</Link>
+          <NavLink
+            to="/"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/map"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Map
+          </NavLink>
+          <NavLink
+            to="/community"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Community
+          </NavLink>
+          <NavLink
+            to="/termsconditions"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Terms and Conditions
+          </NavLink>
+          <NavLink
+            to="/privacypolicy"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Privacy Policy
+          </NavLink>
+          <NavLink
+            to="/contact"
+            className={({ isActive, isPending }) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
+            Contact
+          </NavLink>
           <div className="auth-buttons">
-            <Link to="/signin">Sign In</Link>
-            <Link to="/signup">Sign Up</Link>
+            <NavLink
+              to="/signin"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "active" : ""
+              }
+            >
+              Sign In
+            </NavLink>
+            <NavLink
+              to="/signup"
+              className={({ isActive, isPending }) =>
+                isPending ? "pending" : isActive ? "active" : ""
+              }
+            >
+              Sign Up
+            </NavLink>
           </div>
         </div>
       )}
-      <nav className="navbar d-flex">
-        <Link to="/">HOME</Link>
-        <Link to="/map">MAP</Link>
-        <Link to="/community">COMMUNITY</Link>
+      <nav className="navbar d-flex justify-content-between">
+        <NavLink
+          to="/"
+          className={({ isActive, isPending }) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          HOME
+        </NavLink>
+        <NavLink
+          to="/map"
+          className={({ isActive, isPending }) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          MAP
+        </NavLink>
+        <NavLink
+          to="/community"
+          className={({ isActive, isPending }) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          COMMUNITY
+        </NavLink>
       </nav>
       <div className="user-section d-flex align-items-center">
         <button>

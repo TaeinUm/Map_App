@@ -9,7 +9,7 @@
   }
   
   .trending-map-graphics h2 {
-    font-size: 80px;
+    font-size: 50px;
     color: #FAFAFA;
     margin-bottom: 20px;
     margin-left: 40px;
@@ -18,13 +18,14 @@
   .map-images {
     gap: 10px;
     margin-left: 40px;
-    overflow: hidden;
     transition: transform 0.5s;
+    display:block;
+    overflow: hidden;
   }
   
   .imgblank {
-    width: 650px;
-    height: 500px;
+    width: 500px;
+    height: 400px;
     background-color: grey;
   }
   
