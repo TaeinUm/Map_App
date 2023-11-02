@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../App.css";
+import "../../styles/Home.css";
 
 const Home = () => {
   const [scrollAmount, setScrollAmount] = useState(0);
@@ -17,7 +17,7 @@ const Home = () => {
       <section className="trending-map-graphics d-flex flex-column align-items-start">
         <h2>Trending Map Graphics</h2>
         <div
-          className="map-images d-flex"
+          className="map-images d-flex overflow-hidden"
           style={{ transform: `translateX(${scrollAmount}px)` }}
         >
           <div className="imgblank"> img </div>
