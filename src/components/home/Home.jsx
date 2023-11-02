@@ -17,7 +17,7 @@ const Home = () => {
       <section className="trending-map-graphics d-flex flex-column align-items-start">
         <h2>Trending Map Graphics</h2>
         <div
-          className="map-images d-flex overflow-hidden"
+          className="map-images d-flex"
           style={{ transform: `translateX(${scrollAmount}px)` }}
         >
           <div className="imgblank"> img </div>
