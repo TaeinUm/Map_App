@@ -1,0 +1,57 @@
+
+/*********        SignIn        ***********/
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .signin-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .signin-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  .signin-form input {
+    width: 250px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .signin-form .forgot {
+    align-self: flex-end;
+  }
+  
+  .signin-form button {
+    width: 250px;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    cursor: pointer;
+  }
+  
+  .signin-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .signin-image img {
+    max-width: 100%;
+    height: auto;
+  }
+  

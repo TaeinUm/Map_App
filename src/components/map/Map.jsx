@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import toGeoJSON from "togeojson";
 import shp from "shpjs/dist/shp";
 
-import "../App.css";
+import "../../styles/map.css";
 
 import MapTraffic from "./MapTraffic";
 
