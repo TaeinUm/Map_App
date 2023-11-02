@@ -32,13 +32,13 @@ const Home = () => {
         <h2>MAP Your Vision, Connect Your WORLD</h2>
         <div className="vision-content">
           <div className="vision-left">
-            <img src="path-to-image1.jpg" alt="Image 1" />
+            <img src="path-to-image1.jpg" alt="Description 1" />
             <p>Instructions 1</p>
             <p>Instructions 2</p>
             <p>Instructions 3</p>
           </div>
           <div className="vision-right">
-            <img src="path-to-image2.jpg" alt="Image 2" />
+            <img src="path-to-image2.jpg" alt="Description 2" />
             <p>Instructions 4</p>
             <p>Instructions 5</p>
           </div>
