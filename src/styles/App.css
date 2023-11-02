@@ -1,0 +1,230 @@
+.App {
+  font-family: 'Arial';
+  text-align: center;
+  background-color: #282c34;
+}
+
+/**********               Header                        ***********/
+.hdr {
+  color: #FAFAFA;
+  background: linear-gradient(#465065, #282c34);
+  width: 100%;
+  height: 122px;
+  padding: 0 40px;
+}
+
+.logo {
+  font-size: 30px;
+  pointer-events: cursor;
+}
+
+.navbar {
+  gap: 20px;
+  font-size: 50px;
+  font-weight: regular;
+}
+
+.navbar a {
+  color: #FAFAFA;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #CCCCCC;
+}
+
+.user-section {
+  gap: 10px;
+}
+
+.user-section button {
+  width: 200px;
+  height: 77px;
+  font-size: 30px;
+  color: #282c34;
+  padding: 10px 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.user-section button:hover {
+  background-color: #465065;
+  color: #FAFAFA;
+  border: none;
+}
+
+/**********               Footer                        ***********/
+.ftr {
+  background: black;
+  width: 100vw;
+  height: 40px;
+  margin-top: 20px;
+}
+
+.marker {
+  cursor: pointer;
+}
+
+.dropzone {
+  margin: 10px;
+  height: 300px;
+  width: 70vw;
+  border: dashed gray 3px;
+  border-radius: 10%;
+}
+
+.sidebar {
+  background-color: rgba(35, 55, 75, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  font-family: monospace;
+  z-index: 1;
+  /* position: absolute; */
+  top: 0;
+  left: 0;
+  margin: 12px;
+  border-radius: 4px;
+  height: 60px;
+}
+
+.map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.7);
+  color:whitesmoke;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1;
+  display: none; 
+}
+
+/**********               Home                        ***********/
+/*Trending Map Graphics*/
+.main-page {
+  font-family: 'Arial';
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.trending-map-graphics h2 {
+  font-size: 80px;
+  color: #FAFAFA;
+  margin-bottom: 20px;
+  margin-left: 40px;
+}
+
+.map-images {
+  gap: 10px;
+  margin-left: 40px;
+  overflow: hidden;
+  transition: transform 0.5s;
+}
+
+.imgblank {
+  width: 650px;
+  height: 500px;
+  background-color: grey;
+}
+
+/*Instruction*/
+.map-vision {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.map-vision h2 {
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #D32F2F; /* 제목 색상은 이미지의 빨간색을 기반으로 함 */
+}
+
+.vision-content {
+  display: flex;
+  gap: 40px; /* 내용 사이의 간격 */
+}
+
+.vision-left, .vision-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.vision-content img {
+  width: 100%;
+  max-width: 300px; /* 이미지 최대 너비 */
+  height: auto;
+}
+
+.vision-content p {
+  font-size: 18px;
+  text-align: center;
+}
+
+
+
+
+
+/*********        SignIn        ***********/
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.signin-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.signin-form h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.signin-form input {
+  width: 250px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.signin-form .forgot {
+  align-self: flex-end;
+}
+
+.signin-form button {
+  width: 250px;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+}
+
+.signin-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signin-image img {
+  max-width: 100%;
+  height: auto;
+}
