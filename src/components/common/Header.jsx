@@ -83,6 +83,7 @@ function Header() {
             >
               Sign In
             </NavLink>
+            <div>|</div>
             <NavLink
               to="/signup"
               className={({ isActive, isPending }) =>

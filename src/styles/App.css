@@ -76,37 +76,45 @@
 }
 
 .mobile-nav {
-  display: none;
   position: absolute;
-  top: 100%;
+  width: 400px;
+  height: 430px;
+  top: 100px;
   right: 0;
-  background-color: #fff;
-  width: 200px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  border-radius: 5px;
+  background-color: #E3E2EA;
   overflow: hidden;
+  z-index: 1000;
 }
 
-.mobile-nav.active {
+.mobile-nav .active {
   display: block;
+
 }
 
 .mobile-nav a {
   display: block;
   padding: 10px 15px;
+  height: 60px;
   text-decoration: none;
   color: #000;
-  border-bottom: 1px solid #e1e1e1;
-}
-
-.mobile-nav a:last-child {
-  border-bottom: none;
+  border-bottom: 1px solid #707070;
 }
 
 .mobile-nav .auth-buttons {
   display: flex;
   justify-content: space-between;
-  padding: 10px 15px;
+  padding: 10px 0;
+}
+
+.mobile-nav .auth-buttons div {
+  font-size: 35px;
+  font-weight: regular;
+  color: #707070;
+}
+
+.mobile-nav .auth-buttons a {
+  width:100%;
 }
 
 .mobile-nav a:hover {
@@ -122,36 +130,7 @@
   .hamburger-menu {
     display: block;
   }
-
-  .mobile-nav {
-    position: absolute;
-    justify-content: space-between;
-    width:100%;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    width: 200px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  }
-
-  .mobile-nav a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #000;
-  }
-
-  .mobile-nav a:hover {
-    background-color: #f1f1f1;
-  }
 }
-
-@media (min-width: 769px) {
-  .mobile-nav {
-    display: none;
-  }
-}
-
 /**********               Footer                        ***********/
 .ftr {
   background: black;
