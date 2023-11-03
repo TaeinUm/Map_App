@@ -8,6 +8,11 @@
     padding: 20px;
   }
   
+  .trending-map-graphics {
+    width:100%;
+    overflow: hidden;
+  }
+
   .trending-map-graphics h2 {
     font-size: 50px;
     color: #FAFAFA;
@@ -16,11 +21,10 @@
   }
   
   .map-images {
+    width: 3250px;
     gap: 10px;
     margin-left: 40px;
     transition: transform 0.5s;
-    display:block;
-    overflow: hidden;
   }
   
   .imgblank {
@@ -38,11 +42,17 @@
   }
   
   .map-vision h2 {
-    font-size: 28px;
+    font-size: 40px;
     margin-bottom: 30px;
-    color: #D32F2F;
+    color: #FAFAFA;
+    font-weight: bold;
   }
-  
+
+  .map-vision div {
+    margin-left: 80px;
+    margin-right: 0;
+  }
+
   .vision-content {
     display: flex;
     gap: 40px;
