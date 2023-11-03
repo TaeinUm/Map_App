@@ -1,41 +1,70 @@
 
-/*********        SignIn        ***********/
-.signin-container {
+/*********        SignIn / SignUp        ***********/
+.sign-container {
     height: 100vh;
   }
   
-  .signin-form {
+  .sign-form {
+    width: 70%;
     background-color: #fff;
     height: 100%;
     flex: 1;
     padding: 20px;
+    z-index: 1;
   }
   
-  .signin-form h2 {
+  .sign-form h2 {
     margin-bottom: 80px;
     font-size: 30px;
     font-weight: bold;
   }
   
-  .signin-form input {
-    width: 250px;
+  .sign-form input {
+    width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
   }
 
-  .signin-form .inputform {
+  .sign-form .agreement {
+    padding-bottom: 20px;
+  }
+
+  .sign-form .inputform {
+    width: 70%;
     margin-bottom: 20px;
   }
 
-  .signin-form .input-top {
+  .d-flex.flex-column:first-child {
+    margin-right: 20px;
+  }
+
+  .forgot {
+    margin-left: auto;
+  }
+   
+  .sign-form .input-top {
     font-weight: bold;
     margin-bottom: 5px;
   }
+
+  .sign-form label {
+    font-size: 14px;
+  }
+
+  .sign-form div {
+    width:100%;
+  }
+
+  .sign-form input[type=checkbox] {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+  }
   
-  .signin-form button {
-    width: 250px;
+  .sign-form button {
+    width: 70%;
     padding: 10px;
     margin-bottom: 20px;
     border: none;
@@ -45,15 +74,18 @@
     cursor: pointer;
   }
   
-  .signin-image {
+  .sign-image {
+    width:50%;
+    height: 100%;
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   
-  .signin-image img {
-    max-width: 100%;
-    height: auto;
+  .sign-image img {
+    max-height: 100%;
+    width: auto;
   }
+
   
