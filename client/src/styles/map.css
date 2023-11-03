@@ -1,0 +1,140 @@
+.landing-main {
+    width: 100%;
+    margin: 10px 40px;
+}
+
+.landingtop {
+    width: 100%;
+}
+
+.landing-main p {
+    font-size: 40px;
+    font-weight: bold;
+    color: #FAFAFA;
+}
+
+.landing-main .export-btn {
+    margin-right: 20px;
+    width: 40%;
+    background-color: pink;
+}
+
+.landing-main .export-btn button {
+    width: 150px;
+    height: 50px;
+    border-radius: 5px;
+    border-style: none;
+    margin-left: 20px;
+    color: black;
+    font-weight: regular;
+}   
+
+.map-down {
+    width: 100%;
+}
+
+.my-maps {
+    width: 60%;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.my-maps div {
+    width: 100%;
+}
+
+.my-maps input {
+    width: 100%;
+    height: 50px;
+    border-radius: 5px;
+    border: none;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.my-maps .search-icon {
+    border: none;
+    background: none;
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-left: -50px;
+}
+
+.liked-template {
+    width: 4cqb;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.date {
+    color: #FAFAFA;
+    margin: 10px 0;
+}
+
+.map-item {
+    width: 90%;
+    background-color: aqua;
+}
+
+.map-item {
+    color: #FAFAFA;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.map-graphic {
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: blue;
+}
+
+.map-graphic button {
+    border-style: none;
+    background: none;
+    color: #FAFAFA;
+    font-size: 20px;
+    margin: 20px;
+}
+
+.map-image {
+    width: 60px;
+    height: 60px;
+    background-color: grey;
+    margin-right: 10px;
+}
+
+.liked-template {
+    width: 40%;
+}
+
+.liked-template p {
+    color: #FAFAFA;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.template-image {
+    width: 200px;
+    height: 200px;
+    margin-right: 10px;
+    background-color: grey;
+
+}
+
+.heart-icon {
+    color: red;
+    cursor: pointer;
+    font-size: 24px;
+    margin-left: -30px;
+}
+
+.leftRight button {
+    width: 40px;
+    height: 40px;
+    border: none;
+    margin: 0 10px;
+    background-color: #FAFAFA;
+    color: black;
+    border: none;
+    border-radius: 5px;
+}

@@ -10,7 +10,7 @@ import SignUp from "./components/auth/SignUp";
 import PrivacyPolicy from "./components/policy/PrivacyPolicy";
 import Termsconditions from "./components/policy/TermsConditions";
 import Contact from "./components/policy/Contact";
-import Map from "./components/map/Map";
+import MapLanding from "./components/map/MapLanding";
 import Community from "./components/community/Community";
 import NotFound from "./components/common/NotFound";
 
@@ -21,7 +21,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/map" element={<Map />} />
+          <Route path="/map" element={<MapLanding />} />
           <Route path="/community" element={<Community />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
