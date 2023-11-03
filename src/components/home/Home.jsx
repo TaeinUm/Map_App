@@ -29,7 +29,11 @@ const Home = () => {
       </section>
 
       <section className="map-vision">
-        <h2>MAP Your Vision, Connect Your WORLD</h2>
+        <h2 className="line1">MAP Your Vision,</h2>
+        <div className="d-flex">
+          <div></div>
+          <h2 className="line2"> Connect Your WORLD</h2>
+        </div>
         <div className="vision-content">
           <div className="vision-left">
             <img src="path-to-image1.jpg" alt="Description 1" />
