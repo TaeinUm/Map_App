@@ -1,24 +1,20 @@
 
 /*********        SignIn        ***********/
 .signin-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
   }
   
   .signin-form {
+    background-color: #fff;
+    height: 100%;
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
     padding: 20px;
   }
   
   .signin-form h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
+    margin-bottom: 80px;
+    font-size: 30px;
+    font-weight: bold;
   }
   
   .signin-form input {
@@ -28,16 +24,22 @@
     border: 1px solid #ccc;
     border-radius: 4px;
   }
-  
-  .signin-form .forgot {
-    align-self: flex-end;
+
+  .signin-form .inputform {
+    margin-bottom: 20px;
+  }
+
+  .signin-form .input-top {
+    font-weight: bold;
+    margin-bottom: 5px;
   }
   
   .signin-form button {
     width: 250px;
     padding: 10px;
+    margin-bottom: 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 20px;
     background-color: #333;
     color: #fff;
     cursor: pointer;

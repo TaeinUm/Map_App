@@ -3,13 +3,24 @@ import "../../styles/auth.css";
 
 function SignIn() {
   return (
-    <div className="signin-container">
-      <div className="signin-form">
+    <div className="signin-container d-flex justify-content-center align-items-center">
+      <div className="signin-form d-flex align-items-center justify-content-center flex-column">
         <h2>TerraCanvas</h2>
-        <input type="text" placeholder="Username or Email" />
-        <input type="password" placeholder="Password" />
-        <div className="forgot">
-          <a href="/">Forgot?</a>
+        <div className="inputform">
+          <div className="d-flex justify-content-between">
+            <p className="input-top">Email</p>
+            <div></div>
+          </div>
+          <input type="text" placeholder="Email" />
+        </div>
+        <div className="inputform">
+          <div className="d-flex justify-content-between">
+            <p className="input-top">Password</p>
+            <div className="forgot">
+              <a href="/">Forgot?</a>
+            </div>
+          </div>
+          <input type="password" placeholder="Password" />
         </div>
         <button type="submit">Sign In</button>
         <p>
@@ -17,7 +28,6 @@ function SignIn() {
         </p>
       </div>
       <div className="signin-image">
-        {/* Replace with your actual image */}
         <img src="/path-to-your-image.jpg" alt="Background" />
       </div>
     </div>
