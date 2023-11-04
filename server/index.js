@@ -1,3 +1,46 @@
+// require('dotenv').config();
+// const express = require('express');
+// const mongoose = require('mongoose');
+// const path = require('path');
+// const app = express();
+// const PORT = process.env.PORT || 8080;
+
+// // Test Server
+// app.get('/', (req, res) => {
+//   res.send('Welcome to TerraCanvas!');
+// });
+
+// // app.listen(PORT, () => {
+// //   console.log(`Server is running on port ${PORT}`);
+// // });
+
+// mongoose.connect(process.env.MONGODB_URI)
+//   .then(() => console.log('Connected to MongoDB'))
+//   .catch(err => console.error('Could not connect to MongoDB', err));
+
+// app.use((err, req, res, next) => {
+//   res.status(500).send('Something broke!');
+// });
+
+// // Only start listening when the file is run directly, not when imported as a module
+// if (require.main === module) {
+//   app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+//   });
+// }
+
+// // Heroku Deployment
+// // Serve static files from the React app
+// app.use(express.static(path.join(__dirname, '../client/build')));
+
+// // The "catchall" handler: for any request that doesn't
+// // match one above, send back React's index.html file.
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// });
+
+// module.exports = app;
+
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
@@ -5,19 +48,47 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+// Define a schema for the 'test' collection with only an 'id' field
+const testSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId // Assuming 'id' is an ObjectId; if it's a string, use String instead
+});
+
+// Create a model from the schema
+const TestModel = mongoose.model('Test', testSchema, 'test');
+
+// Function to get data from the 'test' collection
+const getDataFromTestCollection = async () => {
+  try {
+    const data = await TestModel.find({});
+    console.log('성공적으로 데이터를 가져왔습니다.'); 
+    return data;
+  } catch (error) {
+    console.error('Error fetching data from test collection:', error);
+    throw error;
+  }
+};
+
 // Test Server
 app.get('/', (req, res) => {
   res.send('Welcome to TerraCanvas!');
 });
 
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
+// Route to get data from 'test' collection
+app.get('/api/test-data', async (req, res) => {
+  try {
+    const testData = await getDataFromTestCollection();
+    res.json(testData);
+  } catch (error) {
+    res.status(500).send('Error fetching test data');
+  }
+});
 
+// Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB', err));
+  .catch(err => console.error('Could not connect to MongoDB:', err));
 
+// Error handling middleware
 app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });

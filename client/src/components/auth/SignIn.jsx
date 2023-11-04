@@ -20,7 +20,11 @@ function SignIn() {
         flex="1"
         bgcolor="white"
       >
-        <Typography variant="h3" gutterBottom sx={{ marginBottom: "80px" }}>
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{ marginBottom: "80px", fontWeight: "bold" }}
+        >
           TerraCanvas
         </Typography>
         <Box width="70%" marginBottom={2}>
