@@ -138,33 +138,6 @@
   }
 }
 
-/**********               Footer                        ***********/
-.ftr {
-  background: black;
-  width: 100vw;
-  height: 80px;
-}
-
-.ftrlogo {
-  margin-left: 40px;
-  font-size: 40px;
-}
-
-.ftr button {
-  border: none;
-  background: none;
-}
-
-.ftr button a {
-  text-decoration: none;
-  color:#FAFAFA;
-  margin-right: 40px;
-}
-
-.ftr .active {
-  text-decoration: underline;
-}
-
 /**********               side bar                        ***********/
 .sidebar {
   background-color: rgba(35, 55, 75, 0.9);

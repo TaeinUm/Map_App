@@ -1,49 +1,56 @@
-import "../../styles/App.css";
+import { Box, Button, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 
 function Footer() {
   return (
-    <footer className="ftr d-flex justify-content-between align-items-center">
-      <div
-        className="ftrlogo"
-        type="button"
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        background: "black",
+        width: "100vw",
+        height: "80px",
+        px: 3,
+        "@media (max-width: 768px)": {
+          display: "none",
+        },
+      }}
+    >
+      <Button
+        sx={{
+          color: "white",
+          fontSize: "40px",
+        }}
         onClick={() => (window.location.href = "/")}
       >
         TERRACANVAS
-      </div>
-      <nav>
-        <button>
-          <NavLink
-            to="/termsconditions"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Terms and Conditions
-          </NavLink>
-        </button>
-        <button>
-          <NavLink
-            to="/privacypolicy"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Privacy Policy
-          </NavLink>
-        </button>
-        <button>
-          <NavLink
-            to="/contact"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Contact
-          </NavLink>
-        </button>
-      </nav>
-    </footer>
+      </Button>
+      <Box>
+        <Button
+          component={NavLink}
+          to="/termsconditions"
+          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+        >
+          Terms and Conditions
+        </Button>
+        <Button
+          component={NavLink}
+          to="/privacypolicy"
+          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+        >
+          Privacy Policy
+        </Button>
+        <Button
+          component={NavLink}
+          to="/contact"
+          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+        >
+          Contact
+        </Button>
+      </Box>
+    </Box>
   );
 }
+
 export default Footer;
