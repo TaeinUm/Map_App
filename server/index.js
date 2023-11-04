@@ -48,9 +48,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Define a schema for the 'test' collection with only an 'id' field
+// Define a schema for the 'test' collection with only an '_id' field
 const testSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId // Assuming 'id' is an ObjectId; if it's a string, use String instead
+  _id: mongoose.Schema.Types.ObjectId // Assuming '_id' is an ObjectId; if it's a string, use String instead
 });
 
 // Create a model from the schema
@@ -60,13 +60,21 @@ const TestModel = mongoose.model('Test', testSchema, 'test');
 const getDataFromTestCollection = async () => {
   try {
     const data = await TestModel.find({});
-    console.log('성공적으로 데이터를 가져왔습니다.'); 
+    console.log('성공적으로 데이터를 가져왔습니다.');
     return data;
   } catch (error) {
     console.error('Error fetching data from test collection:', error);
     throw error;
   }
 };
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB:', err));
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Test Server
 app.get('/', (req, res) => {
@@ -83,13 +91,15 @@ app.get('/api/test-data', async (req, res) => {
   }
 });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB:', err));
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
-// Error handling middleware
+// Error handling middleware should be the last piece of middleware
 app.use((err, req, res, next) => {
+  console.error(err.stack);
   res.status(500).send('Something broke!');
 });
 
@@ -99,15 +109,5 @@ if (require.main === module) {
     console.log(`Server is running on port ${PORT}`);
   });
 }
-
-// Heroku Deployment
-// Serve static files from the React app
-app.use(express.static(path.join(__dirname, '../client/build')));
-
-// The "catchall" handler: for any request that doesn't
-// match one above, send back React's index.html file.
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
 
 module.exports = app;
