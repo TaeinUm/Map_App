@@ -1,3 +1,8 @@
+// Json Modification
+// "scripts": {
+//   "test": "mocha"
+// },
+
 // test.js
 require('dotenv').config(); // Ensure environment variables are loaded
 const request = require('supertest');
