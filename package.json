@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "description": "Combined package.json for client and server",
   "engines": {
-    "node": "20.2.0",
-    "npm": "9.6.6"
+    "node": "20.2.0"
   },
   "scripts": {
-    "start": "cd client && npm start",
+    "start": "node index.js",
     "start:client": "cd client && npm start",
     "start:server": "cd server && node index.js",
     "install:client": "cd client && npm install",
     "install:server": "cd server && npm install",
     "build:client": "cd client && npm run build",
     "test:client": "cd client && npm test",
-    "test:server": "cd server && node index.js",
+    "test:server": "cd server && npm test",
     "heroku-postbuild": "npm run install:client && npm run build:client"
   },
   "dependencies": {
@@ -46,6 +45,7 @@
   "devDependencies": {
     "chai": "^4.3.10",
     "supertest": "^6.3.3",
-    "mocha": "^10.2.0"
+    "mocha": "^10.2.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.x.x"
   }
 }
