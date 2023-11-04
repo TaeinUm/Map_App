@@ -118,6 +118,7 @@ function Header() {
                   color="inherit"
                   component={NavLink}
                   onClick={handleLogout}
+                  to="/"
                   sx={{
                     width: 100,
                     height: 40,
