@@ -1,8 +1,10 @@
 .landing-main {
     width: 100%;
-    margin: 10px 40px;
+    height: 100%;
+    overflow: hidden;
 }
 
+/*****  my graphics / load files & map graphics *****/
 .landingtop {
     width: 100%;
 }
@@ -14,13 +16,11 @@
 }
 
 .landing-main .export-btn {
-    margin-right: 20px;
     width: 40%;
-    background-color: pink;
 }
 
 .landing-main .export-btn button {
-    width: 150px;
+    width: 170px;
     height: 50px;
     border-radius: 5px;
     border-style: none;
@@ -29,6 +29,10 @@
     font-weight: regular;
 }   
 
+.btn-first {
+    margin-right: 40px;
+}
+
 .map-down {
     width: 100%;
 }
@@ -36,7 +40,6 @@
 .my-maps {
     width: 60%;
     padding: 20px;
-    border-radius: 8px;
 }
 
 .my-maps div {
@@ -49,7 +52,6 @@
     border-radius: 5px;
     border: none;
     margin-bottom: 20px;
-    padding: 10px;
 }
 
 .my-maps .search-icon {
@@ -60,40 +62,10 @@
     margin-left: -50px;
 }
 
-.liked-template {
-    width: 4cqb;
-    border-radius: 8px;
-    padding: 20px;
-}
-
-.date {
-    color: #FAFAFA;
-    margin: 10px 0;
-}
-
-.map-item {
-    width: 90%;
-    background-color: aqua;
-}
-
 .map-item {
     color: #FAFAFA;
     width: 100%;
     margin-bottom: 20px;
-}
-
-.map-graphic {
-    width: 100%;
-    margin-bottom: 20px;
-    background-color: blue;
-}
-
-.map-graphic button {
-    border-style: none;
-    background: none;
-    color: #FAFAFA;
-    font-size: 20px;
-    margin: 20px;
 }
 
 .map-image {
@@ -101,31 +73,17 @@
     height: 60px;
     background-color: grey;
     margin-right: 10px;
+    border: none;
+    border-radius: 0;
 }
 
-.liked-template {
-    width: 40%;
+.map-title {
+    width: 50%;
 }
 
-.liked-template p {
+.map-item button {
     color: #FAFAFA;
-    font-size: 32px;
-    margin-bottom: 20px;
-}
-
-.template-image {
-    width: 200px;
-    height: 200px;
-    margin-right: 10px;
-    background-color: grey;
-
-}
-
-.heart-icon {
-    color: red;
-    cursor: pointer;
     font-size: 24px;
-    margin-left: -30px;
 }
 
 .leftRight button {
@@ -137,4 +95,71 @@
     color: black;
     border: none;
     border-radius: 5px;
+}
+
+.liked-template {
+    width: 40%;
+    overflow: hidden;
+}
+
+.liked-template .imgList {
+    list-style: none;
+}
+
+.imgList {
+    position: relative;
+    flex-basis: clac(50% - 10px);
+    margin-bottom: 20px;
+}
+
+.img {
+    overflow: hidden;
+    height: 150px;
+    width: 150px;
+}
+
+.img img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    margin-right: 40px;
+}
+
+.imgList .heartIcon {
+    position: absolute;
+    top: 2px;
+    right: 45px;
+    z-index: 1;
+    background: none;
+    border: none;
+    color: red;
+    font-size: 20px;
+}
+
+.text-left {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.flex-wrap {
+    flex: wrap;
+}
+
+@media (max-width: 600px) {
+
+    .landingtop .export-btn {
+        margin: 0;
+    }
+
+    .map-down {
+        flex-direction: column;
+    }
+
+    .my-maps {
+        width: 100%;
+    }
+
+    .liked-template {
+        width: 100%;
+    }
 }

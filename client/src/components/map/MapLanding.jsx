@@ -4,6 +4,8 @@ import {
   IconName,
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
+  AiOutlineHeart,
+  AiTwotoneHeart,
 } from "react-icons/ai";
 
 import { FiShare, FiMoreVertical, FiSearch } from "react-icons/fi";
@@ -14,13 +16,13 @@ const MapLanding = () => {
       <div className="landingtop d-flex justify-content-between">
         <p>My Graphics</p>
 
-        <div className="export-btn d-flex justify-content-between">
-          <button>Create New</button>
+        <div className="export-btn d-flex align-items-center">
+          <button className="btn-first">Create New</button>
           <button>Load File</button>
         </div>
       </div>
 
-      <div className="map-down d-flex justify-content-between">
+      <div className="map-down d-flex">
         <div className="my-maps d-flex flex-column align-items-center justify-content-center">
           <div className="d-flex">
             <input />
@@ -28,44 +30,54 @@ const MapLanding = () => {
               <FiSearch />
             </button>
           </div>
-          <div className="map-item d-flex align-items-center d-flex flex-column align-items-center">
-            <div className="map-graphic d-flex align-items-center justify-content-between">
-              <img src="mapImageUrl" className="map-image" />
-              <span>Ver 3. World map</span>
-              <div className="d-flex align-items-center">
-                <span className="date">2023.05.06</span>
-                <button>
-                  <FiShare />
-                </button>
-                <button>
-                  <FiMoreVertical />
-                </button>
+          <div className="map-item">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="d-flex justify-content-between align-items-center my-3">
+                  <img src="mapImageUrl" className="map-image" />
+                  <span className="map-title h5 ml-3">Ver 3. World map</span>
+                  <span className="date text-white ml-3">2023.05.06</span>
+                  <button className="btn btn-sm ml-3">
+                    <FiShare />
+                  </button>
+                  <button className="btn btn-sm ml-3">
+                    <FiMoreVertical />
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="map-graphic d-flex align-items-center justify-content-between">
-              <img src="mapImageUrl" className="map-image" />
-              <span>Ver 3. World map</span>
-              <div className="d-flex align-items-center">
-                <span className="date">2023.05.06</span>
-                <button>
-                  <FiShare />
-                </button>
-                <button>
-                  <FiMoreVertical />
-                </button>
+          </div>
+          <div className="map-item">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="d-flex justify-content-between align-items-center my-3">
+                  <img src="mapImageUrl" className="map-image" />
+                  <span className="map-title h5 ml-3">Ver 3. World map</span>
+                  <span className="date text-white ml-3">2023.05.06</span>
+                  <button className="btn btn-sm ml-3">
+                    <FiShare />
+                  </button>
+                  <button className="btn btn-sm ml-3">
+                    <FiMoreVertical />
+                  </button>
+                </div>
               </div>
             </div>
-            <div className="map-graphic d-flex align-items-center justify-content-between">
-              <img src="mapImageUrl" className="map-image" />
-              <span>Ver 3. World map</span>
-              <div className="d-flex align-items-center">
-                <span className="date">2023.05.06</span>
-                <button>
-                  <FiShare />
-                </button>
-                <button>
-                  <FiMoreVertical />
-                </button>
+          </div>
+          <div className="map-item">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="d-flex justify-content-between align-items-center my-3">
+                  <img src="mapImageUrl" className="map-image" />
+                  <span className="map-title h5 ml-3">Ver 3. World map</span>
+                  <span className="date text-white ml-3">2023.05.06</span>
+                  <button className="btn btn-sm ml-3">
+                    <FiShare />
+                  </button>
+                  <button className="btn btn-sm ml-3">
+                    <FiMoreVertical />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -79,42 +91,72 @@ const MapLanding = () => {
           </div>
         </div>
 
-        <div className="liked-template d-flex flex-column">
-          <p>Liked Templates</p>
-          <div className="templates">
-            <div className="template-item d-flex align-items-center">
-              <img
-                src="templateImageUrl"
-                alt="Template"
-                className="template-image"
-              />
-              <span className="heart-icon">❤</span>
-            </div>
-            <div className="template-item d-flex align-items-center">
-              <img
-                src="templateImageUrl"
-                alt="Template"
-                className="template-image"
-              />
-              <span className="heart-icon">❤</span>
-            </div>
-            <div className="template-item d-flex align-items-center">
-              <img
-                src="templateImageUrl"
-                alt="Template"
-                className="template-image"
-              />
-              <span className="heart-icon">❤</span>
-            </div>
-            <div className="template-item d-flex align-items-center">
-              <img
-                src="templateImageUrl"
-                alt="Template"
-                className="template-image"
-              />
-              <span className="heart-icon">❤</span>
-            </div>
-          </div>
+        <div className="liked-template">
+          <p className="text-left">Liked Templates</p>
+          <form action="#" method="post" className="template">
+            <ul className="template-list d-flex flex-wrap justify-content-between">
+              <li className="imgList">
+                <a className="img" href="/">
+                  <img
+                    src="mapImageUrl"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      backgroundColor: "grey",
+                    }}
+                  />
+                </a>
+                <button className="heartIcon">
+                  <AiTwotoneHeart />
+                </button>
+              </li>
+              <li className="imgList">
+                <a className="img" href="/">
+                  <img
+                    src="mapImageUrl"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      backgroundColor: "grey",
+                    }}
+                  />
+                </a>
+                <button className="heartIcon">
+                  <AiTwotoneHeart />
+                </button>
+              </li>
+              <li className="imgList">
+                <a className="img" href="/">
+                  <img
+                    src="mapImageUrl"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      backgroundColor: "grey",
+                    }}
+                  />
+                </a>
+                <button className="heartIcon">
+                  <AiTwotoneHeart />
+                </button>
+              </li>
+              <li className="imgList">
+                <a className="img" href="/">
+                  <img
+                    src="mapImageUrl"
+                    style={{
+                      width: "200px",
+                      height: "200px",
+                      backgroundColor: "grey",
+                    }}
+                  />
+                </a>
+                <button className="heartIcon">
+                  <AiTwotoneHeart />
+                </button>
+              </li>
+            </ul>
+          </form>
         </div>
       </div>
     </div>
