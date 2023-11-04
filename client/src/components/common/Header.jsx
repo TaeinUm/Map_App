@@ -116,7 +116,6 @@ function Header() {
                 <Button
                   size="large"
                   color="inherit"
-                  component={NavLink}
                   onClick={handleLogout}
                   to="/"
                   sx={{
@@ -136,6 +135,7 @@ function Header() {
                 </Button>
                 <Button
                   size="large"
+                  component={NavLink}
                   color="inherit"
                   to="/profile"
                   sx={{

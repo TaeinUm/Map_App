@@ -16,6 +16,7 @@ import Termsconditions from "./components/policy/TermsConditions";
 import Contact from "./components/policy/Contact";
 import MapLanding from "./components/map/MapLanding";
 import Community from "./components/community/Community";
+import Profile from "./components/common/Profile";
 import NotFound from "./components/common/NotFound";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/signin" element={<SignIn />} />
+            <Route path="/profile" element={<Profile />} />
 
             <Route path="/termsconditions" element={<Termsconditions />} />
             <Route path="/privacypolicy" element={<PrivacyPolicy />} />
