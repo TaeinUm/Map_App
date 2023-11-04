@@ -6,7 +6,7 @@ const Home = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setScrollAmount((prev) => (prev - 650) % (650 * 4));
+      setScrollAmount((prev) => (prev - 650) % (650 * 3));
     }, 3000);
 
     return () => clearInterval(interval);
@@ -29,6 +29,7 @@ const Home = () => {
       </section>
 
       <section className="map-vision">
+        <div className="gradient-line"></div>
         <h2 className="line1">MAP Your Vision,</h2>
         <div className="d-flex">
           <div></div>

@@ -39,6 +39,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
   }
   
   .map-vision h2 {
@@ -46,6 +47,7 @@
     margin-bottom: 30px;
     color: #FAFAFA;
     font-weight: bold;
+    z-index: 2;
   }
 
   .map-vision div {
@@ -76,4 +78,13 @@
     font-size: 18px;
     text-align: center;
   }
-  
+
+  .gradient-line {
+    position: absolute;  
+    height: 100%; 
+    width: 15px; 
+    background: linear-gradient(to bottom, #ff6a00, #ee0979);
+    left: 10%;
+    top: 0;
+    z-index: 0;
+}
