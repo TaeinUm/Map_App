@@ -1,165 +1,157 @@
 import React, { useRef, useEffect, useState } from "react";
-import "../../styles/map.css";
 import {
-  IconName,
+  Box,
+  Typography,
+  Button,
+  IconButton,
+  Container,
+  Grid,
+  Paper,
+  Link,
+  Input,
+} from "@mui/material";
+import { FiSearch, FiShare, FiMoreVertical } from "react-icons/fi";
+import {
   AiOutlineArrowLeft,
   AiOutlineArrowRight,
-  AiOutlineHeart,
   AiTwotoneHeart,
 } from "react-icons/ai";
 
-import { FiShare, FiMoreVertical, FiSearch } from "react-icons/fi";
-
 const MapLanding = () => {
   return (
-    <div className="landing-main d-flex flex-column align-items-center">
-      <div className="landingtop d-flex justify-content-between">
-        <p>My Graphics</p>
+    <Container maxWidth="xl">
+      <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ color: "#FAFAFA", fontWeight: "bold" }}
+        >
+          My Graphics
+        </Typography>
+        <Box>
+          <Button
+            variant="contained"
+            sx={{
+              mx: 1,
+              backgroundColor: "#FAFAFA",
+              color: "black",
+              width: "170px",
+              height: "40px",
+              marginRight: "20px",
+            }}
+          >
+            Create New
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              mx: 1,
+              backgroundColor: "#FAFAFA",
+              color: "black",
+              width: "170px",
+              height: "40px",
+            }}
+          >
+            Load File
+          </Button>
+        </Box>
+      </Box>
 
-        <div className="export-btn d-flex align-items-center">
-          <button className="btn-first">Create New</button>
-          <button>Load File</button>
-        </div>
-      </div>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={7}>
+          <Paper sx={{ p: 2 }}>
+            {/* Search Bar */}
+            <Box sx={{ display: "flex" }}>
+              <Input fullWidth placeholder="Search maps" />
+              <IconButton sx={{ p: "10px" }} aria-label="search">
+                <FiSearch />
+              </IconButton>
+            </Box>
+            {/* Maps List */}
+            <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
+              <Box sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }} />
+              <Typography variant="h5" sx={{ flexGrow: 1 }}>
+                Ver 3. World map
+              </Typography>
+              <Typography variant="body2" sx={{ mx: 2 }}>
+                2023.05.06
+              </Typography>
+              <IconButton size="small">
+                <FiShare />
+              </IconButton>
+              <IconButton size="small">
+                <FiMoreVertical />
+              </IconButton>
+            </Box>
+            {/* Navigation Arrows */}
+            <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
+              <IconButton>
+                <AiOutlineArrowLeft />
+              </IconButton>
+              <IconButton>
+                <AiOutlineArrowRight />
+              </IconButton>
+            </Box>
+          </Paper>
+        </Grid>
 
-      <div className="map-down d-flex">
-        <div className="my-maps d-flex flex-column align-items-center justify-content-center">
-          <div className="d-flex">
-            <input />
-            <button className="search-icon">
-              <FiSearch />
-            </button>
-          </div>
-          <div className="map-item">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="d-flex justify-content-between align-items-center my-3">
-                  <img src="mapImageUrl" className="map-image" />
-                  <span className="map-title h5 ml-3">Ver 3. World map</span>
-                  <span className="date text-white ml-3">2023.05.06</span>
-                  <button className="btn btn-sm ml-3">
-                    <FiShare />
-                  </button>
-                  <button className="btn btn-sm ml-3">
-                    <FiMoreVertical />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="map-item">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="d-flex justify-content-between align-items-center my-3">
-                  <img src="mapImageUrl" className="map-image" />
-                  <span className="map-title h5 ml-3">Ver 3. World map</span>
-                  <span className="date text-white ml-3">2023.05.06</span>
-                  <button className="btn btn-sm ml-3">
-                    <FiShare />
-                  </button>
-                  <button className="btn btn-sm ml-3">
-                    <FiMoreVertical />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="map-item">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="d-flex justify-content-between align-items-center my-3">
-                  <img src="mapImageUrl" className="map-image" />
-                  <span className="map-title h5 ml-3">Ver 3. World map</span>
-                  <span className="date text-white ml-3">2023.05.06</span>
-                  <button className="btn btn-sm ml-3">
-                    <FiShare />
-                  </button>
-                  <button className="btn btn-sm ml-3">
-                    <FiMoreVertical />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="leftRight d-flex align-items-center justify-content-center">
-            <button>
-              <AiOutlineArrowLeft />
-            </button>
-            <button>
-              <AiOutlineArrowRight />
-            </button>
-          </div>
-        </div>
-
-        <div className="liked-template">
-          <p className="text-left">Liked Templates</p>
-          <form action="#" method="post" className="template">
-            <ul className="template-list d-flex flex-wrap justify-content-between">
-              <li className="imgList">
-                <a className="img" href="/">
-                  <img
-                    src="mapImageUrl"
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      backgroundColor: "grey",
+        {/* Liked Templates */}
+        <Grid item xs={12} md={5}>
+          <Paper sx={{ p: 2, height: "100%", background: "none" }}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                color: "#FAFAFA",
+                fontWeight: "bold",
+                textAlign: "left",
+                alignItems: "center",
+              }}
+            >
+              Liked Templates
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "space-between",
+              }}
+            >
+              {[...Array(4)].map((_, index) => (
+                <Box
+                  key={index}
+                  sx={{ mb: 2, position: "relative", width: "48%" }}
+                >
+                  <Link href="/" underline="none">
+                    <Box
+                      component="img"
+                      src="mapImageUrl"
+                      sx={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                        bgcolor: "grey",
+                      }}
+                    />
+                  </Link>
+                  <IconButton
+                    sx={{
+                      position: "absolute",
+                      top: 8,
+                      right: 8,
+                      color: "red",
                     }}
-                  />
-                </a>
-                <button className="heartIcon">
-                  <AiTwotoneHeart />
-                </button>
-              </li>
-              <li className="imgList">
-                <a className="img" href="/">
-                  <img
-                    src="mapImageUrl"
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      backgroundColor: "grey",
-                    }}
-                  />
-                </a>
-                <button className="heartIcon">
-                  <AiTwotoneHeart />
-                </button>
-              </li>
-              <li className="imgList">
-                <a className="img" href="/">
-                  <img
-                    src="mapImageUrl"
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      backgroundColor: "grey",
-                    }}
-                  />
-                </a>
-                <button className="heartIcon">
-                  <AiTwotoneHeart />
-                </button>
-              </li>
-              <li className="imgList">
-                <a className="img" href="/">
-                  <img
-                    src="mapImageUrl"
-                    style={{
-                      width: "200px",
-                      height: "200px",
-                      backgroundColor: "grey",
-                    }}
-                  />
-                </a>
-                <button className="heartIcon">
-                  <AiTwotoneHeart />
-                </button>
-              </li>
-            </ul>
-          </form>
-        </div>
-      </div>
-    </div>
+                    aria-label="like"
+                  >
+                    <AiTwotoneHeart />
+                  </IconButton>
+                </Box>
+              ))}
+            </Box>
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
   );
 };
 
