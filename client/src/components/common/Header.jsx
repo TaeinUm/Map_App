@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 import { Link, NavLink } from "react-router-dom";
 import {
   AppBar,
@@ -20,7 +21,10 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 function Header() {
+  const { isAuthenticated, handleLogin, handleLogout } =
+    useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
+
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
@@ -107,29 +111,75 @@ function Header() {
 
         {isDesktop && (
           <Box sx={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
-            {authLinks.map(({ title, path }) => (
-              <Button
-                key={title}
-                size="large"
-                color="inherit"
-                component={NavLink}
-                to={path}
-                sx={{
-                  width: 100,
-                  height: 40,
-                  backgroundColor: "#FAFAFA",
-                  color: "#282c34",
-                  border: "none",
-                  marginRight: "20px",
-                  borderRadius: "5px",
-                  "&:hover": {
-                    backgroundColor: "primary.light",
-                  },
-                }}
-              >
-                {title}
-              </Button>
-            ))}
+            {isAuthenticated ? (
+              <>
+                <Button
+                  size="large"
+                  color="inherit"
+                  component={NavLink}
+                  onClick={handleLogout}
+                  sx={{
+                    width: 100,
+                    height: 40,
+                    backgroundColor: "#FAFAFA",
+                    color: "#282c34",
+                    border: "none",
+                    marginRight: "20px",
+                    borderRadius: "5px",
+                    "&:hover": {
+                      backgroundColor: "primary.light",
+                    },
+                  }}
+                >
+                  Logout
+                </Button>
+                <Button
+                  size="large"
+                  color="inherit"
+                  to="/profile"
+                  sx={{
+                    width: 100,
+                    height: 40,
+                    backgroundColor: "#FAFAFA",
+                    color: "#282c34",
+                    border: "none",
+                    marginRight: "20px",
+                    borderRadius: "5px",
+                    "&:hover": {
+                      backgroundColor: "primary.light",
+                    },
+                  }}
+                >
+                  Profile
+                </Button>
+              </>
+            ) : (
+              <>
+                {authLinks.map(({ title, path }) => (
+                  <Button
+                    key={title}
+                    size="large"
+                    color="inherit"
+                    component={NavLink}
+                    to={path}
+                    sx={{
+                      width: 100,
+                      height: 40,
+                      backgroundColor: "#FAFAFA",
+                      color: "#282c34",
+                      border: "none",
+                      marginRight: "20px",
+                      borderRadius: "5px",
+                      "&:hover": {
+                        backgroundColor: "primary.light",
+                      },
+                    }}
+                  >
+                    {title}
+                  </Button>
+                ))}
+              </>
+            )}
           </Box>
         )}
 

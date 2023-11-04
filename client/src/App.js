@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+/****         Context Provider     ****/
+import { AuthProvider } from "./contexts/AuthContext";
+
+/****         CSS & Components     ****/
 import "./styles/App.css";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
@@ -18,20 +22,22 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/map" element={<MapLanding />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/signin" element={<SignIn />} />
+        <AuthProvider>
+          <Header />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/map" element={<MapLanding />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signin" element={<SignIn />} />
 
-          <Route path="/termsconditions" element={<Termsconditions />} />
-          <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-          <Route path="/contact" element={<Contact />} />
+            <Route path="/termsconditions" element={<Termsconditions />} />
+            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+            <Route path="/contact" element={<Contact />} />
 
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
         <Footer />
       </BrowserRouter>
     </div>
