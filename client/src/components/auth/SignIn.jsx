@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../contexts/AuthContext";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
 
 function SignIn() {
+  const { handleLogin } = useContext(AuthContext);
+
   return (
     <Box
       display="flex"
@@ -52,6 +55,7 @@ function SignIn() {
               backgroundColor: "black",
               height: "50px",
             }}
+            onClick={handleLogin}
           >
             Sign In
           </Button>
