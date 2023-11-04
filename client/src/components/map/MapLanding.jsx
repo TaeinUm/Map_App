@@ -37,7 +37,7 @@ const MapLanding = () => {
   return (
     <div>
       {isDesktop && (
-        <Container maxWidth="xl">
+        <Container maxWidth="xl" sx={{ height: "90vh" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
             <Typography
               variant="h4"
