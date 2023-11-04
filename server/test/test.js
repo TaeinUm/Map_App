@@ -16,7 +16,9 @@ describe('GET /', function() {
   });
 });
 
-// Optional: Close the mongoose connection after the tests are done
+// Close the mongoose connection after the tests are done
 after(function(done) {
-  mongoose.disconnect(done);
+  mongoose.disconnect()
+    .then(() => done()) // Call done() when the disconnect is successful
+    .catch(done); // Pass any errors to done
 });
