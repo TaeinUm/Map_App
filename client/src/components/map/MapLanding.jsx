@@ -9,6 +9,7 @@ import {
   Paper,
   Link,
   Input,
+  Modal,
 } from "@mui/material";
 import { FiSearch, FiShare, FiMoreVertical } from "react-icons/fi";
 import {
@@ -16,8 +17,18 @@ import {
   AiOutlineArrowRight,
   AiTwotoneHeart,
 } from "react-icons/ai";
+import MapGraphics from "./MapGraphics";
+import LoadFile from "./LoadFile";
 
 const MapLanding = () => {
+  const [openGraphic, setOpenGraphic] = useState(false);
+  const handleGraphicOpen = () => setOpenGraphic(true);
+  const handleGraphicClose = () => setOpenGraphic(false);
+
+  const [openFile, setOpenFile] = useState(false);
+  const handleFileOpen = () => setOpenFile(true);
+  const handleFileClose = () => setOpenFile(false);
+
   return (
     <Container maxWidth="xl">
       <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
@@ -30,6 +41,7 @@ const MapLanding = () => {
         </Typography>
         <Box>
           <Button
+            onClick={handleGraphicOpen}
             variant="contained"
             sx={{
               mx: 1,
@@ -42,7 +54,11 @@ const MapLanding = () => {
           >
             Create New
           </Button>
+          <Modal open={openGraphic} onClose={handleGraphicClose}>
+            <MapGraphics open={openGraphic} />
+          </Modal>
           <Button
+            onClick={handleFileOpen}
             variant="contained"
             sx={{
               mx: 1,
@@ -54,6 +70,9 @@ const MapLanding = () => {
           >
             Load File
           </Button>
+          <Modal open={openFile} onClose={handleFileClose}>
+            <LoadFile open={openFile} />
+          </Modal>
         </Box>
       </Box>
 
