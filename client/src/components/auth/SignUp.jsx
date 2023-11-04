@@ -51,7 +51,7 @@ function SignUp() {
         flex="1"
         bgcolor="white"
       >
-        <Typography variant="h3" gutterBottom>
+        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
           TerraCanvas
         </Typography>
         <Box width="70%">
