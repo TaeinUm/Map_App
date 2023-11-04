@@ -1,135 +1,168 @@
-import React, { useState } from "react";
-import "../../styles/App.css";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Divider,
+  useTheme,
+  useMediaQuery,
+  Hidden,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 
 function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
   const handleMenuClick = () => {
-    setIsOpen((prevState) => !prevState);
+    setIsOpen(!isOpen);
   };
 
+  const navLinks = [
+    { title: "Home", path: "/" },
+    { title: "Map", path: "/map" },
+    { title: "Community", path: "/community" },
+  ];
+
+  const sideLinks = [
+    { title: "Home", path: "/" },
+    { title: "Map", path: "/map" },
+    { title: "Community", path: "/community" },
+    { title: "Terms and Conditions", path: "termsConditions" },
+    { title: "Privacy Policy", path: "privacyPolicy" },
+    { title: "Contact", path: "contact" },
+  ];
+
+  const authLinks = [
+    { title: "Sign In", path: "/signin" },
+    { title: "Sign Up", path: "/signup" },
+  ];
+
   return (
-    <header className="hdr d-flex justify-content-between align-items-center">
-      <div
-        type="button"
-        className="logo"
-        onClick={() => (window.location.href = "/")}
+    <AppBar
+      position="static"
+      height="100px"
+      sx={{ background: "linear-gradient(#465065, #282c34)", color: "#FAFAFA" }}
+    >
+      <Toolbar
+        sx={{
+          alignContent: "center",
+          justifyContent: "space-between",
+          padding: "1rem 2rem",
+        }}
       >
-        TERRACANVAS
-      </div>
-      <div
-        className={`hamburger-menu ${isOpen ? "rotate" : ""}`}
-        onClick={() => handleMenuClick()}
-      >
-        ☰
-      </div>
-      {isOpen && (
-        <div className="mobile-nav active">
-          <NavLink
-            to="/"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
+        <Box sx={{ display: "flex", flex: 1 }}>
+          <Typography
+            sx={{
+              display: "flex",
+              cursor: "pointer",
+              fontSize: "1.5rem",
+              flexGrow: 1,
+            }}
+            onClick={() => (window.location.href = "/")}
           >
-            Home
-          </NavLink>
-          <NavLink
-            to="/map"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
+            TERRACANVAS
+          </Typography>
+        </Box>
+
+        <Hidden mdUp>
+          <IconButton
+            edge="end"
+            color="inherit"
+            aria-label="menu"
+            onClick={handleMenuClick}
           >
-            Map
-          </NavLink>
-          <NavLink
-            to="/community"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
+            <MenuIcon />
+          </IconButton>
+        </Hidden>
+
+        {isDesktop && (
+          <Box sx={{ display: "flex", flex: 2, justifyContent: "center" }}>
+            {navLinks.map(({ title, path }) => (
+              <Button
+                key={title}
+                size="large"
+                color="inherit"
+                component={NavLink}
+                to={path}
+                style={({ isActive }) =>
+                  isActive ? { textDecoration: "underline" } : undefined
+                }
+              >
+                {title}
+              </Button>
+            ))}
+          </Box>
+        )}
+
+        {isDesktop && (
+          <Box sx={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
+            {authLinks.map(({ title, path }) => (
+              <Button
+                key={title}
+                size="large"
+                color="inherit"
+                component={NavLink}
+                to={path}
+                sx={{
+                  width: 100,
+                  height: 40,
+                  backgroundColor: "#FAFAFA",
+                  color: "#282c34",
+                  border: "none",
+                  marginRight: "20px",
+                  borderRadius: "5px",
+                  "&:hover": {
+                    backgroundColor: "primary.light",
+                  },
+                }}
+              >
+                {title}
+              </Button>
+            ))}
+          </Box>
+        )}
+
+        {!isDesktop && (
+          <Drawer
+            width="200px"
+            anchor="right"
+            open={isOpen}
+            onClose={handleMenuClick}
           >
-            Community
-          </NavLink>
-          <NavLink
-            to="/termsconditions"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Terms and Conditions
-          </NavLink>
-          <NavLink
-            to="/privacypolicy"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Privacy Policy
-          </NavLink>
-          <NavLink
-            to="/contact"
-            className={({ isActive, isPending }) =>
-              isPending ? "pending" : isActive ? "active" : ""
-            }
-          >
-            Contact
-          </NavLink>
-          <div className="auth-buttons">
-            <NavLink
-              to="/signin"
-              className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "active" : ""
-              }
+            <List
+              sw={{
+                "@media (max-width: 768px)": {
+                  display: "none",
+                },
+              }}
             >
-              Sign In
-            </NavLink>
-            <div>|</div>
-            <NavLink
-              to="/signup"
-              className={({ isActive, isPending }) =>
-                isPending ? "pending" : isActive ? "active" : ""
-              }
-            >
-              Sign Up
-            </NavLink>
-          </div>
-        </div>
-      )}
-      <nav className="navbar d-flex justify-content-between">
-        <NavLink
-          to="/"
-          className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
-          HOME
-        </NavLink>
-        <NavLink
-          to="/map"
-          className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
-          MAP
-        </NavLink>
-        <NavLink
-          to="/community"
-          className={({ isActive, isPending }) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
-          COMMUNITY
-        </NavLink>
-      </nav>
-      <div className="user-section d-flex align-items-center">
-        <button>
-          <Link to="/signin">Sign In</Link>
-        </button>
-        <button>
-          <Link to="/signup">Sign Up</Link>
-        </button>
-      </div>
-    </header>
+              {sideLinks.map(({ title, path }) => (
+                <ListItem button key={title} component={Link} to={path}>
+                  <ListItemButton primary={title} />
+                </ListItem>
+              ))}
+              <Divider />
+              {authLinks.map(({ title, path }) => (
+                <ListItem button key={title} component={Link} to={path}>
+                  <ListItemText primary={title} />
+                </ListItem>
+              ))}
+            </List>
+          </Drawer>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }
 
