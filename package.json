@@ -6,7 +6,7 @@
     "node": "20.2.0"
   },
   "scripts": {
-    "start": "node server/index.js",
+    "start": "node index.js",
     "start:client": "cd client && npm start",
     "start:server": "cd server && node index.js",
     "install:client": "cd client && npm install",
