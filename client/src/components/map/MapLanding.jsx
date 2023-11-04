@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import {
   Box,
   Typography,
@@ -8,21 +7,24 @@ import {
   Container,
   Grid,
   Paper,
-  Input,
   useMediaQuery,
   useTheme,
   Modal,
 } from "@mui/material";
-import { FiSearch, FiShare, FiMoreVertical } from "react-icons/fi";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineArrowRight,
-  AiTwotoneHeart,
-} from "react-icons/ai";
-import MapGraphics from "./MapGraphics";
-import LoadFile from "./LoadFile";
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 
-const MapLanding = () => {
+/****       Modal     ****/
+import MapGraphics from "./modal/MapGraphics";
+import LoadFile from "./modal/LoadFile";
+
+/****       Components     ****/
+import MapList from "./landing/MapList";
+import LikedTemplates from "./landing/LikedTemplate";
+import MapMobile from "./landing/MapMobile";
+import SearchBar from "./landing/SearchBar";
+
+function MapLanding() {
+  /****       useState, handler for modals     ****/
   const [openGraphic, setOpenGraphic] = useState(false);
   const handleGraphicOpen = () => setOpenGraphic(true);
   const handleGraphicClose = () => setOpenGraphic(false);
@@ -31,14 +33,17 @@ const MapLanding = () => {
   const handleFileOpen = () => setOpenFile(true);
   const handleFileClose = () => setOpenFile(false);
 
+  /****       useTheme, useMediaQuery     ****/
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
+  /****       return     ****/
   return (
     <div>
       {isDesktop && (
         <Container maxWidth="xl" sx={{ height: "90vh" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
+            {/****       My Graphics Title     ****/}
             <Typography
               variant="h4"
               gutterBottom
@@ -47,6 +52,7 @@ const MapLanding = () => {
               My Graphics
             </Typography>
             <Box>
+              {/****       Buttons for Modals    ****/}
               <Button
                 onClick={handleGraphicOpen}
                 variant="contained"
@@ -83,32 +89,14 @@ const MapLanding = () => {
             </Box>
           </Box>
 
+          {/****       My graphics components     ****/}
           <Grid container spacing={2}>
             <Grid item xs={12} md={7}>
               <Paper sx={{ p: 2 }}>
                 {/* Search Bar */}
-                <Box sx={{ display: "flex" }}>
-                  <Input fullWidth placeholder="Search maps" />
-                  <IconButton sx={{ p: "10px" }} aria-label="search">
-                    <FiSearch />
-                  </IconButton>
-                </Box>
+                <SearchBar />
                 {/* Maps List */}
-                <Box sx={{ display: "flex", alignItems: "center", my: 3 }}>
-                  <Box sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }} />
-                  <Typography variant="h5" sx={{ flexGrow: 1 }}>
-                    Ver 3. World map
-                  </Typography>
-                  <Typography variant="body2" sx={{ mx: 2 }}>
-                    2023.05.06
-                  </Typography>
-                  <IconButton size="small">
-                    <FiShare />
-                  </IconButton>
-                  <IconButton size="small">
-                    <FiMoreVertical />
-                  </IconButton>
-                </Box>
+                <MapList />
                 {/* Navigation Arrows */}
                 <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
                   <IconButton>
@@ -136,81 +124,17 @@ const MapLanding = () => {
                 >
                   Liked Templates
                 </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  {[...Array(4)].map((_, index) => (
-                    <Box
-                      key={index}
-                      sx={{ mb: 2, position: "relative", width: "48%" }}
-                    >
-                      <Link href="/" underline="none">
-                        <Box
-                          component="img"
-                          src="mapImageUrl"
-                          sx={{
-                            width: "100%",
-                            height: "200px",
-                            objectFit: "cover",
-                            bgcolor: "grey",
-                          }}
-                        />
-                      </Link>
-                      <IconButton
-                        sx={{
-                          position: "absolute",
-                          top: 8,
-                          right: 8,
-                          color: "red",
-                        }}
-                        aria-label="like"
-                      >
-                        <AiTwotoneHeart />
-                      </IconButton>
-                    </Box>
-                  ))}
-                </Box>
+                <LikedTemplates />
               </Paper>
             </Grid>
           </Grid>
         </Container>
       )}
 
-      {!isDesktop && (
-        <Box
-          sx={{
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100vh",
-            textAlign: "center",
-            p: 2,
-          }}
-        >
-          <Typography
-            variant="h5"
-            gutterBottom
-            sx={{ fontWeight: "bold", marginBottom: "40px" }}
-          >
-            Head to your nearest desktop computer
-          </Typography>
-          <Typography variant="subtitle1" sx={{ mb: 2, marginBottom: "30px" }}>
-            Sorry, TerraCanvas's style interface isn't quite ready for mobile
-            devices like yours.
-          </Typography>
-          <Button variant="contained" color="primary" component={Link} to="/">
-            Home
-          </Button>
-        </Box>
-      )}
+      {/****        mobile view     ****/}
+      {!isDesktop && <MapMobile />}
     </div>
   );
-};
+}
 
 export default MapLanding;
