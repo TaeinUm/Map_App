@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "CSE_416",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "mocha"
   },
