@@ -21,8 +21,7 @@ import {
 import MenuIcon from "@mui/icons-material/Menu";
 
 function Header() {
-  const { isAuthenticated, handleLogin, handleLogout } =
-    useContext(AuthContext);
+  const { isAuthenticated, handleLogout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const theme = useTheme();
