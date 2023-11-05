@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
+import PasswordReset from "./modal/PasswordReset";
 
 function SignIn() {
   /***        useContext for handle Login function  ***/
@@ -13,6 +14,15 @@ function SignIn() {
   const [passwordError, setPasswordError] = useState(false);
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const modalOpen = () => {
+    setIsModalOpen(true);
+  };
+
+  const modalClose = () => {
+    setIsModalOpen(false);
+  };
 
   /**       onChange handler for email      **/
   const handleEmailChange = (event) => {
@@ -144,7 +154,11 @@ function SignIn() {
           Don't have an account? <Link href="/signup">Sign up</Link>
         </Typography>
         <Typography variant="body1">
-          Do you forget the password? <Link href="/">Forgot?</Link>
+          Do you forget the password?{" "}
+          <Button onClick={modalOpen} sx={{ textDecoration: "underline" }}>
+            Forgot?
+          </Button>
+          <PasswordReset open={isModalOpen} handleClose={modalClose} />
         </Typography>
       </Box>
       {/**        Side Image section        **/}
