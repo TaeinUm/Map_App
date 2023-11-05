@@ -200,7 +200,7 @@ function Header() {
             >
               {sideLinks.map(({ title, path }) => (
                 <ListItem button key={title} component={Link} to={path}>
-                  <ListItemButton primary={title} />
+                  <ListItemText primary={title} />
                 </ListItem>
               ))}
               <Divider />
