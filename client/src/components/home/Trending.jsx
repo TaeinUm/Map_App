@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper } from "@mui/material";
+import { getTop5Trending } from "../../api/graphicsAPI";
 
 function Trending() {
   /****   useState Section  ****/
   const [scrollAmount, setScrollAmount] = useState(0);
+  const [topGraphics, setTopGraphics] = useState([]);
 
   /****   useEffect Section  ****/
   useEffect(() => {
+    const fetchGraphics = async () => {
+        try {
+          const data = await getTop5Trending();
+          setTopGraphics(data);
+        } catch (error) {
+          console.error('Error fetching top graphics:', error);
+        }
+      };
+  
+      fetchGraphics();
+
     const interval = setInterval(() => {
       setScrollAmount((prev) => (prev - 650) % (650 * 3));
     }, 3000);
