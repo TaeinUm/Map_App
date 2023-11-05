@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
 
 function PasswordReset({ open, handleClose }) {
+  /***       useState section         ***/
   const [resetEmail, setResetEmail] = useState("");
 
+  /***       handle password reset function        ***/
   const handlePasswordResetRequest = async () => {
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail);
 
@@ -17,6 +19,7 @@ function PasswordReset({ open, handleClose }) {
     return;
   };
 
+  /***       modal style       ***/
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -30,6 +33,7 @@ function PasswordReset({ open, handleClose }) {
     borderRadius: "10px",
   };
 
+  /****       return      ****/
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={modalStyle}>
@@ -37,6 +41,7 @@ function PasswordReset({ open, handleClose }) {
           Reset Your Password
         </Typography>
         <Box id="password-reset-modal-description" sx={{ mt: 2 }}>
+          {/**    text field for email address    **/}
           <TextField
             fullWidth
             label="Email Address"
@@ -44,6 +49,7 @@ function PasswordReset({ open, handleClose }) {
             value={resetEmail}
             onChange={(e) => setResetEmail(e.target.value)}
           />
+          {/**      request reset button    **/}
           <Button
             fullWidth
             variant="contained"
