@@ -48,6 +48,7 @@ function Trending() {
           Trending Map Graphics
         </Typography>
         <Box
+          data-cy="trending-container"
           sx={{
             display: "flex",
             width: "3250px",
@@ -62,6 +63,7 @@ function Trending() {
             <Paper
               key={index}
               elevation={4}
+              data-cy="trending-graphic"
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
             >
               <img src={graphic.imageUrl} alt={graphic.title} />
@@ -73,6 +75,7 @@ function Trending() {
               <Paper
                 key={topGraphics.length + index}
                 elevation={4}
+                data-cy="trending-graphic"
                 sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
               >
                 img

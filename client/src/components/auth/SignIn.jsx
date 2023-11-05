@@ -110,6 +110,7 @@ function SignIn() {
             error={emailError}
             helperText={emailHelperText}
             fullWidth
+            name="email"
             label="Email"
             variant="outlined"
             margin="normal"
@@ -122,6 +123,7 @@ function SignIn() {
             error={passwordError}
             helperText={passwordHelperText}
             fullWidth
+            name="password"
             label="Password"
             variant="outlined"
             margin="normal"
@@ -155,7 +157,7 @@ function SignIn() {
         </Typography>
         <Typography variant="body1">
           Do you forget the password?{" "}
-          <Button onClick={modalOpen} sx={{ textDecoration: "underline" }}>
+          <Button type="button" onClick={modalOpen} sx={{ textDecoration: "underline" }}>
             Forgot?
           </Button>
           <PasswordReset open={isModalOpen} handleClose={modalClose} />

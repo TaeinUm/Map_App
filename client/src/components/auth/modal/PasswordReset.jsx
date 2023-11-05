@@ -44,6 +44,7 @@ function PasswordReset({ open, handleClose }) {
           {/**    text field for email address    **/}
           <TextField
             fullWidth
+            name="resetEmail"
             label="Email Address"
             variant="outlined"
             value={resetEmail}

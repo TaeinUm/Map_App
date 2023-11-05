@@ -68,13 +68,14 @@ function Instruction() {
             {/* Instructions and Images details */}
             <Box
               component="img"
+              data-cy="instruction-image"
               src="path-to-image1.jpg"
               alt="Description 1"
               sx={{ width: "100%", maxWidth: "300px" }}
             />
-            <Typography>Instructions 1</Typography>
-            <Typography>Instructions 2</Typography>
-            <Typography>Instructions 3</Typography>
+            <Typography data-cy="instruction-text">Instructions 1</Typography>
+            <Typography data-cy="instruction-text">Instructions 2</Typography>
+            <Typography data-cy="instruction-text">Instructions 3</Typography>
           </Box>
           <Box
             sx={{
@@ -87,12 +88,13 @@ function Instruction() {
           >
             <Box
               component="img"
+              data-cy="instruction-image"
               src="path-to-image2.jpg"
               alt="Description 2"
               sx={{ width: "100%", maxWidth: "300px" }}
             />
-            <Typography>Instructions 4</Typography>
-            <Typography>Instructions 5</Typography>
+            <Typography data-cy="instruction-text">Instructions 4</Typography>
+            <Typography data-cy="instruction-text">Instructions 5</Typography>
           </Box>
         </Box>
       </Box>
