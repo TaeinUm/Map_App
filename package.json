@@ -6,7 +6,7 @@
     "node": "20.2.0"
   },
   "scripts": {
-    "start": "node server.js",
+    "start": "node server/server.js",
     "start:client": "cd client && npm start",
     "start:server": "cd server && node server.js",
     "install:client": "cd client && npm install",
