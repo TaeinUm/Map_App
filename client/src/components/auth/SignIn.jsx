@@ -3,16 +3,33 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
 
 function SignIn() {
+  /***        useContext for handle Login function  ***/
   const { handleLogin } = useContext(AuthContext);
+
+  /****         useState section               ****/
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
 
+  /**       onChange handler for email      **/
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+    if (emailError) {
+      setEmailError(false);
+      setEmailHelperText("");
+    }
   };
 
+  /**       onChange handler for pw      **/
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+    if (passwordError) {
+      setPasswordError(false);
+      setPasswordHelperText("");
+    }
   };
 
   const handleLoginClick = async () => {
@@ -24,18 +41,25 @@ function SignIn() {
     const passwordPattern = /^(?=.*[!@#$%^&*]).{8,}$/;
     const isValidPassword = passwordPattern.test(password);
 
+    /**  If email is not valid, textField alert error **/
     if (!isValidEmail) {
+      setEmailError(true);
+      setEmailHelperText("Invalid email address");
       console.error("Not a valid email address");
-      alert("Please enter the valid email address.")
-      return;
-    }
-  
-    if (!isValidPassword) {
-      console.error("Password must be at least 8 characters long and include at least one special character");
-      alert("Please enter the valid password. At least 8 characters long and include at least one special character.")
       return;
     }
 
+    /**  If pw is not valid, textField alert error **/
+    if (!isValidPassword) {
+      setPasswordError(true);
+      setPasswordHelperText("8 chars & include a special char");
+      console.error(
+        "Password must be at least 8 characters long and include at least one special character"
+      );
+      return;
+    }
+
+    /**  If both valid, attempt login **/
     if (email && password) {
       handleLogin(email, password);
     } else {
@@ -43,6 +67,7 @@ function SignIn() {
     }
   };
 
+  /**     return      **/
   return (
     <Box
       display="flex"
@@ -50,6 +75,7 @@ function SignIn() {
       alignItems="center"
       height="100vh"
     >
+      {/**        sign in form        **/}
       <Box
         className="sign-form"
         height="100vh"
@@ -69,7 +95,10 @@ function SignIn() {
           TerraCanvas
         </Typography>
         <Box width="70%" marginBottom={2}>
+          {/**        textfield for email        **/}
           <TextField
+            error={emailError}
+            helperText={emailHelperText}
             fullWidth
             label="Email"
             variant="outlined"
@@ -78,7 +107,10 @@ function SignIn() {
             onChange={handleEmailChange}
             sx={{ marginBottom: "20px" }}
           />
+          {/**        textfield for pw        **/}
           <TextField
+            error={passwordError}
+            helperText={passwordHelperText}
             fullWidth
             label="Password"
             variant="outlined"
@@ -88,6 +120,7 @@ function SignIn() {
             onChange={handlePasswordChange}
             sx={{ marginBottom: "20px" }}
           />
+          {/**        Login button        **/}
           <Button
             fullWidth
             variant="contained"
@@ -99,7 +132,6 @@ function SignIn() {
             }}
             onClick={handleLoginClick}
           >
-            {/** replace this to handleLoginClick!!!!!! */}
             Sign In
           </Button>
         </Box>
@@ -115,6 +147,7 @@ function SignIn() {
           Do you forget the password? <Link href="/">Forgot?</Link>
         </Typography>
       </Box>
+      {/**        Side Image section        **/}
       <Box
         display="flex"
         justifyContent="center"
