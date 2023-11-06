@@ -73,7 +73,7 @@ app.get('/api/top5graphics', async (req, res) => {
 const getDataFromTestCollection = async () => {
   try {
     const data = await TestModel.find({});
-    console.log('성공적으로 데이터를 가져왔습니다.'); // Log success message in Korean
+    console.log('Successfully Loaded'); // Log success message in Korean
     return data;
   } catch (error) {
     console.error('Error fetching data from test collection:', error);
@@ -100,7 +100,7 @@ app.get('/api/test-data', async (req, res) => {
     const testData = await getDataFromTestCollection();
     // Send a success message along with the data
     res.json({
-      message: '성공적으로 데이터를 가져왔습니다.', // Success message in Korean
+      message: 'Successfully Loaded', // Success message in Korean
       data: testData
     });
   } catch (error) {

@@ -45,7 +45,7 @@
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.x.x",
+    "@babel/plugin-proposal-private-property-in-object": "^7.x",
     "chai": "^4.3.10",
     "cypress": "^13.4.0",
     "mocha": "^10.2.0",
