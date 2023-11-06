@@ -24,5 +24,5 @@ jobs:
     - name: Install client dependencies
       run: cd client && npm install
       
-    - name: Run Cypress tests
+    - name: Run Cypress tests #with deployed address
       run: npm run cypress:run      
