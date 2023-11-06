@@ -20,8 +20,9 @@ jobs:
     - name: Install dependencies
       run: cd client && npm install
 
-    - name: Build
+    - name: Run build
       run: npm run build
+      working-directory: ./client
 
         
     - name: Deploy to Heroku
