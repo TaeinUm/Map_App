@@ -27,4 +27,6 @@ jobs:
         npm ci
 
     - name: Run Cypress tests
-      run: npm run cypress:run
+      run: |
+        cd client
+        npm run cypress:run
