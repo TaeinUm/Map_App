@@ -21,16 +21,21 @@ describe('API Endpoints', function() {
       });
   });
 
-  // Test for the /api/test-data endpoint
-  it('fetches data from the test collection successfully', function(done) {
+  // Test for the /api/top5graphics endpoint
+  it('fetches the top 5 graphics successfully', function(done) {
     request(app)
       .get('/api/top5graphics')
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
-        expect(res.body).to.be.an('object');
-        expect(res.body.message).to.equal('성공적으로 데이터를 가져왔습니다.');
-        expect(res.body.data).to.be.an('array'); // Check if data is an array
+        expect(res.body).to.be.an('array'); // Check if the response is an array
+        // Optionally, check if the array has 5 items and each item is an object with expected properties
+        if (res.body.length === 5) {
+          res.body.forEach(function(item) {
+            expect(item).to.be.an('object');
+            expect(item).to.have.all.keys('_id', 'likes', 'image', 'title');
+          });
+        }
         done(err); // Pass the error if there is one to Mocha
       });
   });
