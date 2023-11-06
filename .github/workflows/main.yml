@@ -20,5 +20,8 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
+    - name: Print npm log
+      if: failure() # This step will only run if the previous step fails
+      run: cat /home/runner/.npm/_logs/*-debug.log
     - run: npm ci
     - run: npm test
