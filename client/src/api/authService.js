@@ -20,9 +20,8 @@ const logout = async () => {
   return response.data;
 };
 
-const register = async (name, userName, email, password) => {
+const register = async (userName, email, password) => {
   const response = await axios.post(`${BASE_URL}/auth/register`, {
-    name,
     userName,
     email,
     password,

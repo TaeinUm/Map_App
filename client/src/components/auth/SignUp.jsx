@@ -14,7 +14,6 @@ import { register } from "../../api/authService";
 function SignUp() {
   /****       useState section      ****/
   const [name, setName] = useState("");
-  const [nick, setNick] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agreement, setAgreement] = useState(false);
@@ -28,11 +27,6 @@ function SignUp() {
   /****       onChange handler for name      ****/
   const handleNameChange = (event) => {
     setName(event.target.value);
-  };
-
-  /****       onChange handler for username      ****/
-  const handleNickChange = (event) => {
-    setNick(event.target.value);
   };
 
   /**       onChange handler for email      **/
@@ -95,7 +89,7 @@ function SignUp() {
     /****       If everything's valid, attempt register      ****/
     if (email && password) {
       try {
-        const data = await register(name, nick, email, password);
+        const data = await register(name, email, password);
         if (data) {
           alert("successfully registered. Please login.");
           navigate("/signin");
@@ -159,6 +153,7 @@ function SignUp() {
           <Box display="flex" justifyContent="space-between" marginBottom={1}>
             {/**        textfield for name        **/}
             <TextField
+              fullWidth
               name="name"
               label="Name"
               variant="outlined"
@@ -166,15 +161,6 @@ function SignUp() {
               width="50%"
               marginRight="10px"
               onChange={handleNameChange}
-            />
-            {/**        textfield for username        **/}
-            <TextField
-              name="username"
-              label="Username"
-              variant="outlined"
-              margin="normal"
-              width="50%"
-              onChange={handleNickChange}
             />
           </Box>
           {/**        textfield for email        **/}

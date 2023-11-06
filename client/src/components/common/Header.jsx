@@ -66,15 +66,19 @@ function Header() {
         }}
       >
         <Box sx={{ display: "flex", flex: 1 }}>
-          <img
-            src={TerraCanvas}
-            alt="logo"
-            style={{
-              objectFit: "cover",
-              height: "60px",
-              width: "auto",
-            }}
-          />
+          <Link to="/">
+            <CardMedia
+              type="button"
+              image={TerraCanvas}
+              component="img"
+              alt="logo"
+              style={{
+                objectFit: "cover",
+                height: "60px",
+                width: "auto",
+              }}
+            />
+          </Link>
         </Box>
 
         <Hidden mdUp>
