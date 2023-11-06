@@ -10,14 +10,13 @@ export const AuthProvider = ({ children }) => {
   );
   const navigate = useNavigate();
 
-  /** We need to change this into backend HTTP-only cookie for security!  */
   useEffect(() => {
     const checkLoggedIn = async () => {
-      try {
-        const isLoggedIn = await getLoggedIn();
-        setIsAuthenticated(isLoggedIn.loggedIn);
-      } catch (error) {
-        console.error("Failed to get loggin status:", error);
+      const response = await getLoggedIn();
+      if (response.success) {
+        setIsAuthenticated(response.data.loggedIn);
+        localStorage.setItem("isAuthenticated", "true");
+      } else {
         setIsAuthenticated(false);
         localStorage.setItem("isAuthenticated", "false");
       }
@@ -26,30 +25,33 @@ export const AuthProvider = ({ children }) => {
     if (!isAuthenticated) {
       checkLoggedIn();
     }
-  }, []);
+  }, [isAuthenticated]);
 
   const handleLogin = async (email, password) => {
-    try {
-      const response = await login(email, password);
-      if (response.message === "Logged in successfully") {
-        setIsAuthenticated(true);
-        navigate("/"); // Redirect to a protected route after login
-      } else {
-        // Handle the case where login is not successful
-        console.error("Login failed:", response.message);
-        // Here you could set an error state and display it in the UI
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
+    const response = await login(email, password);
+    if (response.success) {
+      setIsAuthenticated(true);
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("token", response.data.token); // Assuming the token is in the response data
+      navigate("/"); // Redirect to a protected route after login
+    } else {
+      console.error("Login failed:", response.message);
       // Here you could set an error state and display it in the UI
     }
   };
-   
-  const handleLogout = () => {
-    localStorage.removeItem('token'); // Remove the token from localStorage
-    setIsAuthenticated(false);
-    navigate("/"); // Redirect to the sign-in page
-  };  
+
+  const handleLogout = async () => {
+    const response = await logout();
+    if (response.success) {
+      setIsAuthenticated(false);
+      localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("token");
+      navigate("/");
+    } else {
+      console.error("Logout failed:", response.message);
+      // Here you could set an error state and display it in the UI
+    }
+  };
 
   return (
     <AuthContext.Provider
