@@ -1,3 +1,7 @@
+// "scripts": {
+//   "test": "mocha"
+// },
+
 require('dotenv').config(); // Ensure environment variables are loaded
 const request = require('supertest');
 const expect = require('chai').expect;

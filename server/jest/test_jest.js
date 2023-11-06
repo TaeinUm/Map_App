@@ -32,6 +32,20 @@ describe('GET /', () => {
   });
 });
 
+describe('GET /api/top-posts', () => {
+  test('fetches top 5 liked posts successfully', async () => {
+    const response = await request(app).get('/api/top-posts');
+    expect(response.statusCode).toBe(200);
+    expect(Array.isArray(response.body)).toBeTruthy();
+    expect(response.body).toHaveLength(5); // Assuming there are at least 5 posts in the database
+    // Check if the posts are sorted by likes in descending order
+    for (let i = 0; i < response.body.length - 1; i++) {
+      expect(response.body[i].likes).toBeGreaterThanOrEqual(response.body[i + 1].likes);
+    }
+  });
+});
+
+
 // Disconnect from the database after all tests have run
 afterAll(async () => {
   await mongoose.disconnect();

@@ -10,8 +10,41 @@ const testSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId // Assuming '_id' is an ObjectId; if it's a string, use String instead
 });
 
+const postSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  likes: Number,
+  image: String,
+  title: String
+});
+
+
 // Create a model from the schema
 const TestModel = mongoose.model('Test', testSchema, 'test');
+const PostModel = mongoose.model('Post', postSchema, 'posts');
+
+// Function to get top 5 liked posts from the 'posts' collection
+const getTopPosts = async () => {
+  try {
+    const topPosts = await PostModel.find({})
+      .sort({ likes: -1 }) // Sort by likes in descending order
+      .limit(5); // Limit to top 5
+    return topPosts;
+  } catch (error) {
+    console.error('Error fetching top posts:', error);
+    throw error;
+  }
+};
+
+// Route to get top 5 liked posts
+app.get('/api/top-posts', async (req, res) => {
+  try {
+    const topPostsData = await getTopPosts();
+    res.json(topPostsData);
+  } catch (error) {
+    res.status(500).send('Error fetching top posts');
+  }
+});
+
 
 // Function to get data from the 'test' collection
 const getDataFromTestCollection = async () => {

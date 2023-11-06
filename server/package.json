@@ -4,12 +4,8 @@
   "description": "CSE_416",
   "main": "server.js",
   "scripts": {
-    "test": "jest"
+    "test": "mocha"
   },
-  "jest": {
-    "testEnvironment": "node"
-  },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JuyeeMyeong/CSE416_project.git"
