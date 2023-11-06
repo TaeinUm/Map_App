@@ -1,6 +1,6 @@
 describe("Home Page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/");
+    cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/");
   });
 
   it("should display the home page correctly", () => {

@@ -1,6 +1,6 @@
 describe("SignIn Page", () => {
   beforeEach(() => {
-    cy.visit("http://localhost:3000/signin");
+    cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/signin");
   });
 
   it("should display the sign-in form", () => {
