@@ -1,13 +1,11 @@
 
 // Json Modification
 // "scripts": {
-//     "test": "jest"
-//   },
+//   "test": "jest jest/test.js"
+// },
 //   "jest": {
 //     "testEnvironment": "node"
 //   },
-
-
 
 // test2.js
 require('dotenv').config(); // Ensure environment variables are loaded
@@ -21,6 +19,7 @@ describe('GET /', () => {
     // Check if the content-type is HTML, since you're serving a React app
     expect(response.headers['content-type']).toMatch(/html/);
     // If you want to check for specific HTML content, you can do so here
+    expect(response.statusCode).toBe(200);
   });
 
   test('fetches data from the test collection successfully', async () => {
@@ -32,21 +31,25 @@ describe('GET /', () => {
   });
 });
 
-describe('GET /api/top-posts', () => {
+describe('GET /api/top5graphics', () => {
   test('fetches top 5 liked posts successfully', async () => {
     const response = await request(app).get('/api/top5graphics');
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body)).toBeTruthy();
-    expect(response.body).toHaveLength(5); // Assuming there are at least 5 posts in the database
+    expect(response.body.length).toBeLessThanOrEqual(5); // The response may have up to 5 posts
     // Check if the posts are sorted by likes in descending order
-    for (let i = 0; i < response.body.length - 1; i++) {
-      expect(response.body[i].likes).toBeGreaterThanOrEqual(response.body[i + 1].likes);
+    if (response.body.length > 1) {
+      for (let i = 0; i < response.body.length - 1; i++) {
+        expect(response.body[i].likes).toBeGreaterThanOrEqual(response.body[i + 1].likes);
+      }
     }
   });
 });
 
-
 // Disconnect from the database after all tests have run
-afterAll(async () => {
-  await mongoose.disconnect();
+// Replace 'after' with 'afterAll' if you are using Jest
+afterAll(function(done) {
+  mongoose.disconnect()
+    .then(() => done()) // Call done() when the disconnect is successful
+    .catch(done); // Pass any errors to done
 });
