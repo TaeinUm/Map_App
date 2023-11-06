@@ -21,7 +21,7 @@ jobs:
       run: cd client && npm install
 
     - name: Build
-      run: cd client && npm run build  # If you have a build script
+      run: cd server && npm test  # If you have a build script
 
     - name: Deploy to Heroku
       uses: akhileshns/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
