@@ -7,12 +7,17 @@ function Trending() {
   const [scrollAmount, setScrollAmount] = useState(0);
   const [topGraphics, setTopGraphics] = useState([]);
 
+
   /****   useEffect Section  ****/
   useEffect(() => {
     const fetchGraphics = async () => {
       try {
         const data = await getTop5Trending();
+        
+        console.log("Hello");
+        console.log(data);
         setTopGraphics(data);
+        
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
@@ -66,7 +71,7 @@ function Trending() {
               data-cy="trending-graphic"
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
             >
-              <img src={graphic.imageUrl} alt={graphic.title} />
+              <img src={graphic.image} alt={graphic.title} />
             </Paper>
           ))}
           {Array(5 - topGraphics.length)

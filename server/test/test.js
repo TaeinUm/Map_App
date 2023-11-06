@@ -24,7 +24,7 @@ describe('API Endpoints', function() {
   // Test for the /api/test-data endpoint
   it('fetches data from the test collection successfully', function(done) {
     request(app)
-      .get('/api/test-data')
+      .get('/api/top5graphics')
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {

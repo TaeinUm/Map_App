@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "BACKEND_API_URL";
+const BASE_URL = "http://localhost:8080";
 
 export const getTop5Trending = async () => {
   try {

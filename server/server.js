@@ -2,21 +2,26 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require('cors'); // Include the cors package
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+// Apply CORS middleware to accept requests from your React app's origin
+// This will allow requests from any origin. For production, you should restrict it to specific domains.
+app.use(cors());
 
 // Define a schema for the 'test' collection with only an '_id' field
 const testSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId // Assuming '_id' is an ObjectId; if it's a string, use String instead
 });
 
+// Define the schema for the 'posts' collection
 const postSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   likes: Number,
   image: String,
   title: String
 });
-
 
 // Create a model from the schema
 const TestModel = mongoose.model('Test', testSchema, 'test');
@@ -36,7 +41,7 @@ const getTopPosts = async () => {
 };
 
 // Route to get top 5 liked posts
-app.get('/api/top-posts', async (req, res) => {
+app.get('/api/top5graphics', async (req, res) => {
   try {
     const topPostsData = await getTopPosts();
     res.json(topPostsData);
