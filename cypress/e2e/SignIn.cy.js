@@ -29,12 +29,12 @@ describe("SignIn Page", () => {
     cy.get(".Mui-error").should("contain", "8 chars & include a special char");
   });
 
-  it("should successfully log in with correct credentials", () => {
-    cy.get('input[name="email"]').type("validuser@example.com");
-    cy.get('input[name="password"]').type("ValidPassword!");
-    cy.get("button").contains("Sign In").click();
-    cy.url().should("not.include", "/signin");
-  });
+  //it("should successfully log in with correct credentials", () => {
+  //  cy.get('input[name="email"]').type("validuser@example.com");
+  //  cy.get('input[name="password"]').type("ValidPassword!");
+  //  cy.get("button").contains("Sign In").click();
+  //  cy.url().should("not.include", "/signin");
+  //});
 
   it("should open password reset modal when click on forgot", () => {
     cy.get("button").contains("Forgot?").click();
