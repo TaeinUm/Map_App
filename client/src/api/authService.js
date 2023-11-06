@@ -35,6 +35,7 @@ const register = async (userName, email, password) => {
   });
 };
 
+// Set up Axios interceptors for Auth token handling
 axios.interceptors.request.use(config => {
   const token = localStorage.getItem('token');
   if (token) {
