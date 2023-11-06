@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
 
 const getLoggedIn = async () => {
   const response = await axios.get(`${BASE_URL}/auth/loggedIn`);
