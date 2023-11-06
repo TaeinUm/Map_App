@@ -26,7 +26,7 @@ jobs:
         cd client # go to client dir
         npm ci
 
-    - name: Run tests
+    - name: RUN JEST and SUPERTEST
       run: |
         cd server # go to server dir
         npm test
