@@ -12,6 +12,7 @@ import {
 import { register } from "../../api/authService";
 
 function SignUp() {
+  /****       useState section      ****/
   const [name, setName] = useState("");
   const [nick, setNick] = useState("");
   const [email, setEmail] = useState("");
@@ -21,13 +22,15 @@ function SignUp() {
   const [passwordError, setPasswordError] = useState(false);
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
-
+  /** useNavigate */
   const navigate = useNavigate();
 
+  /****       onChange handler for name      ****/
   const handleNameChange = (event) => {
     setName(event.target.value);
   };
 
+  /****       onChange handler for username      ****/
   const handleNickChange = (event) => {
     setNick(event.target.value);
   };
@@ -50,10 +53,12 @@ function SignUp() {
     }
   };
 
+  /****       onChange handler for agreement      ****/
   const handleAgreementChange = (event) => {
     setAgreement(event.target.checked);
   };
 
+  /****       register button      ****/
   const handleSubmit = async () => {
     /**   check email regex **/
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,13 +85,14 @@ function SignUp() {
       );
       return;
     }
-
+    /****       if user x agree to the policy, alert error      ****/
     if (!agreement) {
       console.error("You must agree to policy.");
       alert("Please agree to terms and conditions.");
       return;
     }
 
+    /****       If everything's valid, attempt register      ****/
     if (email && password) {
       try {
         const data = await register(name, nick, email, password);
@@ -102,6 +108,7 @@ function SignUp() {
     }
   };
 
+  /****       return      ****/
   return (
     <Box
       className="sign-container"
@@ -110,6 +117,7 @@ function SignUp() {
       alignItems="center"
       height="100vh"
     >
+      {/**        Side Image section        **/}
       <Box
         display="flex"
         justifyContent="center"
@@ -132,6 +140,7 @@ function SignUp() {
           }}
         />
       </Box>
+      {/**        sign up form        **/}
       <Box
         className="sign-form"
         p={3}
@@ -148,6 +157,7 @@ function SignUp() {
         </Typography>
         <Box width="70%">
           <Box display="flex" justifyContent="space-between" marginBottom={1}>
+            {/**        textfield for name        **/}
             <TextField
               name="name"
               label="Name"
@@ -157,6 +167,7 @@ function SignUp() {
               marginRight="10px"
               onChange={handleNameChange}
             />
+            {/**        textfield for username        **/}
             <TextField
               name="username"
               label="Username"
@@ -166,6 +177,7 @@ function SignUp() {
               onChange={handleNickChange}
             />
           </Box>
+          {/**        textfield for email        **/}
           <TextField
             error={emailError}
             helperText={emailHelperText}
@@ -178,6 +190,7 @@ function SignUp() {
             onChange={handleEmailChange}
             sx={{ marginBottom: "20px" }}
           />
+          {/**        textfield for pw        **/}
           <TextField
             error={passwordError}
             helperText={passwordHelperText}
@@ -191,12 +204,14 @@ function SignUp() {
             onChange={handlePasswordChange}
             sx={{ marginBottom: "20px" }}
           />
+          {/**        agreement form        **/}
           <FormControlLabel
             sx={{ marginBottom: "20px" }}
             control={<Checkbox name="agreement" />}
             label="I agree with Dribbble's Terms of Service, Privacy Policy, and default Notification Settings."
             onChange={handleAgreementChange}
           />
+          {/**        register button        **/}
           <Button
             fullWidth
             variant="contained"
