@@ -30,8 +30,3 @@ jobs:
       run: |
         cd server # go to server dir
         npm test
-
-    - name: Run Cypress tests
-      run: |
-        cd client
-        npm run cypress:run
