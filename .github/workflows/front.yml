@@ -23,13 +23,10 @@ jobs:
 
     - name: Install client dependencies
       run: cd client && npm install
-
-    - name: Build the client
-      run: npm run build:client
       
     - name: Run Cypress tests
       uses: cypress-io/github-action@v2
       with:
         start: npm run start:client
-        wait-on: 'http://localhost:3000'
+        wait-on: 'http://localhost:3000' #change this into deployed address
         working-directory: ./client

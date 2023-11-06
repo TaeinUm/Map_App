@@ -25,7 +25,7 @@ describe('GET /', () => {
   test('fetches data from the test collection successfully', async () => {
     const response = await request(app).get('/api/test-data');
     expect(response.statusCode).toBe(200);
-    expect(response.body).toHaveProperty('message', '성공적으로 데이터를 가져왔습니다.');
+    expect(response.body).toHaveProperty('message', 'Successfully Loaded');
     expect(Array.isArray(response.body.data)).toBeTruthy();
     // Add more assertions here if you want to check the structure of the returned documents
   });
