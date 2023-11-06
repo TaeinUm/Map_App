@@ -1,3 +1,4 @@
+
 name: Node.js CI
 
 on:
@@ -25,8 +26,7 @@ jobs:
       run: |
         cd client # go to client dir
         npm ci
-
-    - name: Run test
+    - name: Run tests
       run: |
         cd server # go to server dir
         npm test
