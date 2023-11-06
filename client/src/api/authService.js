@@ -29,4 +29,14 @@ const register = async (userName, email, password) => {
   return response.data;
 };
 
+axios.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});
+
 export { getLoggedIn, login, logout, register };

@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const checkLoggedIn = async () => {
       try {
         const isLoggedIn = await getLoggedIn();
-        setIsAuthenticated(isLoggedIn);
+        setIsAuthenticated(isLoggedIn.loggedIn);
       } catch (error) {
         console.error("Failed to verify login status:", error);
       }
@@ -23,26 +23,26 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogin = async (email, password) => {
     try {
-      const data = await login(email, password);
-      if (data) {
+      const response = await login(email, password);
+      if (response.message === "Logged in successfully") {
         setIsAuthenticated(true);
-        navigate("/");
+        navigate("/"); // Redirect to a protected route after login
+      } else {
+        // Handle the case where login is not successful
+        console.error("Login failed:", response.message);
+        // Here you could set an error state and display it in the UI
       }
     } catch (error) {
       console.error("Login failed:", error);
+      // Here you could set an error state and display it in the UI
     }
   };
-
-  /** 
-  const handleLogin = () => {
-    setIsAuthenticated(true);
-    navigate("/");
-  };*/
-
+   
   const handleLogout = () => {
+    localStorage.removeItem('token'); // Remove the token from localStorage
     setIsAuthenticated(false);
-    navigate("/");
-  };
+    navigate("/"); // Redirect to the sign-in page
+  };  
 
   return (
     <AuthContext.Provider

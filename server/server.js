@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors'); // Include the cors package
 const app = express();
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const authRoutes = require('./routes/authRoutes'); // Adjust the path according to your structure
 const PORT = process.env.PORT || 8080;
 
 // Apply CORS middleware to accept requests from your React app's origin
@@ -22,6 +25,21 @@ const postSchema = new mongoose.Schema({
   image: String,
   title: String
 });
+
+// Session middleware
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Add SESSION_SECRET to your .env file
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+  cookie: { secure: process.env.NODE_ENV === 'production' }, // secure: true in production
+}));
+
+// Body parser middleware to parse JSON bodies
+app.use(express.json());
+
+// Use authentication routes
+app.use('/auth', authRoutes);
 
 // Create a model from the schema
 const TestModel = mongoose.model('Test', testSchema, 'test');
