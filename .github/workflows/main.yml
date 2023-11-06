@@ -25,3 +25,6 @@ jobs:
       run: |
         cd server # 서버 디렉토리로 이동
         npm test
+
+    - name: Run front-end tests
+      run: npm run cypress:run
