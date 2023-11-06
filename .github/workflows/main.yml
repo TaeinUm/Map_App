@@ -14,17 +14,24 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20.x' # 또는 원하는 노드 버전
+        node-version: '20.x'
 
-    - name: Install dependencies
+    - name: Install server dependencies
       run: |
-        cd server # 서버 디렉토리로 이동
+        cd server # go to server dir
+        npm ci
+        
+    - name: Install client dependencies
+      run: |
+        cd client # go to client dir
         npm ci
 
     - name: Run tests
       run: |
-        cd server # 서버 디렉토리로 이동
+        cd server # go to server dir
         npm test
 
-    - name: Run front-end tests
-      run: npm run cypress:run
+    - name: Run Cypress tests
+      run: |
+        cd client
+        npm run cypress:run
