@@ -21,7 +21,6 @@ export const AuthProvider = ({ children }) => {
     checkLoggedIn();
   }, []);
 
-  /** 
   const handleLogin = async (email, password) => {
     try {
       const data = await login(email, password);
@@ -32,12 +31,13 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Login failed:", error);
     }
-  };*/
+  };
 
+  /** 
   const handleLogin = () => {
     setIsAuthenticated(true);
     navigate("/");
-  };
+  };*/
 
   const handleLogout = () => {
     setIsAuthenticated(false);
