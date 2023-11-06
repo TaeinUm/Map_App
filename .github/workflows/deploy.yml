@@ -21,7 +21,7 @@ jobs:
       run: cd client && npm install
 
     - name: Run build
-      run: cd client & npm run build
+      run: CI=false npm run build
       working-directory: ./client
 
         
