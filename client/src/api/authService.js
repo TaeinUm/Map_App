@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "BACKEND_API_URL";
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080";
 
 const getLoggedIn = async () => {
   const response = await axios.get(`${BASE_URL}/auth/loggedIn`);
@@ -20,19 +20,11 @@ const logout = async () => {
   return response.data;
 };
 
-const register = async (
-  firstName,
-  lastName,
-  email,
-  password,
-  passwordVerify
-) => {
+const register = async (userName, email, password) => {
   const response = await axios.post(`${BASE_URL}/auth/register`, {
-    firstName,
-    lastName,
+    userName,
     email,
     password,
-    passwordVerify,
   });
   return response.data;
 };
