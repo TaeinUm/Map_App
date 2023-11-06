@@ -4,7 +4,7 @@
   "description": "CSE_416",
   "main": "server.js",
   "scripts": {
-    "test": "jest jest/test.js && mocha test/test.js"
+    "test": "jest --forceExit --detectOpenHandles jest/test.js && mocha --exit test/test.js"
   },
   "jest": {
     "testEnvironment": "node"
