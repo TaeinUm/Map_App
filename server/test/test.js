@@ -37,6 +37,8 @@ describe('API Endpoints', function() {
 });
 
 // Close the mongoose connection after the tests are done
-afterAll(async () => {
-  await mongoose.disconnect();
+after(function(done) {
+  mongoose.disconnect()
+    .then(() => done()) // Call done() when the disconnect is successful
+    .catch(done); // Pass any errors to done
 });
