@@ -12,17 +12,17 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemButton,
+  CardMedia,
   Divider,
   useTheme,
   useMediaQuery,
   Hidden,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import TerraCanvas from "../../assets/images/TerraCanvas.png";
 
 function Header() {
-  const { isAuthenticated, handleLogin, handleLogout } =
-    useContext(AuthContext);
+  const { isAuthenticated, handleLogout } = useContext(AuthContext);
   const [isOpen, setIsOpen] = useState(false);
 
   const theme = useTheme();
@@ -66,17 +66,19 @@ function Header() {
         }}
       >
         <Box sx={{ display: "flex", flex: 1 }}>
-          <Typography
-            sx={{
-              display: "flex",
-              cursor: "pointer",
-              fontSize: "1.5rem",
-              flexGrow: 1,
-            }}
-            onClick={() => (window.location.href = "/")}
-          >
-            TERRACANVAS
-          </Typography>
+          <Link to="/">
+            <CardMedia
+              type="button"
+              image={TerraCanvas}
+              component="img"
+              alt="logo"
+              style={{
+                objectFit: "cover",
+                height: "60px",
+                width: "auto",
+              }}
+            />
+          </Link>
         </Box>
 
         <Hidden mdUp>
@@ -200,7 +202,7 @@ function Header() {
             >
               {sideLinks.map(({ title, path }) => (
                 <ListItem button key={title} component={Link} to={path}>
-                  <ListItemButton primary={title} />
+                  <ListItemText primary={title} />
                 </ListItem>
               ))}
               <Divider />

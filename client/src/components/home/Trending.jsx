@@ -1,12 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper } from "@mui/material";
+import { getTop5Trending } from "../../api/graphicsAPI";
 
 function Trending() {
   /****   useState Section  ****/
   const [scrollAmount, setScrollAmount] = useState(0);
+  const [topGraphics, setTopGraphics] = useState([]);
+
 
   /****   useEffect Section  ****/
   useEffect(() => {
+    const fetchGraphics = async () => {
+      try {
+        const data = await getTop5Trending();
+        
+        console.log("Hello");
+        console.log(data);
+        setTopGraphics(data);
+        
+      } catch (error) {
+        console.error("Error fetching top graphics:", error);
+      }
+    };
+
+    fetchGraphics();
+
     const interval = setInterval(() => {
       setScrollAmount((prev) => (prev - 650) % (650 * 3));
     }, 3000);
@@ -35,6 +53,7 @@ function Trending() {
           Trending Map Graphics
         </Typography>
         <Box
+          data-cy="trending-container"
           sx={{
             display: "flex",
             width: "3250px",
@@ -45,36 +64,28 @@ function Trending() {
           }}
         >
           {/* TOP5 Trending Map Graphics Examples */}
-          <Paper
-            elevation={4}
-            sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-          >
-            img
-          </Paper>
-          <Paper
-            elevation={4}
-            sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-          >
-            img
-          </Paper>
-          <Paper
-            elevation={4}
-            sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-          >
-            img
-          </Paper>
-          <Paper
-            elevation={4}
-            sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-          >
-            img
-          </Paper>
-          <Paper
-            elevation={4}
-            sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-          >
-            img
-          </Paper>
+          {topGraphics.slice(0, 5).map((graphic, index) => (
+            <Paper
+              key={index}
+              elevation={4}
+              data-cy="trending-graphic"
+              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            >
+              <img src={graphic.image} alt={graphic.title} />
+            </Paper>
+          ))}
+          {Array(5 - topGraphics.length)
+            .fill()
+            .map((_, index) => (
+              <Paper
+                key={topGraphics.length + index}
+                elevation={4}
+                data-cy="trending-graphic"
+                sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+              >
+                img
+              </Paper>
+            ))}
         </Box>
       </Box>
     </div>
