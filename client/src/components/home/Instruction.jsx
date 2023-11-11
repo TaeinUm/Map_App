@@ -72,7 +72,25 @@ function Instruction() {
           position: "relative",
         }}
       >
-        {/* ... existing Box and Typography components ... */}
+        <Typography
+          variant="h3"
+          style={{ fontWeight: "bold", color: "#fafafa", marginBottom: "40px" }}
+        >
+          How to Use TerraCanvas?
+        </Typography>
+        {/* Side Line with Linear Gradient */}
+        <Box
+          sx={{
+            position: "absolute",
+            height: "100%",
+            width: "15px",
+            background: "linear-gradient(to bottom, #ff6a00, #ee0979)",
+            left: "10%",
+            top: 0,
+            zIndex: 0,
+          }}
+        />
+
         <Box
           sx={{
             display: "flex",
@@ -81,7 +99,6 @@ function Instruction() {
             justifyContent: "center",
           }}
         >
-          {/* Instructions details */}
           <Box
             sx={{
               width: "50%",

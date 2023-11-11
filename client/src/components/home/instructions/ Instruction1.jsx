@@ -32,6 +32,18 @@ function Instruction1() {
 
       <div
         style={{
+          height: "60px",
+          backgroundColor: "#465065",
+          color: "#fafafa",
+          fontSize: "24px",
+          padding: "10px",
+          fontWeight: "bold",
+        }}
+      >
+        Click 'Map' on the Header
+      </div>
+      <div
+        style={{
           width: "100%",
           height: "60px",
           background: "linear-gradient(#465065, #282c34)",
@@ -47,6 +59,7 @@ function Instruction1() {
         <div id="map-div">Map</div>
         <div>Community</div>
       </div>
+      <div style={{ height: "480px", backgroundColor: "#282c34" }} />
     </div>
   );
 }
