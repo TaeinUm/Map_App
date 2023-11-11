@@ -33,12 +33,10 @@ function Instruction1() {
 
       <div
         style={{
-          width: "100%",
           height: "60px",
           background: "linear-gradient(#465065, #282c34)",
           color: "#fafafa",
           display: "flex",
-          gap: "20px",
           justifyContent: "center",
           alignItems: "center",
           padding: "15px",
@@ -50,7 +48,7 @@ function Instruction1() {
         style={{
           display: "flex",
           backgroundColor: "#282c34",
-          justifyContent: "space-between",
+          justifyContent: "space-evenly",
         }}
       >
         <p
@@ -61,7 +59,6 @@ function Instruction1() {
             justifyContent: "center",
             backgroundColor: "#fafafa",
             borderRadius: "10px",
-            marginLeft: "80px",
           }}
         >
           Create New
@@ -74,7 +71,6 @@ function Instruction1() {
             justifyContent: "center",
             backgroundColor: "#fafafa",
             borderRadius: "10px",
-            marginRight: "80px",
           }}
         >
           Load File
@@ -93,10 +89,10 @@ function Instruction1() {
           My Graphics
         </div>
         <div style={{ backgroundColor: "#282c34" }}>
-          <img src={inst2} style={{ height: "200px" }} />
+          <img src={inst2} style={{ height: "180px" }} />
         </div>
       </div>
-      <div style={{ height: "220px", backgroundColor: "#282c34" }} />
+      <div style={{ height: "240px", backgroundColor: "#282c34" }} />
     </div>
   );
 }
