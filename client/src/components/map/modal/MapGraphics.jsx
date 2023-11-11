@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Fade,
   Typography,
@@ -9,6 +9,8 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { MapContext } from "../../../contexts/MapContext";
 
 /*****      map graphics example images    *****/
 import heatMapImage from "../../../assets/images/heat-map.png";
@@ -27,23 +29,14 @@ const images = {
   "Basic Map": basicMapImage,
 };
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "none",
-  boxShadow: 24,
-  p: 4,
-};
-
-function MapGraphics(open) {
+function MapGraphics({ open }) {
   const [selectedType, setSelectedType] = useState(null);
+  const { updateMapContextAndNavigate } = useContext(MapContext);
+  const navigate = useNavigate();
 
   const handleSelect = (type) => {
     setSelectedType(type);
+    updateMapContextAndNavigate(type, null, navigate);
   };
 
   const isSelected = (type) => {
@@ -86,7 +79,7 @@ function MapGraphics(open) {
           ].map((type, index) => (
             <Grid item xs={6} sm={4} key={type}>
               <Card>
-                <CardActionArea onClick={() => handleSelect(type)}>
+                <CardActionArea onClick={() => setSelectedType(type)}>
                   <CardMedia
                     component="img"
                     height="140"
@@ -121,6 +114,7 @@ function MapGraphics(open) {
                 height: "50px",
                 width: "200px",
               }}
+              onClick={handleSelect}
             >
               Start New
             </Button>
@@ -130,4 +124,5 @@ function MapGraphics(open) {
     </div>
   );
 }
+
 export default MapGraphics;

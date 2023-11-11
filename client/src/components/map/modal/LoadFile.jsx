@@ -1,9 +1,11 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { Fade, Box, Typography, Button } from "@mui/material";
 import Dropzone from "react-dropzone";
 import toGeoJSON from "togeojson";
 import shp from "shpjs/dist/shp";
 import mapboxgl from "mapbox-gl";
+import { useNavigate } from "react-router-dom";
+import { MapContext } from "../../../contexts/MapContext";
 
 const style = {
   position: "absolute",
@@ -36,6 +38,9 @@ function LoadFile(open) {
   const [lng, setLng] = useState(-73.968285);
   const [lat, setLat] = useState(40.785091); // NY central park
   const [zoom, setZoom] = useState(4);
+  const navigate = useNavigate();
+
+  const { updateMapContextAndNavigate } = useContext(MapContext);
 
   /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {
@@ -185,6 +190,8 @@ function LoadFile(open) {
   const updateMapWithData = (geojsonData) => {
     const sourceId = "uploadedGeoSource";
     const layerId = "uploaded-data-layer";
+
+    updateMapContextAndNavigate(null, geojsonData, navigate);
 
     if (map.current.getSource(sourceId)) {
       map.current.getSource(sourceId).setData(geojsonData);

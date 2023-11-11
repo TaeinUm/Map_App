@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
   Button,
-  IconButton,
   Container,
   Grid,
   Paper,
@@ -11,7 +10,6 @@ import {
   useTheme,
   Modal,
 } from "@mui/material";
-import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 
 /****       Modal     ****/
 import MapGraphics from "./modal/MapGraphics";
@@ -33,9 +31,15 @@ function MapLanding() {
   const handleFileOpen = () => setOpenFile(true);
   const handleFileClose = () => setOpenFile(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
   /****       useTheme, useMediaQuery     ****/
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   /****       return     ****/
   return (
@@ -94,18 +98,9 @@ function MapLanding() {
             <Grid item xs={12} md={7}>
               <Paper sx={{ p: 2 }}>
                 {/* Search Bar */}
-                <SearchBar />
+                <SearchBar onSearchChange={handleSearchChange} />
                 {/* Maps List */}
-                <MapList />
-                {/* Navigation Arrows */}
-                <Box sx={{ display: "flex", justifyContent: "center", my: 2 }}>
-                  <IconButton>
-                    <AiOutlineArrowLeft />
-                  </IconButton>
-                  <IconButton>
-                    <AiOutlineArrowRight />
-                  </IconButton>
-                </Box>
+                <MapList searchQuery={searchTerm} />
               </Paper>
             </Grid>
 

@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Grid, Button } from "@mui/material";
+import Instruction1 from "./instructions/ Instruction1";
+import Instruction2 from "./instructions/Instruction2";
+import Instruction3 from "./instructions/Instruction3";
+import Instruction4 from "./instructions/Instruction4";
+import Instruction5 from "./instructions/Instruction5";
+
+const instructionComponents = {
+  1: <Instruction1 />,
+  2: <Instruction2 />,
+  3: <Instruction3 />,
+  4: <Instruction4 />,
+  5: <Instruction5 />,
+};
 
 const instructions = [
   { id: 1, text: "1. Go to Map page", image: "image1.jpg" },
@@ -18,11 +31,36 @@ const instructions = [
 ];
 
 function Instruction() {
-  const [selectedInstruction, setSelectedInstruction] = useState(
-    instructions[0]
+  const [selectedInstructionId, setSelectedInstructionId] = useState(1);
+  const [autoAdvance, setAutoAdvance] = useState(true); // New state to control auto-advance
+
+  useEffect(() => {
+    let interval;
+    if (autoAdvance) {
+      interval = setInterval(() => {
+        setSelectedInstructionId((prevId) =>
+          prevId === instructions.length ? 1 : prevId + 1
+        );
+      }, 6000);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [autoAdvance]); // Depend on autoAdvance state
+
+  // Function to handle button click
+  const handleButtonClick = (instruction) => {
+    setSelectedInstructionId(instruction.id);
+    setAutoAdvance(false); // Stop auto-advancing when button is manually clicked
+  };
+
+  const selectedInstruction = instructions.find(
+    (instr) => instr.id === selectedInstructionId
   );
 
-  /****      return       ****/
   return (
     <div>
       <Box
@@ -34,6 +72,12 @@ function Instruction() {
           position: "relative",
         }}
       >
+        <Typography
+          variant="h3"
+          style={{ fontWeight: "bold", color: "#fafafa", marginBottom: "40px" }}
+        >
+          How to Use TerraCanvas?
+        </Typography>
         {/* Side Line with Linear Gradient */}
         <Box
           sx={{
@@ -46,62 +90,52 @@ function Instruction() {
             zIndex: 0,
           }}
         />
-        {/* Instruction Title1 */}
-        <Typography
-          variant="h2"
+
+        <Box
           sx={{
-            fontSize: "40px",
-            mb: 3,
-            color: "#FAFAFA",
-            fontWeight: "bold",
-            zIndex: 2,
-            marginLeft: "-60px",
+            display: "flex",
+            gap: "40px",
+            width: "100%",
+            justifyContent: "center",
           }}
         >
-          MAP Your Vision,
-        </Typography>
-        <Box sx={{ display: "flex" }}>
-          {/* Instruction Title2 */}
-          <Typography
-            variant="h2"
+          <Box
             sx={{
-              fontSize: "40px",
-              mb: 3,
-              color: "#FAFAFA",
-              fontWeight: "bold",
-              marginLeft: "100px",
+              width: "50%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 2,
             }}
           >
-            Connect Your WORLD
-          </Typography>
-        </Box>
-        <Box sx={{ display: "flex", gap: "40px" }}>
-          {/* Instructions and Images details */}
-          <Grid container spacing={2} sx={{ width: "100%" }}>
-            <Grid item xs={6} sx={{ display: "flex", flexDirection: "column" }}>
-              {instructions.map((instruction) => (
-                <Button
-                  key={instruction.id}
-                  onClick={() => setSelectedInstruction(instruction)}
-                  sx={{ color: "#fafafa" }}
-                >
-                  {instruction.text}
-                </Button>
-              ))}
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              sx={{ width: "80%", height: "800px", backgroundColor: "grey" }}
-            >
-              <div className="animation-container">
-                <img
-                  src={selectedInstruction.image}
-                  alt={selectedInstruction.text}
-                />
-              </div>
-            </Grid>
-          </Grid>
+            {instructions.map((instruction) => (
+              <Button
+                key={instruction.id}
+                onClick={() => handleButtonClick(instruction)}
+                sx={{
+                  color: "#fafafa",
+                  height: "100px",
+                  width: "100%",
+                  textDecoration:
+                    selectedInstructionId === instruction.id
+                      ? "underline"
+                      : "none",
+                }}
+              >
+                {instruction.text}
+              </Button>
+            ))}
+          </Box>
+          <Box
+            sx={{
+              width: { xs: "100%", md: "50%" },
+              height: "600px",
+              zIndex: "1",
+              backgroundColor: "#fafafa",
+            }}
+          >
+            {selectedInstruction &&
+              instructionComponents[selectedInstructionId]}
+          </Box>
         </Box>
       </Box>
     </div>
