@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 /****         Context Provider     ****/
 import { AuthProvider } from "./contexts/AuthContext";
+import { MapProvider } from "./contexts/MapContext";
 
 /****         CSS & Components     ****/
 import "./styles/App.css";
@@ -17,6 +18,7 @@ import Contact from "./components/policy/Contact";
 import MapLanding from "./components/map/MapLanding";
 import Community from "./components/community/Community";
 import Profile from "./components/common/Profile";
+import MapEditing from "./components/map/MapEditing";
 import NotFound from "./components/common/NotFound";
 
 function App() {
@@ -24,21 +26,24 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/map" element={<MapLanding />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/profile" element={<Profile />} />
+          <MapProvider>
+            <Header />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/mapedit" element={<MapEditing />} />
+              <Route path="/map" element={<MapLanding />} />
+              <Route path="/community" element={<Community />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/profile" element={<Profile />} />
 
-            <Route path="/termsconditions" element={<Termsconditions />} />
-            <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-            <Route path="/contact" element={<Contact />} />
+              <Route path="/termsconditions" element={<Termsconditions />} />
+              <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+              <Route path="/contact" element={<Contact />} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </MapProvider>
         </AuthProvider>
         <Footer />
       </BrowserRouter>
