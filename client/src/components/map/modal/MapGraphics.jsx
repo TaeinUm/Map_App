@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Fade,
   Typography,
@@ -9,6 +9,8 @@ import {
   CardContent,
   Button,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { MapContext } from "../../../contexts/MapContext";
 
 /*****      map graphics example images    *****/
 import heatMapImage from "../../../assets/images/heat-map.png";
@@ -39,11 +41,14 @@ const style = {
   p: 4,
 };
 
-function MapGraphics(open) {
+function MapGraphics({ open }) {
   const [selectedType, setSelectedType] = useState(null);
+  const { updateMapContextAndNavigate } = useContext(MapContext);
+  const navigate = useNavigate();
 
   const handleSelect = (type) => {
     setSelectedType(type);
+    updateMapContextAndNavigate(type, null, navigate);
   };
 
   const isSelected = (type) => {
@@ -121,6 +126,7 @@ function MapGraphics(open) {
                 height: "50px",
                 width: "200px",
               }}
+              onClick={handleSelect}
             >
               Start New
             </Button>
@@ -130,4 +136,5 @@ function MapGraphics(open) {
     </div>
   );
 }
+
 export default MapGraphics;
