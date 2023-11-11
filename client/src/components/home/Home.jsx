@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Paper } from "@mui/material";
+import React from "react";
+import { Box } from "@mui/material";
 
 /****  Import Components  *****/
 import Trending from "./Trending";

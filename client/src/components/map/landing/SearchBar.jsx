@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Box, Input, IconButton } from "@mui/material";
 import { FiSearch } from "react-icons/fi";
 

@@ -29,18 +29,6 @@ const images = {
   "Basic Map": basicMapImage,
 };
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "none",
-  boxShadow: 24,
-  p: 4,
-};
-
 function MapGraphics({ open }) {
   const [selectedType, setSelectedType] = useState(null);
   const { updateMapContextAndNavigate } = useContext(MapContext);
@@ -91,7 +79,7 @@ function MapGraphics({ open }) {
           ].map((type, index) => (
             <Grid item xs={6} sm={4} key={type}>
               <Card>
-                <CardActionArea onClick={() => handleSelect(type)}>
+                <CardActionArea onClick={() => setSelectedType(type)}>
                   <CardMedia
                     component="img"
                     height="140"

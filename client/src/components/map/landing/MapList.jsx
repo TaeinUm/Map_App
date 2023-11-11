@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, IconButton } from "@mui/material";
 import { FiShare, FiTrash } from "react-icons/fi";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
