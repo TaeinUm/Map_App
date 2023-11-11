@@ -1,13 +1,14 @@
 import React from "react";
 import { Grid, TextField, Button } from "@mui/material";
 
-function JSONTab() {
+function JSONTab({ geojsonData }) {
   return (
     <>
       <Grid fullWdith>
         <TextField
           multiline
           rows={19}
+          value={geojsonData}
           sx={{
             width: "100%",
             height: "80%",
