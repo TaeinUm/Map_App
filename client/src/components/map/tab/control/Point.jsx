@@ -165,7 +165,7 @@ const Point = () => {
             <Container>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
                 Choose an excel file that contains 'latitude,' 'longitude,' and
-                'name' of the place.
+                'name' columns
               </Typography>
               <input
                 type="file"
