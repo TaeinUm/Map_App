@@ -6,7 +6,6 @@ import {
   Box,
   TextField,
   Button,
-  Divider,
   Typography,
   MenuItem,
 } from "@mui/material";
@@ -85,7 +84,6 @@ const Flow = () => {
 
   const handleMemoSave = () => {
     console.log("Memo saved:", memoContent);
-    // Memo save logic here...
   };
 
   const handleStartCountryChange = (event) => {
