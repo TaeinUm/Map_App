@@ -8,7 +8,14 @@
         "mapbox": {
             "url": "mapbox://mapbox.mapbox-streets-v7",
             "type": "vector"
-        }
+        },
+        "markers": {
+            "type": "geojson",
+            "data": {
+              "type": "FeatureCollection",
+              "features": []
+            }
+          }
     },
     "sprite": "mapbox://sprites/mapbox/basic-v8",
     "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
@@ -21,6 +28,21 @@
             },
             "interactive": true
         },
+        {
+            "id": "markers",
+            "type": "symbol",
+            "source": "markers",
+            "layout": {
+              "icon-image": "{icon}",
+              "icon-size": 1,
+              "text-field": "{title}",
+              "text-offset": [0, 1.25],
+              "text-anchor": "top"
+            },
+            "paint": {
+              "text-color": "#000000"
+            }
+          },
         {
             "id": "landuse_overlay_national_park",
             "type": "fill",

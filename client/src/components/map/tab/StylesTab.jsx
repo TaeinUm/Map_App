@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import Basic from "./control/Basic";
+import BasicStyles from "./control/BasicStyles";
 import Point from "./control/Point";
 import Heat from "./control/Heat";
 import Regional from "./control/Regional";
@@ -8,22 +8,46 @@ import ThreeD from "./control/ThreeD";
 import { MapContext } from "../../../contexts/MapContext";
 import { Link } from "react-router-dom";
 
-function StylesTab({ onChange, setGeojsonData }) {
+function StylesTab(children) {
   const { mapType } = useContext(MapContext);
 
   let content;
   if (mapType === "Basic Map") {
-    content = <Basic onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = (
+      <BasicStyles
+        categories={children.categories}
+        styleSettings={children.styleSettings}
+        handleColorChange={children.andleColorChange}
+        handleVisibilityChange={children.handleVisibilityChange}
+        fontStyle={children.fontStyle}
+        handleFontChange={children.handleFontChange}
+        regionColor={children.regionColor}
+        setRegionColor={children.setRegionColor}
+        selectedCountry={children.selectedCountry}
+      />
+    );
   } else if (mapType === "Point Map") {
-    content = <Point onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = <Point />;
   } else if (mapType === "Heat Map") {
-    content = <Heat onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = <Heat />;
   } else if (mapType === "Regional Map") {
-    content = <Regional onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = (
+      <Regional
+        selectionType={children.selectionType}
+        handleSelectionTypeChange={children.handleSelectionTypeChange}
+        color={children.color}
+        handleCategoryColor={children.handleCategoryColor}
+        handleCountryChange={children.handleCountryChange}
+        log={children.log}
+        handleContinentSelect={children.handleContinentSelect}
+        updateCountryColor={children.updateCountryColor}
+        countries={children.countries}
+      />
+    );
   } else if (mapType === "Flow Map") {
-    content = <Flow onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = <Flow />;
   } else if (mapType === "3D-Bar Map") {
-    content = <ThreeD onChange={onChange} setGeojsonData={setGeojsonData} />;
+    content = <ThreeD />;
   } else {
     content = <Link to="*" />;
   }
