@@ -21,7 +21,7 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const MapComponent = () => {
+const Flow = () => {
   const [map, setMap] = useState(null);
   const countryCityData = {
     USA: ["New York", "Los Angeles", "Chicago"],
@@ -131,6 +131,9 @@ const MapComponent = () => {
 
         setMap(newMap);
       });
+    }
+    if (map) {
+      setMapJson(map.getStyle());
     }
   }, [map]);
 
@@ -490,4 +493,4 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+export default Flow;
