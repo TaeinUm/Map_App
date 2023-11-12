@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   Box,
   Grid,
@@ -9,7 +9,18 @@ import {
   useTheme,
   IconButton,
 } from "@mui/material";
-import Map from "react-map-gl";
+import Map, {
+  NavigationControl,
+  GeolocateControl,
+  FullscreenControl,
+  ScaleControl,
+  Source,
+  Layer,
+} from "react-map-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
+
+import "react-map-gl-geocoder/dist/mapbox-gl-geocoder.css";
+
 import { TabPanel, TabContext } from "@mui/lab";
 
 import StylesTab from "./tab/StylesTab";
@@ -22,16 +33,34 @@ import Memo from "./Memo";
 
 import { MapContext } from "../../contexts/MapContext";
 
+const accessToken =
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
+
 function MapEditing() {
   const { mapType, geojsonData, setGeojsonData } = useContext(MapContext);
   const [tabValue, setTabValue] = useState("styles");
-  const [memoOpen, setMemoOpen] = useState(false);
+  const [memoOpen, setMemoOpen] = useState(true);
+  const [mapStyle, setMapStyle] = useState(null);
+
+  const [viewport, setViewport] = useState({
+    latitude: 40.7128,
+    longitude: -74.006,
+    zoom: 10,
+  });
+
+  const satelliteStyle = "mapbox://styles/mapbox/satellite-v9";
+  const defaultStyle = mapType || "mapbox://styles/mapbox/streets-v11";
 
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const mapRef = useRef();
 
   const handleChange = (event, newValue) => {
     setTabValue(newValue);
+  };
+
+  const params = {
+    country: "ca",
   };
 
   useEffect(() => {
@@ -41,14 +70,61 @@ function MapEditing() {
     // adjust map styling based on mapType here
   }, [geojsonData, mapType]);
 
+  const handleGeocoderViewportChange = (newViewport) => {
+    const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+    return setViewport({
+      ...newViewport,
+      ...geocoderDefaultOverrides,
+    });
+  };
+
+  const handleOnResult = (event) => {
+    setViewport({
+      longitude: event.result.center[0],
+      latitude: event.result.center[1],
+      zoom: 10,
+      transitionDuration: 1000,
+    });
+  };
+
   return (
     <div>
       {isDesktop && (
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
             {/* MapBox View */}
-            <Grid item xs={12} md={8}>
-              <Map mapType={mapType} geojsonData={geojsonData} />
+            <Grid item sx={{ height: "800px" }} xs={12} md={8}>
+              <Map
+                initialViewState={{
+                  latitude: 37.805,
+                  longitude: -122.447,
+                  zoom: 15.5,
+                }}
+                mapStyle={mapStyle && mapStyle.toJS()}
+                styleDiffing
+                mapboxAccessToken={accessToken}
+              >
+                <NavigationControl onViewportChange={setViewport} />
+                <FullscreenControl />
+                <GeolocateControl />
+                <ScaleControl />
+
+                {geojsonData && (
+                  <Source type="geojson" data={geojsonData}>
+                    <Layer />
+                  </Source>
+                )}
+
+                {/* Toggle button for satellite view */}
+                <button
+                  onClick={() =>
+                    setViewport({ ...viewport, mapStyle: satelliteStyle })
+                  }
+                >
+                  Satellite View
+                </button>
+              </Map>
             </Grid>
 
             {/* Styling Side Bar */}
@@ -86,10 +162,16 @@ function MapEditing() {
                   </Tabs>
                 </Paper>
                 <TabPanel fullWidth value="styles">
-                  <StylesTab />
+                  <StylesTab
+                    onChange={setMapStyle}
+                    setGeojsonData={setGeojsonData}
+                  />
                 </TabPanel>
                 <TabPanel value="json">
-                  <JsonTab />
+                  <JsonTab
+                    geojsonData={geojsonData}
+                    setGeojsonData={setGeojsonData}
+                  />
                 </TabPanel>
                 <TabPanel value="share">
                   <ShareTab />

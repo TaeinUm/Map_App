@@ -35,8 +35,8 @@ function MapGraphics({ open }) {
   const navigate = useNavigate();
 
   const handleSelect = (type) => {
-    setSelectedType(type);
-    updateMapContextAndNavigate(type, null, navigate);
+    setSelectedType(selectedType);
+    updateMapContextAndNavigate(selectedType, null, navigate);
   };
 
   const isSelected = (type) => {
