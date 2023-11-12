@@ -56,8 +56,8 @@ const Point = () => {
   useEffect(() => {
     if (!map) {
       const newMap = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/streets-v11",
+        container: "map",
+        style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
       });
@@ -107,12 +107,12 @@ const Point = () => {
           const marker = new mapboxgl.Marker()
             .setLngLat([location.longitude, location.latitude])
             .addTo(map);
-
+          /*
           const popup = new mapboxgl.Popup()
             .setHTML(`<h3>${location.name}</h3>`)
             .addTo(map);
 
-          marker.setPopup(popup);
+          marker.setPopup(popup);*/
         });
       };
 
