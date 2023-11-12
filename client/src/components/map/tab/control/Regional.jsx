@@ -361,11 +361,13 @@ const Regional = () => {
         setMap(newMap);
         newMap.resize();
       });
-      const json = newMap.getStyle();
-      setMapJson(json);
     };
     initializeMap();
-  }, [mapStyle, regionColor, setMap, setSelectedCountry]);
+
+    if (map) {
+      setMapJson(map.getStyle());
+    }
+  }, [map, mapStyle, regionColor, setMap, setSelectedCountry]);
 
   useEffect(() => {
     if (map && log.length > 0) {
