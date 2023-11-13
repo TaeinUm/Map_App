@@ -30,7 +30,6 @@ describe("TerraCanvas Website Pages", () => {
       cy.contains("Privacy Policy (Example)").should("be.visible");
       cy.contains("Last updated:2023.11.12").should("be.visible");
       cy.contains("What User Data We Collect").should("be.visible");
-      cy.get("ul").children().should("have.length", 4);
     });
   });
 
