@@ -30,7 +30,7 @@ const style = {
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-function LoadFile(open) {
+function LoadFile({ open }) {
   /**  ------------------- useRef / useState   -------------------   **/
   //initialize map, lng, lat, zoom lvl
   const mapContainer = useRef(null);
