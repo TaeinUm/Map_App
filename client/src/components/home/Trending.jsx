@@ -13,8 +13,6 @@ function Trending() {
       try {
         const data = await getTop5Trending();
 
-        console.log("Hello");
-        console.log(data);
         setTopGraphics(data);
       } catch (error) {
         console.error("Error fetching top graphics:", error);

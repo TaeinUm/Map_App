@@ -5,7 +5,11 @@ import { FiSearch } from "react-icons/fi";
 function SearchBar({ onSearchChange }) {
   return (
     <Box sx={{ display: "flex" }}>
-      <Input fullWidth placeholder="Search maps" onChange={onSearchChange} />
+      <Input
+        placeholder="Search maps"
+        onChange={onSearchChange}
+        sx={{ width: "100%" }}
+      />
       <IconButton sx={{ p: "10px" }} aria-label="search">
         <FiSearch />
       </IconButton>

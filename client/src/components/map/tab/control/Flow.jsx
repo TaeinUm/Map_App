@@ -248,8 +248,7 @@ const Flow = () => {
                 }}
               >
                 <Typography
-                  fullWidth
-                  sx={{ color: "#fafafa", textAlign: "left" }}
+                  sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                 >
                   Select Flow Color
                 </Typography>
