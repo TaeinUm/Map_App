@@ -133,7 +133,7 @@ function MapLanding() {
       )}
 
       {/****        mobile view     ****/}
-      {!isDesktop && <MapMobile />}
+      {!isDesktop && <MapMobile data="mobile-view" />}
     </div>
   );
 }
