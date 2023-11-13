@@ -49,7 +49,7 @@ function SaveTab() {
   };
 
   return (
-    <Box fullWidth sx={{ padding: 3 }}>
+    <Box sx={{ width: "100%", padding: 3 }}>
       <Box
         sx={{
           display: "flex",
@@ -81,7 +81,7 @@ function SaveTab() {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Version Setting
         </Typography>
-        <FormControl fullWidth margin="normal">
+        <FormControl margin="normal" sx={{ width: "100%" }}>
           <Select
             size="small"
             value={versionSetting}
@@ -105,7 +105,7 @@ function SaveTab() {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Export File
         </Typography>
-        <FormControl fullWidth margin="normal">
+        <FormControl margin="normal" sx={{ width: "100%" }}>
           <Select
             size="small"
             value={exportFile}
@@ -131,7 +131,7 @@ function SaveTab() {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Privacy Setting
         </Typography>
-        <FormControl fullWidth margin="normal">
+        <FormControl margin="normal" sx={{ width: "100%" }}>
           <Select
             size="small"
             value={privacySetting}

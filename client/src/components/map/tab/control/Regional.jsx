@@ -496,8 +496,7 @@ const Regional = () => {
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Typography
-                    fullWidth
-                    sx={{ color: "#fafafa", textAlign: "left" }}
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                   >
                     Select Region Color
                   </Typography>
@@ -513,16 +512,15 @@ const Regional = () => {
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Typography
-                    fullWidth
-                    sx={{ color: "#fafafa", textAlign: "left" }}
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                   >
                     Select Country
                   </Typography>
                   <Select
-                    fullWidth
                     value={selectedCountry}
                     onChange={handleCountryChange}
                     sx={{
+                      width: "100%",
                       marginBottom: "30px",
                       color: "white",
                       ".MuiOutlinedInput-notchedOutline": {

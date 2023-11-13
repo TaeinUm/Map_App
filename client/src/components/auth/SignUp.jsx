@@ -157,9 +157,6 @@ function SignUp() {
               name="name"
               label="Name"
               variant="outlined"
-              margin="normal"
-              width="50%"
-              marginRight="10px"
               onChange={handleNameChange}
             />
           </Box>
@@ -167,20 +164,18 @@ function SignUp() {
           <TextField
             error={emailError}
             helperText={emailHelperText}
-            fullWidth
             name="email"
             label="Email"
             variant="outlined"
             margin="normal"
             value={email}
             onChange={handleEmailChange}
-            sx={{ marginBottom: "20px" }}
+            sx={{ width: "100%", marginBottom: "20px" }}
           />
           {/**        textfield for pw        **/}
           <TextField
             error={passwordError}
             helperText={passwordHelperText}
-            fullWidth
             name="password"
             label="Password"
             variant="outlined"
@@ -188,7 +183,7 @@ function SignUp() {
             type="password"
             value={password}
             onChange={handlePasswordChange}
-            sx={{ marginBottom: "20px" }}
+            sx={{ width: "100%", marginBottom: "20px" }}
           />
           {/**        agreement form        **/}
           <FormControlLabel
@@ -199,10 +194,10 @@ function SignUp() {
           />
           {/**        register button        **/}
           <Button
-            fullWidth
             variant="contained"
             onClick={handleSubmit}
             sx={{
+              width: "100%",
               borderRadius: "20px",
               color: "#FAFAFA",
               backgroundColor: "black",

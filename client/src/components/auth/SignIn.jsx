@@ -16,8 +16,6 @@ function SignIn() {
   const [passwordHelperText, setPasswordHelperText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
-  
   const modalOpen = () => {
     setIsModalOpen(true);
   };
@@ -111,20 +109,18 @@ function SignIn() {
           <TextField
             error={emailError}
             helperText={emailHelperText}
-            fullWidth
             name="email"
             label="Email"
             variant="outlined"
             margin="normal"
             value={email}
             onChange={handleEmailChange}
-            sx={{ marginBottom: "20px" }}
+            sx={{ width: "100%", marginBottom: "20px" }}
           />
           {/**        textfield for pw        **/}
           <TextField
             error={passwordError}
             helperText={passwordHelperText}
-            fullWidth
             name="password"
             label="Password"
             variant="outlined"
@@ -132,13 +128,13 @@ function SignIn() {
             type="password"
             value={password}
             onChange={handlePasswordChange}
-            sx={{ marginBottom: "20px" }}
+            sx={{ width: "100%", marginBottom: "20px" }}
           />
           {/**        Login button        **/}
           <Button
-            fullWidth
             variant="contained"
             sx={{
+              width: "100%",
               borderRadius: "20px",
               color: "#FAFAFA",
               backgroundColor: "black",
@@ -159,7 +155,11 @@ function SignIn() {
         </Typography>
         <Typography variant="body1">
           Do you forget the password?{" "}
-          <Button type="button" onClick={modalOpen} sx={{ textDecoration: "underline" }}>
+          <Button
+            type="button"
+            onClick={modalOpen}
+            sx={{ textDecoration: "underline" }}
+          >
             Forgot?
           </Button>
           <PasswordReset open={isModalOpen} handleClose={modalClose} />

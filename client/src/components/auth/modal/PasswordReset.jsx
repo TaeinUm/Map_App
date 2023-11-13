@@ -43,18 +43,22 @@ function PasswordReset({ open, handleClose }) {
         <Box id="password-reset-modal-description" sx={{ mt: 2 }}>
           {/**    text field for email address    **/}
           <TextField
-            fullWidth
             name="resetEmail"
             label="Email Address"
             variant="outlined"
             value={resetEmail}
             onChange={(e) => setResetEmail(e.target.value)}
+            sx={{ width: "100%" }}
           />
           {/**      request reset button    **/}
           <Button
-            fullWidth
             variant="contained"
-            sx={{ mt: 2, backgroundColor: "black", borderRadius: "20px" }}
+            sx={{
+              width: "100%",
+              mt: 2,
+              backgroundColor: "black",
+              borderRadius: "20px",
+            }}
             onClick={handlePasswordResetRequest}
           >
             Send Reset Link
