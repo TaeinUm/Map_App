@@ -160,7 +160,6 @@ const BasicStyles = () => {
 
       for (const category of categories) {
         if (layerSelector[category].test(id)) {
-          console.log(`Background layer found: ${id}, type: ${type}`);
           const isVisible = styleSettings.visibility[category];
           map.setLayoutProperty(
             id,
