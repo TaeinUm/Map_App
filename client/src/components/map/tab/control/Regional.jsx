@@ -23,7 +23,7 @@ import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dvdnNlaTA3dTMyam83Yzhua2JtcmIifQ.DnTWaj1jNwPud158t1GHtQ";
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const Regional = () => {
   const [map, setMap] = useState(null);
