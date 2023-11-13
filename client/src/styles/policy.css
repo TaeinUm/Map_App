@@ -1,0 +1,17 @@
+.terms-conditions {
+    font-family: 'Arial', sans-serif;
+    color: white;
+    line-height: 1.6;
+    padding: 20px;
+    text-align: left;
+    margin-left: auto;
+}
+
+.terms-conditions h1 {
+    font-size: 24px;
+    color: white;
+}
+
+.terms-conditions p {
+    font-size: 14px;
+}
