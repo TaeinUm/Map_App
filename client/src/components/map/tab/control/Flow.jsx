@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import mapboxgl from "mapbox-gl";
+import mapboxgl from 'mapbox-gl';
 import {
   Tab,
   Tabs,
@@ -17,8 +17,8 @@ import JSONTab from "../JSONTab";
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
-mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
+//mapboxgl.accessToken =
+// "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const Flow = () => {
   const [map, setMap] = useState(null);
