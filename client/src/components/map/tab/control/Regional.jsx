@@ -305,7 +305,7 @@ const Regional = () => {
 
       map.setPaintProperty("countries", "fill-color", colorExpression);
     }
-  }, [map, log]);
+  }, [map, log, continents]);
 
   const handleSelectionTypeChange = (event) => {
     setSelectionType(event.target.value);

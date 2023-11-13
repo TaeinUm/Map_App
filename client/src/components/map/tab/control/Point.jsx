@@ -82,7 +82,7 @@ const Point = () => {
     if (map) {
       setMapJson(map.getStyle());
     }
-  }, [map]);
+  }, [map, mapStyle]);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];

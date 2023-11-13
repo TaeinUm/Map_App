@@ -100,7 +100,7 @@ const ThreeD = () => {
     if (map) {
       setMapJson(map.getStyle());
     }
-  }, [map]);
+  }, [map, mapStyle]);
 
   const handleFileInputChange = (e) => {
     if (!isMapLoaded) {
