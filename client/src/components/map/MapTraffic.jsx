@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 
 //access token

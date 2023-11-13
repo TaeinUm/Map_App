@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from "mapbox-gl";
 import {
   Tab,
   Tabs,

@@ -3,7 +3,7 @@ import { Fade, Box, Typography, Button } from "@mui/material";
 import Dropzone from "react-dropzone";
 import toGeoJSON from "togeojson";
 import shp from "shpjs/dist/shp";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from "mapbox-gl";
 import { useNavigate } from "react-router-dom";
 import { MapContext } from "../../../contexts/MapContext";
 

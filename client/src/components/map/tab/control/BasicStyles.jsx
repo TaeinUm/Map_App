@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from "mapbox-gl";
 import { Tab, Tabs, Box, Button, Typography } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";

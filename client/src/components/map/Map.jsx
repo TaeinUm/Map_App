@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from "mapbox-gl";
 import Dropzone from "react-dropzone";
 import toGeoJSON from "togeojson";
 import shp from "shpjs/dist/shp";
