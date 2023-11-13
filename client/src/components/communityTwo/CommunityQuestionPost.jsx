@@ -1,16 +1,37 @@
-import React, { useState, useEffect} from "react";
-import {Box, Typography, TextField, Button, Paper, Divider} from "@mui/material";
-//import { getTop5Trending } from "../../api/graphicsAPI";
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Divider,
+  Paper,
+  Container,
+  AppBar,
+  Toolbar,
+  IconButton
+} from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { styled } from '@mui/material/styles';
 
-let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?", "Can I make fantasy map graphics", "Are flow maps used to map the migration routes of geese?"];
+
+const StyledAppBar = styled(AppBar)({
+  backgroundColor: '#333',
+  color: 'white',
+});
+
+const StyledFooter = styled(Paper)(({ theme }) => ({
+  backgroundColor: '#333',
+  color: 'white',
+  padding: theme.spacing(3),
+  marginTop: 'auto',
+}));
 
 function CommunityQuestionPost() {
-    //const [topGraphics, setTopGraphics] = useState([]);
-    const [message, setMessage] = useState('');
-    const {index} = useParams();
-    let actualIndex=index.replace(/:/g, '');
-
+  const [message, setMessage] = useState('');
+  // const { index } = useParams(); // Uncomment this when using in your routing setup
+  const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
@@ -20,109 +41,70 @@ function CommunityQuestionPost() {
     // Handle your submission logic here
     console.log('Submitted message:', message);
   };
-//   useEffect(() => {
-//     const fetchGraphics = async () => {
-//       try {
-//         const data = await getTop5Trending();
-        
-//         console.log("Hello");
-//         console.log(data);
-//         setTopGraphics(data);
-        
-//       } catch (error) {
-//         console.error("Error fetching top graphics:", error);
-//       }
-//     };
 
-//     fetchGraphics();
-//   },[]);
+  return (
+    <Container maxWidth="md" sx={{ p: 3 }}>
 
-{/* <Box>
-                <Typography>Hello</Typography>
-                <TextField
-        id="prompt-textarea"
-        multiline
-        rows={1}
-        placeholder="Send a message"
-        variant="outlined"
-        fullWidth
-        value={message}
-        onChange={handleMessageChange}
-        InputProps={{
-          classes: {
-            root: 'm-0 w-full resize-none border-0 bg-transparent py-2 pr-2',
-            notchedOutline: 'border-transparent',
-          },
-          style: { maxHeight: '200px', height: '116px', overflowY: 'hidden' },
-        }}
-        inputProps={{
-            'data-id': 'request-:R3apdm:-49',
-          tabIndex: '0',
-        }}
-      />
-      <Box>
-        A map idea goes here
-      </Box>
-        
-      {/* <Paper
-              key={0}
-              elevation={4}
-              data-cy="trending-graphic"
-              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
-            >
-              <img
-                src={topGraphics[0]}
-                alt={topGraphics[0]}
-                style={{ objectFit: "cover", width: "100%", height: "100%" }}
-              />
-            </Paper> */}
-    //   <Button variant="contained" color="primary" onClick={handleSubmit}>
-    //     Submit
-    //   </Button>
-    //             {/* <textarea id="prompt-textarea" tabindex="0" data-id="request-:R3apdm:-49" rows="1" placeholder="Send a message" class="m-0 w-full resize-none border-0 bg-transparent py-[10px] pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:py-4 md:pr-12 gizmo:md:py-3.5 gizmo:placeholder-black/50 gizmo:dark:placeholder-white/50 pl-3 md:pl-4" style="max-height: 200px; height: 116px; overflow-y: hidden;"></textarea> */}
-    //         </Box>
-            
-    //         Hi there you are on the community two map ideas posting page */}
+      <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
+        <Typography variant="h4" gutterBottom color="white">
+          What should I write in the memo?
+        </Typography>
+        <Typography variant="subtitle1" gutterBottom color="white">
+          User1 2023.05.10
+        </Typography>
+        <Divider sx={{ my: 2, bgcolor: 'white' }} />
+        <br></br>
+        <Typography paragraph color="white">
+          Hi, I have a question. What do you guys usually jot down in your memo?
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+        </Typography>
+        <Divider sx={{ my: 2, bgcolor: 'white' }} />
+        <Typography variant="h6" gutterBottom color="white">
+          Comments (0)
+        </Typography>
+        {/* Comment list here */}
+        <Typography paragraph color="white">
+        </Typography>
+        {/* ... more comments ... */}
+      
+        <TextField
+          id="prompt-textarea"
+          multiline
+          rows={4}
+          placeholder="Write a comment..."
+          variant="outlined"
+          fullWidth
+          value={message}
+          onChange={handleMessageChange}
+          sx={{ color: 'white',
+            input: { color: 'white' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': { borderColor: 'white' },
+              '&:hover fieldset': { borderColor: 'white' },
+              '&.Mui-focused fieldset': { borderColor: 'white' },
 
-    return(
-        <div>
-            <Box>
-            <Typography variant="h3" color="white">Question Post</Typography>
-            <Typography variant="h5" color="white">User 1 2023.4.29</Typography>
-            <Divider sx={{ my: 0.5, height:5 }} />
-            <Typography color="white">{newQuestions[actualIndex]}</Typography>
-            <Divider sx={{ my: 0.5, height:5 }} />
-            <TextField
-        id="prompt-textarea"
-        multiline
-        rows={1}
-        placeholder="Send a message"
-        variant="outlined"
-        fullWidth
-        value={message}
-        onChange={handleMessageChange}
-        InputProps={{
-          classes: {
-            root: 'm-0 w-full resize-none border-0 bg-transparent py-2 pr-2',
-            notchedOutline: 'border-transparent',
-          },
-          style: { maxHeight: '500px', height: '400px', overflowY: 'hidden' },
-        }}
-        inputProps={{
-          'data-id': 'request-:R3apdm:-49',
-          tabIndex: '0',
-        }}
-      />
-      <Button variant="contained" color="primary" onClick={handleSubmit}>
-        Submit
-      </Button>
-            <Typography color="white">User4 Just Random Phrases</Typography>
-            <Typography color="white">User4 Just Random Phrases</Typography>
-            <Typography color="white">User4 Just Random Phrases</Typography>
-            <Typography color="white">User4 Just Random Phrases</Typography>
-            </Box>
-        </div>
-    );
+            }
+          }}
+        />
+        <br></br>
+        <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
+          Post Comment
+        </Button>
+      </Paper>
+
+    </Container>
+  );
 }
 
 export default CommunityQuestionPost;
