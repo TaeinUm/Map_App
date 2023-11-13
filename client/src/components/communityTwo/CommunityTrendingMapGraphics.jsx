@@ -21,6 +21,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { alpha } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
 import ShareIcon from '@mui/icons-material/Share';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -44,9 +45,16 @@ const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': { backgroundColor: alpha(theme.palette.common.white, 0.25) },
+  '&:hover': {
+    backgroundColor: alpha(theme.palette.common.white, 0.25),
+  },
+  marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: 'auto',
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(3),
+    width: 'auto',
+  },
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -63,6 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -71,6 +80,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
   },
 }));
+
+const StyledToolbar = styled(Toolbar)({
+  justifyContent: 'space-between',
+});
 
 function CommunityTrendingMapGraphics() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -96,7 +109,7 @@ function CommunityTrendingMapGraphics() {
 
   return (
     <Container maxWidth="lg" sx={{ paddingBottom: 4 }}>
-      <StyledAppBar position="static" elevation={0}>
+      {/* <StyledAppBar position="static" elevation={0}>
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap sx={{ cursor: 'pointer', flexGrow: 1 }}>
             TERRACANVAS
@@ -117,7 +130,35 @@ function CommunityTrendingMapGraphics() {
             <AccountCircleIcon />
           </IconButton>
         </Toolbar>
-      </StyledAppBar>
+      </StyledAppBar> */}
+      <AppBar position="static" color="default" elevation={0}>
+      <StyledToolbar sx={{ color:"black" }}>
+        {/* Left side - Title */}
+        <Typography variant="h6" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
+          Trending Map Graphics
+        </Typography>
+
+        {/* Center - Search input */}
+        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' }, justifyContent: 'center' }}>
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon />
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search>
+        </Box>
+
+        {/* Right side - Post button */}
+        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+          <Button variant="contained" startIcon={<AddIcon />} sx={{ mr: 2 }}>
+            Post
+          </Button>
+        </Box>
+      </StyledToolbar>
+    </AppBar>
       <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
         Trending Map Graphics
       </Typography>
