@@ -5,16 +5,24 @@ import { Button } from "@mui/material";
 
 const JSONTab = ({ mapJson, handleJsonChange, saveJson }) => {
   return (
-    <div>
+    <div
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <JSONInput
         id="json-editor"
         size="xs"
         placeholder={mapJson}
         locale={locale}
         height="395px"
+        width="280px"
         onChange={handleJsonChange}
         validationError="Invalid JSON"
-        style={{ width: "80px", maxWidth: "300px", margin: "20px" }}
+        style={{ maxWidth: "300px", margin: "20px", paddingLeft: "50px" }}
       />
       <Button
         variant="contained"
