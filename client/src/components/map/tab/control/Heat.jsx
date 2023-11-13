@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import mapboxgl from "mapbox-gl";
+import mapboxgl from "!mapbox-gl";
 import { Tab, Tabs, Box, Button, Typography, Container } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import * as XLSX from "xlsx";
