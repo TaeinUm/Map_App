@@ -13,7 +13,6 @@
 // import CommunitySearchBar from "./CommunitySearchBar";
 
 
-// let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 // let newIdeas = ["Fantasy Map", "Deer Pop", "Road Trip"];
 
 // const StyledMenu = styled((props) => (
@@ -276,6 +275,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
 import { getTop5Trending } from "../../api/graphicsAPI";
 
+let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 // Styled components
 const StyledAppBar = styled(AppBar)({
   backgroundColor: '#333', // Customize app bar color
@@ -381,9 +381,9 @@ function CommunityTwo() {
             <MenuItem value="">
               Trending Map Graphics
             </MenuItem>
-            <MenuItem value={'category1'}>Category 1</MenuItem>
-            <MenuItem value={'category2'}>Category 2</MenuItem>
-            <MenuItem value={'category2'}>Category 2</MenuItem>
+            <MenuItem value={'category2'}>Map Graphic Idea</MenuItem>
+            <MenuItem value={'category1'}>Question</MenuItem>
+            <MenuItem value={'category2'}>User Name</MenuItem>
             
             {/* ... other categories */}
           </Select>
@@ -463,7 +463,44 @@ function CommunityTwo() {
           showLastButton
         />
       </Box>
+
+      <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+        New Questions:
+      </Typography>
+      <Box 
+          sx={{
+            display: "flex-column",
+            width: "3250px",
+            gap: "10px",
+            mt: 5,
+            transition: "transform 0.5s",
+            //transform: `translateX(${scrollAmount}px)`,
+          }}
+          >
+            
+            {newQuestions.map((text, index) => (
+              <Typography
+                variant="h2"
+                
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+index}
+              >
+                {text}
+              </Typography>
+            ))}
+          </Box>
     </Container>
+
+    
   );
 }
 
