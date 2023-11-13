@@ -6,12 +6,12 @@ function Termsconditions() {
   return (
     <div className="terms-conditions">
       <h1><b>Terms and Conditions (EXAMPLE)</b></h1>
-      <p>Last updated: 2023.10.02</p>
+      <p>Last updated: 2023.11.12</p>
       <p>Please red these terms and conditions of use carefully before accessing, 
         using or obtaining any materials, information, products or services.</p>
       <br></br>
       
-      <h1>Agreement to our Legal Terms</h1>
+      <h2>Agreement to our Legal Terms</h2>
       <br></br>
       <p>We are ‘TerraCanvas.’</p>
       <p>We operate the website to provide map graphics and community services, 
