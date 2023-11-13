@@ -331,14 +331,14 @@ const BasicStyles = () => {
           <TabPanel value="4">
             <SaveTab />
           </TabPanel>
-          <Button
-            sx={{ width: "100%", height: "20px", backgroundColor: "grey" }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button>
-          {isMemoVisible && <Memo />}
         </TabContext>
+        <Button
+          sx={{ width: "100%", height: "20px", backgroundColor: "grey" }}
+          onClick={toggleMemo}
+        >
+          {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        </Button>
+        {isMemoVisible && <Memo />}
       </Box>
     </Box>
   );
