@@ -72,7 +72,6 @@
     "cypress": "^13.4.0",
     "mocha": "^10.2.0",
     "react-app-rewired": "^2.2.1",
-    "supertest": "^6.3.3",
-    "worker-loader": "^3.0.8"
+    "supertest": "^6.3.3"
   }
 }

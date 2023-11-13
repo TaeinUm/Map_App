@@ -61,7 +61,6 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/events": "^3.0.3",
-    "@types/node": "^20.9.0",
-    "worker-loader": "^3.0.8"
+    "@types/node": "^20.9.0"
   }
 }
