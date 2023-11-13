@@ -15,7 +15,9 @@ import {
   Container,
   Paper,
   InputBase,
-  Pagination
+  Pagination,
+  Select, 
+  MenuItem 
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -90,6 +92,11 @@ function CommunityTrendingMapGraphics() {
   const [topGraphics, setTopGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
+  const [category, setCategory] = useState('');
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
 
   useEffect(() => {
     const fetchGraphics = async () => {
@@ -109,28 +116,6 @@ function CommunityTrendingMapGraphics() {
 
   return (
     <Container maxWidth="lg" sx={{ paddingBottom: 4 }}>
-      {/* <StyledAppBar position="static" elevation={0}>
-        <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap sx={{ cursor: 'pointer', flexGrow: 1 }}>
-            TERRACANVAS
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              value={searchTerm}
-            />
-          </Search>
-          <Button color="inherit" startIcon={<LogoutIcon />}>Logout</Button>
-          <IconButton color="inherit">
-            <AccountCircleIcon />
-          </IconButton>
-        </Toolbar>
-      </StyledAppBar> */}
       <AppBar position="static" color="default" elevation={0}>
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
@@ -140,6 +125,24 @@ function CommunityTrendingMapGraphics() {
 
         {/* Center - Search input */}
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'flex' }, justifyContent: 'center' }}>
+        <Select
+            value={category}
+            onChange={handleCategoryChange}
+            displayEmpty
+            inputProps={{ 'aria-label': 'Select category' }}
+            sx={{ mr: 2 }}
+          >
+            <MenuItem value="">
+              Trending Map Graphics
+            </MenuItem>
+            <MenuItem value={'category1'}>Category 1</MenuItem>
+            <MenuItem value={'category2'}>Category 2</MenuItem>
+            <MenuItem value={'category2'}>Category 2</MenuItem>
+            <MenuItem value={'category2'}>Category 2</MenuItem>
+            {/* ... other categories */}
+          </Select>
+          
+          
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -190,7 +193,7 @@ function CommunityTrendingMapGraphics() {
                     <ShareIcon />
                   </IconButton>
                   <Button size="small" color="primary">
-                    Learn More
+                    More
                   </Button>
                 </CardActions>
               </StyledCard>
