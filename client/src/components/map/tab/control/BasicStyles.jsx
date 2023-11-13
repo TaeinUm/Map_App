@@ -11,7 +11,7 @@ import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dvdnNlaTA3dTMyam83Yzhua2JtcmIifQ.DnTWaj1jNwPud158t1GHtQ";
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
 const BasicStyles = () => {
   const [map, setMap] = useState(null);
