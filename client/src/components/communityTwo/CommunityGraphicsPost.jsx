@@ -1,7 +1,10 @@
 import React, { useState, useEffect} from "react";
-import {Box, Typography, TextField, Button, Paper, Divider} from "@mui/material";
+import {Box, Typography, TextField, Button, Paper, Divider, IconButton, Container} from "@mui/material";
 import { getTop5Trending } from "../../api/graphicsAPI";
 import { useParams } from 'react-router-dom';
+import {
+    AiTwotoneHeart,
+  } from "react-icons/ai";
 
 
 function CommunityGraphicPost() {
@@ -89,7 +92,9 @@ function CommunityGraphicPost() {
 
     return(
         <div> 
-            <Box>
+            <Container sx={{display: 'flex-row',
+    justifyContent: 'center',
+    alignItems: 'center',}}>
             <Typography variant="h3" color="white">Hello</Typography>
             <Typography variant="h5" color="white">User 1 2023.4.29</Typography>
             <Divider sx={{ my: 0.5, height:5 }} />
@@ -98,7 +103,8 @@ function CommunityGraphicPost() {
               key={index}
               elevation={4}
               data-cy="trending-graphic"
-              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+              sx={{ width: "500px", height: "400px", bgcolor: "grey", justifyContent: 'center',
+              alignItems: 'center', ml:"325px"}}
             //   component={NavLink}
               //to={"/communityGraphicPost/:"+index}
             >
@@ -107,6 +113,17 @@ function CommunityGraphicPost() {
                 alt={graphic.title}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               /> */}
+              <IconButton
+            sx={{
+              position: "relative",
+            //   top: 8,
+            //   right: 8,
+              color: "red",
+            }}
+            aria-label="like"
+          >
+            <AiTwotoneHeart />
+          </IconButton>
             </Paper>
               
             <Divider sx={{ my: 0.5, height:5 }} />
@@ -138,7 +155,7 @@ function CommunityGraphicPost() {
             <Typography color="white">User4 Just Random Phrases</Typography>
             <Typography color="white">User4 Just Random Phrases</Typography>
             <Typography color="white">User4 Just Random Phrases</Typography>
-            </Box>
+            </Container>
         </div>
     );
 }

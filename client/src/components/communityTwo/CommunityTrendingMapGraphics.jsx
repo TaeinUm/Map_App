@@ -4,13 +4,16 @@ import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 //import { makeStyles } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import {Typography, Paper, Button, Box, TextField} from '@mui/material';
+import {Typography, Paper, Button, IconButton, Box, TextField} from '@mui/material';
 import { getTop5Trending } from "../../api/graphicsAPI";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { styled, alpha } from '@mui/material/styles';
 import CommunitySearchBar from './CommunitySearchBar';
+import {
+    AiTwotoneHeart,
+  } from "react-icons/ai";
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -234,13 +237,45 @@ function CommunityTrendingMapGraphics(){
           {topGraphics.slice(startIndex, endIndex).filter((item) =>
         item.title.toLowerCase().includes(searchTerm.toLowerCase())
       ).map((graphic, index) => (
+        //key={index} sx={{ mb: 2, position: "relative", width: "48%" }}
+        // <Box>
+        // <Typography component={NavLink} to={"/communityGraphicPost/:"+index}>{graphic.title}</Typography>
+        // <Box sx={{ mb: 2, position: "relative"}}>
+            
+        //     <Box
+        //       component="img"
+        //       src="mapImageUrl"
+        //       sx={{
+        //         width: "500px",
+        //         height: "400px",
+        //         objectFit: "cover",
+        //         bgcolor: "grey",
+        //       }}
+        //     />
+          
+        //   <IconButton
+        //     sx={{
+        //       position: "absolute",
+        //       //top: 4,
+        //       //left: 2,
+        //       //right: 10,
+        //       color: "red",
+        //     }}
+        //     aria-label="like"
+        //   >
+        //     <AiTwotoneHeart />
+        //   </IconButton>
+        // </Box>
+        // </Box>
+            
             <Box>
             <Typography component={NavLink} to={"/communityGraphicPost/:"+index}>{graphic.title}</Typography>
+            
             <Paper 
               key={index}
               elevation={4}
               data-cy="trending-graphic"
-              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+              sx={{ width: "500px", height: "400px", bgcolor: "grey", ml:"500px" }}
             //   component={NavLink}
               //to={"/communityGraphicPost/:"+index}
             >
@@ -249,8 +284,32 @@ function CommunityTrendingMapGraphics(){
                 alt={graphic.title}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
+              <IconButton
+            sx={{
+              position: "absolute",
+            //   top: 8,
+            //   right: 8,
+              color: "red",
+            }}
+            aria-label="like"
+          >
+            <AiTwotoneHeart />
+          </IconButton>
             </Paper>
+            
+            {/* <IconButton
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              color: "red",
+            }}
+            aria-label="like"
+          >
+            <AiTwotoneHeart />
+          </IconButton> */}
             </Box>
+            
           ))}
           <Button onClick={handleDecrease}>{"<"}</Button>
           <Button onClick={handleIncrease}>{">"}</Button>

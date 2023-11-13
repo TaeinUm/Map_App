@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getTop5Trending } from "../../api/graphicsAPI";
-import {Box, Typography, Paper, TextField} from "@mui/material";
+import {Box, Typography, Paper, TextField, Container, IconButton} from "@mui/material";
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,6 +11,9 @@ import CommunityTwoMapIdeaPostings from "./CommunityTwoMapIdeasPostingsPage";
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CommunitySearchBar from "./CommunitySearchBar";
+import {
+    AiTwotoneHeart,
+  } from "react-icons/ai";
 
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
@@ -91,6 +94,7 @@ function CommunityTwo(){
 
     return(
     <div>
+        
         <Box>
             
             <Button
@@ -146,10 +150,12 @@ function CommunityTwo(){
           data-cy="new-map-graphics-community-homecontainer"
           sx={{
             display: "flex-row",
-            width: "3250px",
+        
+            width: "100%",
             gap: "10px",
             ml: 5,
             transition: "transform 0.5s",
+            
             //transform: `translateX(${scrollAmount}px)`,
           }}>
             
@@ -159,7 +165,7 @@ function CommunityTwo(){
               key={index}
               elevation={4}
               data-cy="trending-graphic"
-              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+              sx={{ width: "500px", height: "400px", bgcolor: "grey", ml:"450px", mb:"4px" }}
             //   component={NavLink}
             //   to={"/communityGraphicPost/:"+index}
             >
@@ -168,6 +174,17 @@ function CommunityTwo(){
                 alt={graphic.title}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
+              <IconButton
+            sx={{
+              position: "absolute",
+            //   top: 8,
+            //   right: 8,
+              color: "red",
+            }}
+            aria-label="like"
+          >
+            <AiTwotoneHeart />
+          </IconButton>
             </Paper>
           ))}
           {/* </Grid> */}
@@ -177,7 +194,7 @@ function CommunityTwo(){
         <Box 
           sx={{
             display: "flex-column",
-            width: "3250px",
+            width: "100%",
             gap: "10px",
             mt: 5,
             transition: "transform 0.5s",
@@ -209,7 +226,7 @@ function CommunityTwo(){
           <Box 
           sx={{
             display: "flex-column",
-            width: "3250px",
+            width: "100%",
             gap: "10px",
             mt: 5,
             transition: "transform 0.5s",
@@ -237,7 +254,7 @@ function CommunityTwo(){
               </Typography>
             ))}
           </Box>
-
+        
     </div>);
 }
 export default CommunityTwo;
