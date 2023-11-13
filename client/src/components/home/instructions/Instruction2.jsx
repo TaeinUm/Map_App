@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../../styles/home.css";
 import inst2 from "../../../assets/images/inst2_mygraphics.png";
 
-function Instruction1() {
+function Instruction2() {
   useEffect(() => {
     moveCursorDown();
   }, []);
@@ -97,4 +97,4 @@ function Instruction1() {
   );
 }
 
-export default Instruction1;
+export default Instruction2;
