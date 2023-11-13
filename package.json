@@ -69,6 +69,7 @@
     "mocha": "^10.2.0",
     "supertest": "^6.3.3",
     "@types/events": "^3.0.3",
-    "@types/node": "^20.9.0"
+    "@types/node": "^20.9.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.x"
   }
 }
