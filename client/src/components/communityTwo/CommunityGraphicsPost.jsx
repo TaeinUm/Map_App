@@ -1,11 +1,11 @@
 import React, { useState, useEffect} from "react";
 import {Box, Typography, TextField, Button, Paper, Divider} from "@mui/material";
-//import { getTop5Trending } from "../../api/graphicsAPI";
+import { getTop5Trending } from "../../api/graphicsAPI";
 import { useParams } from 'react-router-dom';
 
-let newIdeas = ["Fantasy Map", "Deer Pop", "Road Trip", "City Congestion", "Wildfire report"];
-function CommunityTwoMapIdeaPostings() {
-    //const [topGraphics, setTopGraphics] = useState([]);
+
+function CommunityGraphicPost() {
+    const [topGraphics, setTopGraphics] = useState([]);
     const [message, setMessage] = useState('');
     const {index} = useParams();
     let actualIndex=index.replace(/:/g, '');
@@ -19,22 +19,26 @@ function CommunityTwoMapIdeaPostings() {
     // Handle your submission logic here
     console.log('Submitted message:', message);
   };
-//   useEffect(() => {
-//     const fetchGraphics = async () => {
-//       try {
-//         const data = await getTop5Trending();
+  useEffect(() => {
+    const fetchGraphics = async () => {
+      try {
+        const data = await getTop5Trending();
         
-//         console.log("Hello");
-//         console.log(data);
-//         setTopGraphics(data);
+        console.log("Hello");
+        console.log(data);
+        setTopGraphics(data);
         
-//       } catch (error) {
-//         console.error("Error fetching top graphics:", error);
-//       }
-//     };
+      } catch (error) {
+        console.error("Error fetching top graphics:", error);
+      }
+    };
 
-//     fetchGraphics();
-//   },[]);
+    fetchGraphics();
+  },[]);
+  let graphic=topGraphics[actualIndex];
+//   let title=topGraphics[actualIndex].title;
+//   let image=topGraphics[actualIndex].image;
+  console.log("What is the graphic's properties: "+graphic);
 
 {/* <Box>
                 <Typography>Hello</Typography>
@@ -84,22 +88,27 @@ function CommunityTwoMapIdeaPostings() {
     //         Hi there you are on the community two map ideas posting page */}
 
     return(
-        <div>
+        <div> 
             <Box>
-            <Typography variant="h3" color="white">{newIdeas[actualIndex]}</Typography>
+            <Typography variant="h3" color="white">Hello</Typography>
             <Typography variant="h5" color="white">User 1 2023.4.29</Typography>
             <Divider sx={{ my: 0.5, height:5 }} />
-            <TextField placeholder="Some message is here" fullWidth multiline disabled InputProps={{
-          classes: {
-            root: 'm-0 w-full resize-none border-0 bg-transparent py-2 pr-2',
-            notchedOutline: 'border-transparent',
-          },
-          style: { height: '400px', overflowY: 'hidden' },
-        }}
-        inputProps={{
-          'data-id': 'request-:R3apdm:-49',
-          tabIndex: '0',
-        }}></TextField>
+            
+            <Paper 
+              key={index}
+              elevation={4}
+              data-cy="trending-graphic"
+              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            //   component={NavLink}
+              //to={"/communityGraphicPost/:"+index}
+            >
+              {/* <img
+                src={graphic.image}
+                alt={graphic.title}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              /> */}
+            </Paper>
+              
             <Divider sx={{ my: 0.5, height:5 }} />
             <TextField
         id="prompt-textarea"
@@ -134,4 +143,4 @@ function CommunityTwoMapIdeaPostings() {
     );
 }
 
-export default CommunityTwoMapIdeaPostings;
+export default CommunityGraphicPost;

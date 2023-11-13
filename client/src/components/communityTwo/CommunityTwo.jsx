@@ -10,6 +10,7 @@ import { Link, NavLink } from "react-router-dom";
 import CommunityTwoMapIdeaPostings from "./CommunityTwoMapIdeasPostingsPage";
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CommunitySearchBar from "./CommunitySearchBar";
 
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
@@ -102,7 +103,7 @@ function CommunityTwo(){
               onClick={handleClick}
               //endIcon={}
             >
-              Options
+              Community
             </Button>
             <StyledMenu
               id="demo-customized-menu"
@@ -134,12 +135,13 @@ function CommunityTwo(){
             </StyledMenu>
           </Box>
           <Box>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+          <CommunitySearchBar disabled />
             </Box>
            <Box>
                 <Button id="post-map-button" variant="contained" component={NavLink}
                 to={"/communityPostMapGraphic"}>Post</Button>
            </Box>
+           <Typography color="white" variant="h4">Trending Map Graphics</Typography>
         <Box
           data-cy="new-map-graphics-community-homecontainer"
           sx={{
@@ -150,6 +152,7 @@ function CommunityTwo(){
             transition: "transform 0.5s",
             //transform: `translateX(${scrollAmount}px)`,
           }}>
+            
             {/* <Grid container spacing="2"> */}
             {topGraphics.slice(0, 3).map((graphic, index) => (
             <Paper
@@ -157,6 +160,8 @@ function CommunityTwo(){
               elevation={4}
               data-cy="trending-graphic"
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            //   component={NavLink}
+            //   to={"/communityGraphicPost/:"+index}
             >
               <img
                 src={graphic.image}
@@ -168,6 +173,7 @@ function CommunityTwo(){
           {/* </Grid> */}
           
           </Box>
+          <Typography color="white" variant="h4">Questions</Typography>
         <Box 
           sx={{
             display: "flex-column",
@@ -178,6 +184,7 @@ function CommunityTwo(){
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
+            
             {newQuestions.map((text, index) => (
               <Typography
                 variant="h2"
@@ -191,13 +198,14 @@ function CommunityTwo(){
                   flexGrow: "1",
                   fontWeight: "bold",
                 }}
-                // component={NavLink}
-                // to={"/community"}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+index}
               >
                 {text}
               </Typography>
             ))}
           </Box>
+          <Typography color="white" variant="h4">Map Ideas</Typography>
           <Box 
           sx={{
             display: "flex-column",
@@ -208,6 +216,7 @@ function CommunityTwo(){
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
+            
             {newIdeas.map((text, index) => (
               <Typography
                 variant="h2"
@@ -222,7 +231,7 @@ function CommunityTwo(){
                   fontWeight: "bold",
                 }}
                 component={NavLink}
-                to={"/communityMapIdeasPostings"}
+                to={"/communityMapIdeaPost/:index"}
               >
                 {text}
               </Typography>

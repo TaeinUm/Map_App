@@ -198,7 +198,7 @@ function CommunityUserName(){
               onClick={handleClick}
               //endIcon={}
             >
-              Trending Map Graphics
+              User Name
             </Button>
             <StyledMenu
               id="demo-customized-menu"
@@ -213,18 +213,18 @@ function CommunityUserName(){
               
                 Community
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityMapIdeas"} disableRipple>
                 
                 Map Graphics Idea
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityQuestions"} disableRipple>
                 
                 Questions
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityTrendingMaps"} disableRipple>
                 
-                User Name
+                Trending
               </MenuItem>
             </StyledMenu>
           </Box>
@@ -241,7 +241,7 @@ function CommunityUserName(){
 
           <Box
             key={index}
-            sx={{ display: "flex", alignItems: "center", my: 3 }}
+            sx={{ display: "flex", alignItems: "center", my: 3, height: "110px" }}
           >
             <Box sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}>
               <img

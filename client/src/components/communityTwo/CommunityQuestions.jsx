@@ -5,6 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import {Button, Box, Typography, TextField} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
+import CommunitySearchBar from "./CommunitySearchBar";
 
 let itemsPerPage=3;
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?", "Can I make fantasy map graphics", "Are flow maps used to map the migration routes of geese?"];
@@ -51,6 +52,10 @@ const StyledMenu = styled((props) => (
   }));
 
 function CommunityTwoQuestions() {
+    const [searchTerm, setSearchTerm] = useState("");
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+      };
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -117,40 +122,43 @@ function CommunityTwoQuestions() {
               
                 Trending Map Graphics
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityMapIdeas"} disableRipple>
                 
                 Map Graphics Idea
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityQuestions"} disableRipple>
                 
                 Questions
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityUserName"} disableRipple>
                 
                 User Name
               </MenuItem>
             </StyledMenu>
           </Box>
           <Box>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+          <CommunitySearchBar onSearchChange={handleSearchChange} />
             </Box>
            <Box>
                 <Button id="post-map-button" variant="contained" component={NavLink}
                 to={"/communityPostMapGraphic"}>Post</Button>
            </Box>
-            <Typography>Questions</Typography>
+            <Typography color="white" variant="h4">Questions</Typography>
             <Box 
           sx={{
             display: "flex-column",
             width: "3250px",
+            height: "400px",
             gap: "10px",
             mt: 5,
             transition: "transform 0.5s",
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            {newQuestions.slice(startIndex, endIndex).map((text, index) => (
+            {newQuestions.slice(startIndex, endIndex).filter((item) =>
+        item.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map((text, index) => (
               <Typography
                 variant="h2"
                 
@@ -163,8 +171,8 @@ function CommunityTwoQuestions() {
                   flexGrow: "1",
                   fontWeight: "bold",
                 }}
-                // component={NavLink}
-                // to={"/community"}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+index}
               >
                 {text}
               </Typography>

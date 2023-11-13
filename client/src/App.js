@@ -23,6 +23,9 @@ import CommunityTrendingMapGraphics from "./components/communityTwo/CommunityTre
 import CommunityTwoQuestions from "./components/communityTwo/CommunityQuestions";
 import CommunityTwoMapIdeas from "./components/communityTwo/CommunityMapIdeas";
 import CommunityUserName from "./components/communityTwo/CommunityUserName";
+import CommunityTwoMapIdeasPostingsPage from "./components/communityTwo/CommunityTwoMapIdeasPostingsPage";
+import CommunityQuestionPost from "./components/communityTwo/CommunityQuestionPost";
+import CommunityGraphicPost from "./components/communityTwo/CommunityGraphicsPost";
 import Profile from "./components/common/Profile";
 //import MapEditing from "./components/map/MapEditing";
 import NotFound from "./components/common/NotFound";
@@ -45,6 +48,9 @@ function App() {
               <Route path="/communityQuestions" element={<CommunityTwoQuestions/>}/>
               <Route path="/communityMapIdeas" element={<CommunityTwoMapIdeas/>}/>
               <Route path="/communityUserName" element={<CommunityUserName/>}/>
+              <Route path="/communityMapIdeaPost/:index" element={<CommunityTwoMapIdeasPostingsPage />}/>
+              <Route path="/communityQuestionPost/:index" element={<CommunityQuestionPost/>}/>
+              <Route path="/communityGraphicPost/:index" element={<CommunityGraphicPost/>}/>
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/profile" element={<Profile />} />
