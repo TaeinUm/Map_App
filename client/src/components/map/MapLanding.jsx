@@ -72,7 +72,9 @@ function MapLanding() {
                 Create New
               </Button>
               <Modal open={openGraphic} onClose={handleGraphicClose}>
-                <MapGraphics open={openGraphic} />
+                <Box>
+                  <MapGraphics open={openGraphic} />
+                </Box>
               </Modal>
               <Button
                 onClick={handleFileOpen}
@@ -88,7 +90,9 @@ function MapLanding() {
                 Load File
               </Button>
               <Modal open={openFile} onClose={handleFileClose}>
-                <LoadFile open={openFile} />
+                <Box>
+                  <LoadFile open={openFile} />
+                </Box>
               </Modal>
             </Box>
           </Box>
