@@ -16,7 +16,13 @@ import PrivacyPolicy from "./components/policy/PrivacyPolicy";
 import Termsconditions from "./components/policy/TermsConditions";
 import Contact from "./components/policy/Contact";
 import MapLanding from "./components/map/MapLanding";
-import Community from "./components/community/Community";
+import CommunityTwo from "./components/communityTwo/CommunityTwo";
+import CommunityTwoMapIdeaPostings from "./components/communityTwo/CommunityTwoMapIdeasPostingsPage";
+import CommunityPostMapGraphic from "./components/communityTwo/CommunityPostMapGraphic";
+import CommunityTrendingMapGraphics from "./components/communityTwo/CommunityTrendingMapGraphics";
+import CommunityTwoQuestions from "./components/communityTwo/CommunityQuestions";
+import CommunityTwoMapIdeas from "./components/communityTwo/CommunityMapIdeas";
+import CommunityUserName from "./components/communityTwo/CommunityUserName";
 import Profile from "./components/common/Profile";
 import MapEditing from "./components/map/MapEditing";
 import NotFound from "./components/common/NotFound";
@@ -32,7 +38,31 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/mapedit" element={<MapEditing />} />
               <Route path="/map" element={<MapLanding />} />
-              <Route path="/community" element={<Community />} />
+              <Route path="/community" element={<CommunityTwo />} />
+              <Route
+                path="/communityMapIdeasPostings"
+                element={<CommunityTwoMapIdeaPostings />}
+              />
+              <Route
+                path="/communityPostMapGraphic"
+                element={<CommunityPostMapGraphic />}
+              />
+              <Route
+                path="/communityTrendingMaps"
+                element={<CommunityTrendingMapGraphics />}
+              />
+              <Route
+                path="/communityQuestions"
+                element={<CommunityTwoQuestions />}
+              />
+              <Route
+                path="/communityMapIdeas"
+                element={<CommunityTwoMapIdeas />}
+              />
+              <Route
+                path="/communityUserName"
+                element={<CommunityUserName />}
+              />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/profile" element={<Profile />} />

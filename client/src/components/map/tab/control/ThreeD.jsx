@@ -1,6 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import mapboxgl from "mapbox-gl";
-import { Tab, Tabs, Box, Button, Typography, Container } from "@mui/material";
+import {
+  Tab,
+  Tabs,
+  Box,
+  Button,
+  Typography,
+  Container,
+  CircularProgress,
+} from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import * as XLSX from "xlsx";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -14,13 +22,12 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const Point = () => {
+const ThreeD = () => {
   const [map, setMap] = useState(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const mapContainer = useRef(null);
   const fileInputRef = useRef(null);
-  const [mapStyle, setMapStyle] = useState(
-    "mapbox://styles/mapbox/streets-v11"
-  );
+  const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
 
   const [tabValue, setTabValue] = useState("1");
   const [mapJson, setMapJson] = useState({});
@@ -59,24 +66,35 @@ const Point = () => {
         container: "map",
         style: mapStyle,
         center: [-74.006, 40.7128],
-        zoom: 2,
+        zoom: 4,
+        pitch: 45,
+        bearing: -17.6,
+        antialias: true,
       });
 
       newMap.on("load", () => {
-        newMap.addLayer({
-          id: "country-boundaries",
-          type: "fill",
-          source: {
-            type: "vector",
-            url: "mapbox://mapbox.country-boundaries-v1",
+        newMap.addSource("3d-data", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [],
           },
-          "source-layer": "country_boundaries",
+        });
+
+        newMap.addLayer({
+          id: "3d-bars",
+          type: "fill-extrusion",
+          source: "3d-data",
           paint: {
-            "fill-opacity": 0,
+            "fill-extrusion-color": "blue",
+            "fill-extrusion-height": ["get", "height"],
+            "fill-extrusion-base": 0,
+            "fill-extrusion-opacity": 0.6,
           },
         });
 
         setMap(newMap);
+        setIsMapLoaded(true);
       });
     }
     if (map) {
@@ -85,6 +103,11 @@ const Point = () => {
   }, [map]);
 
   const handleFileInputChange = (e) => {
+    if (!isMapLoaded) {
+      alert("Map is still loading. Please wait.");
+      return;
+    }
+    
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -96,24 +119,39 @@ const Point = () => {
 
         const locations = XLSX.utils.sheet_to_json(worksheet);
 
-        const map = new mapboxgl.Map({
-          container: "map",
-          style: mapStyle,
-          center: [-74.006, 40.7128],
-          zoom: 2,
+        const features = locations.map((location) => {
+          const height = location.value * 5;
+          const deltaLon = 0.05;
+          const deltaLat = 0.05;
+
+          const coordinates = [
+            [location.longitude - deltaLon, location.latitude - deltaLat],
+            [location.longitude + deltaLon, location.latitude - deltaLat],
+            [location.longitude + deltaLon, location.latitude + deltaLat],
+            [location.longitude - deltaLon, location.latitude + deltaLat],
+            [location.longitude - deltaLon, location.latitude - deltaLat],
+          ];
+
+          return {
+            type: "Feature",
+            properties: {
+              height: height,
+            },
+            geometry: {
+              type: "Polygon",
+              coordinates: [coordinates],
+            },
+          };
         });
 
-        locations.forEach((location) => {
-          const marker = new mapboxgl.Marker()
-            .setLngLat([location.longitude, location.latitude])
-            .addTo(map);
-          /*
-          const popup = new mapboxgl.Popup()
-            .setHTML(`<h3>${location.name}</h3>`)
-            .addTo(map);
+        const geojsonData = {
+          type: "FeatureCollection",
+          features,
+        };
 
-          marker.setPopup(popup);*/
-        });
+        if (map && map.getSource("3d-data")) {
+          map.getSource("3d-data").setData(geojsonData);
+        }
       };
 
       reader.readAsArrayBuffer(file);
@@ -127,7 +165,11 @@ const Point = () => {
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
-      ;
+      {!isMapLoaded && (
+        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+          <CircularProgress />
+        </div>
+      )}
       <Box sx={{ width: "30%" }}>
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -164,8 +206,8 @@ const Point = () => {
           <TabPanel value="1">
             <Container>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
-                Choose an excel file that contains 'latitude,' 'longitude,' and
-                'name' columns
+                Choose an excel file that contains 'latitude,' 'longitude,'
+                'name,' and 'value' columns
               </Typography>
               <input
                 type="file"
@@ -211,4 +253,4 @@ const Point = () => {
   );
 };
 
-export default Point;
+export default ThreeD;

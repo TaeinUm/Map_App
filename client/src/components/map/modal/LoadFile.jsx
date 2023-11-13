@@ -171,8 +171,6 @@ function LoadFile(open) {
     const file = files[0];
     const reader = new FileReader();
 
-    //Start Loading
-    document.getElementById("mapLoadingOverlay").style.display = "block";
     //if it's not a valid file type, just return
     if (validFileType(file)) return;
 
@@ -190,8 +188,6 @@ function LoadFile(open) {
   const updateMapWithData = (geojsonData) => {
     const sourceId = "uploadedGeoSource";
     const layerId = "uploaded-data-layer";
-
-    updateMapContextAndNavigate(null, geojsonData, navigate);
 
     if (map.current.getSource(sourceId)) {
       map.current.getSource(sourceId).setData(geojsonData);
@@ -211,10 +207,7 @@ function LoadFile(open) {
         },
       });
     }
-    map.current.once("idle", () => {
-      //Finish Loading!
-      document.getElementById("mapLoadingOverlay").style.display = "none";
-    });
+    updateMapContextAndNavigate("Basic Map", geojsonData, navigate);
   };
 
   return (
