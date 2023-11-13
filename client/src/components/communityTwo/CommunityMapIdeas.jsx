@@ -5,6 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import {Button, Box, Typography, TextField} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
+import CommunityTwoMapIdeaPostings from "./CommunityTwoMapIdeasPostingsPage";
+import CommunitySearchBar from "./CommunitySearchBar";
 
 let itemsPerPage=3;
 let newIdeas = ["Fantasy Map", "Deer Pop", "Road Trip", "City Congestion", "Wildfire report"];
@@ -51,9 +53,15 @@ const StyledMenu = styled((props) => (
   }));
 
 function CommunityTwoMapIdeas() {
+    const [searchTerm, setSearchTerm] = useState("");
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+      };
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const [currentPage, setCurrentPage] = useState(1);
+    // const [postMode, setPostMode] = useState(null);
+    // const [postData, setPostData] = useState({title: ""})
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,15 +86,58 @@ function CommunityTwoMapIdeas() {
         setCurrentPage(newPage);
     }
   }
+//   function changeToPost(text){
+//     setPostMode(true);
+//     setPostData({text});
+
+//   }
 
   useEffect(() => {
-    
+    //setPostMode(false);
     setCurrentPage(1);
   },[]);
   let startIndex = (currentPage - 1) * itemsPerPage;
   let endIndex = startIndex + itemsPerPage;//>topGraphics.length?(startIndex+itemsPerPage):topGraphics.length;
   console.log("What is the startIndex: "+startIndex);
   console.log("What is the endIndex: "+endIndex);
+
+//   let content = "";
+//   if (postMode){
+//     content = <CommunityTwoMapIdeaPostings title={postData.title}/>
+
+//   }else{
+    // content=<Box 
+    // sx={{
+    //   display: "flex-column",
+    //   width: "3250px",
+    //   gap: "10px",
+    //   mt: 5,
+    //   transition: "transform 0.5s",
+    //   //transform: `translateX(${scrollAmount}px)`,
+    // }}
+    // >
+    //   {newIdeas.slice(startIndex, endIndex).map((text, index) => (
+    //     <Typography
+    //       variant="h2"
+          
+    //       sx={{
+    //         fontSize: "20px",
+    //         color: "#FAFAFA",
+    //         mb: 2,
+    //         ml: 5,
+    //         display: "flex",
+    //         flexGrow: "1",
+    //         fontWeight: "bold",
+    //       }}
+    //       onClick={changeToPost(text)}
+    //       // component={NavLink}
+    //       // to={"/community"}
+    //     >
+    //       {text}
+    //     </Typography>
+    //   ))}
+    // </Box>
+  //}
 
     return(
         <div>
@@ -122,54 +173,58 @@ function CommunityTwoMapIdeas() {
                 Community
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityQuestions"} disableRipple>
                 
                 Questions
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityUserName"} disableRipple>
                 
                 User Name
               </MenuItem>
             </StyledMenu>
           </Box>
           <Box>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+                <CommunitySearchBar onSearchChange={handleSearchChange} />
             </Box>
            <Box>
                 <Button id="post-map-button" variant="contained" component={NavLink}
                 to={"/communityPostMapGraphic"}>Post</Button>
            </Box>
-            <Typography>Questions</Typography>
+            <Typography>Map Ideas</Typography>
             <Box 
+    sx={{
+      display: "flex-column",
+      width: "3250px",
+      height: "400px",
+      gap: "10px",
+      mt: 5,
+      transition: "transform 0.5s",
+      //transform: `translateX(${scrollAmount}px)`,
+    }}
+    >
+      {newIdeas.slice(startIndex, endIndex).filter((item) =>
+        item.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map((text, index) => (
+        <Typography
+          variant="h2"
+          
           sx={{
-            display: "flex-column",
-            width: "3250px",
-            gap: "10px",
-            mt: 5,
-            transition: "transform 0.5s",
-            //transform: `translateX(${scrollAmount}px)`,
+            fontSize: "20px",
+            color: "#FAFAFA",
+            mb: 2,
+            ml: 5,
+            display: "flex",
+            flexGrow: "1",
+            fontWeight: "bold",
           }}
-          >
-            {newIdeas.slice(startIndex, endIndex).map((text, index) => (
-              <Typography
-                variant="h2"
-                
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                // component={NavLink}
-                // to={"/community"}
-              >
-                {text}
-              </Typography>
-            ))}
-          </Box>
+          
+          component={NavLink}
+          to={"/communityMapIdeaPost/:"+index}
+        >
+          {text}
+        </Typography>
+      ))}
+    </Box>         
           <Button onClick={handleDecrease}>{"<"}</Button>
           <Button onClick={handleIncrease}>{">"}</Button>
 

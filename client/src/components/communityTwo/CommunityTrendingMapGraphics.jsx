@@ -10,6 +10,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import { styled, alpha } from '@mui/material/styles';
+import CommunitySearchBar from './CommunitySearchBar';
 
 const StyledMenu = styled((props) => (
     <Menu
@@ -84,6 +85,10 @@ const itemsPerPage = 3;
 // ];
 
 function CommunityTrendingMapGraphics(){
+    const [searchTerm, setSearchTerm] = useState("");
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+      };
     
 //     const location = useLocation();
 //   const query = new URLSearchParams(location.search);
@@ -148,6 +153,7 @@ function CommunityTrendingMapGraphics(){
   let endIndex = startIndex + itemsPerPage;//>topGraphics.length?(startIndex+itemsPerPage):topGraphics.length;
   console.log("What is the startIndex: "+startIndex);
   console.log("What is the endIndex: "+endIndex);
+  console.log("What are the properties of a graphic: "+topGraphics[0]);
     //   if (endIndex>=topGraphics.length){
     //     endIndex=topGraphics.length;
     //   }
@@ -203,34 +209,40 @@ function CommunityTrendingMapGraphics(){
               
                 Community
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityMapIdeas"} disableRipple>
                 
                 Map Graphics Idea
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityQuestions"} disableRipple>
                 
                 Questions
               </MenuItem>
-              <MenuItem onClick={handleClose} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/communityUserName"} disableRipple>
                 
                 User Name
               </MenuItem>
             </StyledMenu>
           </Box>
           <Box>
-              <TextField id="outlined-basic" label="Outlined" variant="outlined" />
+          <CommunitySearchBar onSearchChange={handleSearchChange} />
             </Box>
            <Box>
                 <Button id="post-map-button" variant="contained" component={NavLink}
                 to={"/communityPostMapGraphic"}>Post</Button>
            </Box>
-          {topGraphics.slice(startIndex, endIndex).map((graphic, index) => (
-            <Paper
+          {topGraphics.slice(startIndex, endIndex).filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map((graphic, index) => (
+            <Box>
+            <Typography component={NavLink} to={"/communityGraphicPost/:"+index}>{graphic.title}</Typography>
+            <Paper 
               key={index}
               elevation={4}
               data-cy="trending-graphic"
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            //   component={NavLink}
+              //to={"/communityGraphicPost/:"+index}
             >
               <img
                 src={graphic.image}
@@ -238,6 +250,7 @@ function CommunityTrendingMapGraphics(){
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </Paper>
+            </Box>
           ))}
           <Button onClick={handleDecrease}>{"<"}</Button>
           <Button onClick={handleIncrease}>{">"}</Button>

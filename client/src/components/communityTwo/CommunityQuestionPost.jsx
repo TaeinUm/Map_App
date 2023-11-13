@@ -3,8 +3,9 @@ import {Box, Typography, TextField, Button, Paper, Divider} from "@mui/material"
 //import { getTop5Trending } from "../../api/graphicsAPI";
 import { useParams } from 'react-router-dom';
 
-let newIdeas = ["Fantasy Map", "Deer Pop", "Road Trip", "City Congestion", "Wildfire report"];
-function CommunityTwoMapIdeaPostings() {
+let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?", "Can I make fantasy map graphics", "Are flow maps used to map the migration routes of geese?"];
+
+function CommunityQuestionPost() {
     //const [topGraphics, setTopGraphics] = useState([]);
     const [message, setMessage] = useState('');
     const {index} = useParams();
@@ -86,20 +87,10 @@ function CommunityTwoMapIdeaPostings() {
     return(
         <div>
             <Box>
-            <Typography variant="h3" color="white">{newIdeas[actualIndex]}</Typography>
+            <Typography variant="h3" color="white">Question Post</Typography>
             <Typography variant="h5" color="white">User 1 2023.4.29</Typography>
             <Divider sx={{ my: 0.5, height:5 }} />
-            <TextField placeholder="Some message is here" fullWidth multiline disabled InputProps={{
-          classes: {
-            root: 'm-0 w-full resize-none border-0 bg-transparent py-2 pr-2',
-            notchedOutline: 'border-transparent',
-          },
-          style: { height: '400px', overflowY: 'hidden' },
-        }}
-        inputProps={{
-          'data-id': 'request-:R3apdm:-49',
-          tabIndex: '0',
-        }}></TextField>
+            <Typography color="white">{newQuestions[actualIndex]}</Typography>
             <Divider sx={{ my: 0.5, height:5 }} />
             <TextField
         id="prompt-textarea"
@@ -115,7 +106,7 @@ function CommunityTwoMapIdeaPostings() {
             root: 'm-0 w-full resize-none border-0 bg-transparent py-2 pr-2',
             notchedOutline: 'border-transparent',
           },
-          style: { maxHeight: '200px', height: '116px', overflowY: 'hidden' },
+          style: { maxHeight: '500px', height: '400px', overflowY: 'hidden' },
         }}
         inputProps={{
           'data-id': 'request-:R3apdm:-49',
@@ -134,4 +125,4 @@ function CommunityTwoMapIdeaPostings() {
     );
 }
 
-export default CommunityTwoMapIdeaPostings;
+export default CommunityQuestionPost;
