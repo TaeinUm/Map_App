@@ -41,6 +41,7 @@ function LoadFile(open) {
   const navigate = useNavigate();
 
   const { updateMapContextAndNavigate } = useContext(MapContext);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {
@@ -169,6 +170,7 @@ function LoadFile(open) {
   /**  ------------------- functions for updating the map using files (json, geojson, zip, kml) -------------------  **/
   const handleFileDrop = async (files) => {
     const file = files[0];
+    setSelectedFileName(file.name);
     const reader = new FileReader();
 
     //if it's not a valid file type, just return
@@ -186,28 +188,7 @@ function LoadFile(open) {
 
   //update map
   const updateMapWithData = (geojsonData) => {
-    const sourceId = "uploadedGeoSource";
-    const layerId = "uploaded-data-layer";
-
-    if (map.current.getSource(sourceId)) {
-      map.current.getSource(sourceId).setData(geojsonData);
-    } else {
-      map.current.addSource(sourceId, {
-        type: "geojson",
-        data: geojsonData,
-      });
-
-      map.current.addLayer({
-        id: layerId,
-        type: "line",
-        source: sourceId,
-        paint: {
-          "line-color": "#088",
-          "line-opacity": 0.8,
-        },
-      });
-    }
-    updateMapContextAndNavigate("Basic Map", geojsonData, navigate);
+    updateMapContextAndNavigate(null, geojsonData, navigate);
   };
 
   return (
@@ -240,8 +221,8 @@ function LoadFile(open) {
                 }}
               >
                 <input {...getInputProps()} />
-                Drop GeoJSON, Shapefile (in .zip format), or KML file here.
-                (Click)
+                {selectedFileName ||
+                  "Drop GeoJSON, Shapefile (in .zip format), or KML file here. (Click)"}
                 <p>Your layer will show up on the Street Map</p>
                 <p>
                   KML files or large size files can take a long time to process
