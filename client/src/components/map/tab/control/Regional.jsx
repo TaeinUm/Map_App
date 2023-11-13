@@ -276,11 +276,9 @@ const Regional = () => {
       });
 
       setMap(newMap);
-    });
 
-    if (map) {
-      setMapJson(map.getStyle());
-    }
+      setMapJson(newMap.getStyle());
+    });
 
     return () => newMap.remove();
   }, []);
