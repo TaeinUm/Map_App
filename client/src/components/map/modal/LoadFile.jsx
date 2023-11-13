@@ -30,7 +30,7 @@ const style = {
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-function LoadFile(open) {
+function LoadFile({ open }) {
   /**  ------------------- useRef / useState   -------------------   **/
   //initialize map, lng, lat, zoom lvl
   const mapContainer = useRef(null);
@@ -41,6 +41,7 @@ function LoadFile(open) {
   const navigate = useNavigate();
 
   const { updateMapContextAndNavigate } = useContext(MapContext);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
   /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {
@@ -169,10 +170,9 @@ function LoadFile(open) {
   /**  ------------------- functions for updating the map using files (json, geojson, zip, kml) -------------------  **/
   const handleFileDrop = async (files) => {
     const file = files[0];
+    setSelectedFileName(file.name);
     const reader = new FileReader();
 
-    //Start Loading
-    document.getElementById("mapLoadingOverlay").style.display = "block";
     //if it's not a valid file type, just return
     if (validFileType(file)) return;
 
@@ -188,33 +188,7 @@ function LoadFile(open) {
 
   //update map
   const updateMapWithData = (geojsonData) => {
-    const sourceId = "uploadedGeoSource";
-    const layerId = "uploaded-data-layer";
-
     updateMapContextAndNavigate(null, geojsonData, navigate);
-
-    if (map.current.getSource(sourceId)) {
-      map.current.getSource(sourceId).setData(geojsonData);
-    } else {
-      map.current.addSource(sourceId, {
-        type: "geojson",
-        data: geojsonData,
-      });
-
-      map.current.addLayer({
-        id: layerId,
-        type: "line",
-        source: sourceId,
-        paint: {
-          "line-color": "#088",
-          "line-opacity": 0.8,
-        },
-      });
-    }
-    map.current.once("idle", () => {
-      //Finish Loading!
-      document.getElementById("mapLoadingOverlay").style.display = "none";
-    });
   };
 
   return (
@@ -247,8 +221,8 @@ function LoadFile(open) {
                 }}
               >
                 <input {...getInputProps()} />
-                Drop GeoJSON, Shapefile (in .zip format), or KML file here.
-                (Click)
+                {selectedFileName ||
+                  "Drop GeoJSON, Shapefile (in .zip format), or KML file here. (Click)"}
                 <p>Your layer will show up on the Street Map</p>
                 <p>
                   KML files or large size files can take a long time to process

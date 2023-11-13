@@ -1,8 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import mapboxgl from "mapbox-gl";
-import { Tab, Tabs, Box, Button, Typography, Container } from "@mui/material";
+import {
+  Tab,
+  Tabs,
+  Box,
+  Button,
+  Typography,
+  Container,
+  CircularProgress,
+} from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
-import * as XLSX from "xlsx";
+import { MapContext } from "../../../../contexts/MapContext";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../../Memo";
@@ -14,14 +22,11 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const Point = () => {
-  const [map, setMap] = useState(null);
+function File() {
+  const { geojsonData } = useContext(MapContext);
   const mapContainer = useRef(null);
-  const fileInputRef = useRef(null);
-  const [mapStyle, setMapStyle] = useState(
-    "mapbox://styles/mapbox/streets-v11"
-  );
-
+  const [map, setMap] = useState(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [tabValue, setTabValue] = useState("1");
   const [mapJson, setMapJson] = useState({});
   const [isMemoVisible, setIsMemoVisible] = useState(false);
@@ -55,70 +60,39 @@ const Point = () => {
 
   useEffect(() => {
     if (!map) {
+      const sourceId = "uploadedGeoSource";
+      const layerId = "uploaded-data-layer";
+
       const newMap = new mapboxgl.Map({
-        container: "map",
-        style: mapStyle,
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/streets-v11",
         center: [-74.006, 40.7128],
         zoom: 2,
       });
 
       newMap.on("load", () => {
-        newMap.addLayer({
-          id: "country-boundaries",
-          type: "fill",
-          source: {
-            type: "vector",
-            url: "mapbox://mapbox.country-boundaries-v1",
-          },
-          "source-layer": "country_boundaries",
-          paint: {
-            "fill-opacity": 0,
-          },
-        });
+        if (geojsonData) {
+          newMap.addSource(sourceId, {
+            type: "geojson",
+            data: geojsonData,
+          });
+
+          newMap.addLayer({
+            id: layerId,
+            type: "line",
+            source: sourceId,
+            paint: {
+              "line-color": "#088",
+              "line-opacity": 0.8,
+            },
+          });
+        }
 
         setMap(newMap);
+        setIsMapLoaded(true);
       });
     }
-    if (map) {
-      setMapJson(map.getStyle());
-    }
-  }, [map]);
-
-  const handleFileInputChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-
-      reader.onload = (e) => {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: "array" });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-        const locations = XLSX.utils.sheet_to_json(worksheet);
-
-        const map = new mapboxgl.Map({
-          container: "map",
-          style: mapStyle,
-          center: [-74.006, 40.7128],
-          zoom: 2,
-        });
-
-        locations.forEach((location) => {
-          const marker = new mapboxgl.Marker()
-            .setLngLat([location.longitude, location.latitude])
-            .addTo(map);
-          /*
-          const popup = new mapboxgl.Popup()
-            .setHTML(`<h3>${location.name}</h3>`)
-            .addTo(map);
-
-          marker.setPopup(popup);*/
-        });
-      };
-
-      reader.readAsArrayBuffer(file);
-    }
-  };
+  }, [map, geojsonData]);
 
   return (
     <Box sx={{ display: "flex", height: "100vh" }}>
@@ -127,7 +101,11 @@ const Point = () => {
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
-      ;
+      {!isMapLoaded && (
+        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+          <CircularProgress />
+        </div>
+      )}
       <Box sx={{ width: "30%" }}>
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -161,30 +139,7 @@ const Point = () => {
               />
             </Tabs>
           </Box>
-          <TabPanel value="1">
-            <Container>
-              <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
-                Choose an excel file that contains 'latitude,' 'longitude,' and
-                'name' columns
-              </Typography>
-              <input
-                type="file"
-                accept=".xlsx"
-                onChange={handleFileInputChange}
-                ref={fileInputRef}
-                style={{ display: "none" }}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => fileInputRef.current.click()}
-                style={{ marginBottom: "10px" }}
-                sx={{ backgroundColor: "#fafafa", color: "black" }}
-              >
-                Select Data File
-              </Button>
-            </Container>
-          </TabPanel>
+          <TabPanel value="1"></TabPanel>
           <TabPanel value="2">
             <JSONTab
               mapJson={mapJson}
@@ -209,6 +164,6 @@ const Point = () => {
       </Box>
     </Box>
   );
-};
+}
 
-export default Point;
+export default File;

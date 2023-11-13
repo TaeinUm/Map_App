@@ -44,7 +44,7 @@ function ShareTab() {
 
   return (
     <>
-      <Box fullWidth>
+      <Box sx={{ width: "100%" }}>
         <Box
           sx={{
             display: "flex",
@@ -76,7 +76,7 @@ function ShareTab() {
           <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
             Link Access
           </Typography>
-          <FormControl fullWidth>
+          <FormControl sx={{ width: "100%" }}>
             <Select
               size="small"
               value={linkAccess}
@@ -101,7 +101,7 @@ function ShareTab() {
           <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
             View Setting
           </Typography>
-          <FormControl fullWidth>
+          <FormControl sx={{ width: "100%" }}>
             <Select
               size="small"
               value={viewSetting}

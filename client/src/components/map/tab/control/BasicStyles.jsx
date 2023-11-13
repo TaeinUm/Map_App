@@ -13,7 +13,7 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const MapComponent = () => {
+const BasicStyles = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
   const [fontStyle, setFontStyle] = useState("Arial Unicode MS Bold");
@@ -345,4 +345,4 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+export default BasicStyles;

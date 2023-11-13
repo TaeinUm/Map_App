@@ -6,7 +6,6 @@ import {
   Box,
   TextField,
   Button,
-  Divider,
   Typography,
   MenuItem,
 } from "@mui/material";
@@ -21,7 +20,7 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const MapComponent = () => {
+const Flow = () => {
   const [map, setMap] = useState(null);
   const countryCityData = {
     USA: ["New York", "Los Angeles", "Chicago"],
@@ -85,7 +84,6 @@ const MapComponent = () => {
 
   const handleMemoSave = () => {
     console.log("Memo saved:", memoContent);
-    // Memo save logic here...
   };
 
   const handleStartCountryChange = (event) => {
@@ -131,6 +129,9 @@ const MapComponent = () => {
 
         setMap(newMap);
       });
+    }
+    if (map) {
+      setMapJson(map.getStyle());
     }
   }, [map]);
 
@@ -247,8 +248,7 @@ const MapComponent = () => {
                 }}
               >
                 <Typography
-                  fullWidth
-                  sx={{ color: "#fafafa", textAlign: "left" }}
+                  sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                 >
                   Select Flow Color
                 </Typography>
@@ -490,4 +490,4 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+export default Flow;

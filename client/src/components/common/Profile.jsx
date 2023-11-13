@@ -148,7 +148,6 @@ const Profile = () => {
               Profile Edit
             </Typography>
             <TextField
-              fullWidth
               label="Email"
               defaultValue={userData.email}
               variant="outlined"
@@ -168,6 +167,7 @@ const Profile = () => {
                 },
               }}
               sx={{
+                width: "100%",
                 "& label.Mui-focused": {
                   color: "#FAFAFA",
                 },
@@ -189,7 +189,6 @@ const Profile = () => {
             />
 
             <TextField
-              fullWidth
               label="Nickname"
               defaultValue={userData.nickname}
               variant="outlined"
@@ -209,6 +208,7 @@ const Profile = () => {
                 },
               }}
               sx={{
+                width: "100%",
                 "& label.Mui-focused": {
                   color: "#FAFAFA",
                 },
@@ -229,7 +229,6 @@ const Profile = () => {
               }}
             />
             <TextField
-              fullWidth
               label="Password"
               type="password"
               variant="outlined"
@@ -249,6 +248,7 @@ const Profile = () => {
                 },
               }}
               sx={{
+                width: "100%",
                 "& label.Mui-focused": {
                   color: "#FAFAFA",
                 },
@@ -269,7 +269,6 @@ const Profile = () => {
               }}
             />
             <TextField
-              fullWidth
               label="Confirm Password"
               type="password"
               variant="outlined"
@@ -289,6 +288,7 @@ const Profile = () => {
                 },
               }}
               sx={{
+                width: "100%",
                 "& label.Mui-focused": {
                   color: "#FAFAFA",
                 },
@@ -310,9 +310,8 @@ const Profile = () => {
             />
             <Button
               type="submit"
-              fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, backgroundColor: "#262931" }}
+              sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931" }}
             >
               Save Changes
             </Button>

@@ -8,12 +8,10 @@ import {
   Typography,
   Select,
   MenuItem,
-  InputLabel,
   FormControl,
   RadioGroup,
   FormControlLabel,
   Radio,
-  Input,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
@@ -27,38 +25,9 @@ import SaveTab from "../SaveTab";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
 
-const MapComponent = () => {
+const Regional = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
-  const [fontStyle, setFontStyle] = useState("Arial Unicode MS Bold");
-  const [styleSettings, setStyleSettings] = useState({
-    visibility: {
-      water: true,
-      parks: true,
-      buildings: true,
-      roads: true,
-      labels: true,
-      background: true,
-      streets: true,
-      transit: true,
-      landuse: true,
-      waterway: true,
-      boundary: true,
-    },
-    color: {
-      water: "#DBE2E6",
-      parks: "#E6EAE9",
-      buildings: "#c0c0c8",
-      roads: "#ffffff",
-      labels: "#78888a",
-      background: "#EBF0F0",
-      streets: "#ffeda0",
-      transit: "#ff9999",
-      landuse: "#d2f53c",
-      waterway: "#b3cde3",
-      boundary: "#f03b20",
-    },
-  });
   const [mapStyle, setMapStyle] = useState(
     "mapbox://styles/mapbox/streets-v11"
   );
@@ -255,41 +224,6 @@ const MapComponent = () => {
     ],
   });
 
-  const layerSelector = {
-    background: /background/,
-    water: /water/,
-    parks: /park/,
-    buildings: /building/,
-    roads: /road|bridge|tunnel/,
-    labels: /label|place|poi/,
-    streets: /street/,
-    transit: /transit/,
-    landuse: /landuse/,
-    waterway: /waterway/,
-    boundary: /boundary/,
-  };
-
-  const categories = [
-    "water",
-    "parks",
-    "buildings",
-    "roads",
-    "labels",
-    "background",
-    "streets",
-    "transit",
-    "landuse",
-    "waterway",
-    "boundary",
-  ];
-
-  const colorClass = {
-    fill: "fill-color",
-    line: "line-color",
-    symbol: "text-color",
-    background: "background-color",
-  };
-
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -362,8 +296,14 @@ const MapComponent = () => {
         newMap.resize();
       });
     };
-    initializeMap();
-  }, [mapStyle, regionColor, setMap, setSelectedCountry]);
+    if (!map) {
+      initializeMap();
+    }
+
+    if (map) {
+      setMapJson(map.getStyle());
+    }
+  }, [map, mapStyle, regionColor, setMap, setSelectedCountry]);
 
   useEffect(() => {
     if (map && log.length > 0) {
@@ -556,8 +496,7 @@ const MapComponent = () => {
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Typography
-                    fullWidth
-                    sx={{ color: "#fafafa", textAlign: "left" }}
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                   >
                     Select Region Color
                   </Typography>
@@ -573,16 +512,15 @@ const MapComponent = () => {
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Typography
-                    fullWidth
-                    sx={{ color: "#fafafa", textAlign: "left" }}
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
                   >
                     Select Country
                   </Typography>
                   <Select
-                    fullWidth
                     value={selectedCountry}
                     onChange={handleCountryChange}
                     sx={{
+                      width: "100%",
                       marginBottom: "30px",
                       color: "white",
                       ".MuiOutlinedInput-notchedOutline": {
@@ -746,4 +684,4 @@ const MapComponent = () => {
   );
 };
 
-export default MapComponent;
+export default Regional;

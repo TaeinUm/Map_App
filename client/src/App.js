@@ -27,7 +27,7 @@ import CommunityTwoMapIdeasPostingsPage from "./components/communityTwo/Communit
 import CommunityQuestionPost from "./components/communityTwo/CommunityQuestionPost";
 import CommunityGraphicPost from "./components/communityTwo/CommunityGraphicsPost";
 import Profile from "./components/common/Profile";
-//import MapEditing from "./components/map/MapEditing";
+import MapEditing from "./components/map/MapEditing";
 import NotFound from "./components/common/NotFound";
 
 function App() {
@@ -39,7 +39,7 @@ function App() {
             <Header />
             <Routes>
               <Route path="/" element={<Home />} />
-              {/* <Route path="/mapedit" element={<MapEditing />} /> */}
+              <Route path="/mapedit" element={<MapEditing />} />
               <Route path="/map" element={<MapLanding />} />
               <Route path="/community" element={<CommunityTwo />} />
               <Route path="/communityMapIdeasPostings" element={<CommunityTwoMapIdeaPostings/>}/>
