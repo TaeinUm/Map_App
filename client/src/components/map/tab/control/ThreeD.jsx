@@ -20,7 +20,7 @@ import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dvdnNlaTA3dTMyam83Yzhua2JtcmIifQ.DnTWaj1jNwPud158t1GHtQ";
 
 const ThreeD = () => {
   const [map, setMap] = useState(null);
@@ -107,7 +107,6 @@ const ThreeD = () => {
       alert("Map is still loading. Please wait.");
       return;
     }
-    
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
