@@ -15,7 +15,6 @@ import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../../Memo";
 
-import JSONTab from "../JSONTab";
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
@@ -90,6 +89,7 @@ function File() {
 
         setMap(newMap);
         setIsMapLoaded(true);
+        setMapJson(newMap.getStyle());
       });
     }
   }, [map, geojsonData]);
@@ -123,11 +123,6 @@ function File() {
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
               <Tab
-                label="JSON"
-                value="2"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-              <Tab
                 label="Share"
                 value="3"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
@@ -140,13 +135,6 @@ function File() {
             </Tabs>
           </Box>
           <TabPanel value="1"></TabPanel>
-          <TabPanel value="2">
-            <JSONTab
-              mapJson={mapJson}
-              handleJsonChange={handleJsonChange}
-              saveJson={saveJson}
-            />
-          </TabPanel>
           <TabPanel value="3">
             <ShareTab />
           </TabPanel>
