@@ -92,7 +92,7 @@ function File() {
             },
           });
 
-          newMap.setPaintProperty("water-layer-id", "fill-color", waterColor);
+          newMap.setPaintProperty("waterd", "fill-color", waterColor);
         }
 
         setMap(newMap);
@@ -108,7 +108,7 @@ function File() {
       map.setPaintProperty(layerId, "line-opacity", lineOpacity);
       map.setPaintProperty(layerId, "line-width", lineThickness);
 
-      map.setPaintProperty("water-layer-id", "fill-color", waterColor);
+      map.setPaintProperty("water", "fill-color", waterColor);
     }
   };
 
