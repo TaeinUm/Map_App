@@ -1,16 +1,20 @@
 import React from "react";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
-import { Button } from "@mui/material";
+import { Button, useMediaQuery, useTheme } from "@mui/material";
 
 const JSONTab = ({ mapJson, handleJsonChange, saveJson }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <div
-      sx={{
+      style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        padding: "0 10px",
       }}
     >
       <JSONInput
@@ -19,7 +23,7 @@ const JSONTab = ({ mapJson, handleJsonChange, saveJson }) => {
         placeholder={mapJson}
         locale={locale}
         height="395px"
-        width="280px"
+        width={isSmallScreen ? "100%" : "280px"}
         onChange={handleJsonChange}
         validationError="Invalid JSON"
         style={{ maxWidth: "300px", margin: "20px", paddingLeft: "50px" }}
