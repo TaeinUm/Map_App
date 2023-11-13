@@ -25,6 +25,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { alpha } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import ShareIcon from '@mui/icons-material/Share';
+import { Link } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
@@ -138,7 +139,7 @@ function CommunityTrendingMapGraphics() {
             <MenuItem value={'category1'}>Category 1</MenuItem>
             <MenuItem value={'category2'}>Category 2</MenuItem>
             <MenuItem value={'category2'}>Category 2</MenuItem>
-            <MenuItem value={'category2'}>Category 2</MenuItem>
+            
             {/* ... other categories */}
           </Select>
           
@@ -156,9 +157,15 @@ function CommunityTrendingMapGraphics() {
 
         {/* Right side - Post button */}
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Button variant="contained" startIcon={<AddIcon />} sx={{ mr: 2 }}>
-            Post
-          </Button>
+        <Button
+  component={Link}
+  to={`/communityPostMapGraphic/`}
+  variant="contained"
+  startIcon={<AddIcon />}
+  sx={{ mr: 2 }}
+>
+  Post
+</Button>
         </Box>
       </StyledToolbar>
     </AppBar>
