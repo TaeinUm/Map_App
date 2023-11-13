@@ -5,7 +5,7 @@ import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 //access token
 // mapboxgl.accessToken = 'sk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3OHNjdzBlNjgza253bGZhMGxub3MifQ.d6s6zC37DI-Mc-osExr2sg';
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dvdnNlaTA3dTMyam83Yzhua2JtcmIifQ.DnTWaj1jNwPud158t1GHtQ";
 
 function MapTraffic() {
   /**  ------------------- useRef / useState   -------------------   **/

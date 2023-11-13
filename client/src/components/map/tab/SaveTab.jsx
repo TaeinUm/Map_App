@@ -66,6 +66,7 @@ function SaveTab() {
             variant="outlined"
             size="small"
             sx={selectStyle}
+            name="title"
           />
         </FormControl>
       </Box>
@@ -87,6 +88,7 @@ function SaveTab() {
             value={versionSetting}
             onChange={handleVersionSettingChange}
             sx={selectStyle}
+            name="versionSetting"
           >
             <MenuItem value="ver1">Ver 1.</MenuItem>
             <MenuItem value="ver2">Ver 2.</MenuItem>
@@ -111,6 +113,7 @@ function SaveTab() {
             value={exportFile}
             onChange={handleExportFileChange}
             sx={selectStyle}
+            name="exportFile"
           >
             <MenuItem value="jpg">JPG</MenuItem>
             <MenuItem value="png">PNG</MenuItem>
@@ -137,6 +140,7 @@ function SaveTab() {
             value={privacySetting}
             onChange={handlePrivacySettingChange}
             sx={selectStyle}
+            name="privacySetting"
           >
             <MenuItem value="private">Private</MenuItem>
             <MenuItem value="public">Public</MenuItem>

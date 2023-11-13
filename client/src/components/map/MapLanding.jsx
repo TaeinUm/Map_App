@@ -68,6 +68,7 @@ function MapLanding() {
                   height: "40px",
                   marginRight: "20px",
                 }}
+                role="presentation"
               >
                 Create New
               </Button>
@@ -86,6 +87,7 @@ function MapLanding() {
                   width: "170px",
                   height: "40px",
                 }}
+                role="presentation"
               >
                 Load File
               </Button>

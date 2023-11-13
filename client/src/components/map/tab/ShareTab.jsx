@@ -82,6 +82,7 @@ function ShareTab() {
               value={linkAccess}
               onChange={handleLinkAccessChange}
               sx={selectStyle}
+              name="linkAccess"
             >
               <MenuItem value="anyone">Anyone with the link</MenuItem>
               <MenuItem value="public">Public</MenuItem>
@@ -107,6 +108,7 @@ function ShareTab() {
               value={viewSetting}
               onChange={handleViewSettingChange}
               sx={selectStyle}
+              name="viewSetting"
             >
               <MenuItem value="public">Public</MenuItem>
               <MenuItem value="private">Private</MenuItem>
@@ -132,6 +134,7 @@ function ShareTab() {
             variant="outlined"
             placeholder="Search..."
             sx={selectStyle}
+            name="searchByUsername"
           />
         </Box>
         <Button
