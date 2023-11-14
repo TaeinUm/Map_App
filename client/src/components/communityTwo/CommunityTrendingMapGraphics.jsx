@@ -116,7 +116,7 @@ function CommunityTrendingMapGraphics() {
   const endIndex = startIndex + itemsPerPage;
 
   return (
-    <Container maxWidth="lg" sx={{ paddingBottom: 4 }}>
+    <Container maxWidth="lg" sx={{ paddingBottom: 4, height: "100vh" }}>
       <AppBar position="static" color="default" elevation={0}>
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}

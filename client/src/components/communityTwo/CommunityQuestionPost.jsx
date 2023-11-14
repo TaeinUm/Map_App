@@ -43,33 +43,26 @@ function CommunityQuestionPost() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ p: 3 }}>
+    <Container maxWidth="md" sx={{ p: 3,  height: "100vh"}}>
 
-      <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
-        <Typography variant="h4" gutterBottom color="white">
-          What should I write in the memo?
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom color="white">
-          User1 2023.05.10
-        </Typography>
-        <Divider sx={{ my: 2, bgcolor: 'white' }} />
-        <br></br>
-        <Typography paragraph color="white">
-          Hi, I have a question. What do you guys usually jot down in your memo?
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-          <br></br>
-        </Typography>
-        <Divider sx={{ my: 2, bgcolor: 'white' }} />
+    <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
+      <Typography variant="h4" gutterBottom color="white">
+        What should I write in the memo?
+      </Typography>
+      <Typography variant="subtitle1" gutterBottom color="white">
+        User1 2023.05.10
+      </Typography>
+      <Divider sx={{ my: 2, bgcolor: 'white' }} />
+      <br></br>
+      <Typography paragraph style={{ backgroundColor: 'white', color: 'black', padding: '1rem', textAlign:'left'}}>
+        Hi, I have a question. What do you guys usually jot down in your memo?
+
+        <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+
+
+
+      </Typography>
+      <Divider sx={{ my: 2, bgcolor: 'white' }} />
         <Typography variant="h6" gutterBottom color="white">
           Comments (0)
         </Typography>
@@ -101,14 +94,18 @@ function CommunityQuestionPost() {
   }}
 />
 
+        <br></br><br></br>
         <br></br>
         <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
           Post Comment
         </Button>
+        <br></br>
+        <br></br><br></br>
       </Paper>
 
     </Container>
   );
+  
 }
 
 export default CommunityQuestionPost;
