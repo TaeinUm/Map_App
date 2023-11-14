@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: JuyeeMyeong/checkout@v2
+    - uses: JuyeeMyeong/checkout
     - name: Set up Node.js
-      uses: JuyeeMyeong/setup-node@v2
+      uses: JuyeeMyeong/setup-node
       with:
         node-version: '20.x'
 
