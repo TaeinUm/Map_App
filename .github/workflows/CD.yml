@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: JuyeeMyeong/checkout@v2
+    - uses: actions/checkout@v2
 
     - name: Set up Node.js
-      uses: JuyeeMyeong/setup-node@v2
+      uses: actions/setup-node@v2
       with:
         node-version: '20.x'  # Set this to the node version you are using
 
@@ -26,7 +26,7 @@ jobs:
 
         
     - name: Deploy to Heroku
-      uses: JuyeeMyeong/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
+      uses: actions/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: "radiant-falls-95660"  # Set this to your Heroku app's name
