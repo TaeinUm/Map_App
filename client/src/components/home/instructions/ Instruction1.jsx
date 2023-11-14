@@ -12,7 +12,7 @@ function Instruction1() {
       const currentTop = cursorImg.style.top.replace("px", "") || 0;
       const newTop = parseInt(currentTop, 10) + 30;
       cursorImg.style.top = `${newTop}px`;
-      cursorImg.style.transition = "top 0.5s";
+      cursorImg.style.transition = "top 0.004s";
     }
   }
 
