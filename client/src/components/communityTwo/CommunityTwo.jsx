@@ -298,11 +298,13 @@ const Search = styled('div')(({ theme }) => ({
   },
   marginRight: theme.spacing(2),
   marginLeft: 0,
-  width: '100%',
+  // Removed the width: '100%' to prevent stretching, which can misalign the search bar
   [theme.breakpoints.up('sm')]: {
     marginLeft: theme.spacing(3),
-    width: 'auto',
+    width: 'auto', // Use 'auto' or set a fixed width if necessary
   },
+  display: 'flex', // Added display flex
+  alignItems: 'center', // Added alignItems center for the Search component
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
