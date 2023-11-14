@@ -28,5 +28,5 @@ jobs:
         uses: akhileshns/heroku-deploy@v3.12.12 # Corrected to a known community action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "radiant-falls-95660" # Set this to your Heroku app's name
+          heroku_app_name: "terracanvas" # Set this to your Heroku app's name
           heroku_email: "taein.um@stonybrook.edu" # Set this to the email associated with your Heroku account
