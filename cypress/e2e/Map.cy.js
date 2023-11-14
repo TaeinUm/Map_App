@@ -1,6 +1,6 @@
 describe("Map Editing and Landing Page Tests", () => {
   beforeEach(() => {
-    cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/map");
+    cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/map");
   });
 
   it("checks if correct component is rendered based on screen size", () => {

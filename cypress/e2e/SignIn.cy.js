@@ -1,6 +1,6 @@
 describe("SignIn Page", () => {
   beforeEach(() => {
-    cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/signin");
+    cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/signin");
   });
 
   it("should display the sign-in form", () => {

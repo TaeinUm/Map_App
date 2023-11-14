@@ -1,7 +1,7 @@
 describe("Instruction Components Tests", () => {
   describe("Instruction1 Component Test", () => {
     beforeEach(() => {
-      cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/");
+      cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/");
     });
 
     it("should display the first instruction by default", () => {

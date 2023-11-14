@@ -2,7 +2,7 @@ describe("TerraCanvas Website Pages", () => {
   describe("Contact Page Tests", () => {
     beforeEach(() => {
       cy.visit(
-        "https://radiant-falls-95660-566488ce03cf.herokuapp.com/contact"
+        "https://terracanvas-fb4c23ffbf5d.herokuapp.com/contact"
       );
     });
 
@@ -21,7 +21,7 @@ describe("TerraCanvas Website Pages", () => {
   describe("Privacy Policy Page Tests", () => {
     beforeEach(() => {
       cy.visit(
-        "https://radiant-falls-95660-566488ce03cf.herokuapp.com/privacypolicy"
+        "https://terracanvas-fb4c23ffbf5d.herokuapp.com/privacypolicy"
       );
     });
 
@@ -36,7 +36,7 @@ describe("TerraCanvas Website Pages", () => {
   describe("Terms and Conditions Page Tests", () => {
     beforeEach(() => {
       cy.visit(
-        "https://radiant-falls-95660-566488ce03cf.herokuapp.com/termsconditions"
+        "https://terracanvas-fb4c23ffbf5d.herokuapp.com/termsconditions"
       );
     });
 
