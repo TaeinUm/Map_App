@@ -1,0 +1,11 @@
+{
+    "extends": ["react-app", "react-app/jest"],
+    "rules": {
+        "no-unused-vars": "off",
+        "no-lone-blocks": "off",
+        "eqeqeq": "off",
+        "jsx-a11y/alt-text": "off",
+        "no-dupe-keys": "off",
+        "react-hooks/exhaustive-deps": "off"
+      }
+}

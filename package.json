@@ -64,10 +64,8 @@
     "@types/events": "^3.0.3",
     "@types/node": "^20.9.0",
     "chai": "^4.3.10",
-    "customize-cra": "^1.0.0",
     "cypress": "^13.4.0",
     "mocha": "^10.2.0",
-    "react-app-rewired": "^2.2.1",
     "supertest": "^6.3.3"
   }
 }
