@@ -26,7 +26,7 @@ jobs:
 
         
     - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
+      uses: JuyeeMyeong/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: "radiant-falls-95660"  # Set this to your Heroku app's name
