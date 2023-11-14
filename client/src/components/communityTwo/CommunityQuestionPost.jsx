@@ -79,24 +79,28 @@ function CommunityQuestionPost() {
         {/* ... more comments ... */}
       
         <TextField
-          id="prompt-textarea"
-          multiline
-          rows={4}
-          placeholder="Write a comment..."
-          variant="outlined"
-          fullWidth
-          value={message}
-          onChange={handleMessageChange}
-          sx={{ color: 'white',
-            input: { color: 'white' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': { borderColor: 'white' },
-              '&:hover fieldset': { borderColor: 'white' },
-              '&.Mui-focused fieldset': { borderColor: 'white' },
+  id="prompt-textarea"
+  multiline
+  rows={4}
+  placeholder="Write a comment..."
+  variant="outlined"
+  fullWidth
+  value={message}
+  onChange={handleMessageChange}
+  sx={{
+    backgroundColor: 'white', // Set the background color to white
+    color: 'black', // Set the text color to black
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': { borderColor: 'white' },
+      '&:hover fieldset': { borderColor: 'white' },
+      '&.Mui-focused fieldset': { borderColor: 'white' },
+    },
+    '& .MuiInputBase-input': {
+      color: 'black', // Ensure the text color is black
+    },
+  }}
+/>
 
-            }
-          }}
-        />
         <br></br>
         <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
           Post Comment
