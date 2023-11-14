@@ -129,8 +129,6 @@ function Instruction() {
             sx={{
               width: { xs: "100%", md: "50%" },
               height: "600px",
-              zIndex: "1",
-              backgroundColor: "#fafafa",
             }}
           >
             {selectedInstruction &&
