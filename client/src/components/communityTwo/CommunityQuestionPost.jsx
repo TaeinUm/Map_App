@@ -100,6 +100,7 @@ function CommunityQuestionPost() {
     },
   }}
 />
+<br></br>
 
         <br></br>
         <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
