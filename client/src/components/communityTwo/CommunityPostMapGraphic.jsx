@@ -28,6 +28,7 @@ function CommunityPostMapGraphic() {
 <br></br>
 <br></br>
 <br></br>
+<br></br>
 
 
     <Typography variant="h5" gutterBottom style={{ textAlign: 'left' }}>
