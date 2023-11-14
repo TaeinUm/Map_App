@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: "20.x" # Set this to the node version you are using
 
@@ -25,8 +25,8 @@ jobs:
         working-directory: ./client
 
       - name: Deploy to Heroku
-        uses: actions/heroku-deploy@v3.12.12 # This is a community action for deploying to Heroku
+        uses: akhileshns/heroku-deploy@v3.12.12 # Corrected to a known community action
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "radiant-falls-95660" # Set this to our Heroku app's name
+          heroku_app_name: "radiant-falls-95660" # Set this to your Heroku app's name
           heroku_email: "taein.um@stonybrook.edu" # Set this to the email associated with your Heroku account
