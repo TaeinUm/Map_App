@@ -3,31 +3,30 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main  # Set this to the 'main' branch you want to deploy from
+      - main # Set this to the 'main' branch you want to deploy from
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20.x'  # Set this to the node version you are using
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x" # Set this to the node version you are using
 
-    - name: Install dependencies
-      run: cd client && npm install
+      - name: Install dependencies
+        run: cd client && npm install
 
-    - name: Run build
-      run: CI=false npm run build
-      working-directory: ./client
+      - name: Run build
+        run: CI=false npm run build
+        working-directory: ./client
 
-        
-    - name: Deploy to Heroku
-      uses: actions/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
-      with:
-        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: "radiant-falls-95660"  # Set this to our Heroku app's name
-        heroku_email: "taein.um@stonybrook.edu"  # Set this to the email associated with your Heroku account
+      - name: Deploy to Heroku
+        uses: actions/heroku-deploy@v3.12.12 # This is a community action for deploying to Heroku
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: "radiant-falls-95660" # Set this to our Heroku app's name
+          heroku_email: "taein.um@stonybrook.edu" # Set this to the email associated with your Heroku account
