@@ -7,7 +7,7 @@ const API_BASE_URL =
 
   const CommunitySectionAPI = {
     //make a post
-    makePost: async (userId, postType, content, date) => {
+    makePost: async (userId, postType, postFile, date) => {
         const { isAuthenticated, userId, username } = useContext(AuthContext);
 
   if (!isAuthenticated) {
@@ -30,4 +30,30 @@ const API_BASE_URL =
           console.error("cannot make a post.");
         }
       },
-  }
+//       makePost: async (userId, postType, content, date) => {
+//         const { isAuthenticated, userId, username } = useContext(AuthContext);
+
+//   if (!isAuthenticated) {
+//     console.error("User is not authenticated");
+//     return;
+//   }
+//         try {
+//         //   const response = await axios.get(
+//         //     `${API_BASE_URL}/api/community/post`
+//         //   );
+//           return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+//             postType, 
+//             postText,
+//             postFile,
+//             date,
+
+//           }  );
+//         } catch (error) {
+//           console.error("cannot make a post.");
+//         }
+//       },
+
+      
+  };
+  export default CommunitySectionAPI;
