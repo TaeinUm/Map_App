@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 const authAPI = async (method, url, data) => {
   try {
@@ -36,14 +37,17 @@ const register = async (userName, email, password) => {
 };
 
 // Set up Axios interceptors for Auth token handling
-axios.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-}, error => {
-  return Promise.reject(error);
-});
+);
 
 export { getLoggedIn, login, logout, register };

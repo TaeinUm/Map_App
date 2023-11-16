@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 export const getTop5Trending = async () => {
   try {
@@ -11,4 +12,3 @@ export const getTop5Trending = async () => {
     throw error;
   }
 };
-
