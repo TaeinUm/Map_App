@@ -1,20 +1,29 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLoggedIn, login, logout } from "../api/authService";
+import { getLoggedIn, login, logout } from "../api/authAPI";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(
+    // login status from local storage
     JSON.parse(localStorage.getItem("isAuthenticated")) || false
   );
+  const [username, setUsername] = useState(""); // User Name
+  const [userId, setUserId] = useState(""); // User ID
+  const [profileImage, setProfileImage] = useState(""); // User's Profile Image
+
   const navigate = useNavigate();
 
+  //UseEffect for getting login status, username, userID, and user profile image
   useEffect(() => {
     const checkLoggedIn = async () => {
       const response = await getLoggedIn();
       if (response.success) {
-        setIsAuthenticated(response.data.loggedIn);
+        setIsAuthenticated(response.data.loggedIn); //Update Login Status
+        setUsername(response.data.username); // Update username
+        setUserId(response.data.userId); // Update userId
+        setProfileImage(response.data.profileImage); // Update profile image
         localStorage.setItem("isAuthenticated", "true");
       } else {
         setIsAuthenticated(false);
@@ -36,7 +45,6 @@ export const AuthProvider = ({ children }) => {
       navigate("/"); // Redirect to a protected route after login
     } else {
       console.error("Login failed:", response.message);
-      // Here you could set an error state and display it in the UI
     }
   };
 
@@ -49,13 +57,19 @@ export const AuthProvider = ({ children }) => {
       navigate("/");
     } else {
       console.error("Logout failed:", response.message);
-      // Here you could set an error state and display it in the UI
     }
   };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, handleLogin, handleLogout }}
+      value={{
+        isAuthenticated,
+        handleLogin,
+        handleLogout,
+        username,
+        userId,
+        profileImage,
+      }}
     >
       {children}
     </AuthContext.Provider>

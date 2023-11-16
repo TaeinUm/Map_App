@@ -85,8 +85,7 @@ function ShareTab() {
               name="linkAccess"
             >
               <MenuItem value="anyone">Anyone with the link</MenuItem>
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="private">Private</MenuItem>
+              <MenuItem value="only">Only shared user</MenuItem>
             </Select>
           </FormControl>
         </Box>
