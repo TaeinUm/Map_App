@@ -115,6 +115,7 @@ function SaveTab() {
             sx={selectStyle}
             name="exportFile"
           >
+            <MenuItem value="none">NONE</MenuItem>
             <MenuItem value="jpg">JPG</MenuItem>
             <MenuItem value="png">PNG</MenuItem>
             <MenuItem value="pdf">PDF</MenuItem>
