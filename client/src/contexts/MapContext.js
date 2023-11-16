@@ -4,7 +4,7 @@ export const MapContext = createContext(null);
 
 export const MapProvider = ({ children }) => {
   const [mapLink, setMapLink] = useState(""); // the URL of the current working map graphics edit
-  const [mapType, setMapType] = useState(null); // 
+  const [mapType, setMapType] = useState(null); //
   const [mapLayer, setMapLayer] = useState(null);
   const [memoContent, setMemoContent] = useState("");
   const [geojsonData, setGeojsonData] = useState(null);
@@ -13,10 +13,6 @@ export const MapProvider = ({ children }) => {
     setMapType(type);
     setGeojsonData(data);
     navigate("/mapedit");
-  };
-
-  const addMarker = (newMarker) => {
-    setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
   };
 
   return (
