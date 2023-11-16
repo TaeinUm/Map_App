@@ -3,6 +3,7 @@ import axios from "axios";
 const BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
+//get 5 trending map graphics for Home page
 export const getTop5Trending = async () => {
   try {
     const response = await axios.get(`${BASE_URL}/api/top5graphics`);

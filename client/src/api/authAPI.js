@@ -16,18 +16,22 @@ const authAPI = async (method, url, data) => {
   }
 };
 
+//get Loggedin status, profile Image, user name, user ID
 const getLoggedIn = async () => {
   return await authAPI("get", `${BASE_URL}/auth/loggedIn`);
 };
 
+//update login
 const login = async (email, password) => {
   return await authAPI("post", `${BASE_URL}/auth/login`, { email, password });
 };
 
+//do logout
 const logout = async () => {
   return await authAPI("post", `${BASE_URL}/auth/logout`);
 };
 
+//update registered user
 const register = async (userName, email, password) => {
   return await authAPI("post", `${BASE_URL}/auth/register`, {
     userName,

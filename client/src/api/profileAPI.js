@@ -10,6 +10,8 @@ import { AuthContext } from "../contexts/AuthContext";
 const BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
+//get postings of the certain users
+//check the login status first
 export const getPostings = async () => {
   const { isAuthenticated, userId, username } = useContext(AuthContext);
 

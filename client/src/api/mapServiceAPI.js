@@ -11,6 +11,7 @@ const API_BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 const mapServiceAPI = {
+  //get user's all saved map graphics
   getUserMapGraphics: async (userId) => {
     try {
       const response = await axios.get(
@@ -22,6 +23,7 @@ const mapServiceAPI = {
     }
   },
 
+  //get all of users containing 'name'
   getUsersByName: async (name) => {
     try {
       const response = await axios.get(`${API_BASE_URL}/api/users`, {
@@ -33,11 +35,14 @@ const mapServiceAPI = {
     }
   },
 
-  updateViewSetting: async (userId, settings) => {
+  //update view setting, accessSetting for user 'share' button
+  updateViewSetting: async (userId, settings, accessSetting) => {
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/user/${userId}/view-setting`,
-        settings
+        {
+          params: { settings, accessSetting },
+        }
       );
       return response.data;
     } catch (error) {
@@ -45,6 +50,7 @@ const mapServiceAPI = {
     }
   },
 
+  // get memo content of a certain map graphics
   getMemoContent: async (userId, mapType, mapLayer) => {
     try {
       const response = await axios.get(
