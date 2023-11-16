@@ -11,3 +11,4 @@ export const getTop5Trending = async () => {
     throw error;
   }
 };
+
