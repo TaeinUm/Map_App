@@ -325,7 +325,7 @@ const BasicStyles = () => {
         >
           {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </Button>
-        {isMemoVisible && <Memo />}
+        {isMemoVisible && <Memo mapId={""} />}
       </Box>
     </Box>
   );

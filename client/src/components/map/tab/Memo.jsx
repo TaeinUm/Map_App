@@ -8,7 +8,44 @@ import {
   Button,
 } from "@mui/material";
 import { FiEdit } from "react-icons/fi";
-function Memo() {
+import mapServiceAPI from "../../../api/mapServiceAPI";
+import { AuthContext } from "../../../contexts/AuthContext";
+
+function Memo({ mapId }) {
+  const { userId, username } = useContext(AuthContext);
+  const [memoContent, setMemoContent] = useState("");
+
+  useEffect(() => {
+    const loadMemo = async () => {
+      try {
+        const response = await mapServiceAPI.getMemoContent(
+          userId,
+          username,
+          mapId
+        );
+        setMemoContent(response.memoContent);
+      } catch (error) {
+        console.error("Error loading memo:", error);
+      }
+    };
+
+    loadMemo();
+  }, [userId, username, mapId]);
+
+  const handleSave = async () => {
+    try {
+      await mapServiceAPI.updateMemoContent(
+        userId,
+        username,
+        mapId,
+        memoContent
+      );
+      setMemoContent(memoContent);
+    } catch (error) {
+      console.error("Error saving memo:", error);
+    }
+  };
+
   return (
     <>
       <Box style={{ width: "100%", height: "200px", backgroundColor: "white" }}>
@@ -33,8 +70,11 @@ function Memo() {
           multiline
           rows={3}
           sx={{ width: "90%", height: "80px", margin: "10px" }}
+          value={memoContent}
+          onChange={(e) => setMemoContent(e.target.value)}
         ></TextField>
         <Button
+          onClick={handleSave}
           sx={{
             backgroundColor: "#282c34",
             margin: "20px",
