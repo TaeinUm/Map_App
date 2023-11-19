@@ -98,6 +98,53 @@ const mapServiceAPI = {
       console.error("Error updating memo content:", error);
     }
   },
+
+  //when we create or load map graphics from modal, we should add map graphics data to DB
+  updateUserMapGraphics: async (
+    userId,
+    username,
+    mapType,
+    mapLayer,
+    mapId = null
+  ) => {
+    try {
+      let response;
+      const mapGraphicData = { username, mapType, mapLayer };
+
+      if (mapId) {
+        // If mapId is provided, update existing map graphic
+        response = await axios.put(
+          `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
+          mapGraphicData
+        );
+      } else {
+        // If no mapId, create a new map graphic
+        response = await axios.post(
+          `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
+          mapGraphicData
+        );
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Error updating/creating map graphic:", error);
+    }
+  },
+
+  // get specific map graphic data based on userId, username, and mapId
+  getMapGraphicData: async (userId, username, mapId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
+        {
+          params: { username },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching map graphic data:", error);
+    }
+  },
 };
 
 export default mapServiceAPI;
