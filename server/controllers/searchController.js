@@ -1,6 +1,5 @@
 const Post = require('../models/Post');
 
-
 const searchMapByUserName = async (req, res) => {
     try {
         const userId = req.params.userId;

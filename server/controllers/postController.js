@@ -31,3 +31,35 @@ const writePost = async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 };
+
+
+const likePost = async (req, res) => {
+  try {
+      const postId = req.params.postId;
+      // Increment the likes count
+      const updatedPost = await Post.findByIdAndUpdate(
+          postId,
+          { $inc: { likes: 1 } },
+          { new: true }
+      );
+      res.json({ message: 'Map liked successfully', updatedPost });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
+
+// Unlike a map
+const unlikePost = async (req, res) => {
+  try {
+      const postId = req.params.postId;
+      // Decrement the likes count
+      const updatedPost = await Post.findByIdAndUpdate(
+          postId,
+          { $inc: { likes: -1 } },
+          { new: true }
+      );
+      res.json({ message: 'Map unliked successfully', updatedPost });
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
