@@ -69,17 +69,33 @@ const mapServiceAPI = {
   },
 
   // get memo content of a certain map graphics
-  getMemoContent: async (userId, username, mapType, mapLayer) => {
+  getMemoContent: async (userId, username, mapId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/memo`,
+        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
         {
-          params: { username, mapType, mapLayer },
+          params: { username },
         }
       );
       return response.data;
     } catch (error) {
-      console.error("cannot handle setting.");
+      console.error("Error fetching memo content:", error);
+    }
+  },
+
+  // Update memo content for a specific map graphic
+  updateMemoContent: async (userId, username, mapId, memoContent) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
+        {
+          username,
+          memoContent,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating memo content:", error);
     }
   },
 };
