@@ -97,9 +97,13 @@ router.get('/api/community/getMapsBySearch/:searchText', async (req, res) => {
 router.put('/api/community/likeMap/:postId', async (req, res) => {
     try {
         const postId = req.params.postId;
-        const userId = req.body.userId;
-        // Logic to like a map (e.g., update a field in the map document)
-        res.json({ message: 'Map liked successfully' });
+        // Increment the likes count
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $inc: { likes: 1 } },
+            { new: true }
+        );
+        res.json({ message: 'Map liked successfully', updatedPost });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -109,9 +113,13 @@ router.put('/api/community/likeMap/:postId', async (req, res) => {
 router.put('/api/community/unlikeMap/:postId', async (req, res) => {
     try {
         const postId = req.params.postId;
-        const userId = req.body.userId;
-        // Logic to unlike a map (e.g., update a field in the map document)
-        res.json({ message: 'Map unliked successfully' });
+        // Decrement the likes count
+        const updatedPost = await Post.findByIdAndUpdate(
+            postId,
+            { $inc: { likes: -1 } },
+            { new: true }
+        );
+        res.json({ message: 'Map unliked successfully', updatedPost });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
