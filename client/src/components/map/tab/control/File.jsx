@@ -146,7 +146,7 @@ function File() {
           <CircularProgress />
         </div>
       )}
-      <Box sx={{ width: "30%" }}>
+      <Box sx={{ width: "40%" }}>
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -162,11 +162,11 @@ function File() {
                 value="1"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
-              <Tab
+           {/*   <Tab
                 label="Share"
                 value="3"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
+      />*/}
               <Tab
                 label="Save"
                 value="4"
@@ -268,9 +268,9 @@ function File() {
               />
             </Box>
           </TabPanel>
-          <TabPanel value="3">
+          {/*<TabPanel value="3">
             <ShareTab />
-          </TabPanel>
+              </TabPanel>*/}
           <TabPanel value="4">
             <SaveTab />
           </TabPanel>
