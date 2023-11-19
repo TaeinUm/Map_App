@@ -9,7 +9,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
-import { register } from "../../api/authService";
+import { register } from "../../api/authAPI";
 
 function SignUp() {
   /****       useState section      ****/

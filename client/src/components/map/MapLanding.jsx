@@ -37,6 +37,7 @@ function MapLanding() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
 
+  /****       Search term handler     ****/
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -46,15 +47,7 @@ function MapLanding() {
     <div>
       {isDesktop && (
         <Container maxWidth="xl" sx={{ height: "90vh" }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
-            {/****       My Graphics Title     ****/}
-            <Typography
-              variant="h4"
-              gutterBottom
-              sx={{ color: "#FAFAFA", fontWeight: "bold" }}
-            >
-              My Graphics
-            </Typography>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, mb: 4}}>
             <Box>
               {/****       Buttons for Modals    ****/}
               <Button
@@ -64,10 +57,11 @@ function MapLanding() {
                   mx: 1,
                   backgroundColor: "#FAFAFA",
                   color: "black",
-                  width: "170px",
+                  width: "140px",
                   height: "40px",
                   marginRight: "20px",
                 }}
+                role="presentation"
               >
                 Create New
               </Button>
@@ -83,9 +77,10 @@ function MapLanding() {
                   mx: 1,
                   backgroundColor: "#FAFAFA",
                   color: "black",
-                  width: "170px",
+                  width: "140px",
                   height: "40px",
                 }}
+                role="presentation"
               >
                 Load File
               </Button>
@@ -98,8 +93,16 @@ function MapLanding() {
           </Box>
 
           {/****       My graphics components     ****/}
-          <Grid container spacing={2}>
+          <Grid container spacing={8}>
             <Grid item xs={12} md={7}>
+              {/****       My Graphics Title     ****/}
+              <Typography
+                variant="h4"
+                gutterBottom
+                sx={{ color: "#FAFAFA", fontWeight: "bold" , textAlign: "left", mb: 2}}
+              >
+                My Graphics
+              </Typography>
               <Paper sx={{ p: 2 }}>
                 {/* Search Bar */}
                 <SearchBar onSearchChange={handleSearchChange} />
@@ -110,19 +113,19 @@ function MapLanding() {
 
             {/* Liked Templates */}
             <Grid item xs={12} md={5}>
-              <Paper sx={{ p: 2, height: "100%", background: "none" }}>
-                <Typography
-                  variant="h4"
-                  gutterBottom
-                  sx={{
-                    color: "#FAFAFA",
-                    fontWeight: "bold",
-                    textAlign: "left",
-                    alignItems: "center",
-                  }}
-                >
-                  Liked Templates
-                </Typography>
+              <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                      color: "#FAFAFA",
+                      fontWeight: "bold",
+                      textAlign: "left",
+                      alignItems: "center",
+                    }}
+                  >
+                    Liked Templates
+                  </Typography>
+              <Paper sx={{ background: "none" }}>
                 <LikedTemplates />
               </Paper>
             </Grid>
@@ -131,7 +134,7 @@ function MapLanding() {
       )}
 
       {/****        mobile view     ****/}
-      {!isDesktop && <MapMobile />}
+      {!isDesktop && <MapMobile data="mobile-view" />}
     </div>
   );
 }

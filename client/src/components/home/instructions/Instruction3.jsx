@@ -1,7 +1,30 @@
+import React, { useState, useEffect } from "react";
+import "../../../styles/home.css";
+import process1 from "../../../assets/images/Inst3_1.png";
+import process2 from "../../../assets/images/Inst3_2.png";
+import process3 from "../../../assets/images/Inst3_3.png";
+
 function Instruction3() {
-    return (<>
-    
-    </>);
-  }
-  
-  export default Instruction3;
+  const [imgToShow, setImgToShow] = useState(process1);
+  const processes = [process1, process2, process3];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setImgToShow(
+        (prev) => processes[(processes.indexOf(prev) + 1) % processes.length]
+      );
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <>
+      <div>
+        <img style={{ width: "100%" }} src={imgToShow} alt="Process"></img>
+      </div>
+    </>
+  );
+}
+
+export default Instruction3;

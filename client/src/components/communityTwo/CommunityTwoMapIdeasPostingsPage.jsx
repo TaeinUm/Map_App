@@ -84,7 +84,7 @@ function CommunityTwoMapIdeaPostings() {
     //         Hi there you are on the community two map ideas posting page */}
 
     return(
-        <div>
+        <div >
             <Box>
             <Typography variant="h3" color="white">{newIdeas[actualIndex]}</Typography>
             <Typography variant="h5" color="white">User 1 2023.4.29</Typography>

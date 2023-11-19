@@ -3,7 +3,7 @@ import { Fade, Box, Typography, Button } from "@mui/material";
 import Dropzone from "react-dropzone";
 import toGeoJSON from "togeojson";
 import shp from "shpjs/dist/shp";
-import mapboxgl from "mapbox-gl";
+import * as mapboxgl from "mapbox-gl";
 import { useNavigate } from "react-router-dom";
 import { MapContext } from "../../../contexts/MapContext";
 
@@ -28,7 +28,7 @@ const style = {
 
 // Mapbox access token (public default)
 mapboxgl.accessToken =
-  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsbTB3MnJscDA0N3Izcm56dGl4NGFrZzQifQ.T9P37mCX3ll44dNDvOuRGQ";
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dvdnNlaTA3dTMyam83Yzhua2JtcmIifQ.DnTWaj1jNwPud158t1GHtQ";
 
 function LoadFile({ open }) {
   /**  ------------------- useRef / useState   -------------------   **/

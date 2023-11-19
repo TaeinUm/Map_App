@@ -1,11 +1,11 @@
 describe("Home Page", () => {
   beforeEach(() => {
-    cy.visit("https://radiant-falls-95660-566488ce03cf.herokuapp.com/");
+    cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/");
   });
 
   it("should display the home page correctly", () => {
     cy.contains("Trending Map Graphics").should("be.visible");
-    cy.contains("MAP Your Vision,").should("be.visible");
+    cy.contains("How to Use TerraCanvas?").should("be.visible");
   });
 
   describe("Trending Section", () => {
@@ -14,22 +14,25 @@ describe("Home Page", () => {
     });
 
     it("should automatically scroll through graphics", () => {
-      const initialScrollAmount = 0;
-      cy.wait(3001);
       cy.get("[data-cy=trending-container]")
         .scrollIntoView()
         .should("be.visible");
+      cy.wait(3001);
+     // cy.get("[data-cy=trending-container]")
+      //  .invoke("scrollLeft")
+       // .should("not.eq", 0);
     });
   });
 
   describe("Instruction Section", () => {
     it("should display instruction titles correctly", () => {
-      cy.contains("Connect Your WORLD").should("be.visible");
+      cy.contains("How to Use TerraCanvas?").should("be.visible");
     });
 
-    it("should have visible images and text for instructions", () => {
-      cy.get("[data-cy=instruction-image]").should("be.visible");
-      cy.get("[data-cy=instruction-text]").should("be.visible");
+    it("should show the selected instruction on button click", () => {
+      const instructionText = "2. Choose graphics or map files to edit";
+      cy.contains(instructionText).click();
+      cy.contains(instructionText).should("be.visible");
     });
   });
 });
