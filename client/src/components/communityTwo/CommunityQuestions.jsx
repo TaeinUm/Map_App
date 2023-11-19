@@ -107,7 +107,7 @@ function CommunityTwoQuestions() {
               onClick={handleClick}
               //endIcon={}
             >
-              Options
+              Questions
             </Button>
             <StyledMenu
               id="demo-customized-menu"
@@ -127,9 +127,9 @@ function CommunityTwoQuestions() {
                 Map Graphics Idea
               </MenuItem>
               <Divider sx={{ my: 0.5 }} />
-              <MenuItem onClick={handleClose} component={NavLink} to={"/communityQuestions"} disableRipple>
+              <MenuItem onClick={handleClose} component={NavLink} to={"/community"} disableRipple>
                 
-                Questions
+                Community
               </MenuItem>
               <MenuItem onClick={handleClose} component={NavLink} to={"/communityUserName"} disableRipple>
                 
