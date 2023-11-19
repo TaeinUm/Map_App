@@ -7,12 +7,16 @@ import {
   TextField,
   Button,
   Typography,
+  CircularProgress,
   MenuItem,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../Memo";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import { MapContext } from "../../../../contexts/MapContext";
+import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
@@ -50,6 +54,7 @@ const Flow = () => {
   const mapContainer = useRef();
   const [memo, setMemo] = useState("");
   const [flows, setFlows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [startCountry, setStartCountry] = useState("");
   const [startCity, setStartCity] = useState("");
@@ -105,6 +110,7 @@ const Flow = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     if (!map) {
       const newMap = new mapboxgl.Map({
         container: mapContainer.current,
@@ -133,6 +139,7 @@ const Flow = () => {
     if (map) {
       setMapJson(map.getStyle());
     }
+    setIsLoading(false);
   }, [map]);
 
   const drawFlow = () => {
@@ -205,6 +212,12 @@ const Flow = () => {
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
+      {isLoading && (
+        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+          <CircularProgress />
+        </div>
+      )}
+
       <Box sx={{ width: "30%" }}>
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>

@@ -152,7 +152,7 @@ const BasicStyles = () => {
             const mapLayer = data.mapLayer;
 
             // Check if mapLayer is valid and add it to the map
-            if (mapLayer && mapLayer.type && mapLayer.id) {
+            if (mapLayer && data.mapType) {
               newMap.addLayer(mapLayer);
             } else {
               console.error("Invalid map layer data");
@@ -250,6 +250,11 @@ const BasicStyles = () => {
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
+      {isLoading && (
+        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+          <CircularProgress />
+        </div>
+      )}
 
       <Box sx={{ width: "30%" }}>
         <TabContext value={tabValue}>
