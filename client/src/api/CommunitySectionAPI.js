@@ -126,17 +126,10 @@ const CommunitySectionAPI = {
             console.error("cannot get maps for a query.");
         }
     },
-        
-    getComments: async (postId) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+    getPost: async (postId) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getComments/${postId}`,{
+            `${API_BASE_URL}/api/community/getPost/${postId}`,{
                 params:{postId},
             }
             );
@@ -150,9 +143,37 @@ const CommunitySectionAPI = {
 
         //   }  );
         } catch (error) {
-            console.error("cannot get comments.");
+            console.error("cannot get post.");
         }
-    },
+    
+
+    },    
+    // getComments: async (postId) => {
+    //     const { isAuthenticated, userId, username } = useContext(AuthContext);
+
+    //     if (!isAuthenticated) {
+    //         console.error("User is not authenticated");
+    //         return;
+    //     }
+    //     try {
+    //         const response = await axios.get(
+    //         `${API_BASE_URL}/api/community/getComments/${postId}`,{
+    //             params:{postId},
+    //         }
+    //         );
+    //         return response.data;
+    //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+    //     //     postType, 
+    //     //     postText,
+    //     //     postFile,
+    //     //     date,
+
+    //     //   }  );
+    //     } catch (error) {
+    //         console.error("cannot get comments.");
+    //     }
+    // },
 
     postComment: async (postId, userId, date, commentText) => {
         const { isAuthenticated, userId, username } = useContext(AuthContext);
