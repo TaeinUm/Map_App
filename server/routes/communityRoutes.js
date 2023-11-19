@@ -18,6 +18,8 @@ router.post('/api/community/post', async (req, res) => {
         const newPost = new Post({
             _id: new mongoose.Types.ObjectId(),
             userId,
+            postId,
+            content,
             likes,
             types,
             image,
@@ -25,6 +27,22 @@ router.post('/api/community/post', async (req, res) => {
         });
         await newPost.save();
         res.status(201).json(newPost);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.post('/api/community/postComment', async (req, res) => {
+    try {
+        const { userId, postId, content } = req.body;
+        const newComment = new Comment({
+            _id: new mongoose.Types.ObjectId(),
+            userId,
+            postId,
+            content
+        });
+        await newComment.save();
+        res.status(201).json(newComment);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -73,19 +91,7 @@ router.get('/api/community/getMapsBySearch/:searchText', async (req, res) => {
     }
 });
 
-// Other routes like 'getQuestionsBySearch', 'getIdeasBySearch', etc., follow similar patterns
 
-// Post a comment
-router.post('/api/community/postComment', async (req, res) => {
-    try {
-        const { postId, userId, date, commentText } = req.body;
-        const newComment = new Comment({ postId, userId, date, commentText });
-        await newComment.save();
-        res.status(201).json(newComment);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
 
 // Like a map
 router.put('/api/community/likeMap/:postId', async (req, res) => {
