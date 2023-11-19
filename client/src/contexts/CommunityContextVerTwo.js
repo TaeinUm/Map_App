@@ -1,10 +1,10 @@
 import React, { createContext, useState } from "react";
-import { useHistory } from 'react-router-dom';
+//import { useHistory } from 'react-router-dom';
 
 export const CommunityContext = createContext(null);
 
 export const CommunityProvider = ({ children }) => {
-  const history = useHistory();
+  //const history = useHistory();
   const [screenType, setScreenType] = useState(null);
   const [postId, setPostId] = useState(null);
     //   const [comments, setGeojsonData] = useState(null);
@@ -14,12 +14,12 @@ export const CommunityProvider = ({ children }) => {
     setScreenType(searchType);
     // setGeojsonData(data);
     //You should be able to navigate to a specific webpage using a function and a path 
-    history.push(path);
+    //history.push(path);
     //navigate("/mapedit");
   };
   const updatePostIdAndNavigate = (postId, path) => {
     setPostId(postId);
-    history.push(path);
+    //history.push(path);
 
   };
  
