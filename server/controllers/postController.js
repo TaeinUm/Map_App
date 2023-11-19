@@ -11,3 +11,23 @@ exports.getTopPosts = async (req, res) => {
     res.status(500).send('Error fetching top posts');
   }
 };
+
+const writePost = async (req, res) => {
+  try {
+      const { likes, image, title } = req.body;
+      const newPost = new Post({
+          _id: new mongoose.Types.ObjectId(),
+          userId,
+          postId,
+          content,
+          likes,
+          types,
+          image,
+          title
+      });
+      await newPost.save();
+      res.status(201).json(newPost);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};

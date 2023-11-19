@@ -16,3 +16,4 @@ router.post('/logout', userController.logoutUser);
 router.get('/loggedIn', userController.checkLoggedIn);
 
 module.exports = router;
+
