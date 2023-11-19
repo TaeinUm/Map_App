@@ -256,7 +256,7 @@ const BasicStyles = () => {
         </div>
       )}
 
-      <Box sx={{ width: "30%" }}>
+      <Box sx={{ width: "40%" }}>
         <TabContext value={tabValue}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -272,11 +272,11 @@ const BasicStyles = () => {
                 value="1"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
-              <Tab
+              {/*      <Tab
                 label="Share"
                 value="2"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
+      />*/}
               <Tab
                 label="Save"
                 value="3"
@@ -344,9 +344,9 @@ const BasicStyles = () => {
               </div>
             </div>
           </TabPanel>
-          <TabPanel value="2">
+          {/* <TabPanel value="2">
             <ShareTab />
-          </TabPanel>
+              </TabPanel>*/}
           <TabPanel value="3">
             <SaveTab />
           </TabPanel>
