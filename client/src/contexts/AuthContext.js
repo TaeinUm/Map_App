@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     const response = await logout();
     if (response.success) {
       setIsAuthenticated(false);
-      localStorage.removeItem("isAuthenticated");
+      localStorage.setItem("isAuthenticated", "false");
       localStorage.removeItem("token");
       navigate("/");
     } else {
