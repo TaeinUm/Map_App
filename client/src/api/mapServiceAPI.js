@@ -12,14 +12,32 @@ const API_BASE_URL =
 
 const mapServiceAPI = {
   //get user's all saved map graphics
-  getUserMapGraphics: async (userId) => {
+  getUserMapGraphics: async (userId, username) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/user/${userId}/map-graphics`
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
+        {
+          params: { username },
+        }
       );
       return response.data;
     } catch (error) {
       console.error("cannot get data.");
+    }
+  },
+
+  // delete user's selected map based on mapId (userId, username)
+  deleteUserMapGraphic: async (userId, username, mapId) => {
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
+        {
+          data: { username, mapId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting map graphic.");
     }
   },
 
@@ -36,12 +54,12 @@ const mapServiceAPI = {
   },
 
   //update view setting, accessSetting for user 'share' button
-  updateViewSetting: async (userId, settings, accessSetting) => {
+  updateViewSetting: async (userId, username, settings, accessSetting) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/user/${userId}/view-setting`,
+        `${API_BASE_URL}/api/mpagraphics/${userId}/view-setting`,
         {
-          params: { settings, accessSetting },
+          params: { username, settings, accessSetting },
         }
       );
       return response.data;
@@ -51,12 +69,12 @@ const mapServiceAPI = {
   },
 
   // get memo content of a certain map graphics
-  getMemoContent: async (userId, mapType, mapLayer) => {
+  getMemoContent: async (userId, username, mapType, mapLayer) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/user/${userId}/memo`,
+        `${API_BASE_URL}/api/mapgraphics/${userId}/memo`,
         {
-          params: { mapType, mapLayer },
+          params: { username, mapType, mapLayer },
         }
       );
       return response.data;

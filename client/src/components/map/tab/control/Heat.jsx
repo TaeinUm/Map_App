@@ -5,9 +5,8 @@ import { TabPanel, TabContext } from "@mui/lab";
 import * as XLSX from "xlsx";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Memo from "../../Memo";
+import Memo from "../Memo";
 
-import JSONTab from "../JSONTab";
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
@@ -181,18 +180,13 @@ const Heat = () => {
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
               <Tab
-                label="JSON"
+                label="Share"
                 value="2"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
               <Tab
-                label="Share"
-                value="3"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-              <Tab
                 label="Save"
-                value="4"
+                value="3"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
             </Tabs>
@@ -222,16 +216,9 @@ const Heat = () => {
             </Container>
           </TabPanel>
           <TabPanel value="2">
-            <JSONTab
-              mapJson={mapJson}
-              handleJsonChange={handleJsonChange}
-              saveJson={saveJson}
-            />
-          </TabPanel>
-          <TabPanel value="3">
             <ShareTab />
           </TabPanel>
-          <TabPanel value="4">
+          <TabPanel value="3">
             <SaveTab />
           </TabPanel>
           <Button
