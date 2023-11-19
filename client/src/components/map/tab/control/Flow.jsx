@@ -12,8 +12,8 @@ import {
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Memo from "../../Memo";
-import JSONTab from "../JSONTab";
+import Memo from "../Memo";
+
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 
@@ -222,18 +222,13 @@ const Flow = () => {
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
               <Tab
-                label="JSON"
+                label="Share"
                 value="2"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
               <Tab
-                label="Share"
-                value="3"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-              <Tab
                 label="Save"
-                value="4"
+                value="3"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
             </Tabs>
@@ -465,16 +460,9 @@ const Flow = () => {
             </ul>
           </TabPanel>
           <TabPanel value="2">
-            <JSONTab
-              mapJson={mapJson}
-              handleJsonChange={handleJsonChange}
-              saveJson={saveJson}
-            />
-          </TabPanel>
-          <TabPanel value="3">
             <ShareTab />
           </TabPanel>
-          <TabPanel value="4">
+          <TabPanel value="3">
             <SaveTab />
           </TabPanel>
           <Button
