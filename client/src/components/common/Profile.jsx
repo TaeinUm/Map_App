@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Box,
   Grid,
@@ -11,6 +11,8 @@ import {
   CardContent,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { AuthContext } from "../../contexts/AuthContext";
+import profileAPI from "../../api/profileAPI";
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -27,11 +29,55 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Profile = () => {
-  const userData = {
-    email: "user@example.com",
-    nickname: "User1",
-    profileImage: "",
-    postsImage: "",
+  const { userId, username, profileImage } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [profile, setProfile] = useState(profileImage);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postings = await profileAPI.getPostings(userId, username);
+        setPosts(postings);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    const fetchEmail = async () => {
+      try {
+        const emailData = await profileAPI.getEmail(userId, username);
+        setEmail(emailData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchPosts();
+    fetchEmail();
+  }, [userId, username]);
+
+  const handleProfileImageChange = (e) => {
+    setProfile(e.target.files[0]);
+  };
+
+  const handleProfileImageUpload = async () => {
+    try {
+      await profileAPI.updateProfilePicture(userId, username, profile);
+      alert("Successfully updated!");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      await profileAPI.updateUserDetails(userId, email, nickname, password);
+      alert("Successfully updated!");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -42,13 +88,20 @@ const Profile = () => {
             <CardActionArea sx={{ display: "flex" }}>
               <CardMedia
                 component="img"
-                image={userData.profileImage}
+                image={profileImage}
                 alt="Profile Picture"
                 sx={{
                   width: "30%",
+                  height: "150px",
                   backgroundColor: "grey",
+                  borderRadius: "100%",
+                  objectFit: "cover",
+                  zIndex: "1",
                 }}
-              />
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageChange}
+              ></CardMedia>
               <CardContent>
                 <Typography
                   variant="h5"
@@ -59,9 +112,10 @@ const Profile = () => {
                     marginBottom: "30px",
                   }}
                 >
-                  Welcome, {userData.nickname}
+                  Welcome, {username}
                 </Typography>
                 <Button
+                  onClick={handleProfileImageUpload}
                   variant="contained"
                   sx={{ backgroundColor: "#262931", marginBottom: "30px" }}
                 >
@@ -100,7 +154,7 @@ const Profile = () => {
               >
                 <CardMedia
                   component="img"
-                  image={userData.postsImage}
+                  image={posts.postsImage}
                   alt="Posts"
                   sx={{
                     width: "200px",
@@ -111,7 +165,7 @@ const Profile = () => {
                 />
                 <CardMedia
                   component="img"
-                  image={userData.postsImage}
+                  image={posts.postsImage}
                   alt="Posts"
                   sx={{
                     width: "200px",
@@ -149,7 +203,10 @@ const Profile = () => {
             </Typography>
             <TextField
               label="Email"
-              defaultValue={userData.email}
+              defaultValue={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
               variant="outlined"
               margin="normal"
               InputLabelProps={{
@@ -189,8 +246,11 @@ const Profile = () => {
             />
 
             <TextField
-              label="Nickname"
-              defaultValue={userData.nickname}
+              label="Username"
+              defaultValue={username}
+              onChange={(e) => {
+                setNickname(e.target.value);
+              }}
               variant="outlined"
               margin="normal"
               InputLabelProps={{
