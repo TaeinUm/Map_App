@@ -47,12 +47,6 @@ const CommunitySectionAPI = {
         }
     },
     getMapsByUsername: async (searchedUser) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
         try {
             const response = await axios.get(
             `${API_BASE_URL}/api/community/getMapsByUsername/${searchedUser}`,{
@@ -73,12 +67,6 @@ const CommunitySectionAPI = {
         }
     },
     getQuestionsBySearch: async (searchText) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
         try {
             const response = await axios.get(
             `${API_BASE_URL}/api/community/getQuestions/${searchText}`,{
@@ -99,12 +87,6 @@ const CommunitySectionAPI = {
         }
     },
     getIdeasBySearch: async (searchText) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
         try {
             const response = await axios.get(
             `${API_BASE_URL}/api/community/getIdeas/${searchText}`,{
@@ -125,12 +107,6 @@ const CommunitySectionAPI = {
         }
     },
     getMapsBySearch: async (searchText) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
         try {
             const response = await axios.get(
             `${API_BASE_URL}/api/community/getMapsBySearch/${searchText}`,{
