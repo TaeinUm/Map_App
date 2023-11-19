@@ -274,6 +274,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
 import { getTop5Trending } from "../../api/graphicsAPI";
+import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
+import { useContext } from 'react';
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 // Styled components
@@ -341,6 +343,8 @@ function CommunityTwo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
+  const {navigateTo, updatePostIdAndNavigate} = useContext(CommunityContext);
+
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
@@ -405,6 +409,7 @@ function CommunityTwo() {
         {/* Right side - Post button */}
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Button
+  //onClick={navigateTo('/communityPostMapGraphic/')}
   component={Link}
   to={`/communityPostMapGraphic/`}
   variant="contained"
@@ -493,6 +498,7 @@ function CommunityTwo() {
                   flexGrow: "1",
                   fontWeight: "bold",
                 }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
                 to={"/communityQuestionPost/:"+index}
               >
