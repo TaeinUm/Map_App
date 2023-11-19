@@ -46,6 +46,86 @@ const CommunitySectionAPI = {
             console.error("cannot make a post.");
         }
     },
+    getSamplePosts: async () => {
+        try {
+            const response = await axios.get(
+            `${API_BASE_URL}/api/community/getSamplePosts`,{
+                params:{},
+            }
+            );
+            return response.data;
+        //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+        //     postType, 
+        //     postText,
+        //     postFile,
+        //     date,
+
+        //   }  );
+        } catch (error) {
+            console.error("cannot get sample posts.");
+        }
+    },
+    getAllPosts: async (postType) => {
+        try {
+            const response = await axios.get(
+            `${API_BASE_URL}/api/community/getAllPosts/${postType}`,{
+                params:{postType},
+            }
+            );
+            return response.data;
+        //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+        //     postType, 
+        //     postText,
+        //     postFile,
+        //     date,
+
+        //   }  );
+        } catch (error) {
+            console.error("cannot get all posts of a certain type.");
+        }
+    },
+    // deletePost: async (postId) => {
+    //     try {
+    //         const response = await axios.delete(
+    //         `${API_BASE_URL}/api/community/deletePost/${postId}`,{
+    //             params:{postId},
+    //         }
+    //         );
+    //         return response.data;
+    //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+    //     //     postType, 
+    //     //     postText,
+    //     //     postFile,
+    //     //     date,
+
+    //     //   }  );
+    //     } catch (error) {
+    //         console.error("cannot get a user's maps.");
+    //     }
+    // },
+    // updatePost: async (postId, postType) => {
+    //     try {
+    //         const response = await axios.put(
+    //         `${API_BASE_URL}/api/community/updatePost/${postId}`,{
+    //             params:{postId, postType},
+    //         }
+    //         );
+    //         return response.data;
+    //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+    //     //     postType, 
+    //     //     postText,
+    //     //     postFile,
+    //     //     date,
+
+    //     //   }  );
+    //     } catch (error) {
+    //         console.error("cannot get a user's maps.");
+    //     }
+    // },
     getMapsByUsername: async (searchedUser) => {
         try {
             const response = await axios.get(
