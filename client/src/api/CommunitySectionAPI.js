@@ -7,13 +7,13 @@ const API_BASE_URL =
 
 const CommunitySectionAPI = {
     //make a post
-    makePost: async (userId, postType, postFile, date) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
+    makePost: async (content, likes, types, image, title) => {
+        const { isAuthenticated, userId, username } = AuthContext;
 
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     console.error("User is not authenticated");
+        //     return;
+        // }
         try {
             // const response = await
             // axios
@@ -30,7 +30,13 @@ const CommunitySectionAPI = {
             // .catch((err) => console.log(err));
             const response = await axios.post(`${API_BASE_URL}/api/community/post`,
                 {
-                    params:{userId, postType, postType, postFile, date},
+                    //params:{userId, postType, postType, postFile, date},
+                    params: {userId,
+                        content,
+                        likes,
+                        types,
+                        image,
+                        title},
                 }
             );
             return response.data;
@@ -66,11 +72,11 @@ const CommunitySectionAPI = {
             console.error("cannot get sample posts.");
         }
     },
-    getAllPosts: async (postType) => {
+    getAllPosts: async (types) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getAllPosts/${postType}`,{
-                params:{postType},
+            `${API_BASE_URL}/api/community/getAllPosts/${types}`,{
+                params:{types},
             }
             );
             return response.data;
@@ -127,9 +133,10 @@ const CommunitySectionAPI = {
     //     }
     // },
     getMapsByUsername: async (searchedUser) => {
+        const { isAuthenticated, userId, username } = AuthContext;
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getMapsByUsername/${searchedUser}`,{
+            `${API_BASE_URL}/api/community/getMapsByUsername/:${userId}`,{
                 params:{searchedUser},
             }
             );
@@ -149,7 +156,7 @@ const CommunitySectionAPI = {
     getQuestionsBySearch: async (searchText) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getQuestions/${searchText}`,{
+            `${API_BASE_URL}/api/community/getQuestions/:${searchText}`,{
                 params:{searchText},
             }
             );
@@ -169,7 +176,7 @@ const CommunitySectionAPI = {
     getIdeasBySearch: async (searchText) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getIdeas/${searchText}`,{
+            `${API_BASE_URL}/api/community/getIdeas/:${searchText}`,{
                 params:{searchText},
             }
             );
@@ -189,7 +196,7 @@ const CommunitySectionAPI = {
     getMapsBySearch: async (searchText) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getMapsBySearch/${searchText}`,{
+            `${API_BASE_URL}/api/community/getMapsBySearch/:${searchText}`,{
                 params:{searchText},
             }
             );
@@ -255,8 +262,8 @@ const CommunitySectionAPI = {
     //     }
     // },
 
-    postComment: async (postId, userId, date, commentText) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
+    postComment: async (postId, date, content) => {
+        const { isAuthenticated, userId, username } = AuthContext;
 
         if (!isAuthenticated) {
             console.error("User is not authenticated");
@@ -265,7 +272,10 @@ const CommunitySectionAPI = {
         try {
             const response = await axios.post(`${API_BASE_URL}/api/community/postComment`,
                 {
-                    params:{postId, userId, commentText, date},
+                    params:{userId,
+                        postId,
+                        date,
+                        content},
                 }
             );
             return response.data;
@@ -301,14 +311,14 @@ const CommunitySectionAPI = {
     },
 
     likeMap: async (postId) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
+        const { isAuthenticated, userId, username } = AuthContext;
 
         if (!isAuthenticated) {
             console.error("User is not authenticated");
             return;
         }
         try {
-            const response = await axios.put(`${API_BASE_URL}/api/community/likeMap/${postId}`,
+            const response = await axios.put(`${API_BASE_URL}/api/community/likeMap/:${postId}`,
                 {
                     params:{userId},
                 }
@@ -342,14 +352,14 @@ const CommunitySectionAPI = {
         }
     },
     unlikeMap: async (postId) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
+        const { isAuthenticated, userId, username } = AuthContext;
 
         if (!isAuthenticated) {
             console.error("User is not authenticated");
             return;
         }
         try {
-            const response = await axios.put(`${API_BASE_URL}/api/community/unlikeMap/${postId}`,
+            const response = await axios.put(`${API_BASE_URL}/api/community/unlikeMap/:${postId}`,
                 {
                     params:{userId},
                 }

@@ -12,6 +12,10 @@ export const CommunityProvider = ({ children }) => {
     //   const [comments, setGeojsonData] = useState(null);
     //   const [markers, setMarkers] = useState([]);
 
+  const navigateTo = (path) => {
+    navigate(path);
+  };
+
   const updateScreenTypeAndNavigate = (searchType, path) => {
     setScreenType(searchType);
     // setGeojsonData(data);
@@ -36,6 +40,7 @@ export const CommunityProvider = ({ children }) => {
         postId,
         
         updatePostIdAndNavigate,
+        navigateTo,
         
       }}
     >
