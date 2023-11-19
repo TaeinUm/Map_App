@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import {
   Tab,
@@ -26,6 +26,11 @@ mapboxgl.accessToken =
 
 const Flow = () => {
   const [map, setMap] = useState(null);
+  const { mapId } = useContext(MapContext);
+  const { userId, username } = useContext(AuthContext);
+  const [initialLayers, setInitializeLayers] = useState(null);
+  const [mapLayer, setMapLayer] = useState(null);
+
   const countryCityData = {
     USA: ["New York", "Los Angeles", "Chicago"],
     KOR: ["Seoul", "Busan", "Incheon"],
@@ -134,11 +139,19 @@ const Flow = () => {
         });
 
         setMap(newMap);
+        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
+        setInitializeLayers(initialLayers);
       });
     }
     if (map) {
-      setMapJson(map.getStyle());
+      const currentLayers = map.getStyle().layers;
+      const addedLayers = currentLayers.filter(
+        (layer) => !initialLayers.includes(layer.id)
+      );
+      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
+      setMapLayer(addedLayersJson);
     }
+
     setIsLoading(false);
   }, [map]);
 
@@ -203,6 +216,25 @@ const Flow = () => {
 
   const flowColorChange = (event) => {
     setRegionColor(event.target.value);
+  };
+
+  const handleSave = async (title, version, privacy, mapLayer) => {
+    try {
+      await mapServiceAPI.addMapGraphics(
+        userId,
+        username,
+        mapId, // This could be null if creating a new map
+        title,
+        version,
+        privacy,
+        "Flow Map",
+        mapLayer
+      );
+      alert("Map saved successfully");
+    } catch (error) {
+      console.error("Error saving map:", error);
+      alert("Error saving map");
+    }
   };
 
   return (
@@ -476,7 +508,7 @@ const Flow = () => {
             <ShareTab />
               </TabPanel>*/}
           <TabPanel value="3">
-            <SaveTab />
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
           <Button
             sx={{ width: "100%", height: "20px", backgroundColor: "grey" }}

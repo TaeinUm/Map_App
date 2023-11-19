@@ -145,6 +145,48 @@ const mapServiceAPI = {
       console.error("Error fetching map graphic data:", error);
     }
   },
+
+  addMapGraphics: async (
+    userId,
+    username,
+    mapId = null,
+    title,
+    version,
+    privacy,
+    mapType,
+    mapLayer
+  ) => {
+    try {
+      const mapGraphicData = {
+        username,
+        title,
+        version,
+        privacy,
+        mapType,
+        mapLayer,
+      };
+
+      let response;
+      if (mapId) {
+        // Update existing map graphic if mapId is provided
+        response = await axios.put(
+          `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
+          mapGraphicData
+        );
+      } else {
+        // Create a new map graphic if no mapId is provided
+        response = await axios.post(
+          `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
+          mapGraphicData
+        );
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error("Error adding map graphic:", error);
+      throw error;
+    }
+  },
 };
 
 export default mapServiceAPI;

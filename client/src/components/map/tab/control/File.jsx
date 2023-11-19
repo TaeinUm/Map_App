@@ -27,6 +27,9 @@ function File() {
   const { geojsonData, mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const mapContainer = useRef(null);
+
+  const [initialLayers, setInitializeLayers] = useState(null);
+  const [mapLayer, setMapLayer] = useState(null);
   const [map, setMap] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [tabValue, setTabValue] = useState("1");
@@ -119,8 +122,18 @@ function File() {
 
         setMap(newMap);
         setIsMapLoaded(true);
-        setMapJson(newMap.getStyle());
+        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
+        setInitializeLayers(initialLayers);
       });
+    }
+
+    if (map) {
+      const currentLayers = map.getStyle().layers;
+      const addedLayers = currentLayers.filter(
+        (layer) => !initialLayers.includes(layer.id)
+      );
+      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
+      setMapLayer(addedLayersJson);
     }
   }, [map, geojsonData]);
 
@@ -131,6 +144,25 @@ function File() {
       map.setPaintProperty(layerId, "line-width", lineThickness);
 
       map.setPaintProperty("water", "fill-color", waterColor);
+    }
+  };
+
+  const handleSave = async (title, version, privacy, mapLayer) => {
+    try {
+      await mapServiceAPI.addMapGraphics(
+        userId,
+        username,
+        mapId, // This could be null if creating a new map
+        title,
+        version,
+        privacy,
+        null,
+        mapLayer
+      );
+      alert("Map saved successfully");
+    } catch (error) {
+      console.error("Error saving map:", error);
+      alert("Error saving map");
     }
   };
 
@@ -162,7 +194,7 @@ function File() {
                 value="1"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
               />
-           {/*   <Tab
+              {/*   <Tab
                 label="Share"
                 value="3"
                 sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
@@ -272,7 +304,7 @@ function File() {
             <ShareTab />
               </TabPanel>*/}
           <TabPanel value="4">
-            <SaveTab />
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
           <Button
             sx={{ width: "100%", height: "20px", backgroundColor: "grey" }}

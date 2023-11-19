@@ -29,6 +29,8 @@ const BasicStyles = () => {
   const { mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [initialLayers, setInitializeLayers] = useState(null);
+  const [mapLayer, setMapLayer] = useState(null);
 
   const [styleSettings, setStyleSettings] = useState({
     visibility: {
@@ -140,6 +142,9 @@ const BasicStyles = () => {
         zoom: 2,
       });
 
+      const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
+      setInitializeLayers(initialLayers);
+
       newMap.on("load", async () => {
         if (mapId) {
           try {
@@ -205,7 +210,12 @@ const BasicStyles = () => {
       }
     });
     if (map) {
-      setMapJson(map.getStyle());
+      const currentLayers = map.getStyle().layers;
+      const addedLayers = currentLayers.filter(
+        (layer) => !initialLayers.includes(layer.id)
+      );
+      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
+      setMapLayer(addedLayersJson);
     }
   }, [map, mapStyle, styleSettings]);
 
@@ -241,6 +251,25 @@ const BasicStyles = () => {
         [category]: isVisible,
       },
     }));
+  };
+
+  const handleSave = async (title, version, privacy, mapLayer) => {
+    try {
+      await mapServiceAPI.addMapGraphics(
+        userId,
+        username,
+        mapId, // This could be null if creating a new map
+        title,
+        version,
+        privacy,
+        "Basic Map",
+        mapLayer
+      );
+      alert("Map saved successfully");
+    } catch (error) {
+      console.error("Error saving map:", error);
+      alert("Error saving map");
+    }
   };
 
   return (
@@ -348,7 +377,7 @@ const BasicStyles = () => {
             <ShareTab />
               </TabPanel>*/}
           <TabPanel value="3">
-            <SaveTab />
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
         </TabContext>
         <Button
