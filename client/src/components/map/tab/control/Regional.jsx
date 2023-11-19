@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import {
   Tab,
@@ -12,11 +12,15 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  CircularProgress,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../Memo";
+import { MapContext } from "../../../../contexts/MapContext";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
@@ -25,6 +29,10 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const Regional = () => {
+  const { mapId } = useContext(MapContext);
+  const { userId, username } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
   const [mapStyle, setMapStyle] = useState(
@@ -250,6 +258,7 @@ const Regional = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     const newMap = new mapboxgl.Map({
       container: "map",
       style: "mapbox://styles/mapbox/streets-v11",
@@ -257,7 +266,7 @@ const Regional = () => {
       zoom: 2,
     });
 
-    newMap.on("load", () => {
+    newMap.on("load", async () => {
       newMap.addSource("countries", {
         type: "vector",
         url: "mapbox://mapbox.country-boundaries-v1",
@@ -274,9 +283,28 @@ const Regional = () => {
         },
       });
 
+      if (mapId) {
+        try {
+          const data = await mapServiceAPI.getMapGraphicData(
+            userId,
+            username,
+            mapId
+          );
+          const mapLayer = data.mapLayer;
+
+          if (mapLayer && data.mapType) {
+            newMap.addLayer(mapLayer);
+          } else {
+            console.error("Invalid map layer data");
+          }
+        } catch (error) {
+          console.error("Error loading map graphics: ", error);
+        }
+      }
+
       setMap(newMap);
 
-      setMapJson(newMap.getStyle());
+      setIsLoading(false);
     });
 
     return () => newMap.remove();

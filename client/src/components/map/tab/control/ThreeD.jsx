@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import {
   Tab,
@@ -14,6 +14,9 @@ import * as XLSX from "xlsx";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../Memo";
+import { MapContext } from "../../../../contexts/MapContext";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
@@ -27,6 +30,9 @@ const ThreeD = () => {
   const mapContainer = useRef(null);
   const fileInputRef = useRef(null);
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
+
+  const { mapId } = useContext(MapContext);
+  const { userId, username } = useContext(AuthContext);
 
   const [tabValue, setTabValue] = useState("1");
   const [mapJson, setMapJson] = useState({});
@@ -71,7 +77,7 @@ const ThreeD = () => {
         antialias: true,
       });
 
-      newMap.on("load", () => {
+      newMap.on("load", async () => {
         newMap.addSource("3d-data", {
           type: "geojson",
           data: {
@@ -91,6 +97,25 @@ const ThreeD = () => {
             "fill-extrusion-opacity": 0.6,
           },
         });
+
+        if (mapId) {
+          try {
+            const data = await mapServiceAPI.getMapGraphicData(
+              userId,
+              username,
+              mapId
+            );
+            const mapLayer = data.mapLayer;
+
+            if (mapLayer && data.mapType) {
+              newMap.addLayer(mapLayer);
+            } else {
+              console.error("Invalid map layer data");
+            }
+          } catch (error) {
+            console.error("Error loading map graphics: ", error);
+          }
+        }
 
         setMap(newMap);
         setIsMapLoaded(true);
@@ -349,7 +374,7 @@ export default ThreeD;
 //       alert("Map is still loading. Please wait.");
 //       return;
 //     }
-    
+
 //     const file = e.target.files[0];
 //     if (file) {
 //       const reader = new FileReader();

@@ -14,6 +14,8 @@ import { MapContext } from "../../../../contexts/MapContext";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../Memo";
+import mapServiceAPI from "../../../../api/mapServiceAPI";
+import { AuthContext } from "../../../../contexts/AuthContext";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
@@ -22,7 +24,8 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 function File() {
-  const { geojsonData } = useContext(MapContext);
+  const { geojsonData, mapId } = useContext(MapContext);
+  const { userId, username } = useContext(AuthContext);
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
@@ -66,6 +69,7 @@ function File() {
   };
 
   useEffect(() => {
+    setIsMapLoaded(false);
     if (!map) {
       const newMap = new mapboxgl.Map({
         container: mapContainer.current,
@@ -74,8 +78,8 @@ function File() {
         zoom: 2,
       });
 
-      newMap.on("load", () => {
-        if (geojsonData) {
+      newMap.on("load", async () => {
+        if (geojsonData && !mapId) {
           newMap.addSource(sourceId, {
             type: "geojson",
             data: geojsonData,
@@ -93,6 +97,24 @@ function File() {
           });
 
           newMap.setPaintProperty("waterd", "fill-color", waterColor);
+        } else if (geojsonData && mapId) {
+          try {
+            const data = await mapServiceAPI.getMapGraphicData(
+              userId,
+              username,
+              mapId
+            );
+            const mapLayer = data.mapLayer;
+            if (mapLayer && data.mapType) {
+              newMap.addLayer(mapLayer);
+            } else {
+              console.error("Invalid map layer data");
+            }
+          } catch (error) {
+            console.error("Error loading map graphics:", error);
+          } finally {
+            setIsMapLoaded(true);
+          }
         }
 
         setMap(newMap);
