@@ -10,7 +10,7 @@ import { AuthContext } from "../contexts/AuthContext";
 const BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
-const userAPI = {
+const profileAPI = {
   //upate profile image
   updateProfilePicture: async (userId, username, imageData) => {
     const formData = new FormData();
@@ -64,6 +64,23 @@ const userAPI = {
       throw error;
     }
   },
+
+  getEmail: async (userId, username) => {
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/users/${userId}/email`,
+        {
+          params: {
+            username,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching user data", error);
+      throw error;
+    }
+  },
 };
 
-export default userAPI;
+export default profileAPI;
