@@ -258,7 +258,7 @@ function File() {
           >
             {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
           </Button>
-          {isMemoVisible && <Memo />}
+          {isMemoVisible && <Memo mapId={""} />}
         </TabContext>
       </Box>
     </Box>
