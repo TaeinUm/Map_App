@@ -223,3 +223,4 @@ function CommunityTrendingMapGraphics() {
 }
 
 export default CommunityTrendingMapGraphics;
+

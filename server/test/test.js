@@ -33,7 +33,7 @@ describe('API Endpoints', function() {
         if (res.body.length === 5) {
           res.body.forEach(function(item) {
             expect(item).to.be.an('object');
-            expect(item).to.have.all.keys('_id', 'likes', 'image', 'title');
+            expect(item).to.have.all.keys('_id', 'likes', 'image', 'title', 'content');
           });
         }
         done(err); // Pass the error if there is one to Mocha
