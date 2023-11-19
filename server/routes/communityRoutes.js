@@ -14,8 +14,15 @@ const Map = require('../models/Map'); // Adjust path and model as per your setup
 // Make a post
 router.post('/api/community/post', async (req, res) => {
     try {
-        const { userId, postType, postFile, date } = req.body;
-        const newPost = new Post({ userId, postType, postFile, date });
+        const { likes, image, title } = req.body;
+        const newPost = new Post({
+            _id: new mongoose.Types.ObjectId(),
+            userId,
+            likes,
+            types,
+            image,
+            title
+        });
         await newPost.save();
         res.status(201).json(newPost);
     } catch (error) {
