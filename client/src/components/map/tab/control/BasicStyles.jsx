@@ -1,10 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
-import { Tab, Tabs, Box, Button, Typography } from "@mui/material";
+import {
+  Tab,
+  Tabs,
+  Box,
+  Button,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Memo from "../Memo";
+import { MapContext } from "../../../../contexts/MapContext";
+import { AuthContext } from "../../../../contexts/AuthContext";
+import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
@@ -16,6 +26,10 @@ const BasicStyles = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
   const [fontStyle, setFontStyle] = useState("Arial Unicode MS Bold");
+  const { mapId } = useContext(MapContext);
+  const { userId, username } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [styleSettings, setStyleSettings] = useState({
     visibility: {
       water: true,
@@ -116,35 +130,48 @@ const BasicStyles = () => {
   };
 
   useEffect(() => {
-    const newMap = new mapboxgl.Map({
-      container: "map",
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [-74.006, 40.7128],
-      zoom: 2,
-    });
+    const initializeMap = async () => {
+      setIsLoading(true);
 
-    newMap.on("load", () => {
-      newMap.addSource("countries", {
-        type: "vector",
-        url: "mapbox://mapbox.country-boundaries-v1",
+      const newMap = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [-74.006, 40.7128],
+        zoom: 2,
       });
 
-      newMap.addLayer({
-        id: "countries",
-        type: "fill",
-        source: "countries",
-        "source-layer": "country_boundaries",
-        paint: {
-          "fill-color": "#FFFFFF",
-          "fill-opacity": 0.4,
-        },
+      newMap.on("load", async () => {
+        if (mapId) {
+          try {
+            // Fetch map graphics data using mapId
+            const data = await mapServiceAPI.getMapGraphicData(
+              userId,
+              username,
+              mapId
+            );
+            const mapLayer = data.mapLayer;
+
+            // Check if mapLayer is valid and add it to the map
+            if (mapLayer && mapLayer.type && mapLayer.id) {
+              newMap.addLayer(mapLayer);
+            } else {
+              console.error("Invalid map layer data");
+            }
+          } catch (error) {
+            console.error("Error loading map graphics:", error);
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
+          }
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
+        }
       });
+    };
 
-      setMap(newMap);
-    });
-
-    return () => newMap.remove();
-  }, []);
+    initializeMap();
+  }, [mapId]);
 
   useEffect(() => {
     if (!map || !map.getStyle) {
