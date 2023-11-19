@@ -13,7 +13,7 @@ import { TabPanel, TabContext } from "@mui/lab";
 import { MapContext } from "../../../../contexts/MapContext";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Memo from "../../Memo";
+import Memo from "../Memo";
 
 import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";

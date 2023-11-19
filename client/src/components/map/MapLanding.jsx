@@ -17,7 +17,6 @@ import LoadFile from "./modal/LoadFile";
 
 /****       Components     ****/
 import MapList from "./landing/MapList";
-import LikedTemplates from "./landing/LikedTemplate";
 import MapMobile from "./landing/MapMobile";
 import SearchBar from "./landing/SearchBar";
 
@@ -47,7 +46,9 @@ function MapLanding() {
     <div>
       {isDesktop && (
         <Container maxWidth="xl" sx={{ height: "90vh" }}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3, mb: 4}}>
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", mt: 3, mb: 4 }}
+          >
             <Box>
               {/****       Buttons for Modals    ****/}
               <Button
@@ -93,42 +94,26 @@ function MapLanding() {
           </Box>
 
           {/****       My graphics components     ****/}
-          <Grid container spacing={8}>
-            <Grid item xs={12} md={7}>
-              {/****       My Graphics Title     ****/}
-              <Typography
-                variant="h4"
-                gutterBottom
-                sx={{ color: "#FAFAFA", fontWeight: "bold" , textAlign: "left", mb: 2}}
-              >
-                My Graphics
-              </Typography>
-              <Paper sx={{ p: 2 }}>
-                {/* Search Bar */}
-                <SearchBar onSearchChange={handleSearchChange} />
-                {/* Maps List */}
-                <MapList searchQuery={searchTerm} />
-              </Paper>
-            </Grid>
-
-            {/* Liked Templates */}
-            <Grid item xs={12} md={5}>
-              <Typography
-                    variant="h4"
-                    gutterBottom
-                    sx={{
-                      color: "#FAFAFA",
-                      fontWeight: "bold",
-                      textAlign: "left",
-                      alignItems: "center",
-                    }}
-                  >
-                    Liked Templates
-                  </Typography>
-              <Paper sx={{ background: "none" }}>
-                <LikedTemplates />
-              </Paper>
-            </Grid>
+          <Grid item xs={12} md={7}>
+            {/****       My Graphics Title     ****/}
+            <Typography
+              variant="h4"
+              gutterBottom
+              sx={{
+                color: "#FAFAFA",
+                fontWeight: "bold",
+                textAlign: "left",
+                mb: 2,
+              }}
+            >
+              My Graphics
+            </Typography>
+            <Paper sx={{ p: 2 }}>
+              {/* Search Bar */}
+              <SearchBar onSearchChange={handleSearchChange} />
+              {/* Maps List */}
+              <MapList searchQuery={searchTerm} />
+            </Paper>
           </Grid>
         </Container>
       )}
