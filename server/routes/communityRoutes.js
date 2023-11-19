@@ -3,13 +3,8 @@ const express = require('express');
 const router = express.Router();
 
 // MongoDB models
-const Post = require('../models/Post'); // Adjust path and model as per your setup
-const Comment = require('../models/Comment'); // Adjust path and model as per your setup
-const Map = require('../models/Map'); // Adjust path and model as per your setup
-const Question = require('../models/Question'); // Adjust path and model as per your setup
-const Idea = require('../models/Idea'); // Adjust path and model as per your setup
-const Map = require('../models/Map'); // Adjust path and model as per your setup
-
+const Post = require('../models/Post'); 
+const Comment = require('../models/Comment'); 
 
 // Make a post
 router.post('/api/community/post', async (req, res) => {
@@ -48,10 +43,13 @@ router.post('/api/community/postComment', async (req, res) => {
     }
 });
 
-// Get maps by username
-router.get('/api/community/getMapsByUsername/:username', async (req, res) => {
+router.get('/api/community/getMapsByUsername/:userId', async (req, res) => {
     try {
-        const maps = await Map.find({ username: req.params.username });
+        const userId = req.params.userId;
+        const maps = await Post.find({ 
+            userId: userId,
+            types: "map"
+        });
         res.json(maps);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -62,7 +60,10 @@ router.get('/api/community/getMapsByUsername/:username', async (req, res) => {
 router.get('/api/community/getQuestions/:searchText', async (req, res) => {
     try {
         const searchText = req.params.searchText;
-        const questions = await Question.find({ "questionText": { "$regex": searchText, "$options": "i" } });
+        const questions = await Post.find({ 
+            title: { "$regex": searchText, "$options": "i" },
+            types: "question"
+        });
         res.json(questions);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -73,7 +74,10 @@ router.get('/api/community/getQuestions/:searchText', async (req, res) => {
 router.get('/api/community/getIdeas/:searchText', async (req, res) => {
     try {
         const searchText = req.params.searchText;
-        const ideas = await Idea.find({ "ideaText": { "$regex": searchText, "$options": "i" } });
+        const ideas = await Post.find({ 
+            title: { "$regex": searchText, "$options": "i" },
+            types: "idea"
+        });
         res.json(ideas);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -84,7 +88,10 @@ router.get('/api/community/getIdeas/:searchText', async (req, res) => {
 router.get('/api/community/getMapsBySearch/:searchText', async (req, res) => {
     try {
         const searchText = req.params.searchText;
-        const maps = await Map.find({ "mapTitle": { "$regex": searchText, "$options": "i" } });
+        const maps = await Post.find({ 
+            title: { "$regex": searchText, "$options": "i" },
+            types: "map"
+        });
         res.json(maps);
     } catch (error) {
         res.status(500).json({ message: error.message });
