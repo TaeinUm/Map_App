@@ -32,7 +32,6 @@ const writePost = async (req, res) => {
   }
 };
 
-
 const likePost = async (req, res) => {
   try {
       const postId = req.params.postId;
