@@ -4,6 +4,8 @@ import { FiShare, FiTrash } from "react-icons/fi";
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 import mapServiceAPI from "../../../api/mapServiceAPI";
 import { AuthContext } from "../../../contexts/AuthContext";
+import { MapContext } from "../../../contexts/MapContext";
+import { useNavigate } from "react-router-dom";
 
 const getMapListData = [
   {
@@ -50,6 +52,8 @@ function MapList({ searchQuery }) {
   const [mapListData, setMapListData] = useState([]);
   const [visibleItems, setVisibleItems] = useState(5);
   const [startIndex, setStartIndex] = useState(0);
+  const { updateMapContextAndNavigate } = useContext(MapContext);
+  const navigate = useNavigate();
 
   const { userId, username } = useContext(AuthContext);
 
@@ -74,6 +78,10 @@ function MapList({ searchQuery }) {
 
     fetchData();
   }, [searchQuery]);
+
+  const handleItemClick = (mapId, mapType, mapLayer) => {
+    updateMapContextAndNavigate(mapId, mapType, mapLayer, navigate);
+  };
 
   const handleLeftClick = () => {
     setStartIndex(Math.max(0, startIndex - visibleItems));
@@ -111,9 +119,14 @@ function MapList({ searchQuery }) {
             key={index}
             sx={{ display: "flex", alignItems: "center", my: 3 }}
           >
-            <Box sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}>
+            <Box
+              type="button"
+              sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}
+              onClick={() =>
+                handleItemClick(item.mapId, item.mapType, item.mapLayer)
+              }
+            >
               <img
-                type="button"
                 src={item.image}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
@@ -121,6 +134,7 @@ function MapList({ searchQuery }) {
             <Typography
               type="button"
               variant="h6"
+              onClick={() => handleItemClick(item.mapType, item.mapLayer)}
               sx={{ flexGrow: 1, textAlign: "left", marginLeft: "30px" }}
             >
               {item.title}
