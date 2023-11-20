@@ -47,9 +47,9 @@ it('creates a new post successfully', function(done) {
       userId: "65487c7a94678f7bd6d43689".toString(),
       content: 'Test content',
       likes: 0,
-      types: 'Test type',
-      image: 'Test image URL',
-      title: 'Test title'
+      types: '000',
+      image: '',
+      title: '00000'
   };
 
   request(app)
@@ -67,6 +67,42 @@ it('creates a new post successfully', function(done) {
               done();
           }
       });
+});
+
+it('should increment the likes of a post', function(done) {
+  const postId = "6559d630cf378d2d911c6387"; // Replace with a valid post ID
+
+  request(app)
+    .post(`/api/community/likeMap/${postId}`) // Make sure this matches your actual route
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function(err, res) {
+      if (err) {
+        done(err);
+      } else {
+        expect(res.body).to.be.an('object');
+        expect(res.body.updatedPost.likes).to.be.above(0); // Assuming the post initially has 0 likes
+        done();
+      }
+    });
+});
+
+it('should decrement the likes of a post', function(done) {
+  const postId = "6559d630cf378d2d911c6387"; // Replace with a valid post ID
+
+  request(app)
+    .post(`/api/community/unlikeMap/${postId}`) // Make sure this matches your actual route
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function(err, res) {
+      if (err) {
+        done(err);
+      } else {
+        expect(res.body).to.be.an('object');
+        expect(res.body.updatedPost.likes).to.be.least(0); // Assuming the post initially has some likes
+        done();
+      }
+    });
 });
 
 // Close the mongoose connection after the tests are done

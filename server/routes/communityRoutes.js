@@ -19,8 +19,8 @@ router.get('/getIdeas/:searchText', searchController.searchIdeaByText);
 
 router.get('/getMapsBySearch/:searchText', searchController.searchMapByText);
 
-router.put('/likeMap/:postId', postController.likePost)
+router.post('/likeMap/:postId', postController.likePost)
 
-router.put('/unlikeMap/:postId', postController.unlikePost)
+router.post('/unlikeMap/:postId', postController.unlikePost)
 
 module.exports = router;
