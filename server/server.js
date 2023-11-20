@@ -9,6 +9,7 @@ const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const postController = require('./controllers/postController');
 const searchController = require('./controllers/searchController');
@@ -27,6 +28,8 @@ app.use(session({
 
 // Use routes
 app.use('/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
 app.get('/api/top5graphics', postController.getTopPosts);
 app.get('/api/community/getAllPosts', postController.getAllPosts);
 app.get('/api/community/getMapsByUsername/:userId', searchController.searchMapByUserName);
