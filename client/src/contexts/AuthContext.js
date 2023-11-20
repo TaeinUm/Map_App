@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   );
   const [username, setUsername] = useState(""); // User Name
   const [userId, setUserId] = useState(""); // User ID
-  const [profileImage, setProfileImage] = useState(""); // User's Profile Image
+  const [profileImage, setProfileImage] = useState(null); // User's Profile Image
 
   const navigate = useNavigate();
 
