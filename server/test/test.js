@@ -42,6 +42,33 @@ describe('API Endpoints', function() {
 
 });
 
+it('creates a new post successfully', function(done) {
+  const postData = {
+      userId: "65487c7a94678f7bd6d43689".toString(),
+      content: 'Test content',
+      likes: 0,
+      types: 'Test type',
+      image: 'Test image URL',
+      title: 'Test title'
+  };
+
+  request(app)
+      .post('/api/community/post')
+      .send(postData)
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .end(function(err, res) {
+          if (err) {
+              console.error("Test failed with error:", res.body.message); // 에러 메시지를 콘솔에 출력
+              done(err);
+          } else {
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.include.all.keys('_id', 'userId', 'content', 'likes', 'types', 'image', 'title');
+              done();
+          }
+      });
+});
+
 // Close the mongoose connection after the tests are done
 after(function(done) {
   mongoose.disconnect()

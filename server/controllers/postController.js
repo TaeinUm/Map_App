@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Post = require('../models/Post');
 
 exports.getTopPosts = async (req, res) => {
@@ -25,6 +26,12 @@ exports.getAllPosts = async (req, res) => {
 exports.writePost = async (req, res) => {
   try {
       const { userId, content, likes, types, image, title } = req.body;
+      
+      // 데이터 유효성 검증
+      if (!userId || !content) {
+          return res.status(400).json({ message: "Missing required fields" });
+      }
+
       const newPost = new Post({
           _id: new mongoose.Types.ObjectId(),
           userId,
@@ -34,12 +41,15 @@ exports.writePost = async (req, res) => {
           image,
           title
       });
+
       await newPost.save();
       res.status(201).json(newPost);
-  } catch (error) {
+    } catch (error) {
+      console.error(error); // This will log the full error object
       res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.likePost = async (req, res) => {
   try {
