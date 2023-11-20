@@ -31,7 +31,7 @@ const selectStyle = {
   borderTop: "1px solid #fafafa",
 };
 
-function SaveTab({ onSave, mapLayer }) {
+function SaveTab({ onSave, mapLayer, map }) {
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -53,17 +53,32 @@ function SaveTab({ onSave, mapLayer }) {
     setPrivacySetting(event.target.value);
   };
 
-  const exportMapAsJson = (map) => {
+  const triggerDownload = (url, filename) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  };
+
+  const exportMapAsJson = () => {
     try {
       const mapJson = map.getStyle();
-      return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
+      //return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
+      const blob = new Blob([JSON.stringify(mapJson, null, 2)], {
+        type: "application/json",
+      });
+      const url = window.URL.createObjectURL(blob);
+      triggerDownload(url, "map.json");
     } catch (error) {
       console.error("Error exporting map as JSON:", error);
       throw error;
     }
   };
 
-  const exportMapAsImage = async (map, format) => {
+  const exportMapAsImage = async (format) => {
     // Replace these with the actual values from your map
     const longitude = map.getCenter().lng;
     const latitude = map.getCenter().lat;
@@ -74,7 +89,9 @@ function SaveTab({ onSave, mapLayer }) {
 
     try {
       const response = await axios.get(url, { responseType: "arraybuffer" });
-      return new Blob([response.data], { type: `image/${format}` });
+      const blob = new Blob([response.data], { type: `image/${format}` });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      triggerDownload(downloadUrl, `map.${format}`);
     } catch (error) {
       console.error("Error exporting map as image:", error);
       throw error;
@@ -82,9 +99,8 @@ function SaveTab({ onSave, mapLayer }) {
   };
 
   const handleSave = async () => {
-    let mapLayer;
     if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
-      exportMapAsImage();
+      await exportMapAsImage(exportFile);
     } else if (exportFile === "json") {
       exportMapAsJson();
     }

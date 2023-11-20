@@ -6,14 +6,16 @@ import {
   IconButton,
   TextField,
   Button,
+  Snackbar,
 } from "@mui/material";
-import { FiEdit } from "react-icons/fi";
+import EditIcon from "@mui/icons-material/Edit";
 import mapServiceAPI from "../../../api/mapServiceAPI";
 import { AuthContext } from "../../../contexts/AuthContext";
 
 function Memo({ mapId }) {
   const { userId, username } = useContext(AuthContext);
   const [memoContent, setMemoContent] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   useEffect(() => {
     const loadMemo = async () => {
@@ -46,49 +48,50 @@ function Memo({ mapId }) {
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   return (
     <>
-      <Box style={{ width: "100%", height: "200px", backgroundColor: "white" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: "bold",
-              textAlign: "left",
-              marginLeft: "10px",
-            }}
-          >
+      <Box sx={{ width: "100%", backgroundColor: "white", padding: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
             Memo
           </Typography>
-          <IconButton sx={{ marginLeft: "220px", color: "black" }}>
-            <FiEdit />
+          <IconButton color="primary">
+            <EditIcon />
           </IconButton>
         </Box>
-        <Divider sx={{ borderBottomWidth: 2, borderColor: "grey" }} />
+        <Divider sx={{ my: 1 }} />
         <TextField
           variant="outlined"
           multiline
-          rows={3}
-          sx={{ width: "90%", height: "80px", margin: "10px" }}
+          rows={4}
+          sx={{ width: "100%" }}
           value={memoContent}
           onChange={(e) => setMemoContent(e.target.value)}
-        ></TextField>
+        />
         <Button
           onClick={handleSave}
-          sx={{
-            backgroundColor: "#282c34",
-            margin: "20px",
-            height: "30px",
-            width: "80px",
-            color: "#fafafa",
-            "&:hover": {
-              backgroundColor: "black",
-              color: "white",
-            },
-          }}
+          variant="contained"
+          color="primary"
+          sx={{ mt: 2, alignSelf: "flex-end" }}
         >
           Save
         </Button>
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          message="Memo saved"
+        />
       </Box>
     </>
   );
