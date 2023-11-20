@@ -254,21 +254,45 @@ const countryNames = {
   ZWE: "Zimbabwe",
 };
 
-function CountryAutocomplete() {
-  const [value, setValue] = useState("");
-
+function CountryAutocomplete({ onCountrySelect }) {
   const handleOnChange = (event, newValue) => {
-    const countryCode = Object.keys(countryData).find(
-      (key) => countryData[key] === newValue
+    const countryCode = Object.keys(countryNames).find(
+      (key) => countryNames[key] === newValue
     );
-    setValue(countryCode || "");
+    onCountrySelect(countryCode || "");
   };
 
   return (
     <Autocomplete
-      options={Object.values(countryData)}
+      options={Object.values(countryNames)}
       onChange={handleOnChange}
-      renderInput={(params) => <TextField {...params} />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          InputProps={{
+            ...params.InputProps,
+            style: { color: "#fafafa" },
+          }}
+        />
+      )}
+      sx={{
+        color: "#fafafa",
+        width: "100%",
+        marginBottom: "30px",
+        color: "white",
+        ".MuiOutlinedInput-notchedOutline": {
+          borderColor: "#fafafa",
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#fafafa",
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
+          borderColor: "#fafafa",
+        },
+        ".MuiSvgIcon-root ": {
+          fill: "white !important",
+        },
+      }}
     />
   );
 }

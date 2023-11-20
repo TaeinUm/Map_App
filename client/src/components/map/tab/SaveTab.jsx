@@ -16,6 +16,7 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const selectStyle = {
+  width: "200px",
   ".MuiInputBase-input": { color: "#fafafa" },
   ".MuiSelect-select": { color: "#fafafa" },
   ".MuiOutlinedInput-notchedOutline": { borderColor: "#fafafa" },
@@ -31,7 +32,7 @@ const selectStyle = {
   borderTop: "1px solid #fafafa",
 };
 
-function SaveTab({ onSave, mapLayer }) {
+function SaveTab({ onSave, mapLayer, map }) {
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -53,17 +54,32 @@ function SaveTab({ onSave, mapLayer }) {
     setPrivacySetting(event.target.value);
   };
 
-  const exportMapAsJson = (map) => {
+  const triggerDownload = (url, filename) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  };
+
+  const exportMapAsJson = () => {
     try {
       const mapJson = map.getStyle();
-      return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
+      //return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
+      const blob = new Blob([JSON.stringify(mapJson, null, 2)], {
+        type: "application/json",
+      });
+      const url = window.URL.createObjectURL(blob);
+      triggerDownload(url, "map.json");
     } catch (error) {
       console.error("Error exporting map as JSON:", error);
       throw error;
     }
   };
 
-  const exportMapAsImage = async (map, format) => {
+  const exportMapAsImage = async (format) => {
     // Replace these with the actual values from your map
     const longitude = map.getCenter().lng;
     const latitude = map.getCenter().lat;
@@ -74,7 +90,9 @@ function SaveTab({ onSave, mapLayer }) {
 
     try {
       const response = await axios.get(url, { responseType: "arraybuffer" });
-      return new Blob([response.data], { type: `image/${format}` });
+      const blob = new Blob([response.data], { type: `image/${format}` });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      triggerDownload(downloadUrl, `map.${format}`);
     } catch (error) {
       console.error("Error exporting map as image:", error);
       throw error;
@@ -82,9 +100,8 @@ function SaveTab({ onSave, mapLayer }) {
   };
 
   const handleSave = async () => {
-    let mapLayer;
     if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
-      exportMapAsImage();
+      await exportMapAsImage(exportFile);
     } else if (exportFile === "json") {
       exportMapAsJson();
     }
@@ -127,19 +144,21 @@ function SaveTab({ onSave, mapLayer }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Version Setting
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={versionSetting}
-            onChange={handleVersionSettingChange}
-            sx={selectStyle}
-            name="versionSetting"
-          >
-            <MenuItem value="ver1">Ver 1.</MenuItem>
-            <MenuItem value="ver2">Ver 2.</MenuItem>
-            <MenuItem value="ver3">Ver 3.</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={versionSetting}
+              onChange={handleVersionSettingChange}
+              sx={selectStyle}
+              name="versionSetting"
+            >
+              <MenuItem value="ver1">Ver 1.</MenuItem>
+              <MenuItem value="ver2">Ver 2.</MenuItem>
+              <MenuItem value="ver3">Ver 3.</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box
         sx={{
@@ -152,21 +171,23 @@ function SaveTab({ onSave, mapLayer }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Export File
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={exportFile}
-            onChange={handleExportFileChange}
-            sx={selectStyle}
-            name="exportFile"
-          >
-            <MenuItem value="none">NONE</MenuItem>
-            <MenuItem value="jpg">JPG</MenuItem>
-            <MenuItem value="png">PNG</MenuItem>
-            <MenuItem value="pdf">PDF</MenuItem>
-            <MenuItem value="json">JSON</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={exportFile}
+              onChange={handleExportFileChange}
+              sx={selectStyle}
+              name="exportFile"
+            >
+              <MenuItem value="none">NONE</MenuItem>
+              <MenuItem value="jpg">JPG</MenuItem>
+              <MenuItem value="png">PNG</MenuItem>
+              <MenuItem value="pdf">PDF</MenuItem>
+              <MenuItem value="json">JSON</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
 
       <Box
@@ -180,18 +201,20 @@ function SaveTab({ onSave, mapLayer }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Privacy Setting
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={privacySetting}
-            onChange={handlePrivacySettingChange}
-            sx={selectStyle}
-            name="privacySetting"
-          >
-            <MenuItem value="private">Private</MenuItem>
-            <MenuItem value="public">Public</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={privacySetting}
+              onChange={handlePrivacySettingChange}
+              sx={selectStyle}
+              name="privacySetting"
+            >
+              <MenuItem value="private">Private</MenuItem>
+              <MenuItem value="public">Public</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
 
       <Button

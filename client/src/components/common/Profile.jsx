@@ -10,9 +10,12 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
+import { useNavigate } from "react-router-dom";
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -29,13 +32,19 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Profile = () => {
+  const fileInputRef = React.createRef();
+  const navigate = useNavigate();
+
   const { userId, username, profileImage } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [posts, setPosts] = useState([]);
-  const [profile, setProfile] = useState(profileImage);
+  const [profile, setProfile] = useState(
+    profileImage ||
+      "https://www.vecteezy.com/vector-art/1840618-picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector"
+  );
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -54,17 +63,32 @@ const Profile = () => {
         console.error(error);
       }
     };
+    setProfile(profileImage);
     fetchPosts();
     fetchEmail();
   }, [userId, username]);
 
+  useEffect(() => {
+    setNickname(username);
+  }, [username]);
+
   const handleProfileImageChange = (e) => {
-    setProfile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      setProfile(URL.createObjectURL(file));
+      console.log(URL.createObjectURL(file));
+    }
+  };
+
+  const handleEditIconClick = () => {
+    fileInputRef.current.click();
   };
 
   const handleProfileImageUpload = async () => {
     try {
-      await profileAPI.updateProfilePicture(userId, username, profile);
+      const formData = new FormData();
+      formData.append("image", profile);
+      await profileAPI.updateProfilePicture(userId, username, formData);
       alert("Successfully updated!");
     } catch (error) {
       console.error(error);
@@ -80,28 +104,62 @@ const Profile = () => {
     }
   };
 
+  const handleCreateMapClick = () => {
+    navigate("/map");
+  };
+
   return (
     <ResponsiveContainer>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
             <CardActionArea sx={{ display: "flex" }}>
-              <CardMedia
-                component="img"
-                image={profileImage}
-                alt="Profile Picture"
+              {/*profile ? (
+                <CardMedia
+                  component="img"
+                  image={profile}
+                  alt="Profile Picture"
+                  sx={{
+                    width: "30%",
+                    height: "150px",
+                    borderRadius: "100%",
+                    objectFit: "cover",
+                    zIndex: "1",
+                  }}
+                />
+              ) : (
+                <AccountCircleIcon
+                  sx={{
+                    fontSize: "150px",
+                    color: "grey",
+                    width: "30%",
+                    height: "150px",
+                    borderRadius: "100%",
+                  }}
+                />
+              )
+              <Button
+                onClick={handleEditIconClick}
                 sx={{
-                  width: "30%",
-                  height: "150px",
-                  backgroundColor: "grey",
-                  borderRadius: "100%",
-                  objectFit: "cover",
-                  zIndex: "1",
+                  position: "absolute",
+                  top: "10px",
+                  right: "10px",
+                  backgroundColor: "black",
+                  color: "white",
+                  width: "40px",
+                  height: "30px",
                 }}
+              >
+                <EditIcon /> 
+              </Button>
+              <input
                 type="file"
                 accept="image/*"
                 onChange={handleProfileImageChange}
-              ></CardMedia>
+                style={{ display: "none" }}
+                ref={fileInputRef}
+              />
+              */}
               <CardContent>
                 <Typography
                   variant="h5"
@@ -110,16 +168,21 @@ const Profile = () => {
                     fontWeight: "bold",
                     color: "#FAFAFA",
                     marginBottom: "30px",
+                    marginTop: "30px",
                   }}
                 >
                   Welcome, {username}
                 </Typography>
                 <Button
-                  onClick={handleProfileImageUpload}
+                  onClick={handleCreateMapClick}
                   variant="contained"
-                  sx={{ backgroundColor: "#262931", marginBottom: "30px" }}
+                  sx={{
+                    width: "250px",
+                    backgroundColor: "#262931",
+                    marginBottom: "30px",
+                  }}
                 >
-                  Edit Profile Picture
+                  Create Your Map
                 </Button>
               </CardContent>
             </CardActionArea>
@@ -152,28 +215,21 @@ const Profile = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <CardMedia
-                  component="img"
-                  image={posts.postsImage}
-                  alt="Posts"
-                  sx={{
-                    width: "200px",
-                    height: "200px",
-                    backgroundColor: "grey",
-                    margin: "10px",
-                  }}
-                />
-                <CardMedia
-                  component="img"
-                  image={posts.postsImage}
-                  alt="Posts"
-                  sx={{
-                    width: "200px",
-                    height: "200px",
-                    backgroundColor: "grey",
-                    margin: "10px",
-                  }}
-                />
+                {Array.isArray(posts) &&
+                  posts.map((post, index) => (
+                    <CardMedia
+                      key={index}
+                      component="img"
+                      image={post.image}
+                      alt={`Post ${index}`}
+                      sx={{
+                        width: "200px",
+                        height: "200px",
+                        backgroundColor: "grey",
+                        margin: "10px",
+                      }}
+                    />
+                  ))}
               </CardContent>
             </CardActionArea>
           </Card>
@@ -247,7 +303,7 @@ const Profile = () => {
 
             <TextField
               label="Username"
-              defaultValue={username}
+              value={nickname}
               onChange={(e) => {
                 setNickname(e.target.value);
               }}
@@ -370,6 +426,7 @@ const Profile = () => {
             />
             <Button
               type="submit"
+              onClick={handleSaveChanges}
               variant="contained"
               sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931" }}
             >
