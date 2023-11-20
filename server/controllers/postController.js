@@ -1,6 +1,5 @@
 const Post = require('../models/Post');
 
-
 exports.getTopPosts = async (req, res) => {
   try {
     const topPosts = await Post.find({})
@@ -42,7 +41,7 @@ exports.writePost = async (req, res) => {
   }
 };
 
-const likePost = async (req, res) => {
+exports.likePost = async (req, res) => {
   try {
       const postId = req.params.postId;
       // Increment the likes count
@@ -58,7 +57,7 @@ const likePost = async (req, res) => {
 };
 
 // Unlike a map
-const unlikePost = async (req, res) => {
+exports.unlikePost = async (req, res) => {
   try {
       const postId = req.params.postId;
       // Decrement the likes count
