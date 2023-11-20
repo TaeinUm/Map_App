@@ -16,6 +16,7 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const selectStyle = {
+  width: "200px",
   ".MuiInputBase-input": { color: "#fafafa" },
   ".MuiSelect-select": { color: "#fafafa" },
   ".MuiOutlinedInput-notchedOutline": { borderColor: "#fafafa" },
@@ -143,19 +144,21 @@ function SaveTab({ onSave, mapLayer, map }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Version Setting
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={versionSetting}
-            onChange={handleVersionSettingChange}
-            sx={selectStyle}
-            name="versionSetting"
-          >
-            <MenuItem value="ver1">Ver 1.</MenuItem>
-            <MenuItem value="ver2">Ver 2.</MenuItem>
-            <MenuItem value="ver3">Ver 3.</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={versionSetting}
+              onChange={handleVersionSettingChange}
+              sx={selectStyle}
+              name="versionSetting"
+            >
+              <MenuItem value="ver1">Ver 1.</MenuItem>
+              <MenuItem value="ver2">Ver 2.</MenuItem>
+              <MenuItem value="ver3">Ver 3.</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
       <Box
         sx={{
@@ -168,21 +171,23 @@ function SaveTab({ onSave, mapLayer, map }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Export File
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={exportFile}
-            onChange={handleExportFileChange}
-            sx={selectStyle}
-            name="exportFile"
-          >
-            <MenuItem value="none">NONE</MenuItem>
-            <MenuItem value="jpg">JPG</MenuItem>
-            <MenuItem value="png">PNG</MenuItem>
-            <MenuItem value="pdf">PDF</MenuItem>
-            <MenuItem value="json">JSON</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={exportFile}
+              onChange={handleExportFileChange}
+              sx={selectStyle}
+              name="exportFile"
+            >
+              <MenuItem value="none">NONE</MenuItem>
+              <MenuItem value="jpg">JPG</MenuItem>
+              <MenuItem value="png">PNG</MenuItem>
+              <MenuItem value="pdf">PDF</MenuItem>
+              <MenuItem value="json">JSON</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
 
       <Box
@@ -196,18 +201,20 @@ function SaveTab({ onSave, mapLayer, map }) {
         <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
           Privacy Setting
         </Typography>
-        <FormControl margin="normal" sx={{ width: "100%" }}>
-          <Select
-            size="small"
-            value={privacySetting}
-            onChange={handlePrivacySettingChange}
-            sx={selectStyle}
-            name="privacySetting"
-          >
-            <MenuItem value="private">Private</MenuItem>
-            <MenuItem value="public">Public</MenuItem>
-          </Select>
-        </FormControl>
+        <Box>
+          <FormControl margin="normal" sx={{ width: "100%" }}>
+            <Select
+              size="small"
+              value={privacySetting}
+              onChange={handlePrivacySettingChange}
+              sx={selectStyle}
+              name="privacySetting"
+            >
+              <MenuItem value="private">Private</MenuItem>
+              <MenuItem value="public">Public</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
 
       <Button

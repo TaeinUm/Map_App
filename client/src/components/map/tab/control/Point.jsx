@@ -8,14 +8,16 @@ import {
   Typography,
   Container,
   CircularProgress,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  TextField,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import * as XLSX from "xlsx";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Memo from "../Memo";
 
-import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 import { MapContext } from "../../../../contexts/MapContext";
 import { AuthContext } from "../../../../contexts/AuthContext";
@@ -23,6 +25,23 @@ import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
+
+const selectStyle = {
+  width: "80px",
+  ".MuiInputBase-input": { color: "#fafafa" },
+  ".MuiSelect-select": { color: "#fafafa" },
+  ".MuiOutlinedInput-notchedOutline": { borderColor: "#fafafa" },
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#fafafa",
+  },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#fafafa",
+  },
+  "& .MuiSvgIcon-root": {
+    color: "#fafafa",
+  },
+  borderTop: "1px solid #fafafa",
+};
 
 const Point = () => {
   const { mapId } = useContext(MapContext);
@@ -39,9 +58,6 @@ const Point = () => {
   );
 
   const [tabValue, setTabValue] = useState("1");
-  const [mapJson, setMapJson] = useState({});
-  const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [memoContent, setMemoContent] = useState("");
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
@@ -49,28 +65,6 @@ const Point = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-  };
-
-  const handleJsonChange = (json) => {
-    setMapJson(json.jsObject);
-  };
-
-  const saveJson = () => {
-    try {
-      map.setStyle(mapJson);
-      alert("Successfully saved!");
-    } catch (error) {
-      alert("Invalid JSON!");
-    }
-  };
-
-  const toggleMemo = () => {
-    setIsMemoVisible(!isMemoVisible);
-  };
-
-  const handleMemoSave = () => {
-    console.log("Memo saved:", memoContent);
-    // Memo save logic here...
   };
 
   useEffect(() => {
@@ -131,7 +125,7 @@ const Point = () => {
     }
 
     setIsLoading(false);
-  }, [map, mapStyle]);
+  }, [map]);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -178,6 +172,38 @@ const Point = () => {
   const addNewRow = () => {
     setLocations([...locations, { latitude: "", longitude: "", name: "" }]);
   };
+
+  const renderRow = (location, index) => (
+    <TableRow key={index}>
+      <TableCell>
+        <TextField
+          type="text"
+          name="latitude"
+          value={location.latitude}
+          onChange={(e) => handleInputChange(index, e)}
+          sx={selectStyle}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          type="text"
+          name="longitude"
+          value={location.longitude}
+          onChange={(e) => handleInputChange(index, e)}
+          sx={selectStyle}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          type="text"
+          name="name"
+          value={location.name}
+          onChange={(e) => handleInputChange(index, e)}
+          sx={selectStyle}
+        />
+      </TableCell>
+    </TableRow>
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -254,7 +280,7 @@ const Point = () => {
           <TabPanel value="1">
             <Container>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
-                Choose an excel file that contains 'latitude,' 'longitude,' and
+                Choose an EXCEL file that contains 'latitude,' 'longitude,' and
                 'name' columns
               </Typography>
               <input
@@ -273,50 +299,29 @@ const Point = () => {
               >
                 Select Data File
               </Button>
+              <Typography sx={{ color: "#fafafa", marginTop: "30px" }}>
+                Or Simply fill up 'latitude,' 'longitude,' and 'name' of the
+                location of the table below
+              </Typography>
               <form onSubmit={handleSubmit} style={{ marginTop: "40px" }}>
-                <table>
-                  <thead style={{ margin: "20px" }}>
-                    <tr>
-                      <th style={{ color: "#fafafa" }}>Latitude</th>
-                      <th style={{ color: "#fafafa" }}>Longitude</th>
-                      <th style={{ color: "#fafafa" }}>Name</th>
-                    </tr>
-                  </thead>
-                  <tbody style={{ margin: "20px" }}>
-                    {locations.map((location, index) => (
-                      <tr key={index}>
-                        <td>
-                          <input
-                            type="text"
-                            name="latitude"
-                            value={location.latitude}
-                            onChange={(e) => handleInputChange(index, e)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            name="longitude"
-                            value={location.longitude}
-                            onChange={(e) => handleInputChange(index, e)}
-                          />
-                        </td>
-                        <td>
-                          <input
-                            type="text"
-                            name="name"
-                            value={location.name}
-                            onChange={(e) => handleInputChange(index, e)}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <button type="button" onClick={addNewRow}>
-                  + Add Row
-                </button>
-                <button type="submit">Submit</button>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ color: "#fafafa", fontSize: "18px" }}>
+                        Latitude
+                      </TableCell>
+                      <TableCell sx={{ color: "#fafafa", fontSize: "18px" }}>
+                        Longitude
+                      </TableCell>
+                      <TableCell sx={{ color: "#fafafa", fontSize: "18px" }}>
+                        Name
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>{locations.map(renderRow)}</TableBody>
+                </Table>
+                <Button onClick={addNewRow}>+ Add Row</Button>
+                <Button type="submit">Submit</Button>
               </form>
             </Container>
           </TabPanel>
