@@ -33,7 +33,15 @@ app.get('/api/community/getMapsByUsername/:userId', searchController.searchMapBy
 app.get('/api/community/getMapsBySearch/:searchText', searchController.searchMapByText);
 app.get('/api/community/getIdeas/:searchText', searchController.searchIdeaByText);
 app.get('/api/community/getQuestions/:searchText', searchController.searchQuestionByText);
+app.post('/api/community/post', postController.writePost)
+app.put('/api/community/likeMap/:postId', postController.likePost)
+app.put('/api/community/unlikeMap/:postId', postController.unlikePost)
+
+
+
 app.get('/api/test-data', testController.getDataFromTestCollection);
+
+// router.post('/api/community/post', postController.writePost);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
