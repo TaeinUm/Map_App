@@ -1,27 +1,26 @@
 const express = require('express');
 const postController = require('../controllers/postController'); 
-// const commentController = require('../controllers/commentController'); 
-// const searchController = require('../controllers/searchController'); 
+const commentController = require('../controllers/commentController'); 
+const searchController = require('../controllers/searchController'); 
 
 const router = express.Router();
-// Make a post
 
-router.get('/api/community/getAllPosts', postController.getAllPosts);
+router.post('/post', postController.writePost);
 
-// router.get('/api/community/getMapsByUsername/:userId', searchController.searchMapByUserName);
+router.get('/getAllPosts', postController.getAllPosts);
 
-// router.post('/api/community/post', postController.writePost);
+router.get('/getMapsByUsername/:userId', searchController.searchMapByUserName);
 
-// router.post('/api/community/postComment', commentController.writeComment);
+router.post('/postComment', commentController.writeComment);
 
-// router.get('/api/community/getQuestions/:searchText', searchController.searchQuestionByTest);
+router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
 
-// router.get('/api/community/getIdeas/:searchText', searchController.searchIdeaByTest);
+router.get('/getIdeas/:searchText', searchController.searchIdeaByText);
 
-// router.get('/api/community/getMapsBySearch/:searchText', searchController.searchMapByTest);
+router.get('/getMapsBySearch/:searchText', searchController.searchMapByText);
 
-// router.put('/api/community/likeMap/:postId', postController.likePost)
+router.put('/likeMap/:postId', postController.likePost)
 
-// router.put('/api/community/unlikeMap/:postId', unlikePost)
+router.put('/unlikeMap/:postId', postController.unlikePost)
 
 module.exports = router;
