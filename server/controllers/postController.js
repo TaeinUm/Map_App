@@ -1,5 +1,6 @@
 const Post = require('../models/Post');
 
+
 exports.getTopPosts = async (req, res) => {
   try {
     const topPosts = await Post.find({})
@@ -12,13 +13,22 @@ exports.getTopPosts = async (req, res) => {
   }
 };
 
+exports.getAllPosts = async (req, res) => {
+  try {
+      const posts = await Post.find({}); // 모든 포스트 검색
+      res.json(posts); // 검색된 포스트 반환
+  } catch (error) {
+      console.error('Error fetching posts:', error);
+      res.status(500).send('Error fetching posts');
+  }
+};
+
 const writePost = async (req, res) => {
   try {
-      const { likes, image, title } = req.body;
+      const { userId, content, likes, types, image, title } = req.body;
       const newPost = new Post({
           _id: new mongoose.Types.ObjectId(),
           userId,
-          postId,
           content,
           likes,
           types,
@@ -62,3 +72,7 @@ const unlikePost = async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 };
+
+// module.exports = {
+//   writePost
+// };

@@ -9,7 +9,9 @@ const app = express();
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const authRoutes = require('./routes/authRoutes');
+const communityRoutes = require('./routes/communityRoutes');
 const postController = require('./controllers/postController');
+const searchController = require('./controllers/searchController');
 const testController = require('./controllers/testController');
 const PORT = process.env.PORT || 8080;
 
@@ -26,6 +28,11 @@ app.use(session({
 // Use routes
 app.use('/auth', authRoutes);
 app.get('/api/top5graphics', postController.getTopPosts);
+app.get('/api/community/getAllPosts', postController.getAllPosts);
+app.get('/api/community/getMapsByUsername/:userId', searchController.searchMapByUserName);
+app.get('/api/community/getMapsBySearch/:searchText', searchController.searchMapByText);
+app.get('/api/community/getIdeas/:searchText', searchController.searchIdeaByText);
+app.get('/api/community/getQuestions/:searchText', searchController.searchQuestionByText);
 app.get('/api/test-data', testController.getDataFromTestCollection);
 
 mongoose.connect(process.env.MONGODB_URI)
