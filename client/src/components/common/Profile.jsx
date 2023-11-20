@@ -154,7 +154,7 @@ const Profile = () => {
               >
                 <CardMedia
                   component="img"
-                  image={posts.postsImage}
+                  image={posts.image}
                   alt="Posts"
                   sx={{
                     width: "200px",
@@ -165,7 +165,7 @@ const Profile = () => {
                 />
                 <CardMedia
                   component="img"
-                  image={posts.postsImage}
+                  image={posts.image}
                   alt="Posts"
                   sx={{
                     width: "200px",

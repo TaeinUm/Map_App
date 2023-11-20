@@ -18,23 +18,34 @@ export const AuthProvider = ({ children }) => {
   //UseEffect for getting login status, username, userID, and user profile image
   useEffect(() => {
     const checkLoggedIn = async () => {
-      const response = await getLoggedIn();
-      if (response.success) {
-        setIsAuthenticated(response.data.loggedIn); //Update Login Status
-        setUsername(response.data.username); // Update username
-        setUserId(response.data.userId); // Update userId
-        setProfileImage(response.data.profileImage); // Update profile image
-        localStorage.setItem("isAuthenticated", "true");
+      // Check if localStorage indicates authenticated
+      const storedAuthStatus =
+        localStorage.getItem("isAuthenticated") === "true";
+
+      if (storedAuthStatus) {
+        try {
+          const response = await getLoggedIn();
+          if (response.success) {
+            setIsAuthenticated(true);
+            setUsername(response.data.username);
+            setUserId(response.data.userId);
+            setProfileImage(response.data.profileImage);
+          } else {
+            setIsAuthenticated(false);
+            localStorage.removeItem("isAuthenticated");
+          }
+        } catch (error) {
+          console.error("Error checking login status:", error);
+          setIsAuthenticated(false);
+          localStorage.removeItem("isAuthenticated");
+        }
       } else {
         setIsAuthenticated(false);
-        localStorage.setItem("isAuthenticated", "false");
       }
     };
 
-    if (!isAuthenticated) {
-      checkLoggedIn();
-    }
-  }, [isAuthenticated]);
+    checkLoggedIn();
+  }, []);
 
   const handleLogin = async (email, password) => {
     const response = await login(email, password);
