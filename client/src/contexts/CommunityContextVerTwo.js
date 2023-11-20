@@ -8,6 +8,8 @@ export const CommunityProvider = ({ children }) => {
   //const history = useHistory();
   const [screenType, setScreenType] = useState(null);
   const [postId, setPostId] = useState(null);
+  const [questionTitle, setQuestionTitle] = useState("");
+  const [questionContent, setQuestionContent]=useState("");
   const navigate = useNavigate();
     //   const [comments, setGeojsonData] = useState(null);
     //   const [markers, setMarkers] = useState([]);
@@ -15,6 +17,13 @@ export const CommunityProvider = ({ children }) => {
   const navigateTo = (path) => {
     navigate(path);
   };
+
+  const updateQuestionTitle = (text) => {
+    setQuestionTitle(text);
+    console.log("What is the question title now?" + questionTitle);
+  }
+
+  
 
   const updateScreenTypeAndNavigate = (searchType, path) => {
     setScreenType(searchType);
@@ -35,7 +44,10 @@ export const CommunityProvider = ({ children }) => {
     <CommunityContext.Provider
       value={{
         screenType,
-    
+        questionTitle,
+        updateQuestionTitle,
+        setQuestionTitle,
+        setQuestionContent,
         updateScreenTypeAndNavigate,
         postId,
         

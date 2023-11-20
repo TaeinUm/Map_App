@@ -344,12 +344,17 @@ function CommunityTwo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
-  const {navigateTo, updatePostIdAndNavigate} = useContext(CommunityContext);
+  const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle} = useContext(CommunityContext);
   const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     
   };
+  function setupQuestionPost(text){
+    updateQuestionTitle(text);
+    
+    
+  }
 
 
   const handleCategoryChange = (event) => {
@@ -395,7 +400,7 @@ function CommunityTwo() {
             {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
               <Typography
                 variant="h2"
-                
+                onClick={setupQuestionPost(text)}
                 sx={{
                   fontSize: "20px",
                   color: "#FAFAFA",
@@ -407,7 +412,7 @@ function CommunityTwo() {
                 }}
                 //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
-                to={"/communityQuestionPost/:"+index}
+                to={"/communityQuestionPost/:"+text}
               >
                 {text}
               </Typography>
