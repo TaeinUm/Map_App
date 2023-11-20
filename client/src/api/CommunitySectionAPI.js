@@ -312,10 +312,10 @@ const CommunitySectionAPI = {
     likeMap: async (postId) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     console.error("User is not authenticated");
+        //     return;
+        // }
         try {
             const response = await axios.put(`${API_BASE_URL}/api/community/likeMap/:${postId}`,
                 {
@@ -353,10 +353,10 @@ const CommunitySectionAPI = {
     unlikeMap: async (postId) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     console.error("User is not authenticated");
+        //     return;
+        // }
         try {
             const response = await axios.put(`${API_BASE_URL}/api/community/unlikeMap/:${postId}`,
                 {
