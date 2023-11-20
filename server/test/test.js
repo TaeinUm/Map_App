@@ -28,17 +28,18 @@ describe('API Endpoints', function() {
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
-        expect(res.body).to.be.an('array'); // Check if the response is an array
-        // Optionally, check if the array has 5 items and each item is an object with expected properties
+        expect(res.body).to.be.an('array');
         if (res.body.length === 5) {
           res.body.forEach(function(item) {
             expect(item).to.be.an('object');
-            expect(item).to.have.all.keys('_id', 'likes', 'image', 'title');
+            // 모든 예상 키들이 있는지 확인
+            expect(item).to.include.all.keys('_id', 'likes', 'image', 'title', 'content', 'date', 'types');
           });
         }
-        done(err); // Pass the error if there is one to Mocha
+        done(err);
       });
   });
+
 });
 
 // Close the mongoose connection after the tests are done
