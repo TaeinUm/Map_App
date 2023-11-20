@@ -23,7 +23,7 @@ exports.getAllPosts = async (req, res) => {
   }
 };
 
-const writePost = async (req, res) => {
+exports.writePost = async (req, res) => {
   try {
       const { userId, content, likes, types, image, title } = req.body;
       const newPost = new Post({
@@ -72,7 +72,3 @@ const unlikePost = async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 };
-
-// module.exports = {
-//   writePost
-// };

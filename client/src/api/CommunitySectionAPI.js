@@ -7,45 +7,26 @@ const API_BASE_URL =
 
 const CommunitySectionAPI = {
     //make a post
-    makePost: async (userId, postType, postFile, date) => {
-        const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+    makePost: async (content, likes, types, image, title) => {
+        const { isAuthenticated, userId} = AuthContext;
         try {
-            // const response = await
-            // axios
-            // .post(`${API_BASE_URL}/api/community/post`, {
-            //     userId: userId,
-            //     postType: postType,
-            //     postText: postText,
-            //     postFile: postFile,
-            // })
-            // .then(function(response){
-            //     console.log("makePost success");
-            //     console.log(response);
-            // })
-            // .catch((err) => console.log(err));
-            const response = await axios.post(`${API_BASE_URL}/api/community/post`,
+            const response = await axios.post(`http://localhost:8080/api/community/post`, 
                 {
-                    params:{userId, postType, postType, postFile, date},
+                    userId,
+                    content,
+                    likes,
+                    types,
+                    image,
+                    title
                 }
             );
+            console.error("Great");
             return response.data;
-        //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post`,{
-        //     userId,
-        //     postType, 
-        //     postText,
-        //     postFile,
-        //     date,
-
-        //   }  );
         } catch (error) {
             console.error("cannot make a post.");
         }
     },
+
     getMapsByUsername: async (searchedUser) => {
         const { isAuthenticated, userId, username } = useContext(AuthContext);
 
