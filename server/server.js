@@ -10,6 +10,7 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const authRoutes = require('./routes/authRoutes');
 const communityRoutes = require('./routes/communityRoutes');
+const postRoutes = require('./routes/postRoutes');
 const postController = require('./controllers/postController');
 const searchController = require('./controllers/searchController');
 const testController = require('./controllers/testController');
@@ -27,21 +28,9 @@ app.use(session({
 
 // Use routes
 app.use('/auth', authRoutes);
-app.get('/api/top5graphics', postController.getTopPosts);
-app.get('/api/community/getAllPosts', postController.getAllPosts);
-app.get('/api/community/getMapsByUsername/:userId', searchController.searchMapByUserName);
-app.get('/api/community/getMapsBySearch/:searchText', searchController.searchMapByText);
-app.get('/api/community/getIdeas/:searchText', searchController.searchIdeaByText);
-app.get('/api/community/getQuestions/:searchText', searchController.searchQuestionByText);
-app.post('/api/community/post', postController.writePost)
-app.put('/api/community/likeMap/:postId', postController.likePost)
-app.put('/api/community/unlikeMap/:postId', postController.unlikePost)
-
-
-
+app.use('/api/community', communityRoutes);
+app.use('/api', postRoutes);
 app.get('/api/test-data', testController.getDataFromTestCollection);
-
-// router.post('/api/community/post', postController.writePost);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
