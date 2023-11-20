@@ -9,6 +9,11 @@ import {
   Button,
   Typography,
 } from "@mui/material";
+import * as mapboxgl from "mapbox-gl";
+import axios from "axios";
+
+mapboxgl.accessToken =
+  "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const selectStyle = {
   ".MuiInputBase-input": { color: "#fafafa" },
@@ -26,7 +31,7 @@ const selectStyle = {
   borderTop: "1px solid #fafafa",
 };
 
-function SaveTab() {
+function SaveTab({ onSave, mapLayer, map }) {
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -46,6 +51,62 @@ function SaveTab() {
 
   const handlePrivacySettingChange = (event) => {
     setPrivacySetting(event.target.value);
+  };
+
+  const triggerDownload = (url, filename) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  };
+
+  const exportMapAsJson = () => {
+    try {
+      const mapJson = map.getStyle();
+      //return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
+      const blob = new Blob([JSON.stringify(mapJson, null, 2)], {
+        type: "application/json",
+      });
+      const url = window.URL.createObjectURL(blob);
+      triggerDownload(url, "map.json");
+    } catch (error) {
+      console.error("Error exporting map as JSON:", error);
+      throw error;
+    }
+  };
+
+  const exportMapAsImage = async (format) => {
+    // Replace these with the actual values from your map
+    const longitude = map.getCenter().lng;
+    const latitude = map.getCenter().lat;
+    const zoom = map.getZoom();
+
+    // Construct the URL for the Static Images API
+    const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/1024x768?access_token=${mapboxgl.accessToken}&format=${format}`;
+
+    try {
+      const response = await axios.get(url, { responseType: "arraybuffer" });
+      const blob = new Blob([response.data], { type: `image/${format}` });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      triggerDownload(downloadUrl, `map.${format}`);
+    } catch (error) {
+      console.error("Error exporting map as image:", error);
+      throw error;
+    }
+  };
+
+  const handleSave = async () => {
+    if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
+      await exportMapAsImage(exportFile);
+    } else if (exportFile === "json") {
+      exportMapAsJson();
+    }
+
+    // Call onSave function passed from parent component with required parameters
+    onSave(title, versionSetting, privacySetting, mapLayer);
   };
 
   return (
@@ -156,6 +217,7 @@ function SaveTab() {
           height: "40px",
           width: "100px",
         }}
+        onClick={handleSave}
       >
         Save
       </Button>

@@ -17,8 +17,12 @@ const authAPI = async (method, url, data) => {
 };
 
 //get Loggedin status, profile Image, user name, user ID
-const getLoggedIn = async () => {
-  return await authAPI("get", `${BASE_URL}/auth/loggedIn`);
+const getLoggedIn = async (userId) => {
+  return await authAPI("get", `${BASE_URL}/auth/loggedIn/${userId}`);
+};
+
+const getUserData = async (email) => {
+  return await authAPI("get", `${BASE_URL}/auth/loggedIn/${email}`);
 };
 
 //update login
@@ -54,4 +58,4 @@ axios.interceptors.request.use(
   }
 );
 
-export { getLoggedIn, login, logout, register };
+export { getLoggedIn, login, logout, register, getUserData };

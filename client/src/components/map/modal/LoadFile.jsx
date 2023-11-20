@@ -188,7 +188,7 @@ function LoadFile({ open }) {
 
   //update map
   const updateMapWithData = (geojsonData) => {
-    updateMapContextAndNavigate(null, geojsonData, navigate);
+    updateMapContextAndNavigate(null, null, geojsonData, navigate);
   };
 
   return (
