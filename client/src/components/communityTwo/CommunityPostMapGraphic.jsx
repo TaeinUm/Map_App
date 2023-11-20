@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { Box, Typography, Radio, RadioGroup, FormControlLabel, FormControl, TextField, Button, Paper } from '@mui/material';
 import FileLoader from './FileLoader';
+import CommunitySectionAPI from '../../api/CommunitySectionAPI';
+
 
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState('Map Graphics');
+  const {makePost} = CommunitySectionAPI;
+  
+
+  function handlePostButton(){
+    console.log(document.getElementById("shabi-title").value);
+    console.log(document.getElementById("shabi-content").value);
+    
+    makePost(document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
+  }
 
   return (
     <Paper style={{ padding: '2rem', backgroundColor: '#212121', color: 'white', margin: '2rem' }}>
@@ -30,10 +41,12 @@ function CommunityPostMapGraphic() {
 <br></br>
 
 
-    <Typography variant="h5" gutterBottom style={{ textAlign: 'left' }}>
+    <Typography variant="h5"  gutterBottom style={{ textAlign: 'left' }}>
         Title
       </Typography>
       <TextField 
+        id="shabi-title"
+        
         fullWidth 
         variant="outlined" 
         placeholder="Enter the title of your post here" 
@@ -46,6 +59,7 @@ function CommunityPostMapGraphic() {
         Contents
       </Typography>
       <TextField 
+        id="shabi-content"
         fullWidth 
         multiline 
         rows={10} 
@@ -61,7 +75,7 @@ function CommunityPostMapGraphic() {
       <Box display="flex" justifyContent="space-between" marginTop="1rem">
         <Button variant="contained" color="primary" component="label">
           Load Local Files
-          <input type="file" hidden />
+          <input id="shabi-file" type="file" hidden />
         </Button>
         <Button variant="contained" color="primary" component="label">
           Load From Storage
@@ -70,7 +84,7 @@ function CommunityPostMapGraphic() {
       </Box>
 
       <Box display="flex" justifyContent="center" marginTop="1rem">
-        <Button variant="contained" color="secondary" size="large">
+        <Button variant="contained" color="secondary" size="large" onClick={handlePostButton}>
           Post
         </Button>
       </Box>

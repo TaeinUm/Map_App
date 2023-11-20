@@ -274,6 +274,9 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { styled } from '@mui/material/styles';
 import { getTop5Trending } from "../../api/graphicsAPI";
+import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
+import { useContext } from 'react';
+import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 // Styled components
@@ -341,10 +344,19 @@ function CommunityTwo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
+  const {navigateTo, updatePostIdAndNavigate} = useContext(CommunityContext);
+  const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+    
+  };
+
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    console.log("What is the current category? "+category);
   };
+
 
   useEffect(() => {
     const fetchGraphics = async () => {
@@ -361,6 +373,103 @@ function CommunityTwo() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
+
+  let content = null;
+  if (category === "category1"){
+    content=
+    <Box>
+    <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+        New Questions:
+      </Typography>
+      <Box 
+          sx={{
+            display: "flex-column",
+            width: "3250px",
+            gap: "10px",
+            mt: 5,
+            transition: "transform 0.5s",
+            //transform: `translateX(${scrollAmount}px)`,
+          }}
+          >
+            
+            {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
+              <Typography
+                variant="h2"
+                
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+index}
+              >
+                {text}
+              </Typography>
+            ))}
+          </Box>
+          </Box>;
+  }
+  if(category===""){
+    content=<Box>
+    <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+    Trending Map Graphics
+  </Typography>
+
+
+  <Grid container spacing={4}>
+    {topGraphics
+      .filter((graphic) => graphic.title.toLowerCase().includes(searchTerm.toLowerCase()))
+      .slice(startIndex, endIndex)
+      .map((graphic, index) => (
+        <Grid item xs={12} sm={6} md={4} key={graphic.id}>
+          <StyledCard>
+            <CardMedia
+              component="img"
+              height="140"
+              image={graphic.image}
+              alt={graphic.title}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h6">
+                {graphic.title}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <IconButton aria-label="add to favorites">
+                <FavoriteBorderIcon />
+              </IconButton>
+              <IconButton aria-label="share" onClick={likeMap(index)}>
+                <ShareIcon />
+              </IconButton>
+              <Button size="small" color="primary">
+                More
+              </Button>
+            </CardActions>
+          </StyledCard>
+        </Grid>
+    ))}
+  </Grid>
+
+  <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+    <Pagination
+      count={Math.ceil(topGraphics.length / itemsPerPage)}
+      page={currentPage}
+      onChange={(_, page) => setCurrentPage(page)}
+      color="primary"
+      showFirstButton
+      showLastButton
+    />
+  </Box>
+  </Box>;
+  }
+
+  
 
   return (
     <Container maxWidth="lg" sx={{ paddingBottom: 4, height: "100vh" }}>
@@ -385,7 +494,7 @@ function CommunityTwo() {
             </MenuItem>
             <MenuItem value={'category2'}>Map Graphic Idea</MenuItem>
             <MenuItem value={'category1'}>Question</MenuItem>
-            <MenuItem value={'category2'}>User Name</MenuItem>
+            <MenuItem value={'category3'}>User Name</MenuItem>
             
             {/* ... other categories */}
           </Select>
@@ -398,6 +507,24 @@ function CommunityTwo() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
+              onChange={handleSearchChange}
+              onKeyPress= {(e) => {
+                if (e.key === 'Enter') {
+                  console.log('Enter key pressed');
+                  if (category === "category1"){
+                    console.log("Do I have the correct search term?"+searchTerm);
+                    getQuestionsBySearch(searchTerm);
+                  }
+                  // else if (category==="category3"){
+                  //   console.log("Do I have the correct search term?"+searchTerm);
+                  //   getMapsByUsername(searchTerm);
+                  // }else if (category==="category2"){
+                  //   console.log("Do I have the correct search term?"+searchTerm);
+                  //   getIdeasBySearch(searchTerm);
+                  // }
+                  // write your functionality here
+                }
+              }}
             />
           </Search>
         </Box>
@@ -405,6 +532,7 @@ function CommunityTwo() {
         {/* Right side - Post button */}
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
         <Button
+  //onClick={navigateTo('/communityPostMapGraphic/')}
   component={Link}
   to={`/communityPostMapGraphic/`}
   variant="contained"
@@ -416,7 +544,16 @@ function CommunityTwo() {
         </Box>
       </StyledToolbar>
     </AppBar>
-      <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+      {content}
+    </Container>
+
+    
+  );
+}
+
+export default CommunityTwo;
+
+{/* <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
         Trending Map Graphics
       </Typography>
 
@@ -493,17 +630,11 @@ function CommunityTwo() {
                   flexGrow: "1",
                   fontWeight: "bold",
                 }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
                 to={"/communityQuestionPost/:"+index}
               >
                 {text}
               </Typography>
             ))}
-          </Box>
-    </Container>
-
-    
-  );
-}
-
-export default CommunityTwo;
+          </Box> */}

@@ -14,6 +14,8 @@ import {
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { styled } from '@mui/material/styles';
+import CommunitySectionAPI from '../../api/CommunitySectionAPI';
+import { useParams } from 'react-router-dom';
 
 
 const StyledAppBar = styled(AppBar)({
@@ -29,8 +31,9 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 }));
 
 function CommunityQuestionPost() {
+  const {postComment} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
-  // const { index } = useParams(); // Uncomment this when using in your routing setup
+  const { index } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
 
   const handleMessageChange = (event) => {
@@ -39,6 +42,8 @@ function CommunityQuestionPost() {
 
   const handleSubmit = () => {
     // Handle your submission logic here
+    const currentTimeSec = new Date();//date.getSeconds();
+    postComment(index, currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
   };
 
