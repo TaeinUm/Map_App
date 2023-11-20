@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLoggedIn, login, logout } from "../api/authAPI";
+import { getLoggedIn, login, logout, getUserData } from "../api/authAPI";
 
 export const AuthContext = createContext();
 
@@ -18,25 +18,28 @@ export const AuthProvider = ({ children }) => {
   //UseEffect for getting login status, username, userID, and user profile image
   useEffect(() => {
     const checkLoggedIn = async () => {
-      // Check if localStorage indicates authenticated
       const storedAuthStatus =
         localStorage.getItem("isAuthenticated") === "true";
+      const storedUserId = localStorage.getItem("userId");
 
-      if (storedAuthStatus) {
+      if (storedAuthStatus && storedUserId) {
         try {
-          const response = await getLoggedIn();
+          const response = await getLoggedIn(storedUserId);
           if (response.success) {
             setIsAuthenticated(true);
             setUsername(response.data.username);
             setUserId(response.data.userId);
             setProfileImage(response.data.profileImage);
+            localStorage.setItem("isAuthenticated", "true");
           } else {
             setIsAuthenticated(false);
+            localStorage.removeItem("useId");
             localStorage.removeItem("isAuthenticated");
           }
         } catch (error) {
           console.error("Error checking login status:", error);
           setIsAuthenticated(false);
+          localStorage.removeItem("userId");
           localStorage.removeItem("isAuthenticated");
         }
       } else {
@@ -53,6 +56,12 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("token", response.data.token); // Assuming the token is in the response data
+      const data = await getUserData(email);
+      localStorage.setItem("userId", data.userId);
+      setUserId(data.userId);
+      setProfileImage(data.profileImage);
+      setUsername(data.username);
+
       navigate("/"); // Redirect to a protected route after login
     } else {
       console.error("Login failed:", response.message);
@@ -65,6 +74,7 @@ export const AuthProvider = ({ children }) => {
       setIsAuthenticated(false);
       localStorage.setItem("isAuthenticated", "false");
       localStorage.removeItem("token");
+      localStorage.removeItem("userId");
       navigate("/");
     } else {
       console.error("Logout failed:", response.message);

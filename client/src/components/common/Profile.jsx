@@ -372,6 +372,7 @@ const Profile = () => {
               type="submit"
               variant="contained"
               sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931" }}
+              
             >
               Save Changes
             </Button>
