@@ -15,6 +15,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
+import { useNavigate } from "react-router-dom";
 
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
@@ -32,6 +33,8 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
 
 const Profile = () => {
   const fileInputRef = React.createRef();
+  const navigate = useNavigate();
+
   const { userId, username, profileImage } = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
@@ -65,10 +68,15 @@ const Profile = () => {
     fetchEmail();
   }, [userId, username]);
 
+  useEffect(() => {
+    setNickname(username);
+  }, [username]);
+
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setProfile(URL.createObjectURL(file));
+      console.log(URL.createObjectURL(file));
     }
   };
 
@@ -96,13 +104,17 @@ const Profile = () => {
     }
   };
 
+  const handleCreateMapClick = () => {
+    navigate("/map");
+  };
+
   return (
     <ResponsiveContainer>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
             <CardActionArea sx={{ display: "flex" }}>
-              {profile ? (
+              {/*profile ? (
                 <CardMedia
                   component="img"
                   image={profile}
@@ -125,7 +137,7 @@ const Profile = () => {
                     borderRadius: "100%",
                   }}
                 />
-              )}
+              )
               <Button
                 onClick={handleEditIconClick}
                 sx={{
@@ -138,7 +150,7 @@ const Profile = () => {
                   height: "30px",
                 }}
               >
-                <EditIcon /> {/* Icon for editing the profile image */}
+                <EditIcon /> 
               </Button>
               <input
                 type="file"
@@ -147,7 +159,7 @@ const Profile = () => {
                 style={{ display: "none" }}
                 ref={fileInputRef}
               />
-
+              */}
               <CardContent>
                 <Typography
                   variant="h5"
@@ -162,11 +174,15 @@ const Profile = () => {
                   Welcome, {username}
                 </Typography>
                 <Button
-                  onClick={handleProfileImageUpload}
+                  onClick={handleCreateMapClick}
                   variant="contained"
-                  sx={{ backgroundColor: "#262931", marginBottom: "30px" }}
+                  sx={{
+                    width: "250px",
+                    backgroundColor: "#262931",
+                    marginBottom: "30px",
+                  }}
                 >
-                  Edit Profile Picture
+                  Create Your Map
                 </Button>
               </CardContent>
             </CardActionArea>
@@ -287,7 +303,7 @@ const Profile = () => {
 
             <TextField
               label="Username"
-              defaultValue={username}
+              value={nickname}
               onChange={(e) => {
                 setNickname(e.target.value);
               }}
