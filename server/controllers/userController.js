@@ -63,9 +63,38 @@ const checkLoggedIn = (req, res) => {
   }
 };
 
+// Update user details
+const updateUserDetails = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const { newEmail, newUsername, newPassword } = req.body;
+
+    // Find user by email
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update user details
+    user.email = newEmail || user.email;
+    user.userName = newUsername || user.userName;
+    if (newPassword) {
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
+    // Save the updated user
+    await user.save();
+
+    res.json({ message: 'User details updated successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   logoutUser,
-  checkLoggedIn
+  checkLoggedIn,
+  updateUserDetails,
 };
