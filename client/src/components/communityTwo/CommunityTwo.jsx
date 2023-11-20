@@ -435,6 +435,7 @@ function CommunityTwo() {
         <Grid item xs={12} sm={6} md={4} key={graphic.id}>
           <StyledCard>
             <CardMedia
+              data-cy="community-trending-graphics"
               component="img"
               height="140"
               image={graphic.image}
@@ -463,6 +464,7 @@ function CommunityTwo() {
 
   <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
     <Pagination
+      data-cy="pagination-trending-graphics"
       count={Math.ceil(topGraphics.length / itemsPerPage)}
       page={currentPage}
       onChange={(_, page) => setCurrentPage(page)}
@@ -510,6 +512,7 @@ function CommunityTwo() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              data-cy="community-search-bar"
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               onChange={handleSearchChange}

@@ -1,12 +1,12 @@
-describe("Community Page", () => {
+describe("Community Question Posting Page", () => {
     beforeEach(() => {
       cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/community");
     });
   
-    // it("should display the home page correctly", () => {
-    //   cy.contains("Trending Map Graphics").should("be.visible");
+    it("should display the home page correctly", () => {
+      cy.contains("Trending Map Graphics").should("be.visible");
       
-    // });
+    });
   
     describe("Trending Section", () => {
       it("should display top 5 trending graphics", () => {
@@ -30,12 +30,7 @@ describe("Community Page", () => {
     //   })
     });
 
-    describe("pagination", () => {
-        it("should display pagination", () => {
-          cy.get("[data-cy=pagination-trending-graphics]").should("be.visible");
-        });
-    });
-    describe('pagination should be able to go to the last page', () => {
+    describe('pagination', () => {
         // iterate recursively until the "Next" link is disabled
         // then assert we are on the last page
         it('goes to the last page', () => {
