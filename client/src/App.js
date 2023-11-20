@@ -52,7 +52,7 @@ function App() {
                 <Route path="/communityMapIdeas" element={<CommunityTwoMapIdeas/>}/>
                 <Route path="/communityUserName" element={<CommunityUserName/>}/>
                 <Route path="/communityMapIdeaPost/:index" element={<CommunityTwoMapIdeasPostingsPage />}/>
-                <Route path="/communityQuestionPost/:index" element={<CommunityQuestionPost/>}/>
+                <Route path="/communityQuestionPost/:text" element={<CommunityQuestionPost/>}/>
                 <Route path="/communityGraphicPost/:index" element={<CommunityGraphicPost/>}/>
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/signin" element={<SignIn />} />

@@ -1,6 +1,6 @@
 const Comment = require('../models/Comment');
 
-const writeComment = async (req, res) => {
+exports.writeComment = async (req, res) => {
     try {
         const { userId, postId, content } = req.body;
         const newComment = new Comment({
