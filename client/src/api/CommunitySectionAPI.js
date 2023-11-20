@@ -2,8 +2,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 
-const API_BASE_URL =
-"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const API_BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 const CommunitySectionAPI = {
     //make a post
@@ -31,21 +30,21 @@ const CommunitySectionAPI = {
             const response = await axios.post(`${API_BASE_URL}/api/community/post`,
                 {
                     //params:{userId, postType, postType, postFile, date},
-                    params: {userId,
-                        content,
-                        likes,
-                        types,
-                        image,
-                        title},
+                    params: {userId: userId,
+                        content: content,
+                        likes: likes,
+                        types: types,
+                        image: image,
+                        title: title},
                 }
             );
             return response.data;
         //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post`,{
-        //     userId,
-        //     postType, 
-        //     postText,
-        //     postFile,
-        //     date,
+        //     content,
+        //     likes,
+        //     types,
+        //     image,
+        //     title,
 
         //   }  );
         } catch (error) {
