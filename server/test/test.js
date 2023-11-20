@@ -28,17 +28,45 @@ describe('API Endpoints', function() {
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
-        expect(res.body).to.be.an('array'); // Check if the response is an array
-        // Optionally, check if the array has 5 items and each item is an object with expected properties
+        expect(res.body).to.be.an('array');
         if (res.body.length === 5) {
           res.body.forEach(function(item) {
             expect(item).to.be.an('object');
-            expect(item).to.have.all.keys('_id', 'likes', 'image', 'title', 'content', 'date', 'types');
+            // 모든 예상 키들이 있는지 확인
+            expect(item).to.include.all.keys('_id', 'likes', 'image', 'title', 'content', 'date', 'types');
           });
         }
-        done(err); // Pass the error if there is one to Mocha
+        done(err);
       });
   });
+
+});
+
+it('creates a new post successfully', function(done) {
+  const postData = {
+      userId: "65487c7a94678f7bd6d43689".toString(),
+      content: 'Test content',
+      likes: 0,
+      types: 'Test type',
+      image: 'Test image URL',
+      title: 'Test title'
+  };
+
+  request(app)
+      .post('/api/community/post')
+      .send(postData)
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .end(function(err, res) {
+          if (err) {
+              console.error("Test failed with error:", res.body.message); // 에러 메시지를 콘솔에 출력
+              done(err);
+          } else {
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.include.all.keys('_id', 'userId', 'content', 'likes', 'types', 'image', 'title');
+              done();
+          }
+      });
 });
 
 // Close the mongoose connection after the tests are done

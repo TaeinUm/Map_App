@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Post = require('../models/Post');
 
 exports.getTopPosts = async (req, res) => {
@@ -12,27 +13,45 @@ exports.getTopPosts = async (req, res) => {
   }
 };
 
-const writePost = async (req, res) => {
+exports.getAllPosts = async (req, res) => {
   try {
-      const { likes, image, title } = req.body;
+      const posts = await Post.find({}); // 모든 포스트 검색
+      res.json(posts); // 검색된 포스트 반환
+  } catch (error) {
+      console.error('Error fetching posts:', error);
+      res.status(500).send('Error fetching posts');
+  }
+};
+
+exports.writePost = async (req, res) => {
+  try {
+      const { userId, content, likes, types, image, title } = req.body;
+      
+      // 데이터 유효성 검증
+      if (!userId || !content) {
+          return res.status(400).json({ message: "Missing required fields" });
+      }
+
       const newPost = new Post({
           _id: new mongoose.Types.ObjectId(),
           userId,
-          postId,
           content,
           likes,
           types,
           image,
           title
       });
+
       await newPost.save();
       res.status(201).json(newPost);
-  } catch (error) {
+    } catch (error) {
+      console.error(error); // This will log the full error object
       res.status(500).json({ message: error.message });
   }
 };
 
-const likePost = async (req, res) => {
+
+exports.likePost = async (req, res) => {
   try {
       const postId = req.params.postId;
       // Increment the likes count
@@ -48,7 +67,7 @@ const likePost = async (req, res) => {
 };
 
 // Unlike a map
-const unlikePost = async (req, res) => {
+exports.unlikePost = async (req, res) => {
   try {
       const postId = req.params.postId;
       // Decrement the likes count

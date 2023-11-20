@@ -1,6 +1,6 @@
 const Post = require('../models/Post');
 
-const searchMapByUserName = async (req, res) => {
+exports.searchMapByUserName = async (req, res) => {
     try {
         const userId = req.params.userId;
         const maps = await Post.find({ 
@@ -13,8 +13,9 @@ const searchMapByUserName = async (req, res) => {
     }
 };
 
+
 // Get questions by search text
-const searchQuestionByTest = async (req, res) => {
+exports.searchQuestionByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const questions = await Post.find({ 
@@ -28,7 +29,7 @@ const searchQuestionByTest = async (req, res) => {
 };
 
 // Get ideas by search text
-const searchIdeaByTest = async (req, res) => {
+exports.searchIdeaByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const ideas = await Post.find({ 
@@ -42,7 +43,7 @@ const searchIdeaByTest = async (req, res) => {
 };
 
 // Get maps by search text
-const searchMapByTest = async (req, res) => {
+exports.searchMapByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const maps = await Post.find({ 
