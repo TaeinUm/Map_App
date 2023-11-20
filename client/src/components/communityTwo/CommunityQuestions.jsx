@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import {Button, Box, Typography, TextField} from "@mui/material";
 import { styled, alpha } from '@mui/material/styles';
 import CommunitySearchBar from "./CommunitySearchBar";
+//import { CommunityContext } from "../../contexts/CommunityContextVerTwo";
 
 let itemsPerPage=3;
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?", "Can I make fantasy map graphics", "Are flow maps used to map the migration routes of geese?"];
@@ -57,6 +58,7 @@ function CommunityTwoQuestions() {
         setSearchTerm(event.target.value);
       };
     const [anchorEl, setAnchorEl] = React.useState(null);
+    //const {setQuestionTitle, setQuestionContent} = CommunityContext;
 
     const [currentPage, setCurrentPage] = useState(1);
   const open = Boolean(anchorEl);

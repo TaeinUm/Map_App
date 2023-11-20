@@ -344,12 +344,17 @@ function CommunityTwo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
-  const {navigateTo, updatePostIdAndNavigate} = useContext(CommunityContext);
+  const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle} = useContext(CommunityContext);
   const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     
   };
+  function setupQuestionPost(text){
+    updateQuestionTitle(text);
+    
+    
+  }
 
 
   const handleCategoryChange = (event) => {
@@ -395,7 +400,7 @@ function CommunityTwo() {
             {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
               <Typography
                 variant="h2"
-                
+                onClick={setupQuestionPost(text)}
                 sx={{
                   fontSize: "20px",
                   color: "#FAFAFA",
@@ -407,7 +412,7 @@ function CommunityTwo() {
                 }}
                 //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
-                to={"/communityQuestionPost/:"+index}
+                to={"/communityQuestionPost/:"+text}
               >
                 {text}
               </Typography>
@@ -430,6 +435,7 @@ function CommunityTwo() {
         <Grid item xs={12} sm={6} md={4} key={graphic.id}>
           <StyledCard>
             <CardMedia
+              data-cy="community-trending-graphics"
               component="img"
               height="140"
               image={graphic.image}
@@ -458,6 +464,7 @@ function CommunityTwo() {
 
   <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
     <Pagination
+      data-cy="pagination-trending-graphics"
       count={Math.ceil(topGraphics.length / itemsPerPage)}
       page={currentPage}
       onChange={(_, page) => setCurrentPage(page)}
@@ -505,6 +512,7 @@ function CommunityTwo() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              data-cy="community-search-bar"
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               onChange={handleSearchChange}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { styled } from '@mui/material/styles';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { useParams } from 'react-router-dom';
+import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
 
 
 const StyledAppBar = styled(AppBar)({
@@ -33,8 +34,19 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 function CommunityQuestionPost() {
   const {postComment} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
-  const { index } = useParams(); // Uncomment this when using in your routing setup
+  const { text } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
+  const {questionTitle} = CommunityContext;
+  const [actualTitle, setActualTitle] = useState("");
+  const cleanedText= text.replace(/:/g, '');
+
+  // useEffect(() => {
+    
+
+  //   setActualTitle(questionTitle);
+  // }, []);
+
+  
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
@@ -43,24 +55,26 @@ function CommunityQuestionPost() {
   const handleSubmit = () => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
-    postComment(index, currentTimeSec, document.getElementById("prompt-textarea").value);
+    postComment(text, currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
   };
+
+  console.log("What is the question title" + questionTitle);
 
   return (
     <Container maxWidth="md" sx={{ p: 3,  height: "100vh"}}>
 
     <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
       <Typography variant="h4" gutterBottom color="white">
-        What should I write in the memo?
+        {cleanedText}
       </Typography>
       <Typography variant="subtitle1" gutterBottom color="white">
-        User1 2023.05.10
+        
       </Typography>
       <Divider sx={{ my: 2, bgcolor: 'white' }} />
       <br></br>
       <Typography paragraph style={{ backgroundColor: 'white', color: 'black', padding: '1rem', textAlign:'left'}}>
-        Hi, I have a question. What do you guys usually jot down in your memo?
+        {cleanedText}
 
         <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 
