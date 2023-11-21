@@ -158,7 +158,7 @@ function File() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "scroll" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <div
         id="map"
         ref={mapContainer}
@@ -169,7 +169,7 @@ function File() {
           <CircularProgress />
         </div>
       )}
-      <Box sx={{ width: "40%", overflow: "hidden" }}>
+      <Box sx={{ width: "40%", overflow: "scroll" }}>
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 

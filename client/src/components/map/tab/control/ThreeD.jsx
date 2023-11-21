@@ -78,7 +78,6 @@ const ThreeD = () => {
       });
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
-  
 
       newMap.on("load", async () => {
         newMap.addSource("3d-data", {
@@ -301,7 +300,7 @@ const ThreeD = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "scroll" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <div
         id="map"
         ref={mapContainer}
@@ -312,7 +311,7 @@ const ThreeD = () => {
           <CircularProgress />
         </div>
       )}
-      <Box sx={{ width: "40%" }}>
+      <Box sx={{ width: "40%", overflow: "scroll" }}>
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
