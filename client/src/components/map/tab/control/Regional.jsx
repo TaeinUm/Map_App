@@ -1,30 +1,27 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import {
-  Tab,
-  Tabs,
   Box,
   Button,
   Typography,
-  Select,
-  MenuItem,
   FormControl,
+  Divider,
   RadioGroup,
+  Slider,
   FormControlLabel,
   Radio,
   CircularProgress,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Memo from "../Memo";
 import { MapContext } from "../../../../contexts/MapContext";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
 
-import ShareTab from "../ShareTab";
 import SaveTab from "../SaveTab";
 import CountryAutocomplete from "../../editmap/CountryAutocomplete";
+import TabMenu from "../../editmap/TabMenu";
+import ContinentColorUpdater from "../../editmap/ContinentColorUpdater";
+import continents from "./continentsData";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -48,190 +45,10 @@ const Regional = () => {
   const [regionColor, setRegionColor] = useState("#FF5733");
   const [selectedCountry, setSelectedCountry] = useState("");
   const [color, setColor] = useState("#FFFFFF");
+  const [opacity, setOpacity] = useState(0.5);
   const [log, setLog] = useState([]);
 
   const [selectionType, setSelectionType] = useState("country");
-  const [continents, setContinents] = useState({
-    africa: [
-      "AGO",
-      "BDI",
-      "BEN",
-      "BFA",
-      "BWA",
-      "CAF",
-      "CMR",
-      "COD",
-      "COG",
-      "CIV",
-      "COM",
-      "DJI",
-      "EGY",
-      "ERI",
-      "ETH",
-      "GAB",
-      "GMB",
-      "GHA",
-      "GIN",
-      "GMB",
-      "GNB",
-      "GQE",
-      "KEN",
-      "LBR",
-      "LSO",
-      "MLI",
-      "MRT",
-      "MWI",
-      "NAM",
-      "NER",
-      "NGA",
-      "RWA",
-      "SEN",
-      "SLE",
-      "SOM",
-      "SSD",
-      "STP",
-      "SWZ",
-      "TZA",
-      "UGA",
-      "ZAF",
-      "ZMB",
-      "ZWE",
-    ],
-    asia: [
-      "AFG",
-      "AZE",
-      "BGD",
-      "BHR",
-      "BRN",
-      "BTN",
-      "CHN",
-      "COK",
-      "IND",
-      "IDN",
-      "IRN",
-      "IRQ",
-      "ISR",
-      "JPN",
-      "JOR",
-      "KAZ",
-      "KHM",
-      "KIR",
-      "KWT",
-      "LAO",
-      "LBN",
-      "LKA",
-      "MAC",
-      "MAL",
-      "MMR",
-      "MNG",
-      "MYS",
-      "NPL",
-      "OMN",
-      "PAK",
-      "PHL",
-      "QAT",
-      "RUS",
-      "SAU",
-      "SGP",
-      "KOR",
-      "SRI",
-      "SYR",
-      "TJK",
-      "THA",
-      "TLS",
-      "TKM",
-      "TUR",
-      "UZB",
-      "VNM",
-      "YEM",
-    ],
-    europe: [
-      "ALB",
-      "AND",
-      "AUT",
-      "AZE",
-      "BEL",
-      "BIH",
-      "BLR",
-      "BGR",
-      "CYP",
-      "CZE",
-      "DNK",
-      "EST",
-      "FIN",
-      "FRA",
-      "GEO",
-      "DEU",
-      "GIB",
-      "GRC",
-      "HRV",
-      "HUN",
-      "IRL",
-      "ISL",
-      "ITA",
-      "KAZ",
-      "KGZ",
-      "LVA",
-      "LIE",
-      "LTU",
-      "LUX",
-      "MDA",
-      "MCO",
-      "MKD",
-      "MLT",
-      "MNE",
-      "NOR",
-      "NLD",
-      "POL",
-      "PRT",
-      "ROU",
-      "RUS",
-      "SMR",
-      "SRB",
-      "SVK",
-      "SVN",
-      "SWE",
-      "TUR",
-      "UKR",
-      "UZB",
-    ],
-    north_america: ["CAN", "MEX", "USA"],
-    south_america: [
-      "ARG",
-      "BOL",
-      "BRA",
-      "CHL",
-      "COL",
-      "CRI",
-      "CUB",
-      "ECU",
-      "SLV",
-      "GUY",
-      "GTM",
-      "HND",
-      "MEX",
-      "NIC",
-      "PAN",
-      "PAR",
-      "PER",
-      "PRY",
-      "URY",
-      "VEN",
-    ],
-    australia_oceania: [
-      "AUS",
-      "FJI",
-      "KIR",
-      "NCL",
-      "PNG",
-      "NZL",
-      "PLW",
-      "SAM",
-      "SOL",
-      "TUV",
-      "WLF",
-    ],
-  });
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -267,6 +84,8 @@ const Regional = () => {
       center: [-74.006, 40.7128],
       zoom: 2,
     });
+    newMap.addControl(new mapboxgl.FullscreenControl());
+    newMap.addControl(new mapboxgl.NavigationControl());
 
     newMap.on("load", async () => {
       newMap.addSource("countries", {
@@ -344,6 +163,15 @@ const Regional = () => {
       setMapLayer(addedLayersJson);
     }
   }, [map, log, continents]);
+
+  useEffect(() => {
+    if (map) {
+      const countryLayer = map.getLayer("countries");
+      if (countryLayer) {
+        map.setPaintProperty("countries", "fill-opacity", opacity);
+      }
+    }
+  }, [map, opacity]);
 
   const handleSelectionTypeChange = (event) => {
     setSelectionType(event.target.value);
@@ -459,35 +287,16 @@ const Regional = () => {
         ref={mapContainer}
         style={{ width: "100%", height: "100%" }}
       />
+      {isLoading && (
+        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+          <CircularProgress />
+        </div>
+      )}
       ;
-      <Box sx={{ width: "40%" }}>
+      <Box sx={{ width: "40%", overflow: "scroll" }}>
         <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              variant="fullWidth"
-              value={tabValue}
-              onChange={handleTabChange}
-              aria-label="map tabs"
-              indicatorColor="secondary"
-              textColor="secondary"
-            >
-              <Tab
-                label="Styles"
-                value="1"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-              {/* <Tab
-                label="Share"
-                value="2"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />*/}
-              <Tab
-                label="Save"
-                value="3"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-            </Tabs>
-          </Box>
+          <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
+
           <TabPanel value="1">
             <RadioGroup
               row
@@ -538,6 +347,21 @@ const Regional = () => {
                     style={{ marginBottom: "30px" }}
                   />
                 </Box>
+                <Box sx={{ width: "100%", mt: 2 }}>
+                  <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
+                    Adjust Opacity
+                  </Typography>
+                  <Slider
+                    value={opacity}
+                    min={0}
+                    max={1}
+                    step={0.1}
+                    onChange={(e, newValue) => setOpacity(newValue)}
+                    aria-labelledby="opacity-slider"
+                    sx={{ marginBottom: "30px" }}
+                  />
+                </Box>
+
                 <Box
                   width="100%"
                   sx={{ display: "flex", justifyContent: "space-between" }}
@@ -569,89 +393,51 @@ const Regional = () => {
                   gap: "2",
                   justifyContent: "center",
                   alignItems: "center",
+                  overflow: "hidden",
                 }}
               >
-                <input
-                  type="color"
-                  value={color}
-                  onChange={handleColorChange}
-                  style={{ marginBottom: "30px" }}
+                <Box
+                  width="100%"
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                  >
+                    Select Region Color
+                  </Typography>
+                  <input
+                    type="color"
+                    value={color}
+                    onChange={handleColorChange}
+                    style={{ marginBottom: "30px" }}
+                  />
+                </Box>
+                <Box sx={{ width: "100%", mt: 2 }}>
+                  <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
+                    Adjust Opacity
+                  </Typography>
+                  <Slider
+                    value={opacity}
+                    min={0}
+                    max={1}
+                    step={0.1}
+                    onChange={(e, newValue) => setOpacity(newValue)}
+                    aria-labelledby="opacity-slider"
+                    sx={{ marginBottom: "30px" }}
+                  />
+                </Box>
+
+                <ContinentColorUpdater
+                  handleContinentSelect={handleContinentSelect}
+                  color={color}
                 />
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("north_america")}
-                >
-                  Update North America
-                </Button>
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("asia")}
-                >
-                  Update Asia
-                </Button>
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("europe")}
-                >
-                  Update Europe
-                </Button>
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("africa")}
-                >
-                  Update Africa
-                </Button>
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("south_america")}
-                >
-                  Update South America
-                </Button>
-                <Button
-                  sx={{
-                    width: "220px",
-                    marginBottom: "30px",
-                    backgroundColor: "#fafafa",
-                    color: "black",
-                  }}
-                  variant="contained"
-                  onClick={() => handleContinentSelect("australia_oceania")}
-                >
-                  Update Aus_Oceania
-                </Button>
               </FormControl>
             )}
             <Box>
+              <Typography sx={{ color: "#fafafa", margin: "20px" }}>
+                Colored Region List
+              </Typography>
+              <Divider></Divider>
               {log.map((entry, index) =>
                 entry.country ? (
                   <Typography
@@ -673,18 +459,6 @@ const Regional = () => {
           <TabPanel value="3">
             <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
           </TabPanel>
-          {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
         </TabContext>
       </Box>
     </Box>

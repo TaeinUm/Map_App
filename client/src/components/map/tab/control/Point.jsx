@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import {
-  Tab,
-  Tabs,
   Box,
   Button,
   Typography,
@@ -17,11 +15,12 @@ import {
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import * as XLSX from "xlsx";
-
-import SaveTab from "../SaveTab";
 import { MapContext } from "../../../../contexts/MapContext";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
+
+import SaveTab from "../SaveTab";
+import TabMenu from "../../editmap/TabMenu";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -76,6 +75,9 @@ const Point = () => {
         center: [-74.006, 40.7128],
         zoom: 2,
       });
+      newMap.addControl(new mapboxgl.FullscreenControl());
+      newMap.addControl(new mapboxgl.NavigationControl());
+  
 
       newMap.on("load", async () => {
         newMap.addLayer({
@@ -237,7 +239,7 @@ const Point = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh", overflow: "scroll" }}>
       <div
         id="map"
         ref={mapContainer}
@@ -251,32 +253,8 @@ const Point = () => {
       ;
       <Box sx={{ width: "40%" }}>
         <TabContext value={tabValue}>
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs
-              variant="fullWidth"
-              value={tabValue}
-              onChange={handleTabChange}
-              aria-label="map tabs"
-              indicatorColor="secondary"
-              textColor="secondary"
-            >
-              <Tab
-                label="Styles"
-                value="1"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-              {/*     <Tab
-                label="Share"
-                value="2"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-      />*/}
-              <Tab
-                label="Save"
-                value="3"
-                sx={{ backgroundColor: "#282c34", color: "#fafafa" }}
-              />
-            </Tabs>
-          </Box>
+          <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
+
           <TabPanel value="1">
             <Container>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
