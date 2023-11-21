@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Slider, Typography } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import { MapContext } from "../../../../contexts/MapContext";
 import { AuthContext } from "../../../../contexts/AuthContext";
@@ -30,8 +30,6 @@ const BasicStyles = () => {
       roads: true,
       labels: true,
       background: true,
-      streets: true,
-      transit: true,
       landuse: true,
       waterway: true,
       boundary: true,
@@ -43,34 +41,29 @@ const BasicStyles = () => {
       roads: "#ffffff",
       labels: "#78888a",
       background: "#EBF0F0",
-      streets: "#ffeda0",
-      transit: "#ff9999",
       landuse: "#d2f53c",
       waterway: "#b3cde3",
       boundary: "#f03b20",
     },
   });
   const [mapStyle, setMapStyle] = useState(
-    "mapbox://styles/mapbox/streets-v11"
+    "mapbox://styles/mapbox/streets-v12"
   );
   const [tabValue, setTabValue] = useState("1");
-  const [mapJson, setMapJson] = useState({});
-  const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [memoContent, setMemoContent] = useState("");
-  const [regionColor, setRegionColor] = useState("#FF5733");
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [labelFontSize, setLabelFontSize] = useState(12);
+  const [roadWidth, setRoadWidth] = useState(1);
+  const [boundaryWidth, setBoundaryWidth] = useState(1);
+  const [waterwayWidth, setWaterwayWidth] = useState(1);
 
   const layerSelector = {
-    background: /background/,
-    water: /water/,
+    background: /land|landcover/,
+    water: /water-depth|^water$/,
     parks: /park/,
     buildings: /building/,
     roads: /road|bridge|tunnel/,
     labels: /label|place|poi/,
-    streets: /street/,
-    transit: /transit/,
     landuse: /landuse/,
-    waterway: /waterway/,
+    waterway: /^waterway$/,
     boundary: /boundary/,
   };
 
@@ -81,8 +74,6 @@ const BasicStyles = () => {
     "roads",
     "labels",
     "background",
-    "streets",
-    "transit",
     "landuse",
     "waterway",
     "boundary",
@@ -99,43 +90,27 @@ const BasicStyles = () => {
     setTabValue(newValue);
   };
 
-  const handleJsonChange = (json) => {
-    setMapJson(json.jsObject);
-  };
-
-  const saveJson = () => {
-    try {
-      map.setStyle(mapJson);
-      alert("Successfully saved!");
-    } catch (error) {
-      alert("Invalid JSON!");
-    }
-  };
-
-  const toggleMemo = () => {
-    setIsMemoVisible(!isMemoVisible);
-  };
-
-  const handleMemoSave = () => {
-    console.log("Memo saved:", memoContent);
-    // Memo save logic here...
-  };
-
   useEffect(() => {
     const initializeMap = async () => {
       setIsLoading(true);
 
       const newMap = new mapboxgl.Map({
         container: "map",
-        style: "mapbox://styles/mapbox/streets-v11",
+        style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
       });
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
-  
 
       newMap.on("load", async () => {
+        const layers = newMap.getStyle().layers;
+        console.log("layers", layers);
+        const buildingLayer = layers.find((layer) => layer.id === "building");
+
+        if (buildingLayer) {
+          newMap.setLayerZoomRange("building", 15, 2);
+        }
         if (mapId) {
           try {
             // Fetch map graphics data using mapId
@@ -209,9 +184,7 @@ const BasicStyles = () => {
     });
     if (map) {
       const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
+      const addedLayers = currentLayers.id;
       const addedLayersJson = JSON.stringify(addedLayers, null, 2);
       setMapLayer(addedLayersJson);
     }
@@ -270,8 +243,71 @@ const BasicStyles = () => {
     }
   };
 
+  const handleLabelFontSizeChange = (event, newValue) => {
+    setLabelFontSize(newValue);
+    updateLabelFontSize(newValue);
+  };
+
+  const handleRoadWidthChange = (event, newValue) => {
+    setRoadWidth(newValue);
+    if (map) {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id.startsWith("road") && layer.type === "line") {
+          updateLayerWidth(layer.id, newValue);
+        }
+      });
+    }
+  };
+
+  const handleBoundaryWidthChange = (event, newValue) => {
+    setBoundaryWidth(newValue);
+    if (map) {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id.startsWith("admin")) {
+          updateLayerWidth(layer.id, newValue);
+        }
+      });
+    }
+  };
+
+  const handleWaterwayWidthChange = (event, newValue) => {
+    setRoadWidth(newValue);
+    if (map) {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id === "waterway" && layer.type === "line") {
+          updateLayerWidth(layer.id, newValue);
+        }
+      });
+    }
+  };
+
+  const updateLabelFontSize = (fontSize) => {
+    if (map) {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.type === "symbol") {
+          map.setLayoutProperty(layer.id, "text-size", fontSize);
+        }
+      });
+    }
+  };
+
+  const updateLayerWidth = (layerId, width) => {
+    if (map) {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id === layerId) {
+          map.setPaintProperty(layer.id, "line-width", width);
+        }
+      });
+    }
+  };
+
   return (
-    <Box sx={{ display: "flex", height: "100vh", overflow: "scroll" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
       <div
         id="map"
         ref={mapContainer}
@@ -283,7 +319,7 @@ const BasicStyles = () => {
         </div>
       )}
 
-      <Box sx={{ width: "40%" }}>
+      <Box sx={{ width: "40%", overflow: "scroll" }}>
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
@@ -298,6 +334,7 @@ const BasicStyles = () => {
                     display: "flex",
                     justifyContent: "space-between",
                     color: "#fafafa",
+                    marginBottom: "10px",
                   }}
                   key={category}
                 >
@@ -327,6 +364,7 @@ const BasicStyles = () => {
                   display: "flex",
                   justifyContent: "space-between",
                   color: "#fafafa",
+                  marginBottom: "20px",
                 }}
               >
                 <label style={{ marginBottom: "10px" }}>Font Style: </label>
@@ -345,6 +383,46 @@ const BasicStyles = () => {
                   <option value="Roboto Bold">Roboto Bold</option>
                 </select>
               </div>
+              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                Font size
+              </Typography>
+              <Slider
+                value={labelFontSize}
+                onChange={handleLabelFontSizeChange}
+                min={8}
+                max={20}
+                sx={{ marginBottom: "20px" }}
+              />
+              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                Road Width
+              </Typography>
+              <Slider
+                value={roadWidth}
+                onChange={handleRoadWidthChange}
+                min={0.5}
+                max={5}
+                sx={{ marginBottom: "20px" }}
+              />
+              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                Boundary Width
+              </Typography>
+              <Slider
+                value={boundaryWidth}
+                onChange={handleBoundaryWidthChange}
+                min={0.5}
+                max={5}
+                sx={{ marginBottom: "20px" }}
+              />
+              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                Waterway Width
+              </Typography>
+              <Slider
+                value={boundaryWidth}
+                onChange={handleWaterwayWidthChange}
+                min={0.5}
+                max={5}
+                sx={{ marginBottom: "20px" }}
+              />
             </div>
           </TabPanel>
           {/* <TabPanel value="2">
@@ -354,18 +432,6 @@ const BasicStyles = () => {
             <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
         </TabContext>
-        {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
       </Box>
     </Box>
   );
