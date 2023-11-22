@@ -37,7 +37,9 @@ const loginUser = async (req, res) => {
     }
     // User is authenticated, create session
     req.session.userId = user._id;
-    res.json({ message: "Logged in successfully" });
+
+    // Send the user ID in the response
+    res.json({ message: "Logged in successfully", userId: user._id });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
