@@ -15,8 +15,8 @@ exports.getTopPosts = async (req, res) => {
 
 exports.getAllPosts = async (req, res) => {
   try {
-      const posts = await Post.find({}); // 모든 포스트 검색
-      res.json(posts); // 검색된 포스트 반환
+      const posts = await Post.find({}); 
+      res.json(posts); 
   } catch (error) {
       console.error('Error fetching posts:', error);
       res.status(500).send('Error fetching posts');

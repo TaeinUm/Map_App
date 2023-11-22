@@ -13,6 +13,14 @@ router.get('/getMapsByUsername/:userId', searchController.searchMapByUserName);
 
 router.post('/postComment', commentController.writeComment);
 
+
+
+router.get('/getallComments', commentController.getAllComments);
+
+router.get('/getallCommentByPostID', commentController.getAllCommentsByPostID);
+
+
+
 router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
 
 router.get('/getIdeas/:searchText', searchController.searchIdeaByText);

@@ -69,22 +69,60 @@ it('creates a new post successfully', function(done) {
       });
 });
 
-it('should retrieve maps by user ID', function(done) {
-  const userId = "65487c7a94678f7bd6d43689".toString(); // Replace with a valid user ID
+// it('should retrieve comments by post ID', function(done) {
+//   const postId = "6559d630cf378d2d911c6387".toString(); // Replace with a valid user ID
+//   request(app)
+//       .get(`/api/community/getallCommentByPostID/${postId}`)
+//       .expect('Content-Type', /json/)
+//       .expect(200)
+//       .end(function(err, res) {
+//           if (err) done(err);
+//           else {
+//               expect(res.body).to.be.an('array');
+//               // Additional assertions can be added here
+//               done();
+//           }
+//       });
+// });
 
+it('should retrieve all comments', function(done) {
   request(app)
-      .get(`/api/community/getMapsByUsername/${userId}`)
+      .get('/api/community/getallComments') // Replace with the actual route for getting all comments
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
-          if (err) done(err);
-          else {
+          if (err) {
+              console.error("Test failed with error:", err);
+              done(err);
+          } else {
               expect(res.body).to.be.an('array');
-              // Additional assertions can be added here
+              // Here you can add more specific assertions about the content of the response
               done();
           }
       });
 });
+
+
+it('should retrieve maps by user ID', function(done) {
+  const userId = "65487c7a94678f7bd6d43689"; // Ensure this is a valid user ID in your database
+
+  request(app)
+    .get(`/api/community/getMapsByUsername/${userId}`)
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function(err, res) {
+        if (err) {
+            console.error("Test failed with error:", err); // Log the error object
+            console.error("Server response:", res.body); // Log the server response
+            done(err);
+        } else {
+            expect(res.body).to.be.an('array');
+            // Additional assertions can be added here
+            done();
+        }
+    });
+});
+
 
 it('should retrieve questions by search text', function(done) {
   const searchText = 'validSearchText'; // Replace with valid search text
