@@ -2,12 +2,12 @@ const Post = require('../models/Post');
 
 exports.searchMapByUserName = async (req, res) => {
     try {
-        const searchText = req.params.searchText;
-        const questions = await Post.find({ 
-            username: { "$regex": searchText, "$options": "i" },
-            types: "question"
+        const userId = req.params.userId;
+        const maps = await Post.find({ 
+            userId: userId,
+            types: "map"
         });
-        res.json(questions);
+        res.json(maps);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

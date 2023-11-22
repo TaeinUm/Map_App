@@ -69,11 +69,11 @@ it('creates a new post successfully', function(done) {
       });
 });
 
-it('should retrieve maps by username', function(done) {
-  const searchText = 'validSearchText'; // Replace with valid search text
+it('should retrieve maps by user ID', function(done) {
+  const userId = "65487c7a94678f7bd6d43689".toString(); // Replace with a valid user ID
 
   request(app)
-      .get(`/api/community/getMapsByUsername/${searchText}`)
+      .get(`/api/community/getMapsByUsername/${userId}`)
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
