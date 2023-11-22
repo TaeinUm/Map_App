@@ -18,11 +18,12 @@ const authAPI = async (method, url, data) => {
 
 //get Loggedin status, profile Image, user name, user ID
 const getLoggedIn = async (userId) => {
-  return await authAPI("get", `${BASE_URL}/auth/loggedIn/${userId}`);
+  return await authAPI("get", `${BASE_URL}/auth/getLoggedIn/${userId}`);
 };
 
+//get user data
 const getUserData = async (email) => {
-  return await authAPI("get", `${BASE_URL}/auth/loggedIn/${email}`);
+  return await authAPI("get", `${BASE_URL}/auth/getUserData/${email}`);
 };
 
 //update login
