@@ -69,6 +69,74 @@ it('creates a new post successfully', function(done) {
       });
 });
 
+it('should retrieve maps by username', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+
+  request(app)
+      .get(`/api/community/getMapsByUsername/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve questions by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+
+  request(app)
+      .get(`/api/community/getQuestions/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve ideas by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+
+  request(app)
+      .get(`/api/community/getIdeas/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve maps by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+
+  request(app)
+      .get(`/api/community/getMapsBySearch/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
 // Close the mongoose connection after the tests are done
 after(function(done) {
   mongoose.disconnect()
