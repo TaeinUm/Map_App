@@ -46,6 +46,106 @@ describe('GET /api/top5graphics', () => {
   });
 });
 
+
+describe('Community API Endpoints', () => {
+  test('creates a new post successfully', async () => {
+      const postData = {
+          userId: "65487c7a94678f7bd6d43689",
+          content: 'Test content',
+          likes: 0,
+          types: 'Test type',
+          image: 'Test image URL',
+          title: 'Test title'
+      };
+
+      const response = await request(app)
+          .post('/api/community/post')
+          .send(postData);
+
+      expect(response.statusCode).toBe(201);
+      expect(response.body).toMatchObject({
+          userId: postData.userId,
+          content: postData.content,
+          // ... other fields
+      });
+  });
+
+  test('creates a new comment successfully', async () => {
+      const commentData = {
+          postId: "6559d630cf378d2d911c6387",
+          userId: "65487c7a94678f7bd6d43689",
+          date: "2023-10-11",
+          content: 'Test content',
+      };
+
+      const response = await request(app)
+          .post('/api/community/postcomment')
+          .send(commentData);
+
+      expect(response.statusCode).toBe(201);
+      expect(response.body).toMatchObject({
+          postId: commentData.postId,
+          userId: commentData.userId,
+          // ... other fields
+      });
+  });
+
+  test('should retrieve comments by post ID', async () => {
+      const postId = "6559d630cf378d2d911c6387";
+      const response = await request(app)
+          .get(`/api/community/getAllCommentsByPostID/${postId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+
+  test('should retrieve all comments', async () => {
+      const response = await request(app)
+          .get('/api/community/getallComments');
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+
+  test('should retrieve maps by user ID', async () => {
+      const userId = "65487c7a94678f7bd6d43689";
+      const response = await request(app)
+          .get(`/api/community/getMapsByUsername/${userId}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+
+  test('should retrieve questions by search text', async () => {
+      const searchText = 'validSearchText';
+      const response = await request(app)
+          .get(`/api/community/getQuestions/${searchText}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+
+  test('should retrieve ideas by search text', async () => {
+      const searchText = 'validSearchText';
+      const response = await request(app)
+          .get(`/api/community/getIdeas/${searchText}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+
+  test('should retrieve maps by search text', async () => {
+      const searchText = 'validSearchText';
+      const response = await request(app)
+          .get(`/api/community/getMapsBySearch/${searchText}`);
+
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy();
+  });
+});
+
+
+
 // Disconnect from the database after all tests have run
 // Replace 'after' with 'afterAll' if you are using Jest
 afterAll(function(done) {

@@ -5,22 +5,37 @@ const searchController = require('../controllers/searchController');
 
 const router = express.Router();
 
+// Write a comment
+router.post('/postcomment', commentController.writeComment);
+
+// Get all comments
+router.get('/getallComments', commentController.getAllComments);
+
+// Get all comments regarding postID
+router.get('/getAllCommentsByPostID/:postId', commentController.getAllCommentsByPostID);
+
+// Write a post
 router.post('/post', postController.writePost);
 
+// Get all posts
 router.get('/getAllPosts', postController.getAllPosts);
 
-router.get('/getMapsByUsername/:userId', searchController.searchMapByUserName);
+// Get all posts regarding postID
+router.get('/getMapsByUsername/:postId', searchController.searchMapByUserName);
 
-router.post('/postComment', commentController.writeComment);
-
+// Get Question Post by title Text Matched
 router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
 
+// Get Idea Post by title Text Matched
 router.get('/getIdeas/:searchText', searchController.searchIdeaByText);
 
+// Get Map Post by title Text Matched
 router.get('/getMapsBySearch/:searchText', searchController.searchMapByText);
 
-router.post('/likeMap/:postId', postController.likePost)
+// Like Post
+router.put('/likeMap/:postId', postController.likePost)
 
-router.post('/unlikeMap/:postId', postController.unlikePost)
+// UnLike Post
+router.put('/unlikeMap/:postId', postController.unlikePost)
 
 module.exports = router;

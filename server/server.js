@@ -12,8 +12,6 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const postRoutes = require('./routes/postRoutes');
-const postController = require('./controllers/postController');
-const searchController = require('./controllers/searchController');
 const testController = require('./controllers/testController');
 const PORT = process.env.PORT || 8080;
 
