@@ -11,8 +11,6 @@ const MongoStore = require('connect-mongo');
 const authRoutes = require('./routes/authRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const postRoutes = require('./routes/postRoutes');
-const postController = require('./controllers/postController');
-const searchController = require('./controllers/searchController');
 const testController = require('./controllers/testController');
 const PORT = process.env.PORT || 8080;
 
