@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Comment = require('../models/Comment');
 
 exports.writeComment = async (req, res) => {
@@ -26,7 +27,7 @@ exports.getAllComments = async (req, res) => {
     }
   };
 
-  exports.getAllCommentsByPostID = async (req, res) => {
+exports.getAllCommentsByPostID = async (req, res) => {
     try {
         const postId = req.params.postId;
 
@@ -35,6 +36,7 @@ exports.getAllComments = async (req, res) => {
         }
         const comments = await Comment.find({ postId: postId });
         res.json(comments);
+        
     } catch (error) {
         // Log detailed error information
         console.error('Error fetching comments:', error);

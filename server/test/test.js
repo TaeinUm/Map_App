@@ -69,21 +69,21 @@ it('creates a new post successfully', function(done) {
       });
 });
 
-// it('should retrieve comments by post ID', function(done) {
-//   const postId = "6559d630cf378d2d911c6387".toString(); // Replace with a valid user ID
-//   request(app)
-//       .get(`/api/community/getallCommentByPostID/${postId}`)
-//       .expect('Content-Type', /json/)
-//       .expect(200)
-//       .end(function(err, res) {
-//           if (err) done(err);
-//           else {
-//               expect(res.body).to.be.an('array');
-//               // Additional assertions can be added here
-//               done();
-//           }
-//       });
-// });
+it('should retrieve comments by post ID', function(done) {
+  const userId = "6559d630cf378d2d911c6387"; 
+  request(app)
+      .get(`/api/community/getAllCommentsByPostID/${userId}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
 
 it('should retrieve all comments', function(done) {
   request(app)

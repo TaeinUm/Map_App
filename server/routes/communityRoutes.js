@@ -17,7 +17,7 @@ router.post('/postComment', commentController.writeComment);
 
 router.get('/getallComments', commentController.getAllComments);
 
-router.get('/getallCommentByPostID', commentController.getAllCommentsByPostID);
+router.get('/getAllCommentsByPostID/:postId', commentController.getAllCommentsByPostID);
 
 
 
