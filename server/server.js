@@ -44,12 +44,8 @@ app.get('/', (req, res) => {
   res.send('Welcome to TerraCanvas!');
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-});
-
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("Error:", err.message);
   res.status(500).send('Something broke!');
 });
 
