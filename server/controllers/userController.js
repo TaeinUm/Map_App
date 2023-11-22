@@ -54,12 +54,18 @@ const logoutUser = (req, res) => {
   });
 };
 
-// Check if a user is logged in
-const checkLoggedIn = (req, res) => {
-  if (req.session.userId) {
-    res.json({ loggedIn: true });
-  } else {
-    res.json({ loggedIn: false });
+// Check if a user is logged in and return user data
+const checkLoggedIn = async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await User.findOne({ email }).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ loggedIn: true, user });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
