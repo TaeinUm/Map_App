@@ -5,40 +5,37 @@ const searchController = require('../controllers/searchController');
 
 const router = express.Router();
 
-//
-router.post('/post', postController.writePost);
+// Write a comment
+router.post('/postcomment', commentController.writeComment);
 
-//
-router.post('/poscomment', commentController.writeComment);
-
-//
-router.get('/getAllPosts', postController.getAllPosts);
-
-//
-router.get('/getMapsByUsername/:userId', searchController.searchMapByUserName);
-
-//
-router.post('/postComment', commentController.writeComment);
-
-//
+// Get all comments
 router.get('/getallComments', commentController.getAllComments);
 
-//
+// Get all comments regarding postID
 router.get('/getAllCommentsByPostID/:postId', commentController.getAllCommentsByPostID);
 
-//
+// Write a post
+router.post('/post', postController.writePost);
+
+// Get all posts
+router.get('/getAllPosts', postController.getAllPosts);
+
+// Get all posts regarding postID
+router.get('/getMapsByUsername/:postId', searchController.searchMapByUserName);
+
+// Get Question Post by title Text Matched
 router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
 
-//
+// Get Idea Post by title Text Matched
 router.get('/getIdeas/:searchText', searchController.searchIdeaByText);
 
-//
+// Get Map Post by title Text Matched
 router.get('/getMapsBySearch/:searchText', searchController.searchMapByText);
 
-//
+// Like Post
 router.put('/likeMap/:postId', postController.likePost)
 
-//
+// UnLike Post
 router.put('/unlikeMap/:postId', postController.unlikePost)
 
 module.exports = router;
