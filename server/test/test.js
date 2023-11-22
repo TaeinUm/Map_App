@@ -69,10 +69,35 @@ it('creates a new post successfully', function(done) {
       });
 });
 
-it('should retrieve comments by post ID', function(done) {
-  const userId = "6559d630cf378d2d911c6387"; 
+it('creates a new comment successfully', function(done) {
+  const postData = {
+      postId: "6559d630cf378d2d911c6387".toString(),
+      userId: "65487c7a94678f7bd6d43689".toString(),
+      date: "2023-10-11",
+      content: 'Test content',
+  };
+
   request(app)
-      .get(`/api/community/getAllCommentsByPostID/${userId}`)
+      .post('/api/community/postcomment')
+      .send(postData)
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .end(function(err, res) {
+          if (err) {
+              console.error("Test failed with error:", res.body.message); // 에러 메시지를 콘솔에 출력
+              done(err);
+          } else {
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.include.all.keys('_id', 'userId', 'postId', 'date', 'content');
+              done();
+          }
+      });
+});
+
+it('should retrieve comments by post ID', function(done) {
+  const postId = "6559d630cf378d2d911c6387"; 
+  request(app)
+      .get(`/api/community/getAllCommentsByPostID/${postId}`)
       .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {

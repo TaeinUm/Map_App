@@ -3,11 +3,17 @@ const Comment = require('../models/Comment');
 
 exports.writeComment = async (req, res) => {
     try {
-        const { userId, postId, content } = req.body;
+        const { userId, postId, date, content } = req.body;
+       
+        if (!userId || !content) {
+            return res.status(400).json({ message: "Missing required fields" });
+        }
+        
         const newComment = new Comment({
             _id: new mongoose.Types.ObjectId(),
             userId,
             postId,
+            date,
             content
         });
         await newComment.save();

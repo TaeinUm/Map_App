@@ -9,6 +9,9 @@ const router = express.Router();
 router.post('/post', postController.writePost);
 
 //
+router.post('/poscomment', commentController.writeComment);
+
+//
 router.get('/getAllPosts', postController.getAllPosts);
 
 //
