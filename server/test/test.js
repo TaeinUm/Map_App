@@ -1,7 +1,3 @@
-// "scripts": {
-//   "test": "mocha"
-// },
-
 require('dotenv').config(); // Ensure environment variables are loaded
 const request = require('supertest');
 const expect = require('chai').expect;
@@ -39,7 +35,6 @@ describe('API Endpoints', function() {
         done(err);
       });
   });
-
 });
 
 it('creates a new post successfully', function(done) {
@@ -127,10 +122,8 @@ it('should retrieve all comments', function(done) {
       });
 });
 
-
 it('should retrieve maps by user ID', function(done) {
   const userId = "65487c7a94678f7bd6d43689"; // Ensure this is a valid user ID in your database
-
   request(app)
     .get(`/api/community/getMapsByUsername/${userId}`)
     .expect('Content-Type', /json/)
@@ -151,7 +144,6 @@ it('should retrieve maps by user ID', function(done) {
 
 it('should retrieve questions by search text', function(done) {
   const searchText = 'validSearchText'; // Replace with valid search text
-
   request(app)
       .get(`/api/community/getQuestions/${searchText}`)
       .expect('Content-Type', /json/)
@@ -168,7 +160,6 @@ it('should retrieve questions by search text', function(done) {
 
 it('should retrieve ideas by search text', function(done) {
   const searchText = 'validSearchText'; // Replace with valid search text
-
   request(app)
       .get(`/api/community/getIdeas/${searchText}`)
       .expect('Content-Type', /json/)
@@ -185,7 +176,6 @@ it('should retrieve ideas by search text', function(done) {
 
 it('should retrieve maps by search text', function(done) {
   const searchText = 'validSearchText'; // Replace with valid search text
-
   request(app)
       .get(`/api/community/getMapsBySearch/${searchText}`)
       .expect('Content-Type', /json/)
