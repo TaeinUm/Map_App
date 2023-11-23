@@ -4,7 +4,7 @@ const postController = require('../controllers/postController'); // Adjust the p
 const router = express.Router();
 
 // Get top posts
-router.get('/top', postController.getTopPosts);
+router.get('/top5graphics', postController.getTopPosts);
 
 // Add more routes related to posts as needed
 

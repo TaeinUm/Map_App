@@ -1,7 +1,3 @@
-// "scripts": {
-//   "test": "mocha"
-// },
-
 require('dotenv').config(); // Ensure environment variables are loaded
 const request = require('supertest');
 const expect = require('chai').expect;
@@ -39,7 +35,6 @@ describe('API Endpoints', function() {
         done(err);
       });
   });
-
 });
 
 it('creates a new post successfully', function(done) {
@@ -47,9 +42,9 @@ it('creates a new post successfully', function(done) {
       userId: "65487c7a94678f7bd6d43689".toString(),
       content: 'Test content',
       likes: 0,
-      types: 'Test type',
-      image: 'Test image URL',
-      title: 'Test title'
+      types: '000',
+      image: '',
+      title: '00000'
   };
 
   request(app)
@@ -64,6 +59,132 @@ it('creates a new post successfully', function(done) {
           } else {
               expect(res.body).to.be.an('object');
               expect(res.body).to.include.all.keys('_id', 'userId', 'content', 'likes', 'types', 'image', 'title');
+              done();
+          }
+      });
+});
+
+it('creates a new comment successfully', function(done) {
+  const postData = {
+      postId: "6559d630cf378d2d911c6387".toString(),
+      userId: "65487c7a94678f7bd6d43689".toString(),
+      date: "2023-10-11",
+      content: 'Test content',
+  };
+
+  request(app)
+      .post('/api/community/postcomment')
+      .send(postData)
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .end(function(err, res) {
+          if (err) {
+              console.error("Test failed with error:", res.body.message); // 에러 메시지를 콘솔에 출력
+              done(err);
+          } else {
+              expect(res.body).to.be.an('object');
+              expect(res.body).to.include.all.keys('_id', 'userId', 'postId', 'date', 'content');
+              done();
+          }
+      });
+});
+
+it('should retrieve comments by post ID', function(done) {
+  const postId = "6559d630cf378d2d911c6387"; 
+  request(app)
+      .get(`/api/community/getAllCommentsByPostID/${postId}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve all comments', function(done) {
+  request(app)
+      .get('/api/community/getallComments') // Replace with the actual route for getting all comments
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) {
+              console.error("Test failed with error:", err);
+              done(err);
+          } else {
+              expect(res.body).to.be.an('array');
+              // Here you can add more specific assertions about the content of the response
+              done();
+          }
+      });
+});
+
+it('should retrieve maps by user ID', function(done) {
+  const userId = "65487c7a94678f7bd6d43689"; // Ensure this is a valid user ID in your database
+  request(app)
+    .get(`/api/community/getMapsByUsername/${userId}`)
+    .expect('Content-Type', /json/)
+    .expect(200)
+    .end(function(err, res) {
+        if (err) {
+            console.error("Test failed with error:", err); // Log the error object
+            console.error("Server response:", res.body); // Log the server response
+            done(err);
+        } else {
+            expect(res.body).to.be.an('array');
+            // Additional assertions can be added here
+            done();
+        }
+    });
+});
+
+
+it('should retrieve questions by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+  request(app)
+      .get(`/api/community/getQuestions/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve ideas by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+  request(app)
+      .get(`/api/community/getIdeas/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
+              done();
+          }
+      });
+});
+
+it('should retrieve maps by search text', function(done) {
+  const searchText = 'validSearchText'; // Replace with valid search text
+  request(app)
+      .get(`/api/community/getMapsBySearch/${searchText}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+          if (err) done(err);
+          else {
+              expect(res.body).to.be.an('array');
+              // Additional assertions can be added here
               done();
           }
       });

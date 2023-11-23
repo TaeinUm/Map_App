@@ -1,27 +1,41 @@
 const express = require('express');
 const postController = require('../controllers/postController'); 
-// const commentController = require('../controllers/commentController'); 
-// const searchController = require('../controllers/searchController'); 
+const commentController = require('../controllers/commentController'); 
+const searchController = require('../controllers/searchController'); 
 
 const router = express.Router();
-// Make a post
 
-router.get('/api/community/getAllPosts', postController.getAllPosts);
+// Write a comment
+router.post('/postcomment', commentController.writeComment);
 
-// router.get('/api/community/getMapsByUsername/:userId', searchController.searchMapByUserName);
+// Get all comments
+router.get('/getallComments', commentController.getAllComments);
 
-// router.post('/api/community/post', postController.writePost);
+// Get all comments regarding postID
+router.get('/getAllCommentsByPostID/:postId', commentController.getAllCommentsByPostID);
 
-// router.post('/api/community/postComment', commentController.writeComment);
+// Write a post
+router.post('/post', postController.writePost);
 
-// router.get('/api/community/getQuestions/:searchText', searchController.searchQuestionByTest);
+// Get all posts
+router.get('/getAllPosts', postController.getAllPosts);
 
-// router.get('/api/community/getIdeas/:searchText', searchController.searchIdeaByTest);
+// Get all posts regarding postID
+router.get('/getMapsByUsername/:postId', searchController.searchMapByUserName);
 
-// router.get('/api/community/getMapsBySearch/:searchText', searchController.searchMapByTest);
+// Get Question Post by title Text Matched
+router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
 
-// router.put('/api/community/likeMap/:postId', postController.likePost)
+// Get Idea Post by title Text Matched
+router.get('/getIdeas/:searchText', searchController.searchIdeaByText);
 
-// router.put('/api/community/unlikeMap/:postId', unlikePost)
+// Get Map Post by title Text Matched
+router.get('/getMapsBySearch/:searchText', searchController.searchMapByText);
+
+// Like Post
+router.put('/likeMap/:postId', postController.likePost)
+
+// UnLike Post
+router.put('/unlikeMap/:postId', postController.unlikePost)
 
 module.exports = router;
