@@ -6,14 +6,16 @@ const API_BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http:/
 
 const CommunitySectionAPI = {
     //make a post
-    makePost: async (content, likes, types, image, title) => {
-        const { isAuthenticated, userId, username } = AuthContext;
+    makePost: async (userId, content, likes, types, image, title) => {
+        //const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
         //     console.error("User is not authenticated");
         //     return;
         // }
         try {
+            console.log("What is the userId:"+userId);
+            console.log("What is the content: "+content);
             // const response = await
             // axios
             // .post(`${API_BASE_URL}/api/community/post`, {
@@ -71,13 +73,9 @@ const CommunitySectionAPI = {
             console.error("cannot get sample posts.");
         }
     },
-    getAllPosts: async (types) => {
+    getAllPosts: async () => {
         try {
-            const response = await axios.get(
-            `${API_BASE_URL}/api/community/getAllPosts/${types}`,{
-                params:{types},
-            }
-            );
+            const response = axios.get(`${API_BASE_URL}/api/community/getAllPosts`);
             return response.data;
         //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
 
@@ -264,17 +262,17 @@ const CommunitySectionAPI = {
     postComment: async (postId, date, content) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     console.error("User is not authenticated");
+        //     return;
+        // }
         try {
             const response = await axios.post(`${API_BASE_URL}/api/community/postComment`,
                 {
-                    params:{userId,
-                        postId,
-                        date,
-                        content},
+                    params:{userId: userId,
+                        postId: postId,
+                        date: date,
+                        content: content},
                 }
             );
             return response.data;

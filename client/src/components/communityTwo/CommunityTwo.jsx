@@ -339,8 +339,10 @@ const StyledToolbar = styled(Toolbar)({
 });
 
 function CommunityTwo() {
+  const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
   const [topGraphics, setTopGraphics] = useState([]);
+  const [allGraphics, setAllGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
@@ -368,6 +370,9 @@ function CommunityTwo() {
       try {
         const data = await getTop5Trending();
         setTopGraphics(data);
+        const newData = await getAllPosts();
+        setAllGraphics(newData);
+        console.log("How many graphics are there in total: "+allGraphics.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
