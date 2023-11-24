@@ -1,19 +1,23 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLoggedIn, login, logout, getUserData } from "../api/authAPI";
+import {setUserID, setAuthentified, CommunitySectionAPI} from "../api/CommunitySectionAPI";
+import { CommunityContext } from "./CommunityContextVerTwo";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
     // login status from local storage
-    JSON.parse(localStorage.getItem("isAuthenticated")) || false
-  );
+    // JSON.parse(localStorage.getItem("isAuthenticated")) || false
+  //);
   const [username, setUsername] = useState(""); // User Name
   const [userId, setUserId] = useState(""); // User ID
   const [profileImage, setProfileImage] = useState(null); // User's Profile Image
 
   const navigate = useNavigate();
+  //const {doAuthenitication, doUserID} = CommunitySectionAPI;
+  //const {updateUserID} = CommunityContext;
 
   //UseEffect for getting login status, username, userID, and user profile image
   useEffect(() => {
@@ -33,7 +37,7 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem("isAuthenticated", "true");
           } else {
             setIsAuthenticated(false);
-            localStorage.removeItem("useId");
+            localStorage.removeItem("userId");
             localStorage.removeItem("isAuthenticated");
           }
         } catch (error) {
@@ -44,21 +48,45 @@ export const AuthProvider = ({ children }) => {
         }
       } else {
         setIsAuthenticated(false);
+        //setIsAuthenticated(true);
       }
     };
 
     checkLoggedIn();
+    //setIsAuthenticated(true);
   }, []);
 
   const handleLogin = async (email, password) => {
     const response = await login(email, password);
     if (response.success) {
+      //updateAuthentified(true);
+      //doAuthenitication(true);
+      setAuthentified(true);
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
+      //setIsAuthenticated(JSON.parse(localStorage.getItem("isAuthenticated")));
+      console.log("It should be true "+isAuthenticated);
       localStorage.setItem("token", response.data.token); // Assuming the token is in the response data
       const data = await getUserData(email);
+      const parsedData = JSON.stringify(data);
+      const successful = data.success;
+      const aLotOfData = data.data;
+      const userProps = aLotOfData.user;
+      const userId = userProps._id;
+      const profilePic = userProps.profile;
+      const usersName = userProps.userName;
+      //const {user} = data.data;
+      console.log("What are the keys "+userId);
       localStorage.setItem("userId", data.userId);
+      //doUserID(userId);
+      //updateUserID(userId);
+      setUserID(userId);
       setUserId(data.userId);
+      localStorage.setItem("userId", userId)
+      //setUserId(userId);
+      //setProfileImage(profilePic);
+      //setUsername(usersName);
+      //console.log("it should be true: "+isAuthenticated);
       setProfileImage(data.profileImage);
       setUsername(data.username);
 
@@ -69,6 +97,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = async () => {
+    
     const response = await logout();
     if (response.success) {
       setIsAuthenticated(false);

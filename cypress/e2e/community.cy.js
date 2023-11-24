@@ -12,6 +12,7 @@ describe("Community Page", () => {
       cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
     });
   });
+});
 
 //     describe("pagination", () => {
 //         it("should display pagination", () => {

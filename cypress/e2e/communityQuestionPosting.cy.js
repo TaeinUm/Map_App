@@ -6,6 +6,7 @@ describe("Community Question Posting Page", () => {
   it("should display the home page correctly", () => {
     cy.contains("Trending Map Graphics").should("be.visible");
   });
+});
 
   // describe("Trending Section", () => {
   //   it("should display top 5 trending graphics", () => {

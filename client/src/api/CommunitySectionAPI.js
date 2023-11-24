@@ -1,12 +1,36 @@
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
+import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+//const [authenticated, setAuthenticated] = useState(false);
+//const [userID, setUserID] = useState("");
+//const {userID, authentified} = CommunityContext;
+let userID = "";
+let authentified = false;
+
+export function setUserID(userId){
+    userID = userId;
+}
+
+export function setAuthentified(value){
+    authentified=value;
+}
 
 const CommunitySectionAPI = {
+    
+    // doAuthenitication: (value)=>{
+    //     let autheniticated = value;
+    //     return autheniticated;
+    // },
+    // doUserID: (userId)=>{
+    //     let userID = userId;
+    //     return userID;
+    // },
+
     //make a post
-    makePost: async (userId, content, likes, types, image, title) => {
+    makePost: async (content, likes, types, image, title) => {
         //const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
@@ -14,8 +38,8 @@ const CommunitySectionAPI = {
         //     return;
         // }
         try {
-            console.log("What is the userId:"+userId);
-            console.log("What is the content: "+content);
+            console.log("What is the userId:"+userID);
+            console.log("What is the authenticated: "+authentified);
             // const response = await
             // axios
             // .post(`${API_BASE_URL}/api/community/post`, {
@@ -32,7 +56,8 @@ const CommunitySectionAPI = {
             const response = await axios.post(`${API_BASE_URL}/api/community/post`,
                 {
                     //params:{userId, postType, postType, postFile, date},
-                    params: {userId: userId,
+                    params: {
+                        userId: userID,
                         content: content,
                         likes: likes,
                         types: types,

@@ -6,20 +6,20 @@ import { AuthContext } from '../../contexts/AuthContext';
 const mongoose = require('mongoose');
 //import { loginUser } from '../../../../server/controllers/userController';
 //const session = require('express-session');
-var newId = new mongoose.mongo.ObjectId();
+//var newId = new mongoose.mongo.ObjectId();
 //let hardCodedUserIds = [newId];
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState('Map Graphics');
   const {makePost} = CommunitySectionAPI;
-  const {userEmail} = AuthContext;
+  //const {userEmail} = AuthContext;
 
   function handlePostButton(){
     console.log(document.getElementById("shabi-title").value);
     console.log(document.getElementById("shabi-content").value);
-    console.log("Is there a userEmail: "+userEmail);
-    console.log("What is the userId from post: "+newId);
+    //console.log("Is there a userEmail: "+userEmail);
+    //console.log("What is the userId from post: "+newId);
     
-    makePost(newId ,document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
+    makePost(document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
   }
 
   return (

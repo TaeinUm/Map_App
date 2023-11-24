@@ -385,6 +385,7 @@ function CommunityTwo() {
   const endIndex = startIndex + itemsPerPage;
 
   let content = null;
+  
   if (category === "category1"){
     content=
     <Box>
@@ -527,6 +528,18 @@ function CommunityTwo() {
                   if (category === "category1"){
                     console.log("Do I have the correct search term?"+searchTerm);
                     getQuestionsBySearch(searchTerm);
+                  }
+                  if (category === "category2"){
+                    console.log("Do I have the correct search term?"+searchTerm);
+                    getIdeasBySearch(searchTerm);
+                  }
+                  if (category === "category3"){
+                    console.log("Do I have the correct search term?"+searchTerm);
+                    getMapsByUsername(searchTerm);
+                  }
+                  if (category === ""){
+                    console.log("Do I have the correct search term?"+searchTerm);
+                    getMapsBySearch(searchTerm);
                   }
                   // else if (category==="category3"){
                   //   console.log("Do I have the correct search term?"+searchTerm);

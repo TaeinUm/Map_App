@@ -11,8 +11,18 @@ export const CommunityProvider = ({ children }) => {
   const [questionTitle, setQuestionTitle] = useState("");
   const [questionContent, setQuestionContent]=useState("");
   const navigate = useNavigate();
+  const [authentified, setAuthentified] = useState(false);
+  const [userID,setUserID] = useState("");
     //   const [comments, setGeojsonData] = useState(null);
     //   const [markers, setMarkers] = useState([]);
+
+  const updateAuthentified = (value) => {
+    setAuthentified(value);
+  };
+
+  const updateUserID =(userId) => {
+    setUserID(userId);
+  };
 
   const navigateTo = (path) => {
     navigate(path);
@@ -53,6 +63,11 @@ export const CommunityProvider = ({ children }) => {
         
         updatePostIdAndNavigate,
         navigateTo,
+
+        userID,
+        updateUserID,
+        authentified,
+        updateAuthentified,
         
       }}
     >
