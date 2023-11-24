@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     if (response.success) {
       //updateAuthentified(true);
       //doAuthenitication(true);
-      setAuthentified(true);
+      //setAuthentified(true);
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
       //setIsAuthenticated(JSON.parse(localStorage.getItem("isAuthenticated")));
@@ -78,9 +78,10 @@ export const AuthProvider = ({ children }) => {
       //const {user} = data.data;
       console.log("What are the keys "+userId);
       localStorage.setItem("userId", data.userId);
+      localStorage.setItem("newUserid", userId);
       //doUserID(userId);
       //updateUserID(userId);
-      setUserID(userId);
+      //setUserID(userId);
       setUserId(data.userId);
       localStorage.setItem("userId", userId)
       //setUserId(userId);
@@ -97,7 +98,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = async () => {
-    
+    localStorage.clear();
     const response = await logout();
     if (response.success) {
       setIsAuthenticated(false);

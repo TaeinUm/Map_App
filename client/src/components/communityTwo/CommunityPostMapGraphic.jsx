@@ -16,10 +16,12 @@ function CommunityPostMapGraphic() {
   function handlePostButton(){
     console.log(document.getElementById("shabi-title").value);
     console.log(document.getElementById("shabi-content").value);
+    console.log("Do I got a userid "+localStorage.getItem("newUserid"));
+    let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("newUserid"));
     //console.log("Is there a userEmail: "+userEmail);
     //console.log("What is the userId from post: "+newId);
     
-    makePost(document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
+    makePost(mongooseId, document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
   }
 
   return (

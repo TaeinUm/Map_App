@@ -32,19 +32,22 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 }));
 
 function CommunityQuestionPost() {
-  const {postComment} = CommunitySectionAPI;
+  const {postComment, getCommentsForAPost} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
   const { text } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
   const {questionTitle} = CommunityContext;
   const [actualTitle, setActualTitle] = useState("");
   const cleanedText= text.replace(/:/g, '');
+  let commentsBuffer = "";
 
-  // useEffect(() => {
-    
+  useEffect(() => {
+    let postId = localStorage.getItem("questionId");
+    commentsBuffer = getCommentsForAPost(postId);
 
-  //   setActualTitle(questionTitle);
-  // }, []);
+
+    //setActualTitle(questionTitle);
+  }, []);
 
   
 
@@ -120,6 +123,29 @@ function CommunityQuestionPost() {
         </Button>
         <br></br>
         <br></br><br></br>
+
+        <Typography variant="h4" gutterBottom color="white">
+           Comments Section
+      </Typography>
+      {commentsBuffer.map((content, index) => (
+              <Typography
+                variant="h2"
+                
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                
+              >
+                {content}
+              </Typography>
+            ))}
       </Paper>
 
     </Container>

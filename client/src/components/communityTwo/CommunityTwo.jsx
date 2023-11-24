@@ -279,6 +279,10 @@ import { useContext } from 'react';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
+let questions = [];
+let ideas = [];
+let graphics = [];
+let userGraphics =[];
 // Styled components
 const StyledAppBar = styled(AppBar)({
   backgroundColor: '#333', // Customize app bar color
@@ -342,7 +346,7 @@ function CommunityTwo() {
   const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
   const [topGraphics, setTopGraphics] = useState([]);
-  const [allGraphics, setAllGraphics] = useState([]);
+  //const [allGraphics, setAllGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
@@ -357,34 +361,204 @@ function CommunityTwo() {
     
     
   }
+  function setupQuestionLocal(post){
+    if(localStorage.getItem("questionId")!=post._id){
+      localStorage.setItem("questionId", post._id);
+    }
+    if(localStorage.getItem("questionContent")!=post.content){
+      localStorage.setItem("questioncontent", post.content);
+    }else{
+
+    }
+    if(localStorage.getItem("questionTitle")!=post.title){
+      localStorage.setItem("questiontitle", post.title);
+    }else{
+
+    }
+
+  }
+
+  function setupIdeasLocal(post){
+    if(localStorage.getItem("ideaId")!=post._id){
+      localStorage.setItem("questionId", post._id);
+    }
+    if(localStorage.getItem("ideaContent")!=post.content){
+      localStorage.setItem("questioncontent", post.content);
+    }
+    if(localStorage.getItem("ideaTitle")!=post.title){
+      localStorage.setItem("questiontitle", post.title);
+    }
+
+  }
+
+  function setupGraphicsLocal(post){
+    if(localStorage.getItem("graphicId")!=post._id){
+      localStorage.setItem("graphicId", post._id);
+    }
+    if(localStorage.getItem("graphicContent")!=post.content){
+      localStorage.setItem("graphiccontent", post.content);
+    }
+    if(localStorage.getItem("graphicTitle")!=post.title){
+      localStorage.setItem("graphictitle", post.title);
+    }
+
+  }
 
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
     console.log("What is the current category? "+category);
   };
-
+  let newData= "";
 
   useEffect(() => {
+    let newData ="";
+    
     const fetchGraphics = async () => {
       try {
         const data = await getTop5Trending();
         setTopGraphics(data);
-        const newData = await getAllPosts();
-        setAllGraphics(newData);
-        console.log("How many graphics are there in total: "+allGraphics.length);
+        // newData = await getAllPosts();
+        
+        //setAllGraphics(newData);
+        //console.log("How many graphics are there in total: "+allGraphics.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
     };
 
     fetchGraphics();
+    // questions = newData.filter((post)=>(post.types==="Questions"));
+    // ideas = newData.filter((post)=>(post.types==="Map Ideas"));
+    // graphics = newData.filter((post)=>(post.types==="Map Graphics"));
+    // userGraphics = newData.filter((post)=>(post.userId===localStorage.getItem("newUserid")))
+
   }, []);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
 
   let content = null;
+
+  // if (category === "category3"){
+  //   content=
+  //   <Box>
+  //   <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+  //       User Posts:
+  //     </Typography>
+  //     <Box 
+  //         sx={{
+  //           display: "flex-column",
+  //           width: "3250px",
+  //           gap: "10px",
+  //           mt: 5,
+  //           transition: "transform 0.5s",
+  //           //transform: `translateX(${scrollAmount}px)`,
+  //         }}
+  //         >
+  //           {userGraphics.map((post) => (
+  //             <Typography
+  //               variant="h2"
+                
+  //               sx={{
+  //                 fontSize: "20px",
+  //                 color: "#FAFAFA",
+  //                 mb: 2,
+  //                 ml: 5,
+  //                 display: "flex",
+  //                 flexGrow: "1",
+  //                 fontWeight: "bold",
+  //               }}
+  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+  //               // component={NavLink}
+  //               // to={"/communityQuestionPost/:"+text}
+  //             >
+  //               {post.content}
+  //             </Typography>
+  //           ))}
+  //           {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
+  //             <Typography
+  //               variant="h2"
+  //               onClick={setupQuestionPost(text)}
+  //               sx={{
+  //                 fontSize: "20px",
+  //                 color: "#FAFAFA",
+  //                 mb: 2,
+  //                 ml: 5,
+  //                 display: "flex",
+  //                 flexGrow: "1",
+  //                 fontWeight: "bold",
+  //               }}
+  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+  //               component={NavLink}
+  //               to={"/communityQuestionPost/:"+text}
+  //             >
+  //               {text}
+  //             </Typography>
+  //           ))} */}
+  //         </Box>
+  //         </Box>;
+  // }
+  
+  // if (category === "category2"){
+  //   content=
+  //   <Box>
+  //   <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+  //       New Ideas:
+  //     </Typography>
+  //     <Box 
+  //         sx={{
+  //           display: "flex-column",
+  //           width: "3250px",
+  //           gap: "10px",
+  //           mt: 5,
+  //           transition: "transform 0.5s",
+  //           //transform: `translateX(${scrollAmount}px)`,
+  //         }}
+  //         >
+  //           {/* {questions.map((post) => (
+  //             <Typography
+  //               variant="h2"
+  //               onClick={setupQuestionPost(text)}
+  //               sx={{
+  //                 fontSize: "20px",
+  //                 color: "#FAFAFA",
+  //                 mb: 2,
+  //                 ml: 5,
+  //                 display: "flex",
+  //                 flexGrow: "1",
+  //                 fontWeight: "bold",
+  //               }}
+  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+  //               component={NavLink}
+  //               to={"/communityQuestionPost/:"+text}
+  //             >
+  //               {post.content}
+  //             </Typography>
+  //           ))} */}
+  //           {ideas.map((post) => (
+  //             <Typography
+  //               variant="h2"
+  //               onClick={setupIdeasLocal(post)}
+  //               sx={{
+  //                 fontSize: "20px",
+  //                 color: "#FAFAFA",
+  //                 mb: 2,
+  //                 ml: 5,
+  //                 display: "flex",
+  //                 flexGrow: "1",
+  //                 fontWeight: "bold",
+  //               }}
+  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+  //               // component={NavLink}
+  //               // to={"/communityQuestionIdea/:"+text}
+  //             >
+  //               {post.content}
+  //             </Typography>
+  //           ))}
+  //         </Box>
+  //         </Box>;
+  // }
   
   if (category === "category1"){
     content=
@@ -402,7 +576,26 @@ function CommunityTwo() {
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            
+            {/* {questions.map((post) => (
+              <Typography
+                variant="h2"
+                onClick={setupQuestionPost(text)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+text}
+              >
+                {post.content}
+              </Typography>
+            ))} */}
             {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
               <Typography
                 variant="h2"
@@ -434,6 +627,26 @@ function CommunityTwo() {
 
 
   <Grid container spacing={4}>
+  {/* {graphics.map((post) => (
+              <Typography
+                variant="h2"
+                onClick={setupQuestionPost(text)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                // component={NavLink}
+                // to={"/communityQuestionPost/:"+text}
+              >
+                {post.content}
+              </Typography>
+            ))} */}
     {topGraphics
       .filter((graphic) => graphic.title.toLowerCase().includes(searchTerm.toLowerCase()))
       .slice(startIndex, endIndex)
