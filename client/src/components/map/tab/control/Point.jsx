@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
@@ -70,11 +71,17 @@ const Point = () => {
     setIsLoading(true);
     if (!map) {
       const newMap = new mapboxgl.Map({
-        container: "map",
+        container: mapContainer.current,
         style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
       });
+      newMap.addControl(
+        new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+        })
+      );
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 

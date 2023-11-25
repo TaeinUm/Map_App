@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   TextField,
@@ -62,33 +63,9 @@ const Flow = () => {
   const [endCity, setEndCity] = useState("");
 
   const [tabValue, setTabValue] = useState("1");
-  const [mapJson, setMapJson] = useState({});
-  const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [memoContent, setMemoContent] = useState("");
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
-  };
-
-  const handleJsonChange = (json) => {
-    setMapJson(json.jsObject);
-  };
-
-  const saveJson = () => {
-    try {
-      map.setStyle(mapJson);
-      alert("Successfully saved!");
-    } catch (error) {
-      alert("Invalid JSON!");
-    }
-  };
-
-  const toggleMemo = () => {
-    setIsMemoVisible(!isMemoVisible);
-  };
-
-  const handleMemoSave = () => {
-    console.log("Memo saved:", memoContent);
   };
 
   const handleStartCountryChange = (event) => {
@@ -118,6 +95,12 @@ const Flow = () => {
         center: [-74.006, 40.7128],
         zoom: 2,
       });
+      newMap.addControl(
+        new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+        })
+      );
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 

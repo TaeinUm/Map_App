@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import { MapContext } from "../../../../contexts/MapContext";
@@ -38,28 +39,6 @@ function File() {
     setTabValue(newValue);
   };
 
-  const handleJsonChange = (json) => {
-    setMapJson(json.jsObject);
-  };
-
-  const saveJson = () => {
-    try {
-      map.setStyle(mapJson);
-      alert("Successfully saved!");
-    } catch (error) {
-      alert("Invalid JSON!");
-    }
-  };
-
-  const toggleMemo = () => {
-    setIsMemoVisible(!isMemoVisible);
-  };
-
-  const handleMemoSave = () => {
-    console.log("Memo saved:", memoContent);
-    // Memo save logic here...
-  };
-
   useEffect(() => {
     setIsMapLoaded(false);
     if (!map) {
@@ -69,6 +48,12 @@ function File() {
         center: [-74.006, 40.7128],
         zoom: 2,
       });
+      newMap.addControl(
+        new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+        })
+      );
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 

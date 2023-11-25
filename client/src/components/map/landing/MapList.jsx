@@ -55,7 +55,7 @@ function MapList({ searchQuery }) {
   const { updateMapContextAndNavigate } = useContext(MapContext);
   const navigate = useNavigate();
 
-  const { userId, username } = useContext(AuthContext);
+  const { userId, username, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,6 +93,10 @@ function MapList({ searchQuery }) {
     );
   };
 
+  const toLoginPage = () => {
+    navigate("/signin");
+  };
+
   const handleDelete = async (mapId, indexToRemove) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this map?"
@@ -112,6 +116,16 @@ function MapList({ searchQuery }) {
 
   return (
     <>
+      {!isAuthenticated && (
+        <Typography
+          type="button"
+          onClick={toLoginPage}
+          sx={{ textDecoration: "underline", color: "blue", margin: "40px" }}
+        >
+          {" "}
+          Click here to login.{" "}
+        </Typography>
+      )}
       {mapListData
         .slice(startIndex, startIndex + visibleItems)
         .map((item, index) => (

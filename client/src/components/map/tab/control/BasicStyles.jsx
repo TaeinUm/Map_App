@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, CircularProgress, Slider, Typography } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import { MapContext } from "../../../../contexts/MapContext";
@@ -95,11 +96,17 @@ const BasicStyles = () => {
       setIsLoading(true);
 
       const newMap = new mapboxgl.Map({
-        container: "map",
+        container: mapContainer.current,
         style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
       });
+      newMap.addControl(
+        new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+        })
+      );
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 

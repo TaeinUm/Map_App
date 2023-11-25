@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
+import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
@@ -54,36 +55,20 @@ const Regional = () => {
     setTabValue(newValue);
   };
 
-  const handleJsonChange = (json) => {
-    setMapJson(json.jsObject);
-  };
-
-  const saveJson = () => {
-    try {
-      map.setStyle(mapJson);
-      alert("Successfully saved!");
-    } catch (error) {
-      alert("Invalid JSON!");
-    }
-  };
-
-  const toggleMemo = () => {
-    setIsMemoVisible(!isMemoVisible);
-  };
-
-  const handleMemoSave = () => {
-    console.log("Memo saved:", memoContent);
-    // Memo save logic here...
-  };
-
   useEffect(() => {
     setIsLoading(true);
     const newMap = new mapboxgl.Map({
-      container: "map",
+      container: mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v11",
       center: [-74.006, 40.7128],
       zoom: 2,
     });
+    newMap.addControl(
+      new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl,
+      })
+    );
     newMap.addControl(new mapboxgl.FullscreenControl());
     newMap.addControl(new mapboxgl.NavigationControl());
 
