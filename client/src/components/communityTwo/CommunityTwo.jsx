@@ -602,7 +602,7 @@ function CommunityTwo() {
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            {questions.map((post) => (
+            {questions.filter((post) => post.postName.includes(searchTerm)).map((post) => (
               <Typography
                 variant="h2"
                 onMouseEnter={()=>setupQuestionLocal(post)}
@@ -674,7 +674,7 @@ function CommunityTwo() {
               </Typography>
             ))} */}
     {graphics
-      .filter((graphic) => graphic.postName.toLowerCase().includes(searchTerm.toLowerCase()))
+      .filter((graphic) => graphic.postName.includes(searchTerm))
       .slice(startIndex, endIndex)
       .map((graphic, index) => (
         <Grid item xs={12} sm={6} md={4} key={graphic._id}>
