@@ -277,6 +277,7 @@ import { getTop5Trending } from "../../api/graphicsAPI";
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
 import { useContext } from 'react';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
+import {useNavigate} from 'react-router-dom';
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 let questions = [];
@@ -350,6 +351,7 @@ function CommunityTwo() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
   const [category, setCategory] = useState('');
+  const navigate = useNavigate();
   const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle} = useContext(CommunityContext);
   const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
   const handleSearchChange = (event) => {
@@ -362,19 +364,23 @@ function CommunityTwo() {
     
   }
   function setupQuestionLocal(post){
-    if(localStorage.getItem("questionId")!=post._id){
+    
+    // if(localStorage.getItem("questionId")!=post._id){
+    // }
       localStorage.setItem("questionId", post._id);
-    }
-    if(localStorage.getItem("questionContent")!=post.content){
-      localStorage.setItem("questioncontent", post.content);
-    }else{
-
-    }
-    if(localStorage.getItem("questionTitle")!=post.title){
-      localStorage.setItem("questiontitle", post.title);
-    }else{
-
-    }
+    
+    // if(localStorage.getItem("questionContent")!=post.content){
+    // }
+      localStorage.setItem("questionContent", post.content);
+    
+    // if(localStorage.getItem("questionTitle")!=post.title){
+    // }
+      localStorage.setItem("questionTitle", post.title);
+    
+    //navigate("/communityQuestionPost/:"+post.title);
+    //if (event )
+      //window.open("/communityQuestionPost/:"+post.title);
+      
 
   }
 
@@ -412,23 +418,32 @@ function CommunityTwo() {
   let newData= "";
 
   useEffect(() => {
-    let newData ="";
+    let newData =[];
     
     const fetchGraphics = async () => {
       try {
         const data = await getTop5Trending();
         setTopGraphics(data);
-        // newData = await getAllPosts();
+        newData = await getAllPosts();
         
         //setAllGraphics(newData);
-        //console.log("How many graphics are there in total: "+allGraphics.length);
+        console.log("How many graphics are there in total: "+newData.length);
+        console.log("is it possible "+newData[0].types);
+        questions = newData.filter(post=>post.types==="Questions");
+        console.log("What is the length of questions: "+ questions.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
     };
 
     fetchGraphics();
-    // questions = newData.filter((post)=>(post.types==="Questions"));
+    console.log("is my scoping wrong: "+newData);
+    questions = newData.filter(post=>post.types==="Questions");
+    // for (let key in newData){
+    //   console.log((key));
+    // }
+    
+    console.log("What is the length of questions: "+ questions.length);
     // ideas = newData.filter((post)=>(post.types==="Map Ideas"));
     // graphics = newData.filter((post)=>(post.types==="Map Graphics"));
     // userGraphics = newData.filter((post)=>(post.userId===localStorage.getItem("newUserid")))
@@ -576,10 +591,10 @@ function CommunityTwo() {
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            {/* {questions.map((post) => (
+            {questions.map((post) => (
               <Typography
                 variant="h2"
-                onClick={setupQuestionPost(text)}
+                onClick={setupQuestionLocal(post)}
                 sx={{
                   fontSize: "20px",
                   color: "#FAFAFA",
@@ -591,12 +606,12 @@ function CommunityTwo() {
                 }}
                 //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
-                to={"/communityQuestionPost/:"+text}
+                to={"/communityQuestionPost/:"+post.title}
               >
                 {post.content}
               </Typography>
-            ))} */}
-            {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
+            ))}
+            {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
               <Typography
                 variant="h2"
                 onClick={setupQuestionPost(text)}
@@ -615,7 +630,7 @@ function CommunityTwo() {
               >
                 {text}
               </Typography>
-            ))}
+            ))} */}
           </Box>
           </Box>;
   }

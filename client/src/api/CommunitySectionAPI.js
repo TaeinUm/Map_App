@@ -3,7 +3,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
-const API_BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const API_BASE_URL = "http://localhost:8080";
+//"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 //const [authenticated, setAuthenticated] = useState(false);
 //const [userID, setUserID] = useState("");
 //const {userID, authentified} = CommunityContext;
@@ -53,18 +54,26 @@ const CommunitySectionAPI = {
             //     console.log(response);
             // })
             // .catch((err) => console.log(err));
-            const response = await axios.post(`${API_BASE_URL}/api/community/post`,
-                {
-                    //params:{userId, postType, postType, postFile, date},
-                    params: {
-                        userId: userID,
-                        content: content,
-                        likes: likes,
-                        types: types,
-                        image: image,
-                        title: title},
-                }
-            );
+            const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
+                userId: userID,
+                content: content,
+                likes: likes,
+                types: types,
+                image: image,
+                title: title
+            });
+            // const response = await axios.post(`${API_BASE_URL}/api/community/post`,
+            //     {
+            //         //params:{userId, postType, postType, postFile, date},
+            //         params: {
+            //             userId: userID,
+            //             content: content,
+            //             likes: likes,
+            //             types: types,
+            //             image: image,
+            //             title: title},
+            //     }
+            // );
             console.log("What is the userId:"+userID);
             //console.log("What is the authenticated: "+authentified);
             return response.data;
@@ -102,7 +111,8 @@ const CommunitySectionAPI = {
     },
     getAllPosts: async () => {
         try {
-            const response = axios.get(`${API_BASE_URL}/api/community/getAllPosts`);
+            const response = await axios.get(`${API_BASE_URL}/api/community/getAllPosts`);
+            //console.log("Am I getting the right data? "+JSON.stringify(response));
             return response.data;
         //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
 
@@ -237,11 +247,11 @@ const CommunitySectionAPI = {
             console.error("cannot get maps for a query.");
         }
     },
-    getCommentsForAPost: async (postId) => {
+    getCommentsForAPost: async (postID) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getAllCommentsByPostID/:${postId}`,{
-                params:{postId},
+            `${API_BASE_URL}/api/community/getAllCommentsByPostID/${postID}`,{
+                params:{postId: postID},
             }
             );
             return response.data;
@@ -286,7 +296,7 @@ const CommunitySectionAPI = {
     //     }
     // },
 
-    postComment: async (postId, date, content) => {
+    postComment: async (userID, postId, date, content) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
@@ -295,12 +305,12 @@ const CommunitySectionAPI = {
         // }
         try {
             const response = await axios.post(`${API_BASE_URL}/api/community/postComment`,
-                {
-                    params:{userId: userId,
+                
+                    {userId: userID,
                         postId: postId,
                         date: date,
-                        content: content},
-                }
+                        content: content}
+            
             );
             return response.data;
             // axios

@@ -17,6 +17,7 @@ import { styled } from '@mui/material/styles';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { useParams } from 'react-router-dom';
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
+const mongoose = require('mongoose');
 
 
 const StyledAppBar = styled(AppBar)({
@@ -34,15 +35,18 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 function CommunityQuestionPost() {
   const {postComment, getCommentsForAPost} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
-  const { text } = useParams(); // Uncomment this when using in your routing setup
+  //const { text } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
   const {questionTitle} = CommunityContext;
   const [actualTitle, setActualTitle] = useState("");
-  const cleanedText= text.replace(/:/g, '');
-  let commentsBuffer = "";
+  //const cleanedText= text.replace(/:/g, '');
+  let commentsBuffer = [];
 
   useEffect(() => {
     let postId = localStorage.getItem("questionId");
+    console.log("What is the postId "+postId);
+    let string = ""+postId;
+    //let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("questionId"));
     commentsBuffer = getCommentsForAPost(postId);
 
 
@@ -58,7 +62,8 @@ function CommunityQuestionPost() {
   const handleSubmit = () => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
-    postComment(text, currentTimeSec, document.getElementById("prompt-textarea").value);
+    console.log("what is the current id: "+localStorage.getItem("newUserid"));
+    postComment(localStorage.getItem("newUserid"), localStorage.getItem("questionId"), currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
   };
 
@@ -69,7 +74,7 @@ function CommunityQuestionPost() {
 
     <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
       <Typography variant="h4" gutterBottom color="white">
-        {cleanedText}
+        {localStorage.getItem("questionTitle")}
       </Typography>
       <Typography variant="subtitle1" gutterBottom color="white">
         
@@ -77,7 +82,7 @@ function CommunityQuestionPost() {
       <Divider sx={{ my: 2, bgcolor: 'white' }} />
       <br></br>
       <Typography paragraph style={{ backgroundColor: 'white', color: 'black', padding: '1rem', textAlign:'left'}}>
-        {cleanedText}
+        {localStorage.getItem("questionContent")}
 
         <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 
@@ -127,7 +132,26 @@ function CommunityQuestionPost() {
         <Typography variant="h4" gutterBottom color="white">
            Comments Section
       </Typography>
-      {commentsBuffer.map((content, index) => (
+      {commentsBuffer.map((comment) => (
+              <Typography
+                variant="h2"
+                //onClick={setupQuestionLocal(post)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                
+              >
+                {comment.content}
+              </Typography>
+            ))}
+      {/* {commentsBuffer.map((content, index) => (
               <Typography
                 variant="h2"
                 
@@ -145,7 +169,7 @@ function CommunityQuestionPost() {
               >
                 {content}
               </Typography>
-            ))}
+            ))} */}
       </Paper>
 
     </Container>
