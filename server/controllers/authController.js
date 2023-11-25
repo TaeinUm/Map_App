@@ -26,7 +26,9 @@ const registerUser = async (req, res) => {
     const savedUser = await user.save();
     res.status(201).json(savedUser);
   } catch (error) {
-    res.status(500).json({ message: "Error registering user: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error registering user: " + error.message });
   }
 };
 
@@ -45,7 +47,9 @@ const loginUser = async (req, res) => {
     req.session.userId = user._id;
     req.session.save((err) => {
       if (err) {
-        return res.status(500).json({ message: "Error saving session: " + err.message });
+        return res
+          .status(500)
+          .json({ message: "Error saving session: " + err.message });
       }
       res.json({ message: "Logged in successfully", userId: user._id });
     });
@@ -79,7 +83,9 @@ const getUserData = async (req, res) => {
     }
     res.json({ loggedIn: true, user });
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user data: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching user data: " + error.message });
   }
 };
 
@@ -101,7 +107,9 @@ const getLoggedIn = async (req, res) => {
 
     res.json(userInfo);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving user: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving user: " + error.message });
   }
 };
 

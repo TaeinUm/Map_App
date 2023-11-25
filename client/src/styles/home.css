@@ -33,5 +33,30 @@
       top: 125px;
     }
   }
+
+  :root {
+    --circle-radius: 200px;
+    --circle-center-x: 70px;
+    --circle-center-y: 30px;
+  }
   
+  @keyframes moveCursoraround {
+    0% {
+      transform: translate(calc(var(--circle-center-x)), var(--circle-center-y));
+    }
+    25% {
+      transform: translate(var(--circle-center-x), calc(var(--circle-center-y) + var(--circle-radius)));
+    }
+    50% {
+      transform: translate(calc(var(--circle-center-x) - var(--circle-radius) - 40px), var(--circle-center-y));
+    }
+    75% {
+      transform: translate(var(--circle-center-x), calc(var(--circle-center-y) + var(--circle-radius)));
+    }
+    100% {
+      transform: translate(calc(var(--circle-center-x)), var(--circle-center-y));
+    }
+  }
+  
+
   
