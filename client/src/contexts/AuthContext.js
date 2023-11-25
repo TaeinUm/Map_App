@@ -64,6 +64,7 @@ export const AuthProvider = ({ children }) => {
       //setAuthentified(true);
       setIsAuthenticated(true);
       localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("authentification", "true");
       //setIsAuthenticated(JSON.parse(localStorage.getItem("isAuthenticated")));
       console.log("It should be true "+isAuthenticated);
       localStorage.setItem("token", response.data.token); // Assuming the token is in the response data

@@ -729,7 +729,7 @@ function CommunityTwo() {
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
         <Typography variant="h6" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
-          Trending Map Graphics
+          Community Posts
         </Typography>
 
         {/* Center - Search input */}
