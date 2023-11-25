@@ -86,16 +86,11 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogout = async () => {
     localStorage.clear();
-    const response = await logout();
-    if (response.success) {
-      setIsAuthenticated(false);
-      localStorage.setItem("isAuthenticated", "false");
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      navigate("/");
-    } else {
-      console.error("Logout failed:", response.message);
-    }
+    setIsAuthenticated(false);
+    localStorage.setItem("isAuthenticated", "false");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    navigate("/");
   };
 
   return (
