@@ -46,10 +46,9 @@ const Profile = () => {
   );
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPosts = async (id) => {
       try {
-        const postings = await profileAPI.getPostings(userId, username);
-        console.log("fetched postings: ", postings);
+        const postings = await profileAPI.getPostings(id);
         setPosts(postings);
       } catch (error) {
         console.error(error);
@@ -63,8 +62,6 @@ const Profile = () => {
         console.error(error);
       }
     };
-
-    console.log("userId", userId);
 
     if (username && userId) {
       setProfile(profileImage);
