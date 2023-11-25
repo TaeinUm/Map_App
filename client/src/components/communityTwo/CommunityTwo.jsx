@@ -348,6 +348,7 @@ export var postInfo;
 
 function CommunityTwo() {
   //const [postInfo, setPostInfo] = useState(null);
+  const [authentification, setAuthentification] = useState(true);
   const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
   const [topGraphics, setTopGraphics] = useState([]);
@@ -458,6 +459,9 @@ function CommunityTwo() {
     };
 
     fetchGraphics();
+    if (localStorage.getItem("authentification")==="true"){
+      setAuthentification(false);
+    }
     console.log("is my scoping wrong: "+newData);
     //questions = newData.filter(post=>post.types==="Questions");
     // for (let key in newData){
@@ -813,6 +817,7 @@ function CommunityTwo() {
   variant="contained"
   startIcon={<AddIcon />}
   sx={{ mr: 2 }}
+  disabled={authentification}
 >
   Post
 </Button>
