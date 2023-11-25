@@ -49,13 +49,12 @@ const profileAPI = {
     }
   },
 
-  //get all postings by userId, uesrname
-  getPostings: async (userId, username) => {
+  // Get all postings by userId
+  getPostings: async (userId) => {
     try {
       const response = await axios.get(`${BASE_URL}/api/postings`, {
         params: {
           userId,
-          username,
         },
       });
       return response.data;

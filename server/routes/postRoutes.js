@@ -6,6 +6,7 @@ const router = express.Router();
 // Get top posts
 router.get('/top5graphics', postController.getTopPosts);
 
-// Add more routes related to posts as needed
+// Route to get postings by userId and username
+router.get('/postings', postController.getPostings);
 
 module.exports = router;
