@@ -7,47 +7,6 @@ import { AuthContext } from "../../../contexts/AuthContext";
 import { MapContext } from "../../../contexts/MapContext";
 import { useNavigate } from "react-router-dom";
 
-const getMapListData = [
-  {
-    image: "https://geology.com/world/the-united-states-of-america-map.gif",
-    title: "Ver 1. World map",
-    date: "2023.04.01",
-  },
-  {
-    image: "https://geology.com/maps/types-of-maps/weather-map.gif",
-    title: "Ver 2. World map",
-    date: "2023.04.15",
-  },
-  {
-    image:
-      "https://app.datawrapper.de/lib/plugins/vis-d3-maps/static/images/thumb-d3-maps-choropleth.png",
-    title: "Ver 3. World map",
-    date: "2023.05.06",
-  },
-  {
-    image:
-      "https://images.nationalgeographic.org/image/upload/v1638889599/EducationHub/photos/physical-map.jpg",
-    title: "Ver 1. Terra map",
-    date: "2023.03.20",
-  },
-  {
-    image:
-      "https://www.caliper.com/graphics/xmaptitude-bivariate-theme.jpg.pagespeed.ic.2wg_vNa8-S.jpg",
-    title: "Ver 1. New map",
-    date: "2023.06.01",
-  },
-  {
-    image: "https://www.thephysicalenvironment.com/Book/essentials/palmer.jpg",
-    title: "Ver 2. basic map",
-    date: "2023.06.15",
-  },
-  {
-    image: "https://miro.medium.com/v2/resize:fit:1400/0*wkU67BjhsMdkS2dX.gif",
-    title: "Ver 1. basic map",
-    date: "2023.07.01",
-  },
-];
-
 function MapList({ searchQuery }) {
   const [mapListData, setMapListData] = useState([]);
   const [visibleItems, setVisibleItems] = useState(5);
@@ -64,6 +23,7 @@ function MapList({ searchQuery }) {
           userId,
           username
         );
+
         const filteredData = userMapGraphics
           .filter((item) =>
             item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -156,9 +116,9 @@ function MapList({ searchQuery }) {
             <Typography variant="body2" sx={{ mx: 2 }}>
               {item.date}
             </Typography>
-            <IconButton size="small">
+            {/*<IconButton size="small">
               <FiShare />
-            </IconButton>
+            </IconButton>*/}
             <IconButton size="small" onClick={() => handleDelete(index)}>
               <FiTrash />
             </IconButton>
