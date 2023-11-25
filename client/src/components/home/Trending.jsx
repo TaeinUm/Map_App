@@ -68,8 +68,8 @@ function Trending() {
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
             >
               <img
-                src={graphic.image}
-                alt={graphic.title}
+                src={graphic.postImages}
+                alt={graphic.postName}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
             </Paper>
