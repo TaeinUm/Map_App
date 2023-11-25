@@ -17,6 +17,10 @@ import { styled } from '@mui/material/styles';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { useParams } from 'react-router-dom';
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
+import { postInfo } from './CommunityTwo';
+import { useContext } from 'react';
+//const mongoose = require('mongoose');
+
 
 
 const StyledAppBar = styled(AppBar)({
@@ -34,21 +38,48 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 function CommunityQuestionPost() {
   const {postComment, getCommentsForAPost} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
-  const { text } = useParams(); // Uncomment this when using in your routing setup
+  //const { text } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
-  const {questionTitle} = CommunityContext;
+  const {questionTitle, postInfo} = useContext(CommunityContext);
   const [actualTitle, setActualTitle] = useState("");
-  const cleanedText= text.replace(/:/g, '');
-  let commentsBuffer = "";
+  const [commentsBuffer, setCommentsBuffer] = useState([]);
+  //const cleanedText= text.replace(/:/g, '');
+  //let commentsBuffer = [];//getCommentsForAPost(postInfo._id);
 
   useEffect(() => {
-    let postId = localStorage.getItem("questionId");
-    commentsBuffer = getCommentsForAPost(postId);
+    let newData = [];
+    //let postId = localStorage.getItem("questionId");
+    //console.log("What is the postId "+postId);
+    let postItemInfo = localStorage.getItem("postItem");
+    console.log("Do I have access to the CommunityTwo postInfo state variable: "+postInfo+"postId: "+postInfo._id+"postName: "+postInfo.postName);
+    //let string = ""+postId;
+    const fetchGraphics = async () => {
+      try {
+        newData= await getCommentsForAPost(postInfo._id);
+        setCommentsBuffer(newData);
+        //commentsBuffer = newData;
+        console.log("Do I have any items: " +JSON.stringify(newData));
+        
+        //setAllGraphics(newData);
+        // console.log("How many graphics are there in total: "+newData.length);
+        // console.log("is it possible "+newData[0].types);
+        // questions = newData.filter(post=>post.postType==="Questions");
+        // graphics = newData.filter(post=>post.postType==="map");
+        // console.log("What is the length of questions: "+ questions.length);
+      } catch (error) {
+        console.error("Error fetching top graphics:", error);
+      }
+    };
+
+    fetchGraphics();
+    //let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("questionId"));
+    
 
 
     //setActualTitle(questionTitle);
   }, []);
 
+  
   
 
   const handleMessageChange = (event) => {
@@ -58,18 +89,20 @@ function CommunityQuestionPost() {
   const handleSubmit = () => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
-    postComment(text, currentTimeSec, document.getElementById("prompt-textarea").value);
+    console.log("what is the current id: "+localStorage.getItem("newUserid"));
+    //console.log("Do I have any items: " +commentsBuffer.length);
+    postComment(localStorage.getItem("newUserid"), localStorage.getItem("questionId"), currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
   };
 
   console.log("What is the question title" + questionTitle);
 
   return (
-    <Container maxWidth="md" sx={{ p: 3,  height: "100vh"}}>
+    <Container maxWidth="md" sx={{ p: 3,  height: "100%"}}>
 
     <Paper sx={{ my: 2, p: 2, backgroundColor: '#333' }}>
       <Typography variant="h4" gutterBottom color="white">
-        {cleanedText}
+        {postInfo.postName}
       </Typography>
       <Typography variant="subtitle1" gutterBottom color="white">
         
@@ -77,7 +110,7 @@ function CommunityQuestionPost() {
       <Divider sx={{ my: 2, bgcolor: 'white' }} />
       <br></br>
       <Typography paragraph style={{ backgroundColor: 'white', color: 'black', padding: '1rem', textAlign:'left'}}>
-        {cleanedText}
+        {postInfo.content}
 
         <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
 
@@ -127,7 +160,26 @@ function CommunityQuestionPost() {
         <Typography variant="h4" gutterBottom color="white">
            Comments Section
       </Typography>
-      {commentsBuffer.map((content, index) => (
+      {commentsBuffer.map((comment) => (
+              <Typography
+                variant="h2"
+                //onClick={setupQuestionLocal(post)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                
+              >
+                {comment.commentContent}
+              </Typography>
+            ))}
+      {/* {commentsBuffer.map((content, index) => (
               <Typography
                 variant="h2"
                 
@@ -145,7 +197,7 @@ function CommunityQuestionPost() {
               >
                 {content}
               </Typography>
-            ))}
+            ))} */}
       </Paper>
 
     </Container>
