@@ -1,6 +1,34 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Adjust the path according to your structure
+const sharp = require('sharp');
 
+
+// Update user profile image
+const updateProfilePicture = async (req, res) => {
+  const { userId } = req.params;
+  const file = req.file;
+
+  try {
+    // Resize the image
+    const resizedImageBuffer = await sharp(file.path)
+      .resize(100, 100) // Resize to 200x200 pixels or as needed
+      .toBuffer();
+
+    // Find the user and update their profile picture
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.profileImage = resizedImageBuffer;
+    await user.save();
+
+    res.status(200).json({ message: "Profile picture updated successfully" });
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+    res.status(500).json({ message: "Error updating profile picture: " + error.message });
+  }
+};
 
 // Update user details
 const updateUserDetails = async (req, res) => {
@@ -49,6 +77,7 @@ const getEmail = async (req, res) => {
 }
 
 module.exports = {
+  updateProfilePicture,
   updateUserDetails,
   getEmail,
 };
