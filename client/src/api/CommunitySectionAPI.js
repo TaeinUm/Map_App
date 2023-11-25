@@ -31,7 +31,7 @@ const CommunitySectionAPI = {
     // },
 
     //make a post
-    makePost: async (userID, content, likes, types, image, title) => {
+    makePost: async (userID, content, likes, types, image, title, visibility, attachedFile, postDate) => {
         //const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
@@ -57,10 +57,14 @@ const CommunitySectionAPI = {
             const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
                 userId: userID,
                 content: content,
-                likes: likes,
-                types: types,
-                image: image,
-                title: title
+                interactions: likes,
+                postType: types,
+                postImages: image,
+                postName: title,
+                visibility: visibility,
+                attachedFile: attachedFile,
+                postDate: postDate
+
             });
             // const response = await axios.post(`${API_BASE_URL}/api/community/post`,
             //     {
@@ -308,8 +312,8 @@ const CommunitySectionAPI = {
                 
                     {userId: userID,
                         postId: postId,
-                        date: date,
-                        content: content}
+                        commentDate: date,
+                        commentContent: content}
             
             );
             return response.data;
@@ -344,7 +348,7 @@ const CommunitySectionAPI = {
         }
     },
 
-    likeMap: async (postId) => {
+    likeMap: async (userID, postId) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
@@ -352,9 +356,9 @@ const CommunitySectionAPI = {
         //     return;
         // }
         try {
-            const response = await axios.put(`${API_BASE_URL}/api/community/likeMap/:${postId}`,
+            const response = await axios.put(`${API_BASE_URL}/api/community/likeMap/${postId}`,
                 {
-                    params:{userId},
+                    params:{userId: userID},
                 }
             );
             return response.data;
@@ -385,7 +389,7 @@ const CommunitySectionAPI = {
             console.error("cannot like a map.");
         }
     },
-    unlikeMap: async (postId) => {
+    unlikeMap: async (userID, postId) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
@@ -393,9 +397,9 @@ const CommunitySectionAPI = {
         //     return;
         // }
         try {
-            const response = await axios.put(`${API_BASE_URL}/api/community/unlikeMap/:${postId}`,
+            const response = await axios.put(`${API_BASE_URL}/api/community/unlikeMap/${postId}`,
                 {
-                    params:{userId},
+                    params:{userId: userID},
                 }
             );
             return response.data;
