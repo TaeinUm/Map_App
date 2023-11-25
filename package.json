@@ -55,6 +55,7 @@
     "react-json-editor-ajrm": "^2.5.14",
     "react-router-dom": "^6.17.0",
     "react-scripts": "5.0.1",
+    "sharp": "^0.32.6",
     "shpjs": "^4.0.4",
     "togeojson": "^0.16.0",
     "web-vitals": "^2.1.4",
