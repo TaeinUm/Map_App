@@ -22,6 +22,7 @@ import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
+import HeatmapColorPicker from "./heatcontrol/HeatmapColorPicker";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -355,6 +356,7 @@ const Heat = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
+              {map && <HeatmapColorPicker map={map} />}
             </Container>
           </TabPanel>
           {/*<TabPanel value="2">
