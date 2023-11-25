@@ -4,7 +4,7 @@ const Post = require('../models/Post');
 exports.getTopPosts = async (req, res) => {
   try {
     const topPosts = await Post.find({})
-      .sort({ likes: -1 }) // Sort by likes in descending order
+      .sort({ interactions: -1 }) // Sort by likes in descending order
       .limit(5); // Limit to top 5
     res.json(topPosts);
   } catch (error) {
@@ -25,7 +25,7 @@ exports.getAllPosts = async (req, res) => {
 
 exports.writePost = async (req, res) => {
   try {
-      const { userId, content, likes, types, image, title } = req.body;
+      const { userId, content, interactions, postType, postImages, postName, visibility, attachedFile, postDate} = req.body;
       
       // 데이터 유효성 검증
       if (!userId || !content) {
@@ -35,11 +35,14 @@ exports.writePost = async (req, res) => {
       const newPost = new Post({
           _id: new mongoose.Types.ObjectId(),
           userId,
-          content,
-          likes,
-          types,
-          image,
-          title
+          content, 
+          interactions, 
+          postType, 
+          postImages, 
+          postName, 
+          visibility, 
+          attachedFile,
+          postDate
       });
 
       await newPost.save();
@@ -57,7 +60,7 @@ exports.likePost = async (req, res) => {
       // Increment the likes count
       const updatedPost = await Post.findByIdAndUpdate(
           postId,
-          { $inc: { likes: 1 } },
+          { $inc: { interactions: 1 } },
           { new: true }
       );
       res.json({ message: 'Map liked successfully', updatedPost });
@@ -73,7 +76,7 @@ exports.unlikePost = async (req, res) => {
       // Decrement the likes count
       const updatedPost = await Post.findByIdAndUpdate(
           postId,
-          { $inc: { likes: -1 } },
+          { $inc: { interactions: -1 } },
           { new: true }
       );
       res.json({ message: 'Map unliked successfully', updatedPost });
