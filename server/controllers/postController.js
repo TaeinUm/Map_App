@@ -81,3 +81,19 @@ exports.unlikePost = async (req, res) => {
       res.status(500).json({ message: error.message });
   }
 };
+
+// Get all the postings
+exports.getPostings = async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    // Fetch postings from the database where the userId matches
+    const postings = await Post.find({ userId: userId });
+
+    // Send the postings back to the client
+    res.json(postings);
+  } catch (error) {
+    console.error("Error fetching postings:", error);
+    res.status(500).send('Internal Server Error');
+  }
+};
