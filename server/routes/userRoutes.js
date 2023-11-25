@@ -13,9 +13,6 @@ const upload = multer({ dest: 'uploads/' }); // Adjust the destination as needed
 // Update user details
 router.put('/:userId', userController.updateUserDetails);
 
-// Route to get posts
-
-
 // Route to get email by userId
 
 
