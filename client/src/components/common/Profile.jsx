@@ -10,8 +10,7 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
@@ -37,7 +36,7 @@ const Profile = () => {
 
   const { userId, username, profileImage } = useContext(AuthContext);
   const [email, setEmail] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState(username);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [posts, setPosts] = useState([]);
@@ -50,6 +49,7 @@ const Profile = () => {
     const fetchPosts = async () => {
       try {
         const postings = await profileAPI.getPostings(userId, username);
+        console.log("fetched postings: ", postings);
         setPosts(postings);
       } catch (error) {
         console.error(error);
@@ -96,9 +96,20 @@ const Profile = () => {
   };
 
   const handleSaveChanges = async () => {
+    if (!email || !username || !password || !confirmPassword) {
+      alert("please completely fill up the form.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("password doesn't match!");
+      return;
+    }
+
     try {
       await profileAPI.updateUserDetails(userId, email, nickname, password);
       alert("Successfully updated!");
+      navigate("/");
     } catch (error) {
       console.error(error);
     }
@@ -113,79 +124,31 @@ const Profile = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
-            <CardActionArea sx={{ display: "flex" }}>
-              {/*profile ? (
-                <CardMedia
-                  component="img"
-                  image={profile}
-                  alt="Profile Picture"
-                  sx={{
-                    width: "30%",
-                    height: "150px",
-                    borderRadius: "100%",
-                    objectFit: "cover",
-                    zIndex: "1",
-                  }}
-                />
-              ) : (
-                <AccountCircleIcon
-                  sx={{
-                    fontSize: "150px",
-                    color: "grey",
-                    width: "30%",
-                    height: "150px",
-                    borderRadius: "100%",
-                  }}
-                />
-              )
-              <Button
-                onClick={handleEditIconClick}
+            <CardContent>
+              <Typography
+                variant="h5"
+                gutterBottom
                 sx={{
-                  position: "absolute",
-                  top: "10px",
-                  right: "10px",
-                  backgroundColor: "black",
-                  color: "white",
-                  width: "40px",
-                  height: "30px",
+                  fontWeight: "bold",
+                  color: "#FAFAFA",
+                  marginBottom: "30px",
+                  marginTop: "30px",
                 }}
               >
-                <EditIcon /> 
+                Welcome, {username}
+              </Typography>
+              <Button
+                onClick={handleCreateMapClick}
+                variant="contained"
+                sx={{
+                  width: "250px",
+                  backgroundColor: "#262931",
+                  marginBottom: "30px",
+                }}
+              >
+                Create Your Map
               </Button>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleProfileImageChange}
-                style={{ display: "none" }}
-                ref={fileInputRef}
-              />
-              */}
-              <CardContent>
-                <Typography
-                  variant="h5"
-                  gutterBottom
-                  sx={{
-                    fontWeight: "bold",
-                    color: "#FAFAFA",
-                    marginBottom: "30px",
-                    marginTop: "30px",
-                  }}
-                >
-                  Welcome, {username}
-                </Typography>
-                <Button
-                  onClick={handleCreateMapClick}
-                  variant="contained"
-                  sx={{
-                    width: "250px",
-                    backgroundColor: "#262931",
-                    marginBottom: "30px",
-                  }}
-                >
-                  Create Your Map
-                </Button>
-              </CardContent>
-            </CardActionArea>
+            </CardContent>
           </Card>
           <Card
             sx={{
@@ -271,7 +234,7 @@ const Profile = () => {
               InputProps={{
                 style: {
                   color: "#FAFAFA",
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  "& .MuiOutlinedInputNotchedOutline": {
                     borderColor: "#FAFAFA",
                   },
                   "&::placeholder": {
@@ -315,7 +278,7 @@ const Profile = () => {
               InputProps={{
                 style: {
                   color: "#FAFAFA",
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  "& .MuiOutlinedInputNotchedOutline": {
                     borderColor: "#FAFAFA",
                   },
                   "&::placeholder": {
@@ -348,6 +311,9 @@ const Profile = () => {
               label="Password"
               type="password"
               variant="outlined"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
               margin="normal"
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
@@ -355,7 +321,7 @@ const Profile = () => {
               InputProps={{
                 style: {
                   color: "#FAFAFA",
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  "& .MuiOutlinedInputNotchedOutline": {
                     borderColor: "#FAFAFA",
                   },
                   "&::placeholder": {
@@ -388,6 +354,9 @@ const Profile = () => {
               label="Confirm Password"
               type="password"
               variant="outlined"
+              onChange={(e) => {
+                setConfirmPassword(e.target.value);
+              }}
               margin="normal"
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
@@ -395,7 +364,7 @@ const Profile = () => {
               InputProps={{
                 style: {
                   color: "#FAFAFA",
-                  "& .MuiOutlinedInput-notchedOutline": {
+                  "& .MuiOutlinedInputNotchedOutline": {
                     borderColor: "#FAFAFA",
                   },
                   "&::placeholder": {

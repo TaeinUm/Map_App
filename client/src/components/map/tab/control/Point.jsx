@@ -22,6 +22,7 @@ import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
+import MarkerStylePicker from "./pointcontrol/MarkerStylePicker";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -49,6 +50,7 @@ const Point = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
+  const [markers, setMarkers] = useState([]);
 
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
@@ -157,13 +159,10 @@ const Point = () => {
         locations.forEach((location) => {
           const marker = new mapboxgl.Marker()
             .setLngLat([location.longitude, location.latitude])
-            .addTo(map);
-          /*
-          const popup = new mapboxgl.Popup()
-            .setHTML(`<h3>${location.name}</h3>`)
+            .setPopup(new mapboxgl.Popup().setText(location.name))
             .addTo(map);
 
-          marker.setPopup(popup);*/
+          setMarkers((prevMarkers) => [...prevMarkers, marker]);
         });
       };
 
@@ -217,10 +216,12 @@ const Point = () => {
     e.preventDefault();
     locations.forEach((location) => {
       if (map && location.latitude && location.longitude) {
-        new mapboxgl.Marker()
+        const marker = new mapboxgl.Marker()
           .setLngLat([location.longitude, location.latitude])
           .setPopup(new mapboxgl.Popup().setText(location.name))
           .addTo(map);
+
+        setMarkers((prevMarkers) => [...prevMarkers, marker]);
       }
     });
   };
@@ -242,6 +243,11 @@ const Point = () => {
       console.error("Error saving map:", error);
       alert("Error saving map");
     }
+  };
+
+  const removeAllMarkers = () => {
+    markers.forEach((marker) => marker.remove());
+    setMarkers([]);
   };
 
   return (
@@ -307,6 +313,7 @@ const Point = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
+              <MarkerStylePicker map={map} markers={markers} />
             </Container>
           </TabPanel>
           {/*<TabPanel value="2">

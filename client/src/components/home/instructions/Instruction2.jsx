@@ -27,7 +27,7 @@ function Instruction2() {
           width: "50px",
           position: "absolute",
           zIndex: "1000",
-          animation: "moveCursorDownAndUp 6s ease-in-out infinite",
+          animation: "moveCursoraround 6s ease-in-out infinite",
         }}
       />
 
