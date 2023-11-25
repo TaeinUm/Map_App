@@ -43,6 +43,7 @@ function CommunityQuestionPost() {
   const {questionTitle, postInfo} = useContext(CommunityContext);
   const [actualTitle, setActualTitle] = useState("");
   const [commentsBuffer, setCommentsBuffer] = useState([]);
+  const [authentification, setAuthentification] = useState(true);
   //const cleanedText= text.replace(/:/g, '');
   //let commentsBuffer = [];//getCommentsForAPost(postInfo._id);
 
@@ -72,6 +73,9 @@ function CommunityQuestionPost() {
     };
 
     fetchGraphics();
+    if (localStorage.getItem("authentification")==="true"){
+      setAuthentification(false);
+    }
     //let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("questionId"));
     
 
@@ -90,8 +94,9 @@ function CommunityQuestionPost() {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
     console.log("what is the current id: "+localStorage.getItem("newUserid"));
+    console.log("I hope that I get false: "+localStorage.getItem("authentification"));
     //console.log("Do I have any items: " +commentsBuffer.length);
-    postComment(localStorage.getItem("newUserid"), localStorage.getItem("questionId"), currentTimeSec, document.getElementById("prompt-textarea").value);
+    postComment(localStorage.getItem("newUserid"), postInfo._id, currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
   };
 
@@ -119,7 +124,7 @@ function CommunityQuestionPost() {
       </Typography>
       <Divider sx={{ my: 2, bgcolor: 'white' }} />
         <Typography variant="h6" gutterBottom color="white">
-          Comments (0)
+          Comments ({commentsBuffer.length})
         </Typography>
         {/* Comment list here */}
         <Typography paragraph color="white">
@@ -151,7 +156,7 @@ function CommunityQuestionPost() {
 
         <br></br><br></br>
         <br></br>
-        <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }}>
+        <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }} disabled={authentification}>
           Post Comment
         </Button>
         <br></br>

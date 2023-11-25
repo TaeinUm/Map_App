@@ -48,11 +48,11 @@ function CommunityPostMapGraphic() {
     aria-label="privacy-type"
     name="privacyType"
     value={privacyType}
-    onChange={(event) => setPrivacyType(event.target.value)}
+    onChange={(event) => setPrivacyType(parseInt(event.target.value))}
     sx={{ justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start' }} // Align items to the start on the cross-axis
   >
-    <FormControlLabel value="private" control={<Radio />} label="Private" />
-    <FormControlLabel value="public" control={<Radio />} label="Public" />
+    <FormControlLabel value="0" control={<Radio />} label="Private" />
+    <FormControlLabel value="1" control={<Radio />} label="Public" />
     
   </RadioGroup>
 </FormControl>
