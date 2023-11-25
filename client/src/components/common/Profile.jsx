@@ -63,9 +63,14 @@ const Profile = () => {
         console.error(error);
       }
     };
-    setProfile(profileImage);
-    fetchPosts();
-    fetchEmail();
+
+    console.log("userId", userId);
+
+    if (username && userId) {
+      setProfile(profileImage);
+      fetchPosts();
+      fetchEmail();
+    }
   }, [userId, username]);
 
   useEffect(() => {

@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
           const response = await getLoggedIn(storedUserId);
           if (response.success) {
             setIsAuthenticated(true);
+            setUserId(storedUserId);
             setUsername(response.data.userName);
             setProfileImage(response.data.profileImage);
             localStorage.setItem("isAuthenticated", "true");
