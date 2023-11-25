@@ -358,6 +358,7 @@ function CommunityTwo() {
   const navigate = useNavigate();
   const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle, updatePostInfo} = useContext(CommunityContext);
   const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
+  const [whiteBar, setWhiteBar] = useState("Trending Map Graphics");
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     
@@ -420,6 +421,15 @@ function CommunityTwo() {
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    if (event.target.value==="category1"){
+      setWhiteBar("Questions");
+    }else if(event.target.value==="category3"){
+      setWhiteBar("User Name")
+    }else if(event.target.value===""){
+      setWhiteBar("Trending Map Graphics")
+    }else if(event.target.value==="category2"){
+      setWhiteBar("Map Graphics Idea")
+    }
     console.log("What is the current category? "+category);
   };
   function giveALike(userId, postId){
@@ -729,7 +739,7 @@ function CommunityTwo() {
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
         <Typography variant="h6" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
-          Community Posts
+         
         </Typography>
 
         {/* Center - Search input */}

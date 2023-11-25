@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
     checkLoggedIn();
     //setIsAuthenticated(true);
-  }, []);
+  }, [userId]);
 
   const handleLogin = async (email, password) => {
     const response = await login(email, password);
