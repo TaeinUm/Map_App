@@ -29,7 +29,26 @@ const updateUserDetails = async (req, res) => {
   }
 };
 
+const getEmail = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { username } = req.query;
+
+    // Fetch user's email from the database
+    const user = await User.findOne({ _id: userId, userName: username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Send the email back to the client
+    res.json({ email: user.email });
+  } catch (error) {
+    console.error("Error fetching user email:", error);
+    res.status(500).json({ message: "Error fetching user email: " + error.message });
+  }
+}
 
 module.exports = {
   updateUserDetails,
+  getEmail,
 };
