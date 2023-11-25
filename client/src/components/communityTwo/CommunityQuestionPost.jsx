@@ -19,7 +19,7 @@ import { useParams } from 'react-router-dom';
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
 import { postInfo } from './CommunityTwo';
 import { useContext } from 'react';
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 
 
 

@@ -3,7 +3,7 @@ import { Box, Typography, Radio, RadioGroup, FormControlLabel, FormControl, Text
 import FileLoader from './FileLoader';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { AuthContext } from '../../contexts/AuthContext';
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 //import { loginUser } from '../../../../server/controllers/userController';
 //const session = require('express-session');
 //var newId = new mongoose.mongo.ObjectId();
@@ -22,7 +22,7 @@ function CommunityPostMapGraphic() {
     //console.log("Is there a userEmail: "+userEmail);
     //console.log("What is the userId from post: "+newId);
     const currentTimeSec = new Date();
-    makePost(localStorage.getItem("newUserid"), document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value, 0, document.getElementById("shabi-file").files[0], currentTimeSec)
+    makePost(localStorage.getItem("newUserid"), document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value, privacyType, document.getElementById("shabi-file").files[0], currentTimeSec)
   }
 
   return (
