@@ -29,7 +29,7 @@ describe('API Endpoints', function() {
           res.body.forEach(function(item) {
             expect(item).to.be.an('object');
             // 모든 예상 키들이 있는지 확인
-            expect(item).to.include.all.keys('_id', 'likes', 'image', 'title', 'content', 'date', 'types');
+            expect(item).to.include.all.keys('_id', 'interactions', 'postImages', 'postName', 'content', 'postDate', 'postType', 'visibility', 'userId', 'attachedFile');
           });
         }
         done(err);
@@ -40,11 +40,14 @@ describe('API Endpoints', function() {
 it('creates a new post successfully', function(done) {
   const postData = {
       userId: "65487c7a94678f7bd6d43689".toString(),
-      content: 'Test content',
-      likes: 0,
-      types: '000',
-      image: '',
-      title: '00000'
+      postDate: "2020-01-01",
+      content: "Hello World",
+      attachedFile: "",
+      interactions: 12,
+      postType: "map",
+      postImages: "https://moonshadowmobile.com/wp-content/uploads/2015/01/us-bubbles-lrg2-logo.png",
+      postName: "Hello",
+      visibility: 1
   };
 
   request(app)
@@ -58,18 +61,18 @@ it('creates a new post successfully', function(done) {
               done(err);
           } else {
               expect(res.body).to.be.an('object');
-              expect(res.body).to.include.all.keys('_id', 'userId', 'content', 'likes', 'types', 'image', 'title');
+              expect(res.body).to.include.all.keys('_id', 'interactions', 'postImages', 'postName', 'content', 'postDate', 'postType', 'visibility', 'userId', 'attachedFile');
               done();
           }
       });
 });
 
-it('creates a new comment successfully', function(done) {
+it('creates a new comment successfully Number2', function(done) {
   const postData = {
       postId: "6559d630cf378d2d911c6387".toString(),
       userId: "65487c7a94678f7bd6d43689".toString(),
-      date: "2023-10-11",
-      content: 'Test content',
+      commentDate: "2023-10-11",
+      commentContent: 'NEW2',
   };
 
   request(app)
@@ -83,7 +86,7 @@ it('creates a new comment successfully', function(done) {
               done(err);
           } else {
               expect(res.body).to.be.an('object');
-              expect(res.body).to.include.all.keys('_id', 'userId', 'postId', 'date', 'content');
+              expect(res.body).to.include.all.keys('_id', 'userId', 'postId', 'commentDate', 'commentContent');
               done();
           }
       });

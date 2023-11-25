@@ -5,7 +5,7 @@ exports.searchMapByUserName = async (req, res) => {
         const userId = req.params.userId;
         const maps = await Post.find({ 
             userId: userId,
-            types: "map"
+            postType: "map"
         });
         res.json(maps);
     } catch (error) {
@@ -19,8 +19,8 @@ exports.searchQuestionByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const questions = await Post.find({ 
-            title: { "$regex": searchText, "$options": "i" },
-            types: "question"
+            postName: { "$regex": searchText, "$options": "i" },
+            postType: "question"
         });
         res.json(questions);
     } catch (error) {
@@ -33,8 +33,8 @@ exports.searchIdeaByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const ideas = await Post.find({ 
-            title: { "$regex": searchText, "$options": "i" },
-            types: "idea"
+            postName: { "$regex": searchText, "$options": "i" },
+            postType: "idea"
         });
         res.json(ideas);
     } catch (error) {
@@ -47,8 +47,8 @@ exports.searchMapByText = async (req, res) => {
     try {
         const searchText = req.params.searchText;
         const maps = await Post.find({ 
-            title: { "$regex": searchText, "$options": "i" },
-            types: "map"
+            postName: { "$regex": searchText, "$options": "i" },
+            postType: "map"
         });
         res.json(maps);
     } catch (error) {

@@ -1,19 +1,45 @@
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
+import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL = "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+//const [authenticated, setAuthenticated] = useState(false);
+//const [userID, setUserID] = useState("");
+//const {userID, authentified} = CommunityContext;
+// let userID = "";
+// let authentified = false;
+
+// export function setUserID(userId){
+//     userID = userId;
+// }
+
+// export function setAuthentified(value){
+//     authentified=value;
+// }
 
 const CommunitySectionAPI = {
+    
+    // doAuthenitication: (value)=>{
+    //     let autheniticated = value;
+    //     return autheniticated;
+    // },
+    // doUserID: (userId)=>{
+    //     let userID = userId;
+    //     return userID;
+    // },
+
     //make a post
-    makePost: async (content, likes, types, image, title) => {
-        const { isAuthenticated, userId, username } = AuthContext;
+    makePost: async (userID, content, likes, types, image, title) => {
+        //const { isAuthenticated, userId, username } = AuthContext;
 
         // if (!isAuthenticated) {
         //     console.error("User is not authenticated");
         //     return;
         // }
         try {
+            console.log("What is the userId:"+userID);
+           // console.log("What is the authenticated: "+authentified);
             // const response = await
             // axios
             // .post(`${API_BASE_URL}/api/community/post`, {
@@ -30,7 +56,8 @@ const CommunitySectionAPI = {
             const response = await axios.post(`${API_BASE_URL}/api/community/post`,
                 {
                     //params:{userId, postType, postType, postFile, date},
-                    params: {userId: userId,
+                    params: {
+                        userId: userID,
                         content: content,
                         likes: likes,
                         types: types,
@@ -38,6 +65,8 @@ const CommunitySectionAPI = {
                         title: title},
                 }
             );
+            console.log("What is the userId:"+userID);
+            //console.log("What is the authenticated: "+authentified);
             return response.data;
         //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post`,{
         //     content,
@@ -71,13 +100,9 @@ const CommunitySectionAPI = {
             console.error("cannot get sample posts.");
         }
     },
-    getAllPosts: async (types) => {
+    getAllPosts: async () => {
         try {
-            const response = await axios.get(
-            `${API_BASE_URL}/api/community/getAllPosts/${types}`,{
-                params:{types},
-            }
-            );
+            const response = axios.get(`${API_BASE_URL}/api/community/getAllPosts`);
             return response.data;
         //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
 
@@ -212,10 +237,10 @@ const CommunitySectionAPI = {
             console.error("cannot get maps for a query.");
         }
     },
-    getPost: async (postId) => {
+    getCommentsForAPost: async (postId) => {
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/community/getPost/${postId}`,{
+            `${API_BASE_URL}/api/community/getAllCommentsByPostID/:${postId}`,{
                 params:{postId},
             }
             );
@@ -264,17 +289,17 @@ const CommunitySectionAPI = {
     postComment: async (postId, date, content) => {
         const { isAuthenticated, userId, username } = AuthContext;
 
-        if (!isAuthenticated) {
-            console.error("User is not authenticated");
-            return;
-        }
+        // if (!isAuthenticated) {
+        //     console.error("User is not authenticated");
+        //     return;
+        // }
         try {
             const response = await axios.post(`${API_BASE_URL}/api/community/postComment`,
                 {
-                    params:{userId,
-                        postId,
-                        date,
-                        content},
+                    params:{userId: userId,
+                        postId: postId,
+                        date: date,
+                        content: content},
                 }
             );
             return response.data;

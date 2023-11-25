@@ -2,18 +2,26 @@ import React, { useState } from 'react';
 import { Box, Typography, Radio, RadioGroup, FormControlLabel, FormControl, TextField, Button, Paper } from '@mui/material';
 import FileLoader from './FileLoader';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
-
-
+import { AuthContext } from '../../contexts/AuthContext';
+const mongoose = require('mongoose');
+//import { loginUser } from '../../../../server/controllers/userController';
+//const session = require('express-session');
+//var newId = new mongoose.mongo.ObjectId();
+//let hardCodedUserIds = [newId];
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState('Map Graphics');
   const {makePost} = CommunitySectionAPI;
-  
+  //const {userEmail} = AuthContext;
 
   function handlePostButton(){
     console.log(document.getElementById("shabi-title").value);
     console.log(document.getElementById("shabi-content").value);
+    console.log("Do I got a userid "+localStorage.getItem("newUserid"));
+    let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("newUserid"));
+    //console.log("Is there a userEmail: "+userEmail);
+    //console.log("What is the userId from post: "+newId);
     
-    makePost(document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
+    makePost(mongooseId, document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value)
   }
 
   return (

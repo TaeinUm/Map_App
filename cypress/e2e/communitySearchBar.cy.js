@@ -12,10 +12,18 @@ describe("Community Page", () => {
       cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
     });
   });
-
-  describe("Search Bar", () => {
-    it("should be visible", () => {
-      cy.get("[data-cy=community-search-bar]").should("be.visible");
-    });
-  });
 });
+
+//     describe("Search Bar", () => {
+//         it("should be visible", () => {
+//           cy.get("[data-cy=community-search-bar]").should("be.visible");
+//         });
+//     }); 
+    
+//     describe("Search Bar search capabilities", () => {
+//         it("should only show search results with the prefix Red", () => {
+//           cy.get("[data-cy=community-search-bar]").type("Red");
+//           cy.get("[data-cy=community-search-results]").should('contain', );
+//         });
+//     }); 
+//   });

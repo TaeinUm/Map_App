@@ -40,7 +40,7 @@ describe('GET /api/top5graphics', () => {
     // Check if the posts are sorted by likes in descending order
     if (response.body.length > 1) {
       for (let i = 0; i < response.body.length - 1; i++) {
-        expect(response.body[i].likes).toBeGreaterThanOrEqual(response.body[i + 1].likes);
+        expect(response.body[i].interactions).toBeGreaterThanOrEqual(response.body[i + 1].interactions);
       }
     }
   });
@@ -50,12 +50,15 @@ describe('GET /api/top5graphics', () => {
 describe('Community API Endpoints', () => {
   test('creates a new post successfully', async () => {
       const postData = {
-          userId: "65487c7a94678f7bd6d43689",
-          content: 'Test content',
-          likes: 0,
-          types: 'Test type',
-          image: 'Test image URL',
-          title: 'Test title'
+        userId: "65487c7a94678f7bd6d43689".toString(),
+        postDate: "2020-01-01",
+        content: "Hello World",
+        attachedFile: "",
+        interactions: 9,
+        postType: "map",
+        postImages: "https://raw.githubusercontent.com/rougier/matplotlib-3d/master/doc/bar.png",
+        postName: "Hello",
+        visibility: 1
       };
 
       const response = await request(app)
@@ -66,7 +69,6 @@ describe('Community API Endpoints', () => {
       expect(response.body).toMatchObject({
           userId: postData.userId,
           content: postData.content,
-          // ... other fields
       });
   });
 
@@ -74,8 +76,8 @@ describe('Community API Endpoints', () => {
       const commentData = {
           postId: "6559d630cf378d2d911c6387",
           userId: "65487c7a94678f7bd6d43689",
-          date: "2023-10-11",
-          content: 'Test content',
+          commentDate: "2023-10-11",
+          commentContent: 'Test content',
       };
 
       const response = await request(app)
@@ -86,7 +88,6 @@ describe('Community API Endpoints', () => {
       expect(response.body).toMatchObject({
           postId: commentData.postId,
           userId: commentData.userId,
-          // ... other fields
       });
   });
 
