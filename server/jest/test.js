@@ -1,13 +1,3 @@
-
-// Json Modification
-// "scripts": {
-//   "test": "jest jest/test.js"
-// },
-//   "jest": {
-//     "testEnvironment": "node"
-//   },
-
-// test2.js
 require('dotenv').config(); // Ensure environment variables are loaded
 const request = require('supertest');
 const mongoose = require('mongoose');
@@ -48,10 +38,32 @@ describe('GET /api/top5graphics', () => {
 
 
 describe('Community API Endpoints', () => {
-  test('creates a new post successfully', async () => {
-      const postData = {
-        userId: "65487c7a94678f7bd6d43689".toString(),
-        postDate: "2020-01-01",
+  // test('creates a new post successfully', async () => {
+  //     const postData = {
+  //       userId: "65487c7a94678f7bd6d43689".toString(),
+  //       postDate: "2020-01-01",
+  //       content: "Hello World",
+  //       attachedFile: "",
+  //       interactions: 9,
+  //       postType: "map",
+  //       postImages: "https://raw.githubusercontent.com/rougier/matplotlib-3d/master/doc/bar.png",
+  //       postName: "Hello",
+  //       visibility: 1
+  //     };
+
+  //     const response = await request(app)
+  //         .post('/api/community/post')
+  //         .send(postData);
+
+  //     expect(response.statusCode).toBe(201);
+  //     expect(response.body).toMatchObject({
+  //         userId: postData.userId,
+  //         content: postData.content,
+  //     });
+  // });
+  test('creates and then deletes a new post successfully', async () => {
+    const postData = {
+        userId: "65487c7a94678f7bd6d43689",
         content: "Hello World",
         attachedFile: "",
         interactions: 9,
@@ -59,37 +71,64 @@ describe('Community API Endpoints', () => {
         postImages: "https://raw.githubusercontent.com/rougier/matplotlib-3d/master/doc/bar.png",
         postName: "Hello",
         visibility: 1
-      };
+    };
 
-      const response = await request(app)
-          .post('/api/community/post')
-          .send(postData);
+    // First, create the post
+    const createResponse = await request(app)
+        .post('/api/community/post')
+        .send(postData);
 
-      expect(response.statusCode).toBe(201);
-      expect(response.body).toMatchObject({
-          userId: postData.userId,
-          content: postData.content,
-      });
+    expect(createResponse.statusCode).toBe(201);
+    expect(createResponse.body).toMatchObject({
+        userId: postData.userId,
+        content: postData.content,
+        attachedFile: postData.attachedFile,
+        interactions: postData.interactions,
+        postType: postData.postType,
+        postName: postData.postName,
+        visibility: postData.visibility
+    });
+    const postId = createResponse.body._id;
+
+    // Then, delete the post
+    const deleteResponse = await request(app)
+        .delete(`/api/community/deletePost/${postId}`);
+
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(deleteResponse.body).toMatchObject({
+        message: 'Post deleted successfully'
+    });
+});
+
+test('creates and then deletes a new comment successfully', async () => {
+  const commentData = {
+      postId: "6559d630cf378d2d911c6387",
+      userId: "65487c7a94678f7bd6d43689",
+      commentContent: 'Test content',
+  };
+
+  // Create the comment
+  const createResponse = await request(app)
+      .post('/api/community/postcomment')
+      .send(commentData);
+
+  expect(createResponse.statusCode).toBe(201);
+  expect(createResponse.body).toMatchObject({
+      postId: commentData.postId,
+      userId: commentData.userId,
+      commentContent: commentData.commentContent
   });
 
-  test('creates a new comment successfully', async () => {
-      const commentData = {
-          postId: "6559d630cf378d2d911c6387",
-          userId: "65487c7a94678f7bd6d43689",
-          commentDate: "2023-10-11",
-          commentContent: 'Test content',
-      };
+  const commentId = createResponse.body._id;
 
-      const response = await request(app)
-          .post('/api/community/postcomment')
-          .send(commentData);
+  const deleteResponse = await request(app)
+      .delete(`/api/community/deleteComment/${commentId}`);
 
-      expect(response.statusCode).toBe(201);
-      expect(response.body).toMatchObject({
-          postId: commentData.postId,
-          userId: commentData.userId,
-      });
+  expect(deleteResponse.statusCode).toBe(200);
+  expect(deleteResponse.body).toMatchObject({
+      message: 'Comment deleted successfully'
   });
+});
 
   test('should retrieve comments by post ID', async () => {
       const postId = "6559d630cf378d2d911c6387";
@@ -146,9 +185,6 @@ describe('Community API Endpoints', () => {
 });
 
 
-
-// Disconnect from the database after all tests have run
-// Replace 'after' with 'afterAll' if you are using Jest
 afterAll(function(done) {
   mongoose.disconnect()
     .then(() => done()) // Call done() when the disconnect is successful
