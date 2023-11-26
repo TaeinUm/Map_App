@@ -1,4 +1,4 @@
-const Map = require('../models/Map'); // Adjust the path and model name as needed
+const Map = require("../models/Map"); // Adjust the path and model name as needed
 
 // Get user maps
 const getUserMapGraphics = async (req, res) => {
@@ -21,7 +21,9 @@ const deleteUserMapGraphic = async (req, res) => {
   try {
     const map = await Map.findOneAndDelete({ _id: mapId, userId: userId });
     if (!map) {
-      return res.status(404).json({ message: "Map graphic not found or user mismatch" });
+      return res
+        .status(404)
+        .json({ message: "Map graphic not found or user mismatch" });
     }
     res.status(200).json({ message: "Map graphic deleted successfully" });
   } catch (error) {
@@ -91,10 +93,19 @@ const updateMemoContent = async (req, res) => {
 // Create map graphic
 const addMapGraphic = async (req, res) => {
   const { userId } = req.params;
-  const { mapType, mapLayer } = req.body;
+  const { title, mapType, mapLayer, version, privacy } = req.body;
 
   try {
-    const newMap = new Map({ userId, mapType, mapLayer });
+    const newMap = new Map({
+      userId,
+      mapName: title,
+      mapDate: new Date(),
+      mapData: mapLayer,
+      memo: "",
+      vers: version,
+      mapType,
+      privacy,
+    });
     await newMap.save();
     res.status(201).json(newMap);
   } catch (error) {
@@ -138,7 +149,6 @@ const getMapGraphicData = async (req, res) => {
     res.status(500).json({ message: "Error fetching map graphic data" });
   }
 };
-
 
 module.exports = {
   getUserMapGraphics,

@@ -127,6 +127,7 @@ const Point = () => {
         setMap(newMap);
         const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
         setInitializeLayers(initialLayers);
+        console.log(newMap.getStyle());
       });
     }
     if (map) {
@@ -332,7 +333,7 @@ const Point = () => {
             </Container>
           </TabPanel>
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
           </TabPanel>
         </TabContext>
       </Box>

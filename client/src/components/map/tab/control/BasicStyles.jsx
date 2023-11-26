@@ -307,7 +307,6 @@ const BasicStyles = () => {
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
         title,
         version,
@@ -509,7 +508,7 @@ const BasicStyles = () => {
                 </div>
               </TabPanel>
               <TabPanel value="3">
-                <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+                <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
               </TabPanel>
             </TabContext>
           </Box>

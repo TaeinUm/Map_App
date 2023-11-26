@@ -37,7 +37,7 @@ const mapServiceAPI = {
     } catch (error) {
       console.error("Error deleting map graphic.");
     }
-  },  
+  },
 
   //get all of users containing 'name'
   getUsersByName: async (name) => {
@@ -76,7 +76,7 @@ const mapServiceAPI = {
     } catch (error) {
       console.error("Error fetching memo content:", error);
     }
-  },  
+  },
 
   // Update memo content for a specific map graphic
   updateMemoContent: async (userId, mapId, memoContent) => {
@@ -146,7 +146,7 @@ const mapServiceAPI = {
         mapType,
         mapLayer,
       };
-  
+
       let response;
       if (mapId) {
         // Update existing map graphic if mapId is provided
@@ -161,13 +161,13 @@ const mapServiceAPI = {
           mapGraphicData
         );
       }
-  
+
       return response.data;
     } catch (error) {
       console.error("Error adding map graphic:", error);
       throw error;
     }
-  },  
+  },
 };
 
 export default mapServiceAPI;
