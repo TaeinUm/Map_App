@@ -79,14 +79,11 @@ const mapServiceAPI = {
   },  
 
   // Update memo content for a specific map graphic
-  updateMemoContent: async (userId, username, mapId, memoContent) => {
+  updateMemoContent: async (userId, mapId, memoContent) => {
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
-        {
-          username,
-          memoContent,
-        }
+        { memoContent }
       );
       return response.data;
     } catch (error) {
