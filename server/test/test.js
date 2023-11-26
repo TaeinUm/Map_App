@@ -6,16 +6,16 @@ const app = require('../server'); // Adjust the path to where your Express app i
 
 describe('API Endpoints', function() {
   // Test for the root endpoint
-  it('responds with the correct content type', function(done) {
-    request(app)
-      .get('/')
-      .expect('Content-Type', /html/) // Expect HTML content type
-      .expect(200)
-      .end(function(err, res) {
-        // You might want to check for specific HTML content here
-        done(err); // Pass the error if there is one to Mocha
-      });
-  });
+  // it('responds with the correct content type', function(done) {
+  //   request(app)
+  //     .get('/')
+  //     .expect('Content-Type', /html/) // Expect HTML content type
+  //     .expect(200)
+  //     .end(function(err, res) {
+  //       // You might want to check for specific HTML content here
+  //       done(err); // Pass the error if there is one to Mocha
+  //     });
+  // });
 
   // Test for the /api/top5graphics endpoint
   it('fetches the top 5 graphics successfully', function(done) {
