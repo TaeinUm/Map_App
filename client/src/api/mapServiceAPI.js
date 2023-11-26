@@ -117,14 +117,11 @@ const mapServiceAPI = {
     }
   },
 
-  // get specific map graphic data based on userId, username, and mapId
-  getMapGraphicData: async (userId, username, mapId) => {
+  // Get specific map graphic data based on userId and mapId
+  getMapGraphicData: async (userId, mapId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`
       );
       return response.data;
     } catch (error) {
@@ -134,7 +131,6 @@ const mapServiceAPI = {
 
   addMapGraphics: async (
     userId,
-    username,
     mapId = null,
     title,
     version,
@@ -144,14 +140,13 @@ const mapServiceAPI = {
   ) => {
     try {
       const mapGraphicData = {
-        username,
         title,
         version,
         privacy,
         mapType,
         mapLayer,
       };
-
+  
       let response;
       if (mapId) {
         // Update existing map graphic if mapId is provided
@@ -166,13 +161,13 @@ const mapServiceAPI = {
           mapGraphicData
         );
       }
-
+  
       return response.data;
     } catch (error) {
       console.error("Error adding map graphic:", error);
       throw error;
     }
-  },
+  },  
 };
 
 export default mapServiceAPI;
