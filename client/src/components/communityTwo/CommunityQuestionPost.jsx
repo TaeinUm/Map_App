@@ -90,7 +90,7 @@ function CommunityQuestionPost() {
     setMessage(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
     console.log("what is the current id: "+localStorage.getItem("newUserid"));
@@ -98,6 +98,8 @@ function CommunityQuestionPost() {
     //console.log("Do I have any items: " +commentsBuffer.length);
     postComment(localStorage.getItem("newUserid"), postInfo._id, currentTimeSec, document.getElementById("prompt-textarea").value);
     console.log('Submitted message:', message);
+    let refreshData= await getCommentsForAPost(postInfo._id);
+    setCommentsBuffer(refreshData);
   };
 
   console.log("What is the question title" + questionTitle);

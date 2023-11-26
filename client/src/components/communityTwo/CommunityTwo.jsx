@@ -454,6 +454,7 @@ function CommunityTwo() {
         console.log("is it possible "+newData[0].types);
         setQuestionBuffer(newData.filter(post=>post.postType==="Questions"));
         setTrendingBuffer(newData.filter(post=>post.postType==="map"));
+        console.log("What is the length of TrendingBuffer? "+trendingBuffer.length);
         console.log("What is the length of questions: "+ questions.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
@@ -693,7 +694,7 @@ function CommunityTwo() {
       .filter((graphic) => graphic.postName.includes(searchTerm))
       .slice(startIndex, endIndex)
       .map((graphic, index) => (
-        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics">
+        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics" >
           <StyledCard>
             <CardMedia
               
@@ -703,7 +704,8 @@ function CommunityTwo() {
               alt={graphic.postName}
             />
             <CardContent>
-              <Typography gutterBottom variant="h6">
+              <Typography gutterBottom variant="h6" onMouseEnter={()=>setupQuestionLocal(graphic)} component={NavLink}
+                to={"/communityGraphicPost/:"+graphic.postName}>
                 {graphic.postName}
               </Typography>
             </CardContent>
