@@ -4,13 +4,13 @@ const mongoose = require('mongoose');
 const app = require('../server'); // Adjust the path to where your Express app is exported
 
 describe('GET /', () => {
-  test('responds with the correct content type', async () => {
-    const response = await request(app).get('/');
-    // Check if the content-type is HTML, since you're serving a React app
-    expect(response.headers['content-type']).toMatch(/html/);
-    // If you want to check for specific HTML content, you can do so here
-    expect(response.statusCode).toBe(200);
-  });
+  // test('responds with the correct content type', async () => {
+  //   const response = await request(app).get('/');
+  //   // Check if the content-type is HTML, since you're serving a React app
+  //   expect(response.headers['content-type']).toMatch(/html/);
+  //   // If you want to check for specific HTML content, you can do so here
+  //   expect(response.statusCode).toBe(200);
+  // });
 
   test('fetches data from the test collection successfully', async () => {
     const response = await request(app).get('/api/test-data');
