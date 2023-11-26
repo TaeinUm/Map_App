@@ -15,4 +15,7 @@ router.get('/:userId/:mapId/memo', mapController.getMemoContent);
 // Route to update view setting
 router.put('/:userId/view-setting', mapController.updateViewSetting);
 
+// Route to update memo content
+router.put('/:userId/:mapId/memo', mapController.updateMemoContent);
+
 module.exports = router;

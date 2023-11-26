@@ -30,22 +30,6 @@ const deleteUserMapGraphic = async (req, res) => {
   }
 };
 
-// Get the memo content
-const getMemoContent = async (req, res) => {
-  const { userId, mapId } = req.params;
-
-  try {
-    const map = await Map.findOne({ _id: mapId, userId: userId });
-    if (!map) {
-      return res.status(404).json({ message: "Map graphic not found" });
-    }
-    res.json({ memo: map.memo });
-  } catch (error) {
-    console.error("Error fetching memo content:", error);
-    res.status(500).json({ message: "Error fetching memo content" });
-  }
-};
-
 // Update map view setting
 const updateViewSetting = async (req, res) => {
   const { userId } = req.params;
@@ -68,10 +52,47 @@ const updateViewSetting = async (req, res) => {
   }
 };
 
+// Get the memo content
+const getMemoContent = async (req, res) => {
+  const { userId, mapId } = req.params;
+
+  try {
+    const map = await Map.findOne({ _id: mapId, userId: userId });
+    if (!map) {
+      return res.status(404).json({ message: "Map graphic not found" });
+    }
+    res.json({ memo: map.memo });
+  } catch (error) {
+    console.error("Error fetching memo content:", error);
+    res.status(500).json({ message: "Error fetching memo content" });
+  }
+};
+
+const updateMemoContent = async (req, res) => {
+  const { userId, mapId } = req.params;
+  const { memoContent } = req.body;
+
+  try {
+    const updatedMap = await Map.findOneAndUpdate(
+      { _id: mapId, userId: userId },
+      { memo: memoContent },
+      { new: true }
+    );
+    if (!updatedMap) {
+      return res.status(404).json({ message: "Map not found" });
+    }
+    res.json(updatedMap);
+  } catch (error) {
+    console.error("Error updating memo content:", error);
+    res.status(500).json({ message: "Error updating memo content" });
+  }
+};
+
 
 module.exports = {
   getUserMapGraphics,
   deleteUserMapGraphic,
-  getMemoContent,
   updateViewSetting,
+  getMemoContent,
+  updateMemoContent,
 };
