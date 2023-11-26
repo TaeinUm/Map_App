@@ -3,12 +3,15 @@ import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, CircularProgress, Slider, Typography } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 import { MapContext } from "../../../../contexts/MapContext";
 import { AuthContext } from "../../../../contexts/AuthContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
+import MapMobile from "../../landing/MapMobile";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -16,6 +19,9 @@ mapboxgl.accessToken =
 const BasicStyles = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [fontStyle, setFontStyle] = useState("Arial Unicode MS Bold");
   const { mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
@@ -155,11 +161,13 @@ const BasicStyles = () => {
       });
     };
 
-    initializeMap();
-  }, [mapId]);
+    if (!isMobile) {
+      initializeMap();
+    }
+  }, [mapId, isMobile]);
 
   useEffect(() => {
-    if (!map || !map.getStyle) {
+    if (!map || !map.getStyle || isMobile) {
       return;
     }
 
@@ -196,6 +204,70 @@ const BasicStyles = () => {
       setMapLayer(addedLayersJson);
     }
   }, [map, mapStyle, styleSettings]);
+
+  // Update Font Size
+  useEffect(() => {
+    if (!map || isMobile) return; // Skip if no map or mobile view
+
+    const updateLabelFontSize = (fontSize) => {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.type === "symbol") {
+          map.setLayoutProperty(layer.id, "text-size", fontSize);
+        }
+      });
+    };
+
+    updateLabelFontSize(labelFontSize);
+  }, [map, labelFontSize, isMobile]);
+
+  // Update Road Width
+  useEffect(() => {
+    if (!map || isMobile) return; // Skip if no map or mobile view
+
+    const updateRoadWidth = (width) => {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id.startsWith("road") && layer.type === "line") {
+          map.setPaintProperty(layer.id, "line-width", width);
+        }
+      });
+    };
+
+    updateRoadWidth(roadWidth);
+  }, [map, roadWidth, isMobile]);
+
+  // Update Boundary Width
+  useEffect(() => {
+    if (!map || isMobile) return; // Skip if no map or mobile view
+
+    const updateBoundaryWidth = (width) => {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id.startsWith("admin")) {
+          map.setPaintProperty(layer.id, "line-width", width);
+        }
+      });
+    };
+
+    updateBoundaryWidth(boundaryWidth);
+  }, [map, boundaryWidth, isMobile]);
+
+  // Update Waterway Width
+  useEffect(() => {
+    if (!map || isMobile) return; // Skip if no map or mobile view
+
+    const updateWaterwayWidth = (width) => {
+      const layers = map.getStyle().layers;
+      layers.forEach((layer) => {
+        if (layer.id === "waterway" && layer.type === "line") {
+          map.setPaintProperty(layer.id, "line-width", width);
+        }
+      });
+    };
+
+    updateWaterwayWidth(waterwayWidth);
+  }, [map, waterwayWidth, isMobile]);
 
   const handleCategoryColor = (category, color) => {
     setStyleSettings((prevSettings) => ({
@@ -314,133 +386,136 @@ const BasicStyles = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
-      <div
-        id="map"
-        ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
-      />
-      {isLoading && (
-        <div style={{ position: "absolute", top: "50%", left: "50%" }}>
-          <CircularProgress />
-        </div>
-      )}
-
-      <Box sx={{ width: "40%", overflow: "scroll" }}>
-        <TabContext value={tabValue}>
-          <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
-
-          <TabPanel value="1">
-            <div>
-              <h3 style={{ color: "#fafafa", textAlign: "left" }}>
-                Basic Styles
-              </h3>
-              {categories.map((category) => (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    color: "#fafafa",
-                    marginBottom: "10px",
-                  }}
-                  key={category}
-                >
-                  <label>{category}: </label>
-                  <div style={{ display: "flex", marginBottom: "10px" }}>
-                    <input
-                      type="color"
-                      value={styleSettings.color[category]}
-                      onChange={(e) =>
-                        handleCategoryColor(category, e.target.value)
-                      }
-                      disabled={!styleSettings.visibility[category]}
-                    />
-                    <label>Visible: </label>
-                    <input
-                      type="checkbox"
-                      checked={styleSettings.visibility[category]}
-                      onChange={(e) =>
-                        handleVisibilityChange(category, e.target.checked)
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  color: "#fafafa",
-                  marginBottom: "20px",
-                }}
-              >
-                <label style={{ marginBottom: "10px" }}>Font Style: </label>
-                <select
-                  value={fontStyle}
-                  onChange={(e) => handleFontChange(e.target.value)}
-                >
-                  <option value="Arial Unicode MS Bold">
-                    Arial Unicode MS Bold
-                  </option>
-                  <option value="Open Sans Bold">Open Sans Bold</option>
-                  <option value="DIN Offc Pro Medium">
-                    DIN Offc Pro Medium
-                  </option>
-                  <option value="Roboto Regular">Roboto Regular</option>
-                  <option value="Roboto Bold">Roboto Bold</option>
-                </select>
-              </div>
-              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
-                Font size
-              </Typography>
-              <Slider
-                value={labelFontSize}
-                onChange={handleLabelFontSizeChange}
-                min={8}
-                max={20}
-                sx={{ marginBottom: "20px" }}
-              />
-              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
-                Road Width
-              </Typography>
-              <Slider
-                value={roadWidth}
-                onChange={handleRoadWidthChange}
-                min={0.5}
-                max={5}
-                sx={{ marginBottom: "20px" }}
-              />
-              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
-                Boundary Width
-              </Typography>
-              <Slider
-                value={boundaryWidth}
-                onChange={handleBoundaryWidthChange}
-                min={0.5}
-                max={5}
-                sx={{ marginBottom: "20px" }}
-              />
-              <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
-                Waterway Width
-              </Typography>
-              <Slider
-                value={boundaryWidth}
-                onChange={handleWaterwayWidthChange}
-                min={0.5}
-                max={5}
-                sx={{ marginBottom: "20px" }}
-              />
+    <>
+      {isMobile ? (
+        <MapMobile />
+      ) : (
+        <Box sx={{ display: "flex", height: "100vh" }}>
+          <div
+            id="map"
+            ref={mapContainer}
+            style={{ width: "100%", height: "100%" }}
+          />
+          {isLoading && (
+            <div style={{ position: "absolute", top: "50%", left: "50%" }}>
+              <CircularProgress />
             </div>
-          </TabPanel>
-          {/* <TabPanel value="2">
-            <ShareTab />
-              </TabPanel>*/}
-          <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
-          </TabPanel>
-        </TabContext>
-      </Box>
-    </Box>
+          )}
+
+          <Box sx={{ width: "40%", overflow: "scroll" }}>
+            <TabContext value={tabValue}>
+              <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
+
+              <TabPanel value="1">
+                <div>
+                  <h3 style={{ color: "#fafafa", textAlign: "left" }}>
+                    Basic Styles
+                  </h3>
+                  {categories.map((category) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        color: "#fafafa",
+                        marginBottom: "10px",
+                      }}
+                      key={category}
+                    >
+                      <label>{category}: </label>
+                      <div style={{ display: "flex", marginBottom: "10px" }}>
+                        <input
+                          type="color"
+                          value={styleSettings.color[category]}
+                          onChange={(e) =>
+                            handleCategoryColor(category, e.target.value)
+                          }
+                          disabled={!styleSettings.visibility[category]}
+                        />
+                        <label>Visible: </label>
+                        <input
+                          type="checkbox"
+                          checked={styleSettings.visibility[category]}
+                          onChange={(e) =>
+                            handleVisibilityChange(category, e.target.checked)
+                          }
+                        />
+                      </div>
+                    </div>
+                  ))}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      color: "#fafafa",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    <label style={{ marginBottom: "10px" }}>Font Style: </label>
+                    <select
+                      value={fontStyle}
+                      onChange={(e) => handleFontChange(e.target.value)}
+                    >
+                      <option value="Arial Unicode MS Bold">
+                        Arial Unicode MS Bold
+                      </option>
+                      <option value="Open Sans Bold">Open Sans Bold</option>
+                      <option value="DIN Offc Pro Medium">
+                        DIN Offc Pro Medium
+                      </option>
+                      <option value="Roboto Regular">Roboto Regular</option>
+                      <option value="Roboto Bold">Roboto Bold</option>
+                    </select>
+                  </div>
+                  <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                    Font size
+                  </Typography>
+                  <Slider
+                    value={labelFontSize}
+                    onChange={handleLabelFontSizeChange}
+                    min={8}
+                    max={20}
+                    sx={{ marginBottom: "20px" }}
+                  />
+                  <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                    Road Width
+                  </Typography>
+                  <Slider
+                    value={roadWidth}
+                    onChange={handleRoadWidthChange}
+                    min={0.5}
+                    max={5}
+                    sx={{ marginBottom: "20px" }}
+                  />
+                  <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                    Boundary Width
+                  </Typography>
+                  <Slider
+                    value={boundaryWidth}
+                    onChange={handleBoundaryWidthChange}
+                    min={0.5}
+                    max={5}
+                    sx={{ marginBottom: "20px" }}
+                  />
+                  <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
+                    Waterway Width
+                  </Typography>
+                  <Slider
+                    value={boundaryWidth}
+                    onChange={handleWaterwayWidthChange}
+                    min={0.5}
+                    max={5}
+                    sx={{ marginBottom: "20px" }}
+                  />
+                </div>
+              </TabPanel>
+              <TabPanel value="3">
+                <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+              </TabPanel>
+            </TabContext>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 

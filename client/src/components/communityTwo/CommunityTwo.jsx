@@ -348,9 +348,12 @@ export var postInfo;
 
 function CommunityTwo() {
   //const [postInfo, setPostInfo] = useState(null);
+  const [authentification, setAuthentification] = useState(true);
   const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
   const [topGraphics, setTopGraphics] = useState([]);
+  const [questionBuffer, setQuestionBuffer] = useState([]);
+  const [trendingBuffer, setTrendingBuffer] = useState([]);
   //const [allGraphics, setAllGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
@@ -358,6 +361,7 @@ function CommunityTwo() {
   const navigate = useNavigate();
   const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle, updatePostInfo} = useContext(CommunityContext);
   const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
+  const [whiteBar, setWhiteBar] = useState("Trending Map Graphics");
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
     
@@ -420,6 +424,15 @@ function CommunityTwo() {
 
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
+    if (event.target.value==="category1"){
+      setWhiteBar("Questions");
+    }else if(event.target.value==="category3"){
+      setWhiteBar("User Name")
+    }else if(event.target.value===""){
+      setWhiteBar("Trending Map Graphics")
+    }else if(event.target.value==="category2"){
+      setWhiteBar("Map Graphics Idea")
+    }
     console.log("What is the current category? "+category);
   };
   function giveALike(userId, postId){
@@ -439,8 +452,8 @@ function CommunityTwo() {
         //setAllGraphics(newData);
         console.log("How many graphics are there in total: "+newData.length);
         console.log("is it possible "+newData[0].types);
-        questions = newData.filter(post=>post.postType==="Questions");
-        graphics = newData.filter(post=>post.postType==="map");
+        setQuestionBuffer(newData.filter(post=>post.postType==="Questions"));
+        setTrendingBuffer(newData.filter(post=>post.postType==="map"));
         console.log("What is the length of questions: "+ questions.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
@@ -448,6 +461,9 @@ function CommunityTwo() {
     };
 
     fetchGraphics();
+    if (localStorage.getItem("authentification")==="true"){
+      setAuthentification(false);
+    }
     console.log("is my scoping wrong: "+newData);
     //questions = newData.filter(post=>post.types==="Questions");
     // for (let key in newData){
@@ -602,7 +618,7 @@ function CommunityTwo() {
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            {questions.filter((post) => post.postName.includes(searchTerm)).map((post) => (
+            {questionBuffer.filter((post) => post.postName.includes(searchTerm)).map((post) => (
               <Typography
                 variant="h2"
                 onMouseEnter={()=>setupQuestionLocal(post)}
@@ -673,14 +689,14 @@ function CommunityTwo() {
                 {post.content}
               </Typography>
             ))} */}
-    {graphics
+    {trendingBuffer
       .filter((graphic) => graphic.postName.includes(searchTerm))
       .slice(startIndex, endIndex)
       .map((graphic, index) => (
-        <Grid item xs={12} sm={6} md={4} key={graphic._id}>
+        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics">
           <StyledCard>
             <CardMedia
-              data-cy="community-trending-graphics"
+              
               component="img"
               height="140"
               image={graphic.postImages}
@@ -729,7 +745,7 @@ function CommunityTwo() {
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
         <Typography variant="h6" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
-          Community Posts
+         {whiteBar}
         </Typography>
 
         {/* Center - Search input */}
@@ -803,6 +819,7 @@ function CommunityTwo() {
   variant="contained"
   startIcon={<AddIcon />}
   sx={{ mr: 2 }}
+  disabled={authentification}
 >
   Post
 </Button>

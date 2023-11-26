@@ -3,6 +3,8 @@ import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 import { MapContext } from "../../../../contexts/MapContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
 import { AuthContext } from "../../../../contexts/AuthContext";
@@ -17,15 +19,14 @@ function File() {
   const { geojsonData, mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const mapContainer = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
   const [map, setMap] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [tabValue, setTabValue] = useState("1");
-  const [mapJson, setMapJson] = useState({});
-  const [isMemoVisible, setIsMemoVisible] = useState(false);
-  const [memoContent, setMemoContent] = useState("");
 
   const [lineColor, setLineColor] = useState("#088");
   const [lineOpacity, setLineOpacity] = useState(0.8);
@@ -143,18 +144,30 @@ function File() {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "100vh",
+      }}
+    >
       <div
         id="map"
         ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: isMobile ? "50%" : "100%" }}
       />
       {!isMapLoaded && (
         <div style={{ position: "absolute", top: "50%", left: "50%" }}>
           <CircularProgress />
         </div>
       )}
-      <Box sx={{ width: "40%", overflow: "scroll" }}>
+      <Box
+        sx={{
+          width: isMobile ? "100%" : "40%",
+          overflow: "scroll",
+          height: isMobile ? "50%" : "auto",
+        }}
+      >
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
@@ -252,24 +265,10 @@ function File() {
               />
             </Box>
           </TabPanel>
-          {/*<TabPanel value="3">
-            <ShareTab />
-              </TabPanel>*/}
+
           <TabPanel value="4" sx={{ height: "100%", overflow: "scroll" }}>
             <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
-          {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
         </TabContext>
       </Box>
     </Box>
