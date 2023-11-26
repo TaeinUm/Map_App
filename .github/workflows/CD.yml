@@ -42,7 +42,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Run build
       run: CI=false npm run build
       working-directory: ./client
