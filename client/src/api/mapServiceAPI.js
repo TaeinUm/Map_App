@@ -91,17 +91,11 @@ const mapServiceAPI = {
     }
   },
 
-  //when we create or load map graphics from modal, we should add map graphics data to DB
-  updateUserMapGraphics: async (
-    userId,
-    username,
-    mapType,
-    mapLayer,
-    mapId = null
-  ) => {
+  // When we create or load map graphics from modal, we should add map graphics data to DB
+  updateUserMapGraphics: async (userId, mapType, mapLayer, mapId = null) => {
     try {
       let response;
-      const mapGraphicData = { username, mapType, mapLayer };
+      const mapGraphicData = { mapType, mapLayer };
 
       if (mapId) {
         // If mapId is provided, update existing map graphic
