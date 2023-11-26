@@ -40,11 +40,17 @@ jobs:
   build:
     needs: install-dependencies
     runs-on: ubuntu-latest
-
+    
     steps:
-    - name: Run build
-      run: CI=false npm run build
-      working-directory: ./client
+      - uses: actions/checkout@v2  # Check out the repository code
+  
+      - name: Install dependencies
+        run: cd client && npm install  # Install npm dependencies in the client directory
+  
+      - name: Run build
+        run: CI=false npm run build  # Build the client application
+        working-directory: ./client  # Ensure this is executed in the client directory
+
 
   deploy:
     needs: build
