@@ -36,65 +36,63 @@ describe('GET /api/top5graphics', () => {
   });
 });
 
-
-// describe('User API Endpoints', () => {
-//     // Update User Profile Image
-//     test('updates user profile image successfully', async () => {
-//       const userId = '65487c7a94678f7bd6d43689';
-//       const response = await request(app)
-//         .post(`/api/users/${userId}/profile-picture`)
-//         .attach('file', 'path/to/your/test/image.jpg'); // Adjust path and field name as necessary
-  
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body).toMatchObject({
-//         message: 'Profile picture updated successfully'
-//       });
-//     });
-  
-    // // Update User Details
-    // test('updates user details successfully', async () => {
-    //   const userId = '65487c7a94678f7bd6d43689';
-    //   const userData = {
-    //     email: 'newemail@example.com',
-    //     userName: 'newUsername',
-    //     password: 'newPassword'
-    //   };
-  
+describe('User API Endpoints', () => {
+    // // Update User Profile Image
+    // test('updates user profile image successfully', async () => {
+    //   const userId = '65488ef3fec19c23e9a3e06f';
     //   const response = await request(app)
-    //     .patch(`/api/users/${userId}`) // or .put(), depending on your API
-    //     .send(userData);
+    //     .put(`/api/users/${userId}/profile-picture`)
+    //     .attach('file', '/jest/testprofile.jpeg'); // Adjust path and field name as necessary
   
     //   expect(response.statusCode).toBe(200);
     //   expect(response.body).toMatchObject({
-    //     message: 'User updated successfully'
+    //     message: 'Profile picture updated successfully'
     //   });
     // });
   
-    // Get Email
-//     test('retrieves user email successfully', async () => {
-//       const userId = '65487c7a94678f7bd6d43689';
-//       const username = 'Taein Um';
+    // Update User Details
+    test('updates user details successfully', async () => {
+      const userId = '65488ef3fec19c23e9a3e06f';
+      const userData = {
+        email: 'juyoung.um@stonybrook.edu',
+        userName: 'Juyoung Um',
+        password: '1q2w3e4r!'
+      };
   
-//       const response = await request(app)
-//         .get(`/api/users/${userId}/email`)
-//         .query({ username });
+      const response = await request(app)
+        .put(`/api/users/${userId}`) // or .put(), depending on your API
+        .send(userData);
   
-//       expect(response.statusCode).toBe(200);
-//       expect(response.body).toHaveProperty('email');
-//     });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toMatchObject({
+        message: 'User updated successfully'
+      });
+    });
   
-//     // Get Users by Name
-//     test('retrieves users by name successfully', async () => {
-//       const name = 'Taein Um';
+    test('retrieves user email successfully', async () => {
+      const userId = '65488ef3fec19c23e9a3e06f';
+      const username = 'Juyoung Um';
   
-//       const response = await request(app)
-//         .get(`/api/users/${name}`)
-//         .query({ name });
+      const response = await request(app)
+        .get(`/api/users/${userId}/email`)
+        .query({ username });
   
-//       expect(response.statusCode).toBe(200);
-//       expect(Array.isArray(response.body)).toBeTruthy();
-//     });
-//   });
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toHaveProperty('email');
+    });
+  
+    // Get Users by Name
+    // test('retrieves users by name successfully', async () => {
+    //   const name = 'Taein Um';
+  
+    //   const response = await request(app)
+    //     .get(`/api/users/${name}`)
+    //     .query({ name });
+  
+    //   expect(response.statusCode).toBe(200);
+    //   expect(Array.isArray(response.body)).toBeTruthy();
+    // });
+  });
 
 
 
