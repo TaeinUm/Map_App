@@ -27,19 +27,17 @@ const mapServiceAPI = {
   },
 
   // delete user's selected map based on mapId (userId, username)
-  deleteUserMapGraphic: async (userId, username, mapId) => {
+  deleteUserMapGraphic: async (userId, mapId) => {
     try {
       const response = await axios.delete(
         `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        {
-          data: { username, mapId },
-        }
+        { data: { mapId } }
       );
       return response.data;
     } catch (error) {
       console.error("Error deleting map graphic.");
     }
-  },
+  },  
 
   //get all of users containing 'name'
   getUsersByName: async (name) => {
@@ -69,19 +67,16 @@ const mapServiceAPI = {
   },
 
   // get memo content of a certain map graphics
-  getMemoContent: async (userId, username, mapId) => {
+  getMemoContent: async (userId, mapId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`
       );
       return response.data;
     } catch (error) {
       console.error("Error fetching memo content:", error);
     }
-  },
+  },  
 
   // Update memo content for a specific map graphic
   updateMemoContent: async (userId, username, mapId, memoContent) => {
