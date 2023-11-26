@@ -18,4 +18,10 @@ router.put('/:userId/view-setting', mapController.updateViewSetting);
 // Route to update memo content
 router.put('/:userId/:mapId/memo', mapController.updateMemoContent);
 
+// Route to create a new map graphic
+router.post('/:userId/map-graphics', mapController.createMapGraphic);
+
+// Route to update an existing map graphic
+router.put('/:userId/map-graphics/:mapId', mapController.updateMapGraphic);
+
 module.exports = router;

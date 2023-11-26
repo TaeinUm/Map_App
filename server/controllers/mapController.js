@@ -88,6 +88,42 @@ const updateMemoContent = async (req, res) => {
   }
 };
 
+// Create map graphic
+const createMapGraphic = async (req, res) => {
+  const { userId } = req.params;
+  const { mapType, mapLayer } = req.body;
+
+  try {
+    const newMap = new Map({ userId, mapType, mapLayer });
+    await newMap.save();
+    res.status(201).json(newMap);
+  } catch (error) {
+    console.error("Error creating map graphic:", error);
+    res.status(500).json({ message: "Error creating map graphic" });
+  }
+};
+
+// Update map graphic
+const updateMapGraphic = async (req, res) => {
+  const { userId, mapId } = req.params;
+  const { mapType, mapLayer } = req.body;
+
+  try {
+    const updatedMap = await Map.findOneAndUpdate(
+      { _id: mapId, userId: userId },
+      { mapType, mapLayer },
+      { new: true }
+    );
+    if (!updatedMap) {
+      return res.status(404).json({ message: "Map not found" });
+    }
+    res.json(updatedMap);
+  } catch (error) {
+    console.error("Error updating map graphic:", error);
+    res.status(500).json({ message: "Error updating map graphic" });
+  }
+};
+
 
 module.exports = {
   getUserMapGraphics,
@@ -95,4 +131,6 @@ module.exports = {
   updateViewSetting,
   getMemoContent,
   updateMemoContent,
+  createMapGraphic,
+  updateMapGraphic,
 };
