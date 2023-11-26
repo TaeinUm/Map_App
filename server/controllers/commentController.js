@@ -3,7 +3,7 @@ const Comment = require('../models/Comment');
 
 exports.writeComment = async (req, res) => {
     try {
-        const { userId, postId, commentDate, commentContent } = req.body;
+        const { userId, postId, commentContent } = req.body;
        
         if (!userId || !commentContent) {
             return res.status(400).json({ message: "Missing required fields" });
@@ -13,7 +13,7 @@ exports.writeComment = async (req, res) => {
             _id: new mongoose.Types.ObjectId(),
             userId,
             postId,
-            commentDate,
+            commentDate: new Date(),
             commentContent
         });
         await newComment.save();
@@ -22,6 +22,31 @@ exports.writeComment = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.deleteComment = async (req, res) => {
+    try {
+        const commentId = req.params.commentId;
+
+        // Check if the commentId is valid
+        if (!mongoose.Types.ObjectId.isValid(commentId)) {
+            return res.status(400).json({ message: "Invalid comment ID" });
+        }
+
+        // Find the comment and delete it
+        const deletedComment = await Comment.findByIdAndDelete(commentId);
+
+        // If no comment was found to delete
+        if (!deletedComment) {
+            return res.status(404).json({ message: "Comment not found" });
+        }
+
+        res.status(200).json({ message: "Comment deleted successfully", deletedComment });
+    } catch (error) {
+        console.error('Error deleting comment:', error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 exports.getAllComments = async (req, res) => {
     try {
