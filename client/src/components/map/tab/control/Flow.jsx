@@ -10,6 +10,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { MapContext } from "../../../../contexts/MapContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
@@ -28,6 +30,9 @@ const Flow = () => {
   const [map, setMap] = useState(null);
   const { mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
 
@@ -252,11 +257,17 @@ const Flow = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "100vh",
+      }}
+    >
       <div
         id="map"
         ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: isMobile ? "50%" : "100%" }}
       />
       {isLoading && (
         <div style={{ position: "absolute", top: "50%", left: "50%" }}>
@@ -264,7 +275,13 @@ const Flow = () => {
         </div>
       )}
 
-      <Box sx={{ width: "40%", overflow: "scroll" }}>
+      <Box
+        sx={{
+          width: isMobile ? "100%" : "40%",
+          overflow: "scroll",
+          height: isMobile ? "50%" : "auto",
+        }}
+      >
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 

@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { MapContext } from "../../contexts/MapContext";
 import { useMediaQuery, useTheme } from "@mui/material";
+import MapMobile from "./landing/MapMobile";
 
 function MapEditing() {
   const navigate = useNavigate();

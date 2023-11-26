@@ -15,6 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
+import { useMediaQuery, useTheme } from "@mui/material";
 import * as XLSX from "xlsx";
 
 import { MapContext } from "../../../../contexts/MapContext";
@@ -49,6 +50,9 @@ const ThreeD = () => {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const mapContainer = useRef(null);
   const fileInputRef = useRef(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
 
   const { mapId } = useContext(MapContext);
@@ -307,18 +311,30 @@ const ThreeD = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "100vh",
+      }}
+    >
       <div
         id="map"
         ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: isMobile ? "50%" : "100%" }}
       />
       {!isMapLoaded && (
         <div style={{ position: "absolute", top: "50%", left: "50%" }}>
           <CircularProgress />
         </div>
       )}
-      <Box sx={{ width: "40%", overflow: "scroll" }}>
+      <Box
+        sx={{
+          width: isMobile ? "100%" : "40%",
+          overflow: "scroll",
+          height: isMobile ? "50%" : "auto",
+        }}
+      >
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
