@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     checkLoggedIn();
-  }, []);
+  }, [userId]);
 
   const handleLogin = async (email, password) => {
     const response = await login(email, password);

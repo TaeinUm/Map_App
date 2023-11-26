@@ -8,7 +8,7 @@ describe("Community Page", () => {
   });
 
   describe("Trending Section", () => {
-    it("should display top 5 trending graphics", () => {
+    it("should display top 3 trending graphics", () => {
       cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
     });
   });
