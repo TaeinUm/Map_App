@@ -3,31 +3,60 @@ name: Deploy to Heroku
 on:
   push:
     branches:
-      - main  # Set this to the branch you want to deploy from
+      - main
 
 jobs:
-  build:
+  checkout:
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.get-timestamp.outputs.time }}
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get timestamp
+      id: get-timestamp
+      run: echo "::set-output name=time::$(date +%s)"
+
+  setup-node:
+    needs: checkout
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20.x'  # Set this to the node version you are using
+        node-version: '20.x'
 
+  install-dependencies:
+    needs: setup-node
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Install dependencies
       run: cd client && npm install
 
+  build:
+    needs: install-dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Run build
       run: CI=false npm run build
       working-directory: ./client
 
-        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - uses: actions/checkout@v2
     - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12  # This is a community action for deploying to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: "radiant-falls-95660"  # Set this to your Heroku app's name
-        heroku_email: "taein.um@stonybrook.edu"  # Set this to the email associated with your Heroku account
+        heroku_app_name: "radiant-falls-95660"
+        heroku_email: "taein.um@stonybrook.edu"
