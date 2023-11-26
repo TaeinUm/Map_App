@@ -19,9 +19,13 @@ router.put('/:userId/view-setting', mapController.updateViewSetting);
 router.put('/:userId/:mapId/memo', mapController.updateMemoContent);
 
 // Route to create a new map graphic
-router.post('/:userId/map-graphics', mapController.createMapGraphic);
+router.post('/:userId/map-graphics', mapController.addMapGraphic);
 
 // Route to update an existing map graphic
 router.put('/:userId/map-graphics/:mapId', mapController.updateMapGraphic);
+
+// Route to get a specific map graphic
+router.get('/:userId/map-graphics/:mapId', mapController.getMapGraphicData);
+
 
 module.exports = router;

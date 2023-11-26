@@ -89,7 +89,7 @@ const updateMemoContent = async (req, res) => {
 };
 
 // Create map graphic
-const createMapGraphic = async (req, res) => {
+const addMapGraphic = async (req, res) => {
   const { userId } = req.params;
   const { mapType, mapLayer } = req.body;
 
@@ -124,6 +124,21 @@ const updateMapGraphic = async (req, res) => {
   }
 };
 
+const getMapGraphicData = async (req, res) => {
+  const { userId, mapId } = req.params;
+
+  try {
+    const mapGraphic = await Map.findOne({ _id: mapId, userId: userId });
+    if (!mapGraphic) {
+      return res.status(404).json({ message: "Map graphic not found" });
+    }
+    res.json(mapGraphic);
+  } catch (error) {
+    console.error("Error fetching map graphic data:", error);
+    res.status(500).json({ message: "Error fetching map graphic data" });
+  }
+};
+
 
 module.exports = {
   getUserMapGraphics,
@@ -131,6 +146,7 @@ module.exports = {
   updateViewSetting,
   getMemoContent,
   updateMemoContent,
-  createMapGraphic,
+  addMapGraphic,
   updateMapGraphic,
+  getMapGraphicData,
 };
