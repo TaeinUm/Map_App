@@ -324,6 +324,7 @@ const Flow = () => {
               >
                 <TextField
                   select
+                  data-testid="start-country-select"
                   label="Choose Start Country"
                   value={startCountry}
                   onChange={handleStartCountryChange}
@@ -355,7 +356,11 @@ const Flow = () => {
                   }}
                 >
                   {Object.keys(countryCityData).map((country) => (
-                    <MenuItem key={country} value={country}>
+                    <MenuItem
+                      key={country}
+                      value={country}
+                      data-value="country"
+                    >
                       {country}
                     </MenuItem>
                   ))}
@@ -364,6 +369,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose Start City"
+                  data-testid="start-city-select"
                   value={startCity}
                   onChange={handleStartCityChange}
                   helperText="Please select the start city"
@@ -396,7 +402,7 @@ const Flow = () => {
                 >
                   {startCountry
                     ? countryCityData[startCountry].map((city) => (
-                        <MenuItem key={city} value={city}>
+                        <MenuItem key={city} value={city} data-value="city">
                           {city}
                         </MenuItem>
                       ))
@@ -414,6 +420,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose End Country"
+                  data-testid="end-country-select"
                   value={endCountry}
                   onChange={handleEndCountryChange}
                   helperText="Please select the end country"
@@ -444,7 +451,11 @@ const Flow = () => {
                   }}
                 >
                   {Object.keys(countryCityData).map((country) => (
-                    <MenuItem key={country} value={country}>
+                    <MenuItem
+                      key={country}
+                      value={country}
+                      data-value="country"
+                    >
                       {country}
                     </MenuItem>
                   ))}
@@ -453,6 +464,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose End City"
+                  data-testid="end-city-select"
                   value={endCity}
                   onChange={handleEndCityChange}
                   helperText="Please select the end city"
@@ -485,7 +497,7 @@ const Flow = () => {
                 >
                   {endCountry
                     ? countryCityData[endCountry].map((city) => (
-                        <MenuItem key={city} value={city}>
+                        <MenuItem key={city} value={city} data-value="city">
                           {city}
                         </MenuItem>
                       ))
