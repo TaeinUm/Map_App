@@ -16,6 +16,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
 import { useNavigate } from "react-router-dom";
 
+// Styled component for container
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
   [theme.breakpoints.up("sm")]: {
     display: "flex",
@@ -31,10 +32,12 @@ const ResponsiveContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Profile = () => {
+  // React.createRef, useNavigate, useContext section
   const fileInputRef = React.createRef();
   const navigate = useNavigate();
-
   const { userId, username, profileImage } = useContext(AuthContext);
+
+  // useState section
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState(username);
   const [password, setPassword] = useState("");
@@ -45,7 +48,43 @@ const Profile = () => {
       "https://www.vecteezy.com/vector-art/1840618-picture-profile-icon-male-icon-human-or-people-sign-and-symbol-vector"
   );
 
+  // styles
+  const textFieldStyle = {
+    style: {
+      color: "#FAFAFA",
+      "& .MuiOutlinedInputNotchedOutline": {
+        borderColor: "#FAFAFA",
+      },
+      "&::placeholder": {
+        color: "#FAFAFA",
+      },
+    },
+  };
+
+  const textFieldsx = {
+    width: "100%",
+    "& label.Mui-focused": {
+      color: "#FAFAFA",
+    },
+    "& .MuiOutlinedInput-root": {
+      "& fieldset": {
+        borderColor: "#FAFAFA",
+      },
+      "&.Mui-focused fieldset": {
+        borderColor: "#FAFAFA",
+      },
+    },
+    "& .MuiInputBase-input": {
+      "&::placeholder": {
+        color: "#FAFAFA",
+        opacity: 1,
+      },
+    },
+  };
+
+  /****         useEffect section       *****/
   useEffect(() => {
+    //fetch user's postings
     const fetchPosts = async (id) => {
       try {
         const postings = await profileAPI.getPostings(id);
@@ -54,6 +93,7 @@ const Profile = () => {
         console.error(error);
       }
     };
+    //fetch user's email
     const fetchEmail = async () => {
       try {
         const emailData = await profileAPI.getEmail(userId, username);
@@ -63,6 +103,7 @@ const Profile = () => {
       }
     };
 
+    //check if the user's logged in (has username and id)
     if (username && userId) {
       setProfile(profileImage);
       fetchPosts();
@@ -74,29 +115,7 @@ const Profile = () => {
     setNickname(username);
   }, [username]);
 
-  const handleProfileImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfile(URL.createObjectURL(file));
-      console.log(URL.createObjectURL(file));
-    }
-  };
-
-  const handleEditIconClick = () => {
-    fileInputRef.current.click();
-  };
-
-  const handleProfileImageUpload = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("image", profile);
-      await profileAPI.updateProfilePicture(userId, username, formData);
-      alert("Successfully updated!");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
+  // when Save Changes button's clicked
   const handleSaveChanges = async () => {
     if (!email || !username || !password || !confirmPassword) {
       alert("please completely fill up the form.");
@@ -117,6 +136,7 @@ const Profile = () => {
     }
   };
 
+  // when Create Your Map button's clicked
   const handleCreateMapClick = () => {
     navigate("/map");
   };
@@ -125,6 +145,7 @@ const Profile = () => {
     <ResponsiveContainer>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
+          {/**           Welcome, {user}  & create your map button    */}
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
             <CardContent>
               <Typography
@@ -152,6 +173,8 @@ const Profile = () => {
               </Button>
             </CardContent>
           </Card>
+
+          {/**           User's Postings on Community       */}
           <Card
             sx={{
               mt: 2,
@@ -199,6 +222,8 @@ const Profile = () => {
             </CardActionArea>
           </Card>
         </Grid>
+
+        {/**           Profile Edit   (User Information Change section)       */}
         <Grid item xs={12} sm={6}>
           <Box
             component="form"
@@ -233,37 +258,8 @@ const Profile = () => {
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
               }}
-              InputProps={{
-                style: {
-                  color: "#FAFAFA",
-                  "& .MuiOutlinedInputNotchedOutline": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                  },
-                },
-              }}
-              sx={{
-                width: "100%",
-                "& label.Mui-focused": {
-                  color: "#FAFAFA",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                    opacity: 1,
-                  },
-                },
-              }}
+              InputProps={textFieldStyle}
+              sx={textFieldsx}
             />
 
             <TextField
@@ -277,37 +273,8 @@ const Profile = () => {
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
               }}
-              InputProps={{
-                style: {
-                  color: "#FAFAFA",
-                  "& .MuiOutlinedInputNotchedOutline": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                  },
-                },
-              }}
-              sx={{
-                width: "100%",
-                "& label.Mui-focused": {
-                  color: "#FAFAFA",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                    opacity: 1,
-                  },
-                },
-              }}
+              InputProps={textFieldStyle}
+              sx={textFieldsx}
             />
             <TextField
               label="Password"
@@ -320,37 +287,8 @@ const Profile = () => {
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
               }}
-              InputProps={{
-                style: {
-                  color: "#FAFAFA",
-                  "& .MuiOutlinedInputNotchedOutline": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                  },
-                },
-              }}
-              sx={{
-                width: "100%",
-                "& label.Mui-focused": {
-                  color: "#FAFAFA",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                    opacity: 1,
-                  },
-                },
-              }}
+              InputProps={textFieldStyle}
+              sx={textFieldsx}
             />
             <TextField
               label="Confirm Password"
@@ -363,37 +301,8 @@ const Profile = () => {
               InputLabelProps={{
                 style: { color: "#FAFAFA" },
               }}
-              InputProps={{
-                style: {
-                  color: "#FAFAFA",
-                  "& .MuiOutlinedInputNotchedOutline": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                  },
-                },
-              }}
-              sx={{
-                width: "100%",
-                "& label.Mui-focused": {
-                  color: "#FAFAFA",
-                },
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                  "&.Mui-focused fieldset": {
-                    borderColor: "#FAFAFA",
-                  },
-                },
-                "& .MuiInputBase-input": {
-                  "&::placeholder": {
-                    color: "#FAFAFA",
-                    opacity: 1,
-                  },
-                },
-              }}
+              InputProps={textFieldStyle}
+              sx={textFieldsx}
             />
             <Button
               type="submit"

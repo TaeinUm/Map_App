@@ -1,43 +1,50 @@
-import React, { useContext } from "react";
-import { useMediaQuery, useTheme } from "@mui/material";
-import BasicStyles from "./tab/control/BasicStyles";
-import Point from "./tab/control/Point";
-import Heat from "./tab/control/Heat";
-import Regional from "./tab/control/Regional";
-import Flow from "./tab/control/Flow";
-import ThreeD from "./tab/control/ThreeD";
-import File from "./tab/control/File";
-import MapMobile from "./landing/MapMobile";
+import React, { useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { MapContext } from "../../contexts/MapContext";
-import { Link } from "react-router-dom";
+import { useMediaQuery, useTheme } from "@mui/material";
 
-function MapEditing(children) {
+function MapEditing() {
+  const navigate = useNavigate();
   const { mapType } = useContext(MapContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  let content;
-  if (isMobile) {
-    content = <MapMobile />;
-  } else if (mapType === "Basic Map") {
-    content = <BasicStyles />;
-  } else if (mapType === "Point Map") {
-    content = <Point />;
-  } else if (mapType === "Heat Map") {
-    content = <Heat />;
-  } else if (mapType === "Regional Map") {
-    content = <Regional />;
-  } else if (mapType === "Flow Map") {
-    content = <Flow />;
-  } else if (mapType === "3D-Bar Map") {
-    content = <ThreeD />;
-  } else if (mapType === null) {
-    content = <File />;
-  } else {
-    content = <Link to="*" />;
-  }
+  useEffect(() => {
+    if (isMobile) {
+      // Redirect to the mobile map view
+      navigate("/mobilemap");
+    } else {
+      // Redirect based on the mapType
+      switch (mapType) {
+        case "Basic Map":
+          navigate("/mapedit/basic");
+          break;
+        case "Point Map":
+          navigate("/mapedit/point");
+          break;
+        case "Heat Map":
+          navigate("/mapedit/heat");
+          break;
+        case "Regional Map":
+          navigate("/mapedit/regional");
+          break;
+        case "Flow Map":
+          navigate("/mapedit/flow");
+          break;
+        case "3D-Bar Map":
+          navigate("/mapedit/3d");
+          break;
+        case null:
+          navigate("/mapedit/file");
+          break;
+        default:
+          navigate("/");
+          break;
+      }
+    }
+  }, [mapType, isMobile, navigate]);
 
-  return <>{content}</>;
+  return null;
 }
 
 export default MapEditing;
