@@ -329,27 +329,11 @@ const Point = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
-              <MarkerStylePicker map={map} markers={markers} />
             </Container>
           </TabPanel>
-          {/*<TabPanel value="2">
-            <ShareTab />
-          </TabPanel>*/}
           <TabPanel value="3">
             <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
-          {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
         </TabContext>
       </Box>
     </Box>
