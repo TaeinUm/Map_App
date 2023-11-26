@@ -352,6 +352,8 @@ function CommunityTwo() {
   const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
   const [topGraphics, setTopGraphics] = useState([]);
+  const [questionBuffer, setQuestionBuffer] = useState([]);
+  const [trendingBuffer, setTrendingBuffer] = useState([]);
   //const [allGraphics, setAllGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
@@ -450,8 +452,8 @@ function CommunityTwo() {
         //setAllGraphics(newData);
         console.log("How many graphics are there in total: "+newData.length);
         console.log("is it possible "+newData[0].types);
-        questions = newData.filter(post=>post.postType==="Questions");
-        graphics = newData.filter(post=>post.postType==="map");
+        setQuestionBuffer(newData.filter(post=>post.postType==="Questions"));
+        setTrendingBuffer(newData.filter(post=>post.postType==="map"));
         console.log("What is the length of questions: "+ questions.length);
       } catch (error) {
         console.error("Error fetching top graphics:", error);
@@ -616,7 +618,7 @@ function CommunityTwo() {
             //transform: `translateX(${scrollAmount}px)`,
           }}
           >
-            {questions.filter((post) => post.postName.includes(searchTerm)).map((post) => (
+            {questionBuffer.filter((post) => post.postName.includes(searchTerm)).map((post) => (
               <Typography
                 variant="h2"
                 onMouseEnter={()=>setupQuestionLocal(post)}
@@ -687,14 +689,14 @@ function CommunityTwo() {
                 {post.content}
               </Typography>
             ))} */}
-    {graphics
+    {trendingBuffer
       .filter((graphic) => graphic.postName.includes(searchTerm))
       .slice(startIndex, endIndex)
       .map((graphic, index) => (
-        <Grid item xs={12} sm={6} md={4} key={graphic._id}>
+        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics">
           <StyledCard>
             <CardMedia
-              data-cy="community-trending-graphics"
+              
               component="img"
               height="140"
               image={graphic.postImages}
@@ -743,7 +745,7 @@ function CommunityTwo() {
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
         <Typography variant="h6" noWrap sx={{ display: { xs: 'none', sm: 'block' } }}>
-         
+         {whiteBar}
         </Typography>
 
         {/* Center - Search input */}
