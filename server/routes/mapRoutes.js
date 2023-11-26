@@ -12,4 +12,7 @@ router.delete('/:userId/map-graphics', mapController.deleteUserMapGraphic);
 // Route to get memo content of a map graphic
 router.get('/:userId/:mapId/memo', mapController.getMemoContent);
 
+// Route to update view setting
+router.put('/:userId/view-setting', mapController.updateViewSetting);
+
 module.exports = router;

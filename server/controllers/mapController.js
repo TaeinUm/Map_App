@@ -30,6 +30,7 @@ const deleteUserMapGraphic = async (req, res) => {
   }
 };
 
+// Get the memo content
 const getMemoContent = async (req, res) => {
   const { userId, mapId } = req.params;
 
@@ -45,9 +46,32 @@ const getMemoContent = async (req, res) => {
   }
 };
 
+// Update map view setting
+const updateViewSetting = async (req, res) => {
+  const { userId } = req.params;
+  const { settings, accessSetting } = req.body;
+
+  try {
+    // Assuming you have a field in your Map model to store these settings
+    const updatedMap = await Map.findOneAndUpdate(
+      { userId: userId },
+      { viewSettings: settings, accessSetting: accessSetting },
+      { new: true }
+    );
+    if (!updatedMap) {
+      return res.status(404).json({ message: "Map not found" });
+    }
+    res.json(updatedMap);
+  } catch (error) {
+    console.error("Error updating view setting:", error);
+    res.status(500).json({ message: "Error updating view setting" });
+  }
+};
+
 
 module.exports = {
   getUserMapGraphics,
   deleteUserMapGraphic,
   getMemoContent,
+  updateViewSetting,
 };
