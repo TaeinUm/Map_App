@@ -55,7 +55,7 @@ const mapServiceAPI = {
   updateViewSetting: async (userId, username, settings, accessSetting) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/mpagraphics/${userId}/view-setting`,
+        `${API_BASE_URL}/api/mapgraphics/${userId}/view-setting`,
         {
           params: { username, settings, accessSetting },
         }
