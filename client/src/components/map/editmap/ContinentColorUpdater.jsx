@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import continents from "../tab/control/continentsData";
+import continents from "../tab/control/regionalcontrol/continentsData";
 
 const ContinentColorUpdater = ({ handleContinentSelect, color }) => {
   return (

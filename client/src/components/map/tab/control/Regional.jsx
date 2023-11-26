@@ -22,7 +22,7 @@ import SaveTab from "../SaveTab";
 import CountryAutocomplete from "../../editmap/CountryAutocomplete";
 import TabMenu from "../../editmap/TabMenu";
 import ContinentColorUpdater from "../../editmap/ContinentColorUpdater";
-import continents from "./continentsData";
+import continents from "./regionalcontrol/continentsData";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
