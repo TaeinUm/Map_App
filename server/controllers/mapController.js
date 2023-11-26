@@ -4,8 +4,8 @@ const getUserMapGraphics = async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const mapGraphics = await Map.find({ userId: userId });
-    res.json(mapGraphics);
+    const map = await Map.find({ userId: userId });
+    res.json(map);
   } catch (error) {
     console.error("Error fetching map graphics:", error);
     res.status(500).json({ message: "Error fetching map graphics" });

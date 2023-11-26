@@ -12,6 +12,6 @@ const mapSchema = new mongoose.Schema({
   mapType: Number,
 });
 
-const Post = mongoose.model('Map', mapSchema, 'maps');
+const Map = mongoose.model('Map', mapSchema);
 
 module.exports = Map;
