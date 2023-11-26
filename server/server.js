@@ -54,9 +54,9 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 // Catch-all handler for React routing: serves index.html for all non-API routes
-//app.get('*', (req, res) => {
-//  res.sendFile(path.join(__dirname, '../client/build/index.html'));
-//});
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
 // Root route (serves the React app)
 app.get('/', (req, res) => {
