@@ -80,11 +80,11 @@ const getUsersByName = async (req, res) => {
   const { name } = req.query;
 
   try {
-    const users = await User.find({ name: { $regex: name, $options: 'i' } });
+    const users = await User.find({ userName: { $regex: name, $options: 'i' } });
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Error fetching users" });
+    res.status(500).json({ message: "Error fetching users", whatName: name });
   }
 };
 

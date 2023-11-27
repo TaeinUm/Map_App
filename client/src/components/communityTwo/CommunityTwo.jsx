@@ -278,13 +278,14 @@ import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
 import { useContext } from 'react';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import {useNavigate} from 'react-router-dom';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 //import { likePost } from '../../../../server/controllers/postController';
 
 let newQuestions = ["What should I write in the memo?", "Where can I find the map graphics templates that I liked?", "what is JSON files?"];
 let questions = [];
 let ideas = [];
 let graphics = [];
-let userGraphics =[];
+//let userGraphics =[];
 // Styled components
 const StyledAppBar = styled(AppBar)({
   backgroundColor: '#333', // Customize app bar color
@@ -348,6 +349,7 @@ export var postInfo;
 
 function CommunityTwo() {
   //const [postInfo, setPostInfo] = useState(null);
+  const [userGraphics, setUserGraphics] = useState([]);
   const [authentification, setAuthentification] = useState(true);
   const {getAllPosts} = CommunitySectionAPI;
   const [searchTerm, setSearchTerm] = useState("");
@@ -360,11 +362,48 @@ function CommunityTwo() {
   const [category, setCategory] = useState('');
   const navigate = useNavigate();
   const {navigateTo, updatePostIdAndNavigate, setQuestionTitle, setQuestionContent, questionTitle, updateQuestionTitle, updatePostInfo} = useContext(CommunityContext);
-  const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap} =CommunitySectionAPI;
+  const {getMapsByUsername, getQuestionsBySearch, getIdeasBySearch, getMapsBySearch, likeMap, getPostsByUserId} =CommunitySectionAPI;
   const [whiteBar, setWhiteBar] = useState("Trending Map Graphics");
-  const handleSearchChange = (event) => {
+  const handleSearchChange = async (event) => {
+    console.log("What is the event value "+event.target.value);
+    if(category==="category3"){
+      let total =[];
+      let repeat = [];
+      let users=[];
+      console.log("Does the random bar "+event.target.value);
+      users = await getMapsByUsername(event.target.value);
+      //console.log("what is users: "+JSON.stringify(users[0]));
+      for (let user in users){
+        //console.log("What is the user id: "+user._id)
+        console.log("what is users: "+users[user]._id);
+        repeat= await getPostsByUserId(users[user]._id);
+        
+        total = total.concat(repeat);
+        console.log("what is total: "+total);
+        setUserGraphics(total);
+      }
+
+    }
+    
     setSearchTerm(event.target.value);
     
+    
+  };
+  const handleUserSearch = async (e) => {
+    if(e === 'Enter'){
+      if(category==="category3"){
+        let repeat = [];
+        let users=[];
+        console.log("Does the random bar "+document.getElementById("random-search-bar"));
+        users = await getMapsByUsername(document.getElementById("random-search-bar"));
+        
+        for (let user in users){
+          repeat= await getPostsByUserId(user);
+          userGraphics.concat(repeat);
+        }
+  
+      }
+    }
   };
   function setupQuestionPost(text){
     updateQuestionTitle(text);
@@ -423,6 +462,7 @@ function CommunityTwo() {
 
 
   const handleCategoryChange = (event) => {
+    
     setCategory(event.target.value);
     if (event.target.value==="category1"){
       setWhiteBar("Questions");
@@ -448,7 +488,7 @@ function CommunityTwo() {
         const data = await getTop5Trending();
         setTopGraphics(data);
         newData = await getAllPosts();
-        
+        setUserGraphics(newData);
         //setAllGraphics(newData);
         console.log("How many graphics are there in total: "+newData.length);
         console.log("is it possible "+newData[0].types);
@@ -466,6 +506,7 @@ function CommunityTwo() {
       setAuthentification(false);
     }
     console.log("is my scoping wrong: "+newData);
+    
     //questions = newData.filter(post=>post.types==="Questions");
     // for (let key in newData){
     //   console.log((key));
@@ -602,6 +643,98 @@ function CommunityTwo() {
   //         </Box>
   //         </Box>;
   // }
+  if (category === "category3"){
+    content=
+    <Box>
+    <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+        Username Posts:
+      </Typography>
+      <Box 
+          sx={{
+            display: "flex-column",
+            width: "3250px",
+            gap: "10px",
+            mt: 5,
+            transition: "transform 0.5s",
+            //transform: `translateX(${scrollAmount}px)`,
+          }}
+          >
+            {userGraphics
+      
+      
+      .map((graphic, index) => (
+        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics" >
+          <StyledCard>
+            <CardMedia
+              
+              component="img"
+              height="140"
+              image={graphic.postImages}
+              alt={graphic.postName}
+            />
+            <CardContent>
+              <Typography gutterBottom variant="h6" onMouseEnter={()=>setupQuestionLocal(graphic)} component={NavLink}
+                to={"/communityGraphicPost/:"+graphic.postName}>
+                {graphic.postName}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <IconButton aria-label="add to favorites" onClick={()=>giveALike(localStorage.getItem("newUserid"), graphic._id)}>
+                <FavoriteBorderIcon />
+              </IconButton>
+              <IconButton aria-label="share">
+                <ShareIcon />
+              </IconButton>
+              <Button size="small" color="primary">
+                More
+              </Button>
+            </CardActions>
+          </StyledCard>
+        </Grid>
+    ))}
+            {/* {questionBuffer.filter((post) => post.postName.includes(searchTerm)).map((post) => (
+              <Typography
+                variant="h2"
+                onMouseEnter={()=>setupQuestionLocal(post)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                // component={NavLink}
+                // to={"/communityUserNamePost/:"+post.postName}
+              >
+                {post.postName}
+              </Typography>
+            ))} */}
+            {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
+              <Typography
+                variant="h2"
+                onClick={setupQuestionPost(text)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+text}
+              >
+                {text}
+              </Typography>
+            ))} */}
+          </Box>
+          </Box>;
+  }
   
   if (category === "category1"){
     content=
@@ -775,10 +908,12 @@ function CommunityTwo() {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
+              id = "random-search-bar"
               data-cy="community-search-bar"
               placeholder="Search…"
               inputProps={{ 'aria-label': 'search' }}
               onChange={handleSearchChange}
+              onKeyDown={handleUserSearch}
               onKeyPress= {(e) => {
                 if (e.key === 'Enter') {
                   console.log('Enter key pressed');

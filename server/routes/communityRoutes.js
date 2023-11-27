@@ -27,7 +27,7 @@ router.post('/post', postController.writePost);
 router.get('/getAllPosts', postController.getAllPosts);
 
 // Get all posts regarding postID
-router.get('/getMapsByUsername/:postId', searchController.searchMapByUserName);
+router.get('/getMapsByUsername/:userIden', searchController.searchMapByUserName);
 
 // Get Question Post by title Text Matched
 router.get('/getQuestions/:searchText', searchController.searchQuestionByText);
