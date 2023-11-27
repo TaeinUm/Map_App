@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/");
-    setMapId(null);
+    setMapId(null); // remove all the context data
     setUserId("");
     setUsername("");
     setIsAuthenticated(false);
