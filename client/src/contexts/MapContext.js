@@ -8,7 +8,7 @@ export const MapProvider = ({ children }) => {
   const [mapLink, setMapLink] = useState(""); // the URL of the current working map graphics edit
   const [mapType, setMapType] = useState(null); //
   const [memoContent, setMemoContent] = useState("");
-  const [mapId, setMapId] = useState(0);
+  const [mapId, setMapId] = useState(null);
   const [geojsonData, setGeojsonData] = useState(null);
   const { userId, username } = useContext(AuthContext);
 
@@ -31,6 +31,7 @@ export const MapProvider = ({ children }) => {
         setGeojsonData,
         updateMapContextAndNavigate,
         mapId,
+        setMapId,
       }}
     >
       {children}

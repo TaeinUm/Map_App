@@ -14,21 +14,24 @@ function MapList({ searchQuery }) {
   const { updateMapContextAndNavigate } = useContext(MapContext);
   const navigate = useNavigate();
 
-  const { userId, username, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userMapGraphics = await mapServiceAPI.getUserMapGraphics(
-          userId,
-          username
-        );
+        const userInfo = await mapServiceAPI.getUserMapGraphics(userId);
+        if (!Array.isArray(userInfo)) {
+          return;
+        }
 
-        const filteredData = userMapGraphics
-          .filter((item) =>
-            item.title.toLowerCase().includes(searchQuery.toLowerCase())
+        const filteredData = userInfo
+          .filter(
+            (item) =>
+              item &&
+              item.mapName &&
+              item.mapName.toLowerCase().includes(searchQuery.toLowerCase())
           )
-          .sort((a, b) => b.date.localeCompare(a.date));
+          .sort((a, b) => new Date(b.mapDate) - new Date(a.mapDate));
 
         setMapListData(filteredData);
       } catch (error) {
@@ -37,7 +40,7 @@ function MapList({ searchQuery }) {
     };
 
     fetchData();
-  }, [searchQuery]);
+  }, [searchQuery, userId]);
 
   const handleItemClick = (mapId, mapType, mapLayer) => {
     updateMapContextAndNavigate(mapId, mapType, mapLayer, navigate);
@@ -63,7 +66,7 @@ function MapList({ searchQuery }) {
     );
     if (confirmDelete) {
       try {
-        await mapServiceAPI.deleteUserMapGraphic(userId, username, mapId);
+        await mapServiceAPI.deleteUserMapGraphic(userId, mapId);
         const updatedData = mapListData.filter(
           (_, index) => index !== indexToRemove
         );
@@ -97,7 +100,7 @@ function MapList({ searchQuery }) {
               type="button"
               sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}
               onClick={() =>
-                handleItemClick(item.mapId, item.mapType, item.mapLayer)
+                handleItemClick(item._id, item.mapType, item.mapData)
               }
             >
               <img
@@ -108,18 +111,27 @@ function MapList({ searchQuery }) {
             <Typography
               type="button"
               variant="h6"
-              onClick={() => handleItemClick(item.mapType, item.mapLayer)}
+              onClick={() =>
+                handleItemClick(item._id, item.mapType, item.mapData)
+              }
               sx={{ flexGrow: 1, textAlign: "left", marginLeft: "30px" }}
             >
-              {item.title}
+              {item.vers + ". " + item.mapName}
             </Typography>
             <Typography variant="body2" sx={{ mx: 2 }}>
-              {item.date}
+              {new Date(item.mapDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </Typography>
             {/*<IconButton size="small">
               <FiShare />
             </IconButton>*/}
-            <IconButton size="small" onClick={() => handleDelete(index)}>
+            <IconButton
+              size="small"
+              onClick={() => handleDelete(item._id, index)}
+            >
               <FiTrash />
             </IconButton>
           </Box>
