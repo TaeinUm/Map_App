@@ -19,17 +19,17 @@ function MapList({ searchQuery }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log(userId);
         const userInfo = await mapServiceAPI.getUserMapGraphics(userId);
         if (!Array.isArray(userInfo)) {
           return;
         }
 
         const filteredData = userInfo
-          .filter(
-            (item) =>
-              item &&
-              item.mapName &&
-              item.mapName.toLowerCase().includes(searchQuery.toLowerCase())
+          .filter((item) =>
+            item?.mapName
+              ?.toLowerCase()
+              .includes(searchQuery?.toLowerCase() ?? "")
           )
           .sort((a, b) => new Date(b.mapDate) - new Date(a.mapDate));
 
