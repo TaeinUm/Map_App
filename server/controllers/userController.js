@@ -77,6 +77,7 @@ const getEmail = async (req, res) => {
 }
 
 const getUsersByName = async (req, res) => {
+  const {name} = req.query;
   try {
     const users = await User.find({ userName: { $regex: name, $options: 'i' } });
 
