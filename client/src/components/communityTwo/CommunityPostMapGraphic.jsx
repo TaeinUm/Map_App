@@ -3,15 +3,17 @@ import { Box, Typography, Radio, RadioGroup, FormControlLabel, FormControl, Text
 import FileLoader from './FileLoader';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 //const mongoose = require('mongoose');
 //import { loginUser } from '../../../../server/controllers/userController';
 //const session = require('express-session');
 //var newId = new mongoose.mongo.ObjectId();
 //let hardCodedUserIds = [newId];
 function CommunityPostMapGraphic() {
-  const [postType, setPostType] = useState('Map Graphics');
-  const [privacyType, setPrivacyType] = useState('private');
+  const [postType, setPostType] = useState("Questions");
+  const [privacyType, setPrivacyType] = useState("1");
   const {makePost} = CommunitySectionAPI;
+  const navigate = useNavigate();
   //const {userEmail} = AuthContext;
 
   function handlePostButton(){
@@ -22,7 +24,9 @@ function CommunityPostMapGraphic() {
     //console.log("Is there a userEmail: "+userEmail);
     //console.log("What is the userId from post: "+newId);
     const currentTimeSec = new Date();
-    makePost(localStorage.getItem("newUserid"), document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value, privacyType, document.getElementById("shabi-file").files[0], currentTimeSec)
+    makePost(localStorage.getItem("newUserid"), document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value, parseInt(privacyType), document.getElementById("shabi-file").files[0], currentTimeSec);
+    alert("You are being directed to the community landing page");
+    navigate("/community");
   }
 
   return (
@@ -48,7 +52,7 @@ function CommunityPostMapGraphic() {
     aria-label="privacy-type"
     name="privacyType"
     value={privacyType}
-    onChange={(event) => setPrivacyType(parseInt(event.target.value))}
+    onChange={(event) => setPrivacyType(event.target.value)}
     sx={{ justifyContent: 'flex-start', width: '100%', alignItems: 'flex-start' }} // Align items to the start on the cross-axis
   >
     <FormControlLabel value="0" control={<Radio />} label="Private" />

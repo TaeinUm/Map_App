@@ -105,7 +105,7 @@ function App() {
                   element={<CommunityQuestionPost />}
                 />
                 <Route
-                  path="/communityGraphicPost/:index"
+                  path="/communityGraphicPost/:postsTitle"
                   element={<CommunityGraphicPost />}
                 />
                 <Route path="/signup" element={<SignUp />} />
