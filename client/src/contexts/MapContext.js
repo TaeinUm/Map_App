@@ -31,6 +31,7 @@ export const MapProvider = ({ children }) => {
         setGeojsonData,
         updateMapContextAndNavigate,
         mapId,
+        setMapId,
       }}
     >
       {children}

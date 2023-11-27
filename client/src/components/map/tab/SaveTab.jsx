@@ -13,6 +13,7 @@ import * as mapboxgl from "mapbox-gl";
 import axios from "axios";
 
 import { AuthContext } from "../../../contexts/AuthContext";
+import { MapContext } from "../../../contexts/MapContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -36,6 +37,7 @@ const selectStyle = {
 
 function SaveTab({ onSave, mapLayer, map }) {
   const { isAuthenticated } = useContext(AuthContext);
+  const { setMapId } = useContext(MapContext);
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -122,6 +124,7 @@ function SaveTab({ onSave, mapLayer, map }) {
       exportMapAsJson();
     }
 
+    setMapId(null);
     onSave(title, versionSetting, privacySetting);
   };
 

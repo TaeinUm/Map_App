@@ -142,16 +142,18 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
-        image
+        image,
       };
       let response;
       if (mapId) {
+        console.log("let's go");
         // Update existing map graphic if mapId is provided
         response = await axios.put(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
           mapGraphicData
         );
       } else if (mapId === null) {
+        console.log("here we go~");
         // Create a new map graphic if no mapId is provided
         response = await axios.post(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
