@@ -122,7 +122,10 @@ const updateMapGraphic = async (req, res) => {
   try {
     const updatedMap = await Map.findOneAndUpdate(
       { _id: mapId, userId: userId },
-      { mapType, mapLayer },
+      { 
+        mapType, 
+        mapData: mapLayer // Storing mapLayer in mapData field
+      },
       { new: true }
     );
     if (!updatedMap) {
@@ -134,6 +137,7 @@ const updateMapGraphic = async (req, res) => {
     res.status(500).json({ message: "Error updating map graphic" });
   }
 };
+
 
 const getMapGraphicData = async (req, res) => {
   const { userId, mapId } = req.params;
