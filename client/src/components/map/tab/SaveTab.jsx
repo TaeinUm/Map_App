@@ -121,14 +121,13 @@ function SaveTab({ onSave, mapLayer, map }) {
     } else if (exportFile === "json") {
       exportMapAsJson();
     }
+    console.log("mapLayer to DB: ", mapLayer);
+    console.log("mapLayer type: ", typeof JSON.stringify(mapLayer));
+    console.log("title type: ", typeof title);
+    console.log("version type: ", typeof versionSetting);
+    console.log("privacy type: ", typeof privacySetting);
 
-    // Get the map's style as JSON
-    const mapStyleJson = map.getStyle();
-    // Convert the JSON to a string
-    const mapStyleString = JSON.stringify(mapStyleJson, null, 2);
-    console.log(mapStyleString);
-
-    onSave(title, versionSetting, privacySetting, mapStyleString);
+    onSave(title, versionSetting, privacySetting);
   };
 
   return (
