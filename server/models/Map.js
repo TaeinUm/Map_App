@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const mapSchema = new mongoose.Schema({
-  _id: mongoose.Schema.Types.ObjectId,
   mapName: String,
   mapDate: Date,
   mapData: String,
@@ -10,6 +9,7 @@ const mapSchema = new mongoose.Schema({
   vers: String,
   mapType: String,
   privacy: String,
+  image: { type: Buffer, required: false },
 });
 
 const Map = mongoose.model("Map", mapSchema);
