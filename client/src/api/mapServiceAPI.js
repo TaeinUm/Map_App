@@ -132,8 +132,7 @@ const mapServiceAPI = {
     version,
     privacy,
     mapType,
-    mapLayer,
-    image
+    mapLayer
   ) => {
     try {
       const mapGraphicData = {
@@ -142,7 +141,6 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
-        image,
       };
       let response;
       if (mapId) {
