@@ -19,15 +19,15 @@ function MapList({ searchQuery }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userMapGraphics = await mapServiceAPI.getUserMapGraphics(userId);
-        if (!userMapGraphics) return;
+        const userInfo = await mapServiceAPI.getUserMapGraphics(userId);
+        if (userInfo === undefined) return;
 
-        const filteredData = userMapGraphics
+        const filteredData = userInfo
           .filter(
             (item) =>
               item &&
-              item.title &&
-              item.title.toLowerCase().includes(searchQuery.toLowerCase())
+              item.mapName &&
+              item.mapName.toLowerCase().includes(searchQuery.toLowerCase())
           )
           .sort((a, b) => b.date.localeCompare(a.date));
 
@@ -38,7 +38,7 @@ function MapList({ searchQuery }) {
     };
 
     fetchData();
-  }, [searchQuery]);
+  }, [searchQuery, userId]);
 
   const handleItemClick = (mapId, mapType, mapLayer) => {
     updateMapContextAndNavigate(mapId, mapType, mapLayer, navigate);
@@ -64,7 +64,7 @@ function MapList({ searchQuery }) {
     );
     if (confirmDelete) {
       try {
-        await mapServiceAPI.deleteUserMapGraphic(userId, username, mapId);
+        await mapServiceAPI.deleteUserMapGraphic(userId, mapId);
         const updatedData = mapListData.filter(
           (_, index) => index !== indexToRemove
         );
@@ -98,7 +98,7 @@ function MapList({ searchQuery }) {
               type="button"
               sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}
               onClick={() =>
-                handleItemClick(item.mapId, item.mapType, item.mapLayer)
+                handleItemClick(item.mapId, item.mapType, item.mapData)
               }
             >
               <img
@@ -110,14 +110,18 @@ function MapList({ searchQuery }) {
               type="button"
               variant="h6"
               onClick={() =>
-                handleItemClick(item.mapId, item.mapType, item.mapLayer)
+                handleItemClick(item.mapId, item.mapType, item.mapData)
               }
               sx={{ flexGrow: 1, textAlign: "left", marginLeft: "30px" }}
             >
-              {item.title}
+              {item.vers + ". " + item.mapName}
             </Typography>
             <Typography variant="body2" sx={{ mx: 2 }}>
-              {item.date}
+              {new Date(item.mapDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </Typography>
             {/*<IconButton size="small">
               <FiShare />
