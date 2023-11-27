@@ -2,11 +2,17 @@ const Post = require('../models/Post');
 
 exports.searchMapByUserName = async (req, res) => {
     try {
-        const userId = req.params.userId;
+        
+        //const {userId} = req.query;
+        const userId = req.params.userIden;
+        
         const maps = await Post.find({ 
             userId: userId,
             postType: "map"
         });
+        for(let map in maps){
+            console.log("What is the JSON: "+JSON.stringify(maps[map]));
+        }
         res.json(maps);
     } catch (error) {
         res.status(500).json({ message: error.message });
