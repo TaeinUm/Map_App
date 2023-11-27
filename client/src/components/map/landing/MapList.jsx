@@ -23,8 +23,11 @@ function MapList({ searchQuery }) {
         if (!userMapGraphics) return;
 
         const filteredData = userMapGraphics
-          .filter((item) =>
-            item.title.toLowerCase().includes(searchQuery.toLowerCase())
+          .filter(
+            (item) =>
+              item &&
+              item.title &&
+              item.title.toLowerCase().includes(searchQuery.toLowerCase())
           )
           .sort((a, b) => b.date.localeCompare(a.date));
 
@@ -106,7 +109,9 @@ function MapList({ searchQuery }) {
             <Typography
               type="button"
               variant="h6"
-              onClick={() => handleItemClick(item.mapType, item.mapLayer)}
+              onClick={() =>
+                handleItemClick(item.mapId, item.mapType, item.mapLayer)
+              }
               sx={{ flexGrow: 1, textAlign: "left", marginLeft: "30px" }}
             >
               {item.title}
