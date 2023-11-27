@@ -77,10 +77,13 @@ const getEmail = async (req, res) => {
 }
 
 const getUsersByName = async (req, res) => {
-  const { name } = req.query;
-
   try {
-    const users = await User.find({ name: { $regex: name, $options: 'i' } });
+    const name = req.query.name;
+    const regex = new RegExp(name, 'i'); // 'i' for case-insensitive
+
+    // Search for users by userName
+    const users = await User.find({ userName: { $regex: regex } });
+
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
