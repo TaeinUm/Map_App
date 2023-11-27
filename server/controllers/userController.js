@@ -77,13 +77,14 @@ const getEmail = async (req, res) => {
 }
 
 const getUsersByName = async (req, res) => {
-  try {
-    const users = await User.find({ userName: { $regex: name, $options: 'i' } });
+  const { searchedUser } = req.params;
 
+  try {
+    const users = await User.find({ name: { $regex: searchedUser, $options: 'i' } });
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Error fetching users", whatName: name });
+    res.status(500).json({ message: "Error fetching users" });
   }
 };
 

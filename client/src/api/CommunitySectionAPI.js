@@ -174,8 +174,8 @@ const CommunitySectionAPI = {
         //const { isAuthenticated, userId, username } = AuthContext;
         try {
             const response = await axios.get(
-            `${API_BASE_URL}/api/users/?name=${searchedUser}`,{
-                params:{dopu: searchedUser},
+            `${API_BASE_URL}/api/users/`,{
+                params: searchedUser,
             }
             );
             return response.data;
