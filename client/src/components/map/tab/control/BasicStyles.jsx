@@ -121,19 +121,10 @@ const BasicStyles = () => {
         if (mapId) {
           try {
             // Fetch map graphics data using mapId
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
-            const mapLayer = data.mapLayer;
-
-            // Check if mapLayer is valid and add it to the map
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = data.mapData;
+            console.log("mapLayer: ", mapLayer);
+            setStyleSettings(JSON.parse(mapLayer));
           } catch (error) {
             console.error("Error loading map graphics:", error);
           } finally {
