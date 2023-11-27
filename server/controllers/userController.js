@@ -1,7 +1,6 @@
-const bcrypt = require('bcrypt');
-const User = require('../models/User'); // Adjust the path according to your structure
-const sharp = require('sharp');
-
+const bcrypt = require("bcrypt");
+const User = require("../models/User"); // Adjust the path according to your structure
+const sharp = require("sharp");
 
 // Update user profile image
 const updateProfilePicture = async (req, res) => {
@@ -26,7 +25,9 @@ const updateProfilePicture = async (req, res) => {
     res.status(200).json({ message: "Profile picture updated successfully" });
   } catch (error) {
     console.error("Error updating profile picture:", error);
-    res.status(500).json({ message: "Error updating profile picture: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating profile picture: " + error.message });
   }
 };
 
@@ -51,7 +52,9 @@ const updateUserDetails = async (req, res) => {
 
     // Save the updated user
     const updatedUser = await user.save();
-    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
     res.status(500).json({ message: "Error updating user: " + error.message });
   }
@@ -72,22 +75,26 @@ const getEmail = async (req, res) => {
     res.json({ email: user.email });
   } catch (error) {
     console.error("Error fetching user email:", error);
-    res.status(500).json({ message: "Error fetching user email: " + error.message });
-  }
-}
-
-const getUsersByName = async (req, res) => {
-  const {name} = req.query;
-  try {
-    const users = await User.find({ userName: { $regex: name, $options: 'i' } });
-
-    res.json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Error fetching users", whatName: name });
+    res
+      .status(500)
+      .json({ message: "Error fetching user email: " + error.message });
   }
 };
 
+const getUsersByName = async (req, res) => {
+  const { searchedUser } = req.params;
+  const regexPattern = String(searchedUser);
+
+  try {
+    const users = await User.find({
+      userName: { $regex: regexPattern, $options: "i" },
+    });
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Error fetching users" });
+  }
+};
 
 module.exports = {
   updateProfilePicture,
