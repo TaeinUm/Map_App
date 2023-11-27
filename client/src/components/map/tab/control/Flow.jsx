@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -42,10 +43,11 @@ const textFieldStyles = {
 
 const Flow = () => {
   const [map, setMap] = useState(null);
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const mapContainer = useRef();
   const [isLoading, setIsLoading] = useState(true);
@@ -293,6 +295,8 @@ const Flow = () => {
         "Flow Map",
         JSON.stringify(styleSettings)
       );
+      setMapId(null);
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);

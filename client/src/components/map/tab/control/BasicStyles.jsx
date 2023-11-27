@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, CircularProgress, Slider, Typography } from "@mui/material";
@@ -21,6 +22,7 @@ const BasicStyles = () => {
   const mapContainer = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
@@ -237,6 +239,7 @@ const BasicStyles = () => {
         JSON.stringify(styleSettings)
       );
       setMapId(null);
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
