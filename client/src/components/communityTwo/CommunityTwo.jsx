@@ -356,6 +356,7 @@ function CommunityTwo() {
   const [topGraphics, setTopGraphics] = useState([]);
   const [questionBuffer, setQuestionBuffer] = useState([]);
   const [trendingBuffer, setTrendingBuffer] = useState([]);
+  const [ideasBuffer, setIdeasBuffer] = useState([]);
   //const [allGraphics, setAllGraphics] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
@@ -494,6 +495,7 @@ function CommunityTwo() {
         console.log("is it possible "+newData[0].types);
         setQuestionBuffer(newData.filter(post=>post.postType==="Questions"));
         setTrendingBuffer(newData.filter(post=>post.postType==="map"));
+        setIdeasBuffer(newData.filter(post=>post.postType==="Map Ideas"));
         console.log("What is the length of TrendingBuffer? "+trendingBuffer.length);
         console.log("What is the length of questions: "+ questions.length);
       } catch (error) {
@@ -643,6 +645,66 @@ function CommunityTwo() {
   //         </Box>
   //         </Box>;
   // }
+  if (category === "category2"){
+    content=
+    <Box>
+    <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
+        Map Ideas:
+      </Typography>
+      <Box 
+          sx={{
+            display: "flex-column",
+            height: "1000px",
+            width: "3250px",
+            gap: "10px",
+            mt: 5,
+            transition: "transform 0.5s",
+            //transform: `translateX(${scrollAmount}px)`,
+          }}
+          >
+            {ideasBuffer.filter((post) => post.postName.includes(searchTerm)).map((post) => (
+              <Typography
+                variant="h2"
+                onMouseEnter={()=>setupQuestionLocal(post)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+post.postName}
+              >
+                {post.postName}
+              </Typography>
+            ))}
+            {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
+              <Typography
+                variant="h2"
+                onClick={setupQuestionPost(text)}
+                sx={{
+                  fontSize: "20px",
+                  color: "#FAFAFA",
+                  mb: 2,
+                  ml: 5,
+                  display: "flex",
+                  flexGrow: "1",
+                  fontWeight: "bold",
+                }}
+                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
+                component={NavLink}
+                to={"/communityQuestionPost/:"+text}
+              >
+                {text}
+              </Typography>
+            ))} */}
+          </Box>
+          </Box>;
+  }
   if (category === "category3"){
     content=
     <Box>
@@ -652,7 +714,8 @@ function CommunityTwo() {
       <Box 
           sx={{
             display: "flex-column",
-            width: "3250px",
+            width: "100%",
+            height: "100%",
             gap: "10px",
             mt: 5,
             transition: "transform 0.5s",
@@ -663,15 +726,20 @@ function CommunityTwo() {
       
       
       .map((graphic, index) => (
-        <Grid item xs={12} sm={6} md={4} key={graphic._id} data-cy="community-trending-graphics" >
+        <Grid item xs={12} sm={6} md={4} key={graphic._id} m={2} data-cy="community-trending-graphics" >
           <StyledCard>
-            <CardMedia
-              
-              component="img"
-              height="140"
-              image={graphic.postImages}
-              alt={graphic.postName}
-            />
+            <Paper
+              key={index}
+              elevation={4}
+              data-cy="trending-graphic"
+              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            >
+              <img
+                src={graphic.postImages}
+                alt={graphic.postName}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              />
+            </Paper>
             <CardContent>
               <Typography gutterBottom variant="h6" onMouseEnter={()=>setupQuestionLocal(graphic)} component={NavLink}
                 to={"/communityGraphicPost/:"+graphic.postName}>
@@ -875,7 +943,7 @@ function CommunityTwo() {
   
 
   return (
-    <Container maxWidth="lg" sx={{ paddingBottom: 4, height: "100vh" }}>
+    <Container maxWidth="lg" sx={{ paddingBottom: 4, height: "100%" }}>
       <AppBar position="static" color="default" elevation={0}>
       <StyledToolbar sx={{ color:"black" }}>
         {/* Left side - Title */}
