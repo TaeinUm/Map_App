@@ -100,7 +100,7 @@ function MapList({ searchQuery }) {
               type="button"
               sx={{ width: 60, height: 60, bgcolor: "grey", mr: 2 }}
               onClick={() =>
-                handleItemClick(item.mapId, item.mapType, item.mapData)
+                handleItemClick(item._id, item.mapType, item.mapData)
               }
             >
               <img
@@ -112,7 +112,7 @@ function MapList({ searchQuery }) {
               type="button"
               variant="h6"
               onClick={() =>
-                handleItemClick(item.mapId, item.mapType, item.mapData)
+                handleItemClick(item._id, item.mapType, item.mapData)
               }
               sx={{ flexGrow: 1, textAlign: "left", marginLeft: "30px" }}
             >

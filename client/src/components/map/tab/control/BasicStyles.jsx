@@ -22,7 +22,7 @@ const BasicStyles = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -121,19 +121,9 @@ const BasicStyles = () => {
         if (mapId) {
           try {
             // Fetch map graphics data using mapId
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
-            const mapLayer = data.mapLayer;
-
-            // Check if mapLayer is valid and add it to the map
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = data.mapData;
+            setStyleSettings(JSON.parse(mapLayer));
           } catch (error) {
             console.error("Error loading map graphics:", error);
           } finally {
@@ -246,6 +236,7 @@ const BasicStyles = () => {
         "Basic Map",
         JSON.stringify(styleSettings)
       );
+      setMapId(null);
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);

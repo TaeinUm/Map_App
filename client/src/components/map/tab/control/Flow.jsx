@@ -26,19 +26,43 @@ import LineWidthSlider from "./flowcontrol/LineWidthSlider";
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
+const textFieldStyles = {
+  width: "150px",
+  "& .MuiInputLabel-root": { color: "#fafafa !important" },
+  "& .MuiFormHelperText-root": { color: "#fafafa !important" },
+  "& .MuiOutlinedInput-notchedOutline": { borderColor: "#fafafa !important" },
+  "& select": {
+    borderColor: "#fafafa",
+    color: "#fafafa",
+    "&:focus": { borderColor: "#fafafa" },
+  },
+  "& .MuiSelect-icon": { color: "#fafafa" },
+  "& .MuiInputBase-input": { color: "#fafafa" },
+};
+
 const Flow = () => {
   const [map, setMap] = useState(null);
   const { mapId } = useContext(MapContext);
-  const { userId, username } = useContext(AuthContext);
+  const { userId } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
+  const mapContainer = useRef();
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [lineCurvature, setLineCurvature] = useState(0.5);
-  const [lineOpacity, setLineOpacity] = useState(1);
-  const [lineWidth, setLineWidth] = useState(5);
+  const [regionColor, setRegionColor] = useState("#FF5733");
+  const [startCountry, setStartCountry] = useState("");
+  const [startCity, setStartCity] = useState("");
+  const [endCountry, setEndCountry] = useState("");
+  const [endCity, setEndCity] = useState("");
+  const [tabValue, setTabValue] = useState("1");
+
+  const [styleSettings, setStyleSettings] = useState({
+    lineCurvature: 0.5,
+    lineOpacity: 1,
+    lineWidth: 5,
+    flows: [],
+  });
 
   const countryCityData = {
     USA: ["New York", "Los Angeles", "Chicago"],
@@ -64,19 +88,6 @@ const Flow = () => {
     },
   };
 
-  const [regionColor, setRegionColor] = useState("#FF5733");
-  const mapContainer = useRef();
-  const [memo, setMemo] = useState("");
-  const [flows, setFlows] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const [startCountry, setStartCountry] = useState("");
-  const [startCity, setStartCity] = useState("");
-  const [endCountry, setEndCountry] = useState("");
-  const [endCity, setEndCity] = useState("");
-
-  const [tabValue, setTabValue] = useState("1");
-
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -100,8 +111,8 @@ const Flow = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     if (!map) {
+      setIsLoading(true);
       const newMap = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/streets-v11",
@@ -117,33 +128,41 @@ const Flow = () => {
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
-      newMap.on("load", () => {
-        setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
+      newMap.on("load", async () => {
+        if (mapId) {
+          try {
+            // Fetch map graphics data using mapId
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = JSON.parse(data.mapData);
+            setStyleSettings(mapLayer);
+            drawExistingFlows(mapLayer.flows, newMap);
+          } catch (error) {
+            console.error("Error loading map graphics:", error);
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
+          }
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
+        }
       });
     }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
-    }
-
-    setIsLoading(false);
   }, [map]);
 
   useEffect(() => {
     if (map) {
-      flows.forEach((flow) => {
+      styleSettings.flows.forEach((flow) => {
         if (map.getLayer(flow.id)) {
-          map.setPaintProperty(flow.id, "line-opacity", lineOpacity);
+          map.setPaintProperty(
+            flow.id,
+            "line-opacity",
+            styleSettings.lineOpacity
+          );
         }
       });
     }
-  }, [lineOpacity, map, flows]);
+  }, [styleSettings, map]);
 
   const drawFlow = () => {
     if (startCountry && startCity && endCountry && endCity) {
@@ -156,7 +175,7 @@ const Flow = () => {
         countryCityCoordinates[endCountry][endCity].lat,
       ];
 
-      const flowId = `flow-${Date.now()}`;
+      const flowId = `flow-${startCountry}-${startCity}-${endCountry}-${endCity}-${Date.now()}`;
 
       if (!map.getLayer(flowId)) {
         map.addLayer({
@@ -175,7 +194,7 @@ const Flow = () => {
                     coordinates: getCurvedLineCoordinates(
                       startPoint,
                       endPoint,
-                      lineCurvature
+                      styleSettings.lineCurvature
                     ),
                   },
                 },
@@ -188,19 +207,29 @@ const Flow = () => {
           },
           paint: {
             "line-color": regionColor,
-            "line-width": lineWidth,
-            "line-opacity": lineOpacity,
+            "line-width": styleSettings.lineWidth,
+            "line-opacity": styleSettings.lineOpacity,
           },
         });
       }
 
       const flowLog = `${startCountry}, ${startCity} -> ${endCountry}, ${endCity}`;
-      setMemo((prevMemo) => (prevMemo ? `${prevMemo}\n${flowLog}` : flowLog));
 
-      setFlows((prevFlows) => [
-        ...prevFlows,
-        { id: flowId, log: flowLog, color: regionColor },
-      ]);
+      setStyleSettings((prevSettings) => {
+        const newFlow = {
+          id: flowId,
+          log: flowLog,
+          start: startPoint,
+          end: endPoint,
+          color: regionColor,
+          curvature: styleSettings.lineCurvature,
+          lineWidth: styleSettings.lineWidth,
+        };
+        return {
+          ...prevSettings,
+          flows: [...prevSettings.flows, newFlow],
+        };
+      });
 
       setStartCountry("");
       setStartCity("");
@@ -209,21 +238,60 @@ const Flow = () => {
     }
   };
 
+  const drawExistingFlows = (flows, mapInstance) => {
+    flows.forEach((flow) => {
+      if (!mapInstance.getLayer(flow.id)) {
+        // Add the layer for each flow
+        mapInstance.addLayer({
+          id: flow.id,
+          type: "line",
+          source: {
+            type: "geojson",
+            data: {
+              type: "FeatureCollection",
+              features: [
+                {
+                  type: "Feature",
+                  properties: {},
+                  geometry: {
+                    type: "LineString",
+                    coordinates: getCurvedLineCoordinates(
+                      flow.start,
+                      flow.end,
+                      flow.curvature
+                    ),
+                  },
+                },
+              ],
+            },
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-color": flow.color,
+            "line-width": flow.lineWidth,
+          },
+        });
+      }
+    });
+  };
+
   const flowColorChange = (event) => {
     setRegionColor(event.target.value);
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
         title,
         version,
         privacy,
         "Flow Map",
-        mapLayer
+        JSON.stringify(styleSettings)
       );
       alert("Map saved successfully");
     } catch (error) {
@@ -305,16 +373,21 @@ const Flow = () => {
                   onChange={flowColorChange}
                 />
               </Box>
-
               <CurveSlider
-                value={lineCurvature}
-                onChange={(e, newVal) => setLineCurvature(newVal)}
+                value={styleSettings.lineCurvature}
+                onChange={(e, newVal) =>
+                  setStyleSettings((prev) => ({
+                    ...prev,
+                    lineCurvature: newVal,
+                  }))
+                }
               />
               <LineWidthSlider
-                value={lineWidth}
-                onChange={(e, newVal) => setLineWidth(newVal)}
+                value={styleSettings.lineWidth}
+                onChange={(e, newVal) =>
+                  setStyleSettings((prev) => ({ ...prev, lineWidth: newVal }))
+                }
               />
-
               <Box
                 sx={{
                   display: "flex",
@@ -329,31 +402,7 @@ const Flow = () => {
                   value={startCountry}
                   onChange={handleStartCountryChange}
                   helperText="Please select the start country"
-                  sx={{
-                    width: "150px",
-                    "& .MuiInputLabel-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiFormHelperText-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#fafafa !important",
-                    },
-                    "& select": {
-                      borderColor: "#fafafa",
-                      color: "#fafafa",
-                      "&:focus": {
-                        borderColor: "#fafafa",
-                      },
-                    },
-                    "& .MuiSelect-icon": {
-                      color: "#fafafa",
-                    },
-                    "& .MuiInputBase-input": {
-                      color: "#fafafa",
-                    },
-                  }}
+                  sx={textFieldStyles}
                 >
                   {Object.keys(countryCityData).map((country) => (
                     <MenuItem
@@ -374,31 +423,7 @@ const Flow = () => {
                   onChange={handleStartCityChange}
                   helperText="Please select the start city"
                   disabled={!startCountry}
-                  sx={{
-                    width: "150px",
-                    "& .MuiInputLabel-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiFormHelperText-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#fafafa !important",
-                    },
-                    "& select": {
-                      borderColor: "#fafafa",
-                      color: "#fafafa",
-                      "&:focus": {
-                        borderColor: "#fafafa",
-                      },
-                    },
-                    "& .MuiSelect-icon": {
-                      color: "#fafafa",
-                    },
-                    "& .MuiInputBase-input": {
-                      color: "#fafafa",
-                    },
-                  }}
+                  sx={textFieldStyles}
                 >
                   {startCountry
                     ? countryCityData[startCountry].map((city) => (
@@ -409,7 +434,6 @@ const Flow = () => {
                     : []}
                 </TextField>
               </Box>
-
               <Box
                 sx={{
                   display: "flex",
@@ -424,31 +448,7 @@ const Flow = () => {
                   value={endCountry}
                   onChange={handleEndCountryChange}
                   helperText="Please select the end country"
-                  sx={{
-                    width: "150px",
-                    "& .MuiInputLabel-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiFormHelperText-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#fafafa !important",
-                    },
-                    "& select": {
-                      borderColor: "#fafafa",
-                      color: "#fafafa",
-                      "&:focus": {
-                        borderColor: "#fafafa",
-                      },
-                    },
-                    "& .MuiSelect-icon": {
-                      color: "#fafafa",
-                    },
-                    "& .MuiInputBase-input": {
-                      color: "#fafafa",
-                    },
-                  }}
+                  sx={textFieldStyles}
                 >
                   {Object.keys(countryCityData).map((country) => (
                     <MenuItem
@@ -469,31 +469,7 @@ const Flow = () => {
                   onChange={handleEndCityChange}
                   helperText="Please select the end city"
                   disabled={!endCountry}
-                  sx={{
-                    width: "150px",
-                    "& .MuiInputLabel-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiFormHelperText-root": {
-                      color: "#fafafa !important",
-                    },
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#fafafa !important",
-                    },
-                    "& select": {
-                      borderColor: "#fafafa",
-                      color: "#fafafa",
-                      "&:focus": {
-                        borderColor: "#fafafa",
-                      },
-                    },
-                    "& .MuiSelect-icon": {
-                      color: "#fafafa",
-                    },
-                    "& .MuiInputBase-input": {
-                      color: "#fafafa",
-                    },
-                  }}
+                  sx={textFieldStyles}
                 >
                   {endCountry
                     ? countryCityData[endCountry].map((city) => (
@@ -522,7 +498,7 @@ const Flow = () => {
               Flows:
             </Typography>
             <ul>
-              {flows.map((flow) => (
+              {styleSettings.flows.map((flow) => (
                 <li
                   style={{ listStyle: "none", color: "#fafafa" }}
                   key={flow.id}
@@ -533,13 +509,18 @@ const Flow = () => {
             </ul>
 
             <OpacitySlider
-              value={lineOpacity}
-              onChange={(e, newVal) => setLineOpacity(newVal)}
+              value={styleSettings.lineOpacity}
+              onChange={(e, newVal) =>
+                setStyleSettings((prev) => ({
+                  ...prev,
+                  lineOpacity: newVal,
+                }))
+              }
             />
           </TabPanel>
 
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
           </TabPanel>
         </TabContext>
       </Box>
