@@ -39,7 +39,7 @@ const profileAPI = {
     try {
       const response = await axios.put(`${BASE_URL}/api/users/${userId}`, {
         email: newEmail,
-        username: newUsername,
+        userName: newUsername,
         password: newPassword,
       });
       return response.data;

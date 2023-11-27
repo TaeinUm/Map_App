@@ -10,12 +10,18 @@ import {
   MenuItem,
 } from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
+import { useMediaQuery, useTheme } from "@mui/material";
+
 import { AuthContext } from "../../../../contexts/AuthContext";
 import { MapContext } from "../../../../contexts/MapContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
+
+import CurveSlider from "./flowcontrol/CurveSlider";
+import OpacitySlider from "./flowcontrol/OpacitySlider";
+import LineWidthSlider from "./flowcontrol/LineWidthSlider";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -24,8 +30,15 @@ const Flow = () => {
   const [map, setMap] = useState(null);
   const { mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
+
+  const [lineCurvature, setLineCurvature] = useState(0.5);
+  const [lineOpacity, setLineOpacity] = useState(1);
+  const [lineWidth, setLineWidth] = useState(5);
 
   const countryCityData = {
     USA: ["New York", "Los Angeles", "Chicago"],
@@ -105,19 +118,6 @@ const Flow = () => {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", () => {
-        newMap.addLayer({
-          id: "country-boundaries",
-          type: "fill",
-          source: {
-            type: "vector",
-            url: "mapbox://mapbox.country-boundaries-v1",
-          },
-          "source-layer": "country_boundaries",
-          paint: {
-            "fill-opacity": 0,
-          },
-        });
-
         setMap(newMap);
         const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
         setInitializeLayers(initialLayers);
@@ -134,6 +134,16 @@ const Flow = () => {
 
     setIsLoading(false);
   }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      flows.forEach((flow) => {
+        if (map.getLayer(flow.id)) {
+          map.setPaintProperty(flow.id, "line-opacity", lineOpacity);
+        }
+      });
+    }
+  }, [lineOpacity, map, flows]);
 
   const drawFlow = () => {
     if (startCountry && startCity && endCountry && endCity) {
@@ -162,7 +172,11 @@ const Flow = () => {
                   properties: {},
                   geometry: {
                     type: "LineString",
-                    coordinates: [startPoint, endPoint],
+                    coordinates: getCurvedLineCoordinates(
+                      startPoint,
+                      endPoint,
+                      lineCurvature
+                    ),
                   },
                 },
               ],
@@ -174,7 +188,8 @@ const Flow = () => {
           },
           paint: {
             "line-color": regionColor,
-            "line-width": 5,
+            "line-width": lineWidth,
+            "line-opacity": lineOpacity,
           },
         });
       }
@@ -217,12 +232,42 @@ const Flow = () => {
     }
   };
 
+  const getCurvedLineCoordinates = (start, end, curvature) => {
+    const midLng = (start[0] + end[0]) / 2;
+    const midLat = (start[1] + end[1]) / 2;
+
+    const controlLat = midLat + curvature;
+
+    const controlPoint = [midLng, controlLat];
+    const curveCoordinates = [];
+    const steps = 100;
+
+    for (let t = 0; t <= 1; t += 1 / steps) {
+      const x =
+        (1 - t) * (1 - t) * start[0] +
+        2 * (1 - t) * t * controlPoint[0] +
+        t * t * end[0];
+      const y =
+        (1 - t) * (1 - t) * start[1] +
+        2 * (1 - t) * t * controlPoint[1] +
+        t * t * end[1];
+      curveCoordinates.push([x, y]);
+    }
+    return curveCoordinates;
+  };
+
   return (
-    <Box sx={{ display: "flex", height: "100vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        height: "100vh",
+      }}
+    >
       <div
         id="map"
         ref={mapContainer}
-        style={{ width: "100%", height: "100%" }}
+        style={{ width: "100%", height: isMobile ? "50%" : "100%" }}
       />
       {isLoading && (
         <div style={{ position: "absolute", top: "50%", left: "50%" }}>
@@ -230,7 +275,13 @@ const Flow = () => {
         </div>
       )}
 
-      <Box sx={{ width: "40%", overflow: "scroll" }}>
+      <Box
+        sx={{
+          width: isMobile ? "100%" : "40%",
+          overflow: "scroll",
+          height: isMobile ? "50%" : "auto",
+        }}
+      >
         <TabContext value={tabValue}>
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
@@ -252,9 +303,18 @@ const Flow = () => {
                   type="color"
                   value={regionColor}
                   onChange={flowColorChange}
-                  style={{ marginBottom: "30px" }}
                 />
               </Box>
+
+              <CurveSlider
+                value={lineCurvature}
+                onChange={(e, newVal) => setLineCurvature(newVal)}
+              />
+              <LineWidthSlider
+                value={lineWidth}
+                onChange={(e, newVal) => setLineWidth(newVal)}
+              />
+
               <Box
                 sx={{
                   display: "flex",
@@ -264,6 +324,7 @@ const Flow = () => {
               >
                 <TextField
                   select
+                  data-testid="start-country-select"
                   label="Choose Start Country"
                   value={startCountry}
                   onChange={handleStartCountryChange}
@@ -295,7 +356,11 @@ const Flow = () => {
                   }}
                 >
                   {Object.keys(countryCityData).map((country) => (
-                    <MenuItem key={country} value={country}>
+                    <MenuItem
+                      key={country}
+                      value={country}
+                      data-value="country"
+                    >
                       {country}
                     </MenuItem>
                   ))}
@@ -304,6 +369,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose Start City"
+                  data-testid="start-city-select"
                   value={startCity}
                   onChange={handleStartCityChange}
                   helperText="Please select the start city"
@@ -336,7 +402,7 @@ const Flow = () => {
                 >
                   {startCountry
                     ? countryCityData[startCountry].map((city) => (
-                        <MenuItem key={city} value={city}>
+                        <MenuItem key={city} value={city} data-value="city">
                           {city}
                         </MenuItem>
                       ))
@@ -354,6 +420,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose End Country"
+                  data-testid="end-country-select"
                   value={endCountry}
                   onChange={handleEndCountryChange}
                   helperText="Please select the end country"
@@ -384,7 +451,11 @@ const Flow = () => {
                   }}
                 >
                   {Object.keys(countryCityData).map((country) => (
-                    <MenuItem key={country} value={country}>
+                    <MenuItem
+                      key={country}
+                      value={country}
+                      data-value="country"
+                    >
                       {country}
                     </MenuItem>
                   ))}
@@ -393,6 +464,7 @@ const Flow = () => {
                 <TextField
                   select
                   label="Choose End City"
+                  data-testid="end-city-select"
                   value={endCity}
                   onChange={handleEndCityChange}
                   helperText="Please select the end city"
@@ -425,7 +497,7 @@ const Flow = () => {
                 >
                   {endCountry
                     ? countryCityData[endCountry].map((city) => (
-                        <MenuItem key={city} value={city}>
+                        <MenuItem key={city} value={city} data-value="city">
                           {city}
                         </MenuItem>
                       ))
@@ -440,7 +512,7 @@ const Flow = () => {
                 color: "black",
               }}
             >
-              Draw Flow
+              Create Flow
             </Button>
 
             <Typography
@@ -459,25 +531,16 @@ const Flow = () => {
                 </li>
               ))}
             </ul>
+
+            <OpacitySlider
+              value={lineOpacity}
+              onChange={(e, newVal) => setLineOpacity(newVal)}
+            />
           </TabPanel>
-          {/*<TabPanel value="2">
-            <ShareTab />
-              </TabPanel>*/}
+
           <TabPanel value="3">
             <SaveTab onSave={handleSave} mapLayer={mapLayer} />
           </TabPanel>
-          {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
         </TabContext>
       </Box>
     </Box>

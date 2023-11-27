@@ -15,5 +15,8 @@ router.put('/:userId', userController.updateUserDetails);
 // Route to get email by userId
 router.get('/:userId/email', userController.getEmail);
 
+// Route to get users by name
+router.get('/', userController.getUsersByName);
+
 
 module.exports = router;

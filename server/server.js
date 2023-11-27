@@ -14,6 +14,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const communityRoutes = require('./routes/communityRoutes');
 const postRoutes = require('./routes/postRoutes');
+const mapRoutes = require('./routes/mapRoutes');
 const testController = require('./controllers/testController');
 
 // Initialize Express application
@@ -35,9 +36,10 @@ app.use(session({
 
 // Define routes
 app.use('/auth', authRoutes); // Routes for authentication
+app.use('/api', postRoutes); // Routes for post-related operations
 app.use('/api/users', userRoutes); // Routes for user-related operations
 app.use('/api/community', communityRoutes); // Routes for community-related operations
-app.use('/api', postRoutes); // Routes for post-related operations
+app.use('/api/mapgraphics', mapRoutes); // Routes for map graphics
 app.get('/api/test-data', testController.getDataFromTestCollection); // Route for fetching test data
 
 // Connect to MongoDB

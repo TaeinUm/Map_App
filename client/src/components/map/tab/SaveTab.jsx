@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   TextField,
@@ -11,6 +11,8 @@ import {
 } from "@mui/material";
 import * as mapboxgl from "mapbox-gl";
 import axios from "axios";
+
+import { AuthContext } from "../../../contexts/AuthContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -33,6 +35,7 @@ const selectStyle = {
 };
 
 function SaveTab({ onSave, mapLayer, map }) {
+  const { isAuthenticated } = useContext(AuthContext);
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -65,6 +68,10 @@ function SaveTab({ onSave, mapLayer, map }) {
   };
 
   const exportMapAsJson = () => {
+    if (!isAuthenticated) {
+      alert("please log in");
+      return;
+    }
     try {
       const mapJson = map.getStyle();
       //return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
@@ -80,6 +87,10 @@ function SaveTab({ onSave, mapLayer, map }) {
   };
 
   const exportMapAsImage = async (format) => {
+    if (!isAuthenticated) {
+      alert("please log in");
+      return;
+    }
     // Replace these with the actual values from your map
     const longitude = map.getCenter().lng;
     const latitude = map.getCenter().lat;
@@ -100,14 +111,24 @@ function SaveTab({ onSave, mapLayer, map }) {
   };
 
   const handleSave = async () => {
+    if (!isAuthenticated) {
+      alert("please log in");
+      return;
+    }
+
     if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
       await exportMapAsImage(exportFile);
     } else if (exportFile === "json") {
       exportMapAsJson();
     }
 
-    // Call onSave function passed from parent component with required parameters
-    onSave(title, versionSetting, privacySetting, mapLayer);
+    // Get the map's style as JSON
+    const mapStyleJson = map.getStyle();
+    // Convert the JSON to a string
+    const mapStyleString = JSON.stringify(mapStyleJson, null, 2);
+    console.log(mapStyleString);
+
+    onSave(title, versionSetting, privacySetting, mapStyleString);
   };
 
   return (

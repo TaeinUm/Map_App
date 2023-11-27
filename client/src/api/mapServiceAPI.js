@@ -27,13 +27,11 @@ const mapServiceAPI = {
   },
 
   // delete user's selected map based on mapId (userId, username)
-  deleteUserMapGraphic: async (userId, username, mapId) => {
+  deleteUserMapGraphic: async (userId, mapId) => {
     try {
       const response = await axios.delete(
         `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        {
-          data: { username, mapId },
-        }
+        { data: { mapId } }
       );
       return response.data;
     } catch (error) {
@@ -57,7 +55,7 @@ const mapServiceAPI = {
   updateViewSetting: async (userId, username, settings, accessSetting) => {
     try {
       const response = await axios.put(
-        `${API_BASE_URL}/api/mpagraphics/${userId}/view-setting`,
+        `${API_BASE_URL}/api/mapgraphics/${userId}/view-setting`,
         {
           params: { username, settings, accessSetting },
         }
@@ -69,13 +67,10 @@ const mapServiceAPI = {
   },
 
   // get memo content of a certain map graphics
-  getMemoContent: async (userId, username, mapId) => {
+  getMemoContent: async (userId, mapId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`
       );
       return response.data;
     } catch (error) {
@@ -84,14 +79,11 @@ const mapServiceAPI = {
   },
 
   // Update memo content for a specific map graphic
-  updateMemoContent: async (userId, username, mapId, memoContent) => {
+  updateMemoContent: async (userId, mapId, memoContent) => {
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/mapgraphics/${userId}/${mapId}/memo`,
-        {
-          username,
-          memoContent,
-        }
+        { memoContent }
       );
       return response.data;
     } catch (error) {
@@ -99,17 +91,11 @@ const mapServiceAPI = {
     }
   },
 
-  //when we create or load map graphics from modal, we should add map graphics data to DB
-  updateUserMapGraphics: async (
-    userId,
-    username,
-    mapType,
-    mapLayer,
-    mapId = null
-  ) => {
+  // When we create or load map graphics from modal, we should add map graphics data to DB
+  updateUserMapGraphics: async (userId, mapType, mapLayer, mapId = null) => {
     try {
       let response;
-      const mapGraphicData = { username, mapType, mapLayer };
+      const mapGraphicData = { mapType, mapLayer };
 
       if (mapId) {
         // If mapId is provided, update existing map graphic
@@ -131,14 +117,11 @@ const mapServiceAPI = {
     }
   },
 
-  // get specific map graphic data based on userId, username, and mapId
-  getMapGraphicData: async (userId, username, mapId) => {
+  // Get specific map graphic data based on userId and mapId
+  getMapGraphicData: async (userId, mapId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`
       );
       return response.data;
     } catch (error) {
@@ -148,7 +131,6 @@ const mapServiceAPI = {
 
   addMapGraphics: async (
     userId,
-    username,
     mapId = null,
     title,
     version,
@@ -158,7 +140,6 @@ const mapServiceAPI = {
   ) => {
     try {
       const mapGraphicData = {
-        username,
         title,
         version,
         privacy,

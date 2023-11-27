@@ -34,7 +34,6 @@ exports.writePost = async (req, res) => {
       postName,
       visibility,
       attachedFile,
-      postDate,
     } = req.body;
 
     // 데이터 유효성 검증
@@ -52,7 +51,7 @@ exports.writePost = async (req, res) => {
       postName,
       visibility,
       attachedFile,
-      postDate,
+      postDate: new Date()
     });
 
     await newPost.save();
@@ -62,6 +61,31 @@ exports.writePost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.deletePost = async (req, res) => {
+  try {
+      const postId = req.params.postId;
+
+      // Check if the postId is valid
+      if (!mongoose.Types.ObjectId.isValid(postId)) {
+          return res.status(400).json({ message: "Invalid post ID" });
+      }
+
+      // Find the post and delete it
+      const deletedPost = await Post.findByIdAndDelete(postId);
+
+      // If no post was found to delete
+      if (!deletedPost) {
+          return res.status(404).json({ message: "Post not found" });
+      }
+
+      res.status(200).json({ message: "Post deleted successfully", deletedPost });
+  } catch (error) {
+      console.error('Error deleting post:', error);
+      res.status(500).json({ message: error.message });
+  }
+};
+
 
 exports.likePost = async (req, res) => {
   try {
