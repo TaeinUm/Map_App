@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, CircularProgress, Slider, Typography } from "@mui/material";
@@ -21,13 +22,11 @@ const BasicStyles = () => {
   const mapContainer = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
-  const [fontStyle, setFontStyle] = useState("Arial Unicode MS Bold");
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
 
   const [styleSettings, setStyleSettings] = useState({
     visibility: {
@@ -52,15 +51,19 @@ const BasicStyles = () => {
       waterway: "#b3cde3",
       boundary: "#f03b20",
     },
+    fontSize: 12, // default font size
+    fontFamily: "Arial Unicode MS Bold", // default font family
+    lineWidth: {
+      roads: 1,
+      boundary: 1,
+      waterway: 1,
+    },
   });
+
   const [mapStyle, setMapStyle] = useState(
     "mapbox://styles/mapbox/streets-v12"
   );
   const [tabValue, setTabValue] = useState("1");
-  const [labelFontSize, setLabelFontSize] = useState(12);
-  const [roadWidth, setRoadWidth] = useState(1);
-  const [boundaryWidth, setBoundaryWidth] = useState(1);
-  const [waterwayWidth, setWaterwayWidth] = useState(1);
 
   const layerSelector = {
     background: /land|landcover/,
@@ -117,46 +120,21 @@ const BasicStyles = () => {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", async () => {
-        const layers = newMap.getStyle().layers;
-        console.log("layers", layers);
-        const buildingLayer = layers.find((layer) => layer.id === "building");
-
-        if (buildingLayer) {
-          newMap.setLayerZoomRange("building", 15, 2);
-        }
         if (mapId) {
           try {
             // Fetch map graphics data using mapId
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
-            const mapLayer = data.mapLayer;
-
-            // Check if mapLayer is valid and add it to the map
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = data.mapData;
+            setStyleSettings(JSON.parse(mapLayer));
           } catch (error) {
             console.error("Error loading map graphics:", error);
           } finally {
             setMap(newMap);
             setIsLoading(false);
-            const initialLayers = newMap
-              .getStyle()
-              .layers.map((layer) => layer.id);
-            setInitializeLayers(initialLayers);
           }
         } else {
           setMap(newMap);
           setIsLoading(false);
-          const initialLayers = newMap
-            .getStyle()
-            .layers.map((layer) => layer.id);
-          setInitializeLayers(initialLayers);
         }
       });
     };
@@ -174,9 +152,7 @@ const BasicStyles = () => {
     const layers = map.getStyle().layers;
 
     layers.forEach((layer) => {
-      const id = layer.id;
-      const type = layer.type;
-
+      const { id, type } = layer;
       for (const category of categories) {
         if (layerSelector[category].test(id)) {
           const isVisible = styleSettings.visibility[category];
@@ -185,6 +161,7 @@ const BasicStyles = () => {
             "visibility",
             isVisible ? "visible" : "none"
           );
+
           const colorProperty = colorClass[type];
           if (colorProperty) {
             map.setPaintProperty(
@@ -193,82 +170,30 @@ const BasicStyles = () => {
               styleSettings.color[category]
             );
           }
-          break;
         }
       }
+
+      // Update font and line width specific properties
+      if (type === "symbol") {
+        map.setLayoutProperty(id, "text-size", styleSettings.fontSize);
+        map.setLayoutProperty(id, "text-font", [styleSettings.fontFamily]);
+      }
+      if (type === "line") {
+        const lineWidthCategory = id.startsWith("road")
+          ? "roads"
+          : id.startsWith("admin")
+          ? "boundary"
+          : "waterway";
+        map.setPaintProperty(
+          id,
+          "line-width",
+          styleSettings.lineWidth[lineWidthCategory] || 1
+        );
+      }
     });
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.id;
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
-    }
-  }, [map, mapStyle, styleSettings]);
+  }, [map, styleSettings, isMobile]);
 
-  // Update Font Size
-  useEffect(() => {
-    if (!map || isMobile) return; // Skip if no map or mobile view
-
-    const updateLabelFontSize = (fontSize) => {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.type === "symbol") {
-          map.setLayoutProperty(layer.id, "text-size", fontSize);
-        }
-      });
-    };
-
-    updateLabelFontSize(labelFontSize);
-  }, [map, labelFontSize, isMobile]);
-
-  // Update Road Width
-  useEffect(() => {
-    if (!map || isMobile) return; // Skip if no map or mobile view
-
-    const updateRoadWidth = (width) => {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id.startsWith("road") && layer.type === "line") {
-          map.setPaintProperty(layer.id, "line-width", width);
-        }
-      });
-    };
-
-    updateRoadWidth(roadWidth);
-  }, [map, roadWidth, isMobile]);
-
-  // Update Boundary Width
-  useEffect(() => {
-    if (!map || isMobile) return; // Skip if no map or mobile view
-
-    const updateBoundaryWidth = (width) => {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id.startsWith("admin")) {
-          map.setPaintProperty(layer.id, "line-width", width);
-        }
-      });
-    };
-
-    updateBoundaryWidth(boundaryWidth);
-  }, [map, boundaryWidth, isMobile]);
-
-  // Update Waterway Width
-  useEffect(() => {
-    if (!map || isMobile) return; // Skip if no map or mobile view
-
-    const updateWaterwayWidth = (width) => {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id === "waterway" && layer.type === "line") {
-          map.setPaintProperty(layer.id, "line-width", width);
-        }
-      });
-    };
-
-    updateWaterwayWidth(waterwayWidth);
-  }, [map, waterwayWidth, isMobile]);
-
+  // Handlers for changing style settings
   const handleCategoryColor = (category, color) => {
     setStyleSettings((prevSettings) => ({
       ...prevSettings,
@@ -276,34 +201,33 @@ const BasicStyles = () => {
     }));
   };
 
-  const handleFontChange = (newFont) => {
-    setFontStyle(newFont);
-    if (!map) return;
-
-    const layers = map.getStyle().layers;
-
-    layers.forEach((layer) => {
-      if (
-        layer.type === "symbol" &&
-        layer.layout &&
-        layer.layout["text-field"]
-      ) {
-        map.setLayoutProperty(layer.id, "text-font", [newFont]);
-      }
-    });
-  };
-
   const handleVisibilityChange = (category, isVisible) => {
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      visibility: {
-        ...prevSettings.visibility,
-        [category]: isVisible,
-      },
+    setStyleSettings((prev) => ({
+      ...prev,
+      visibility: { ...prev.visibility, [category]: isVisible },
     }));
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleFontSizeChange = (fontSize) => {
+    setStyleSettings((prev) => ({ ...prev, fontSize }));
+  };
+
+  const handleFontFamilyChange = (fontFamily) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      fontFamily: fontFamily,
+    }));
+  };
+
+  const handleLineWidthChange = (category, width) => {
+    setStyleSettings((prev) => ({
+      ...prev,
+      lineWidth: { ...prev.lineWidth, [category]: width },
+    }));
+  };
+
+  const handleSave = async (title, version, privacy) => {
+    console.log("userId: ", userId);
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
@@ -312,75 +236,14 @@ const BasicStyles = () => {
         version,
         privacy,
         "Basic Map",
-        mapLayer
+        JSON.stringify(styleSettings)
       );
+      setMapId(null);
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
       alert("Error saving map");
-    }
-  };
-
-  const handleLabelFontSizeChange = (event, newValue) => {
-    setLabelFontSize(newValue);
-    updateLabelFontSize(newValue);
-  };
-
-  const handleRoadWidthChange = (event, newValue) => {
-    setRoadWidth(newValue);
-    if (map) {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id.startsWith("road") && layer.type === "line") {
-          updateLayerWidth(layer.id, newValue);
-        }
-      });
-    }
-  };
-
-  const handleBoundaryWidthChange = (event, newValue) => {
-    setBoundaryWidth(newValue);
-    if (map) {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id.startsWith("admin")) {
-          updateLayerWidth(layer.id, newValue);
-        }
-      });
-    }
-  };
-
-  const handleWaterwayWidthChange = (event, newValue) => {
-    setRoadWidth(newValue);
-    if (map) {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id === "waterway" && layer.type === "line") {
-          updateLayerWidth(layer.id, newValue);
-        }
-      });
-    }
-  };
-
-  const updateLabelFontSize = (fontSize) => {
-    if (map) {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.type === "symbol") {
-          map.setLayoutProperty(layer.id, "text-size", fontSize);
-        }
-      });
-    }
-  };
-
-  const updateLayerWidth = (layerId, width) => {
-    if (map) {
-      const layers = map.getStyle().layers;
-      layers.forEach((layer) => {
-        if (layer.id === layerId) {
-          map.setPaintProperty(layer.id, "line-width", width);
-        }
-      });
     }
   };
 
@@ -412,13 +275,13 @@ const BasicStyles = () => {
                   </h3>
                   {categories.map((category) => (
                     <div
+                      key={category}
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
                         color: "#fafafa",
                         marginBottom: "10px",
                       }}
-                      key={category}
                     >
                       <label>{category}: </label>
                       <div style={{ display: "flex", marginBottom: "10px" }}>
@@ -451,8 +314,8 @@ const BasicStyles = () => {
                   >
                     <label style={{ marginBottom: "10px" }}>Font Style: </label>
                     <select
-                      value={fontStyle}
-                      onChange={(e) => handleFontChange(e.target.value)}
+                      value={styleSettings.fontFamily}
+                      onChange={(e) => handleFontFamilyChange(e.target.value)}
                     >
                       <option value="Arial Unicode MS Bold">
                         Arial Unicode MS Bold
@@ -469,8 +332,8 @@ const BasicStyles = () => {
                     Font size
                   </Typography>
                   <Slider
-                    value={labelFontSize}
-                    onChange={handleLabelFontSizeChange}
+                    value={styleSettings.fontSize}
+                    onChange={(e, newValue) => handleFontSizeChange(newValue)}
                     min={8}
                     max={20}
                     sx={{ marginBottom: "20px" }}
@@ -479,28 +342,36 @@ const BasicStyles = () => {
                     Road Width
                   </Typography>
                   <Slider
-                    value={roadWidth}
-                    onChange={handleRoadWidthChange}
+                    value={styleSettings.lineWidth.roads}
+                    onChange={(e, newValue) =>
+                      handleLineWidthChange("roads", newValue)
+                    }
                     min={0.5}
                     max={5}
                     sx={{ marginBottom: "20px" }}
                   />
+
                   <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
                     Boundary Width
                   </Typography>
                   <Slider
-                    value={boundaryWidth}
-                    onChange={handleBoundaryWidthChange}
+                    value={styleSettings.lineWidth.boundary}
+                    onChange={(e, newValue) =>
+                      handleLineWidthChange("boundary", newValue)
+                    }
                     min={0.5}
                     max={5}
                     sx={{ marginBottom: "20px" }}
                   />
+
                   <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
                     Waterway Width
                   </Typography>
                   <Slider
-                    value={boundaryWidth}
-                    onChange={handleWaterwayWidthChange}
+                    value={styleSettings.lineWidth.waterway}
+                    onChange={(e, newValue) =>
+                      handleLineWidthChange("waterway", newValue)
+                    }
                     min={0.5}
                     max={5}
                     sx={{ marginBottom: "20px" }}
@@ -508,7 +379,11 @@ const BasicStyles = () => {
                 </div>
               </TabPanel>
               <TabPanel value="3">
-                <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
+                <SaveTab
+                  onSave={handleSave}
+                  mapLayer={styleSettings}
+                  map={map}
+                />
               </TabPanel>
             </TabContext>
           </Box>

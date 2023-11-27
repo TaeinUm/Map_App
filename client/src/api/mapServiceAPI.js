@@ -12,13 +12,10 @@ const API_BASE_URL =
 
 const mapServiceAPI = {
   //get user's all saved map graphics
-  getUserMapGraphics: async (userId, username) => {
+  getUserMapGraphics: async (userId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`
       );
       return response.data;
     } catch (error) {
@@ -30,12 +27,11 @@ const mapServiceAPI = {
   deleteUserMapGraphic: async (userId, mapId) => {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        { data: { mapId } }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting map graphic.");
+      console.error("Error deleting map graphic:", error);
     }
   },
 
@@ -52,12 +48,12 @@ const mapServiceAPI = {
   },
 
   //update view setting, accessSetting for user 'share' button
-  updateViewSetting: async (userId, username, settings, accessSetting) => {
+  updateViewSetting: async (userId, mapId, accessSetting) => {
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/mapgraphics/${userId}/view-setting`,
         {
-          params: { username, settings, accessSetting },
+          params: { mapId, accessSetting },
         }
       );
       return response.data;
@@ -131,7 +127,7 @@ const mapServiceAPI = {
 
   addMapGraphics: async (
     userId,
-    mapId = null,
+    mapId,
     title,
     version,
     privacy,
@@ -146,7 +142,6 @@ const mapServiceAPI = {
         mapType,
         mapLayer,
       };
-
       let response;
       if (mapId) {
         // Update existing map graphic if mapId is provided
@@ -154,7 +149,7 @@ const mapServiceAPI = {
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
           mapGraphicData
         );
-      } else {
+      } else if (mapId === null) {
         // Create a new map graphic if no mapId is provided
         response = await axios.post(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,

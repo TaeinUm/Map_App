@@ -5,7 +5,6 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel,
   Button,
   Typography,
 } from "@mui/material";
@@ -13,6 +12,7 @@ import * as mapboxgl from "mapbox-gl";
 import axios from "axios";
 
 import { AuthContext } from "../../../contexts/AuthContext";
+import { MapContext } from "../../../contexts/MapContext";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -36,6 +36,7 @@ const selectStyle = {
 
 function SaveTab({ onSave, mapLayer, map }) {
   const { isAuthenticated } = useContext(AuthContext);
+  const { mapId } = useContext(MapContext);
   const [title, setTitle] = useState("");
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
@@ -122,65 +123,62 @@ function SaveTab({ onSave, mapLayer, map }) {
       exportMapAsJson();
     }
 
-    // Get the map's style as JSON
-    const mapStyleJson = map.getStyle();
-    // Convert the JSON to a string
-    const mapStyleString = JSON.stringify(mapStyleJson, null, 2);
-    console.log(mapStyleString);
-
-    onSave(title, versionSetting, privacySetting, mapStyleString);
+    onSave(title, versionSetting, privacySetting);
   };
 
   return (
     <Box sx={{ width: "100%", padding: 3 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginY: 3,
-        }}
-      >
-        <Typography sx={{ color: "#fafafa" }}>Title</Typography>
-        <FormControl margin="normal">
-          <TextField
-            value={title}
-            onChange={handleTitleChange}
-            variant="outlined"
-            size="small"
-            sx={selectStyle}
-            name="title"
-          />
-        </FormControl>
-      </Box>
-
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginY: 3,
-        }}
-      >
-        <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
-          Version Setting
-        </Typography>
-        <Box>
-          <FormControl margin="normal" sx={{ width: "100%" }}>
-            <Select
+      {!mapId && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginY: 3,
+          }}
+        >
+          <Typography sx={{ color: "#fafafa" }}>Title</Typography>
+          <FormControl margin="normal">
+            <TextField
+              value={title}
+              onChange={handleTitleChange}
+              variant="outlined"
               size="small"
-              value={versionSetting}
-              onChange={handleVersionSettingChange}
               sx={selectStyle}
-              name="versionSetting"
-            >
-              <MenuItem value="ver1">Ver 1.</MenuItem>
-              <MenuItem value="ver2">Ver 2.</MenuItem>
-              <MenuItem value="ver3">Ver 3.</MenuItem>
-            </Select>
+              name="title"
+            />
           </FormControl>
         </Box>
-      </Box>
+      )}
+      {!mapId && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginY: 3,
+          }}
+        >
+          <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
+            Version Setting
+          </Typography>
+          <Box>
+            <FormControl margin="normal" sx={{ width: "100%" }}>
+              <Select
+                size="small"
+                value={versionSetting}
+                onChange={handleVersionSettingChange}
+                sx={selectStyle}
+                name="versionSetting"
+              >
+                <MenuItem value="ver1">Ver 1.</MenuItem>
+                <MenuItem value="ver2">Ver 2.</MenuItem>
+                <MenuItem value="ver3">Ver 3.</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </Box>
+      )}
       <Box
         sx={{
           display: "flex",
