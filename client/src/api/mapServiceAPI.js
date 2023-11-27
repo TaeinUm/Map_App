@@ -150,7 +150,6 @@ const mapServiceAPI = {
           mapGraphicData
         );
       } else if (mapId === null) {
-        console.log("got you");
         // Create a new map graphic if no mapId is provided
         response = await axios.post(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,

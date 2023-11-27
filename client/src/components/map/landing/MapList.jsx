@@ -24,8 +24,6 @@ function MapList({ searchQuery }) {
           return;
         }
 
-        console.log(userInfo);
-
         const filteredData = userInfo
           .filter(
             (item) =>

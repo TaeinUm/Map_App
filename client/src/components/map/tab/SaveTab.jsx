@@ -121,11 +121,6 @@ function SaveTab({ onSave, mapLayer, map }) {
     } else if (exportFile === "json") {
       exportMapAsJson();
     }
-    console.log("mapLayer to DB: ", mapLayer);
-    console.log("mapLayer type: ", typeof JSON.stringify(mapLayer));
-    console.log("title type: ", typeof title);
-    console.log("version type: ", typeof versionSetting);
-    console.log("privacy type: ", typeof privacySetting);
 
     onSave(title, versionSetting, privacySetting);
   };
