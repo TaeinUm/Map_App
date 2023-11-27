@@ -3,8 +3,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
-//const API_BASE_URL = //"https://terracanvas-fb4c23ffbf5d.herokuapp.com"||;
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 //const [authenticated, setAuthenticated] = useState(false);
 //const [userID, setUserID] = useState("");
 //const {userID, authentified} = CommunityContext;
