@@ -123,7 +123,6 @@ const BasicStyles = () => {
             // Fetch map graphics data using mapId
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = data.mapData;
-            console.log("mapLayer: ", mapLayer);
             setStyleSettings(JSON.parse(mapLayer));
           } catch (error) {
             console.error("Error loading map graphics:", error);
