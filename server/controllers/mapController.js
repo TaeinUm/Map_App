@@ -7,7 +7,9 @@ const getUserMapGraphics = async (req, res) => {
     const maps = await Map.find({ userId: userId });
     // Check if any maps were found
     if (maps.length === 0) {
-      return res.status(200).json({ message: "No map graphics found for this user" });
+      return res
+        .status(200)
+        .json({ message: "No map graphics found for this user" });
     }
     res.json(maps);
   } catch (error) {
@@ -18,8 +20,7 @@ const getUserMapGraphics = async (req, res) => {
 
 // Delete user maps
 const deleteUserMapGraphic = async (req, res) => {
-  const { userId } = req.params;
-  const { mapId } = req.body;
+  const { userId, mapId } = req.params;
 
   try {
     const map = await Map.findOneAndDelete({ _id: mapId, userId: userId });
@@ -125,9 +126,9 @@ const updateMapGraphic = async (req, res) => {
   try {
     const updatedMap = await Map.findOneAndUpdate(
       { _id: mapId, userId: userId },
-      { 
-        mapType, 
-        mapData: mapLayer // Storing mapLayer in mapData field
+      {
+        mapType,
+        mapData: mapLayer, // Storing mapLayer in mapData field
       },
       { new: true }
     );
@@ -140,7 +141,6 @@ const updateMapGraphic = async (req, res) => {
     res.status(500).json({ message: "Error updating map graphic" });
   }
 };
-
 
 const getMapGraphicData = async (req, res) => {
   const { userId, mapId } = req.params;

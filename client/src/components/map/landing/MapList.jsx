@@ -14,13 +14,17 @@ function MapList({ searchQuery }) {
   const { updateMapContextAndNavigate } = useContext(MapContext);
   const navigate = useNavigate();
 
-  const { userId, username, isAuthenticated } = useContext(AuthContext);
+  const { userId, isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userInfo = await mapServiceAPI.getUserMapGraphics(userId);
-        if (userInfo === undefined) return;
+        if (!Array.isArray(userInfo)) {
+          return;
+        }
+
+        console.log(userInfo);
 
         const filteredData = userInfo
           .filter(
@@ -29,7 +33,7 @@ function MapList({ searchQuery }) {
               item.mapName &&
               item.mapName.toLowerCase().includes(searchQuery.toLowerCase())
           )
-          .sort((a, b) => b.date.localeCompare(a.date));
+          .sort((a, b) => new Date(b.mapDate) - new Date(a.mapDate));
 
         setMapListData(filteredData);
       } catch (error) {
@@ -126,7 +130,10 @@ function MapList({ searchQuery }) {
             {/*<IconButton size="small">
               <FiShare />
             </IconButton>*/}
-            <IconButton size="small" onClick={() => handleDelete(index)}>
+            <IconButton
+              size="small"
+              onClick={() => handleDelete(item._id, index)}
+            >
               <FiTrash />
             </IconButton>
           </Box>

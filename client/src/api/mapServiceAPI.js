@@ -27,12 +27,11 @@ const mapServiceAPI = {
   deleteUserMapGraphic: async (userId, mapId) => {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        { data: { mapId } }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting map graphic.");
+      console.error("Error deleting map graphic:", error);
     }
   },
 
