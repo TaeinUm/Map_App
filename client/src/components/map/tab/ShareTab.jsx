@@ -27,15 +27,10 @@ const selectStyle = {
 
 function ShareTab() {
   const [linkAccess, setLinkAccess] = useState("");
-  const [viewSetting, setViewSetting] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleLinkAccessChange = (event) => {
     setLinkAccess(event.target.value);
-  };
-
-  const handleViewSettingChange = (event) => {
-    setViewSetting(event.target.value);
   };
 
   const handleSearchChange = (event) => {
@@ -86,31 +81,6 @@ function ShareTab() {
             >
               <MenuItem value="anyone">Anyone with the link</MenuItem>
               <MenuItem value="only">Only shared user</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginY: 3,
-          }}
-        >
-          <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
-            View Setting
-          </Typography>
-          <FormControl sx={{ width: "100%" }}>
-            <Select
-              size="small"
-              value={viewSetting}
-              onChange={handleViewSettingChange}
-              sx={selectStyle}
-              name="viewSetting"
-            >
-              <MenuItem value="public">Public</MenuItem>
-              <MenuItem value="private">Private</MenuItem>
             </Select>
           </FormControl>
         </Box>

@@ -48,12 +48,12 @@ const mapServiceAPI = {
   },
 
   //update view setting, accessSetting for user 'share' button
-  updateViewSetting: async (userId, username, settings, accessSetting) => {
+  updateViewSetting: async (userId, mapId, accessSetting) => {
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/mapgraphics/${userId}/view-setting`,
         {
-          params: { username, settings, accessSetting },
+          params: { mapId, accessSetting },
         }
       );
       return response.data;

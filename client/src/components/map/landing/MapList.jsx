@@ -20,6 +20,7 @@ function MapList({ searchQuery }) {
     const fetchData = async () => {
       try {
         const userMapGraphics = await mapServiceAPI.getUserMapGraphics(userId);
+        if (!userMapGraphics) return;
 
         const filteredData = userMapGraphics
           .filter((item) =>
