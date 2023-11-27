@@ -22,7 +22,7 @@ const BasicStyles = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -236,6 +236,7 @@ const BasicStyles = () => {
         "Basic Map",
         JSON.stringify(styleSettings)
       );
+      setMapId(null);
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
