@@ -286,11 +286,27 @@ const Flow = () => {
 
   const handleSave = async (title, version, privacy) => {
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+        const originalVer = response.vers;
+        if (originalVer === "ver1") {
+          versionToPut = "ver2";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver3";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver1";
+          // Here, find the version1 having the same title & delete it from DB
+        }
+      }
+
       await mapServiceAPI.addMapGraphics(
         userId,
-        mapId, // This could be null if creating a new map
-        title,
-        version,
+        null, // This could be null if creating a new map
+        titleToPut,
+        versionToPut,
         privacy,
         "Flow Map",
         JSON.stringify(styleSettings)
