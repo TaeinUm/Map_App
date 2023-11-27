@@ -272,7 +272,6 @@ const Flow = () => {
           paint: {
             "line-color": flow.color,
             "line-width": flow.lineWidth,
-            "line-opacity": flow.opacity,
           },
         });
       }
