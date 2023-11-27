@@ -19,10 +19,7 @@ function MapList({ searchQuery }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const userMapGraphics = await mapServiceAPI.getUserMapGraphics(
-          userId,
-          username
-        );
+        const userMapGraphics = await mapServiceAPI.getUserMapGraphics(userId);
 
         const filteredData = userMapGraphics
           .filter((item) =>

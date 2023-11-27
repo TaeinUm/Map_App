@@ -7,18 +7,14 @@
 // 'share' button -> update vviewSetting (public, private),  Link Access (Anyone with the link, only shared user)
 import axios from "axios";
 
-const API_BASE_URL =
-  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const API_BASE_URL = "http://localhost:8080";
 
 const mapServiceAPI = {
   //get user's all saved map graphics
-  getUserMapGraphics: async (userId, username) => {
+  getUserMapGraphics: async (userId) => {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
-        {
-          params: { username },
-        }
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`
       );
       return response.data;
     } catch (error) {
@@ -131,7 +127,7 @@ const mapServiceAPI = {
 
   addMapGraphics: async (
     userId,
-    mapId = null,
+    mapId,
     title,
     version,
     privacy,
@@ -146,7 +142,6 @@ const mapServiceAPI = {
         mapType,
         mapLayer,
       };
-
       let response;
       if (mapId) {
         // Update existing map graphic if mapId is provided
@@ -154,7 +149,8 @@ const mapServiceAPI = {
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
           mapGraphicData
         );
-      } else {
+      } else if (mapId === null) {
+        console.log("got you");
         // Create a new map graphic if no mapId is provided
         response = await axios.post(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
