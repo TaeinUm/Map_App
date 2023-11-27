@@ -109,6 +109,7 @@ const addMapGraphic = async (req, res) => {
       vers: version,
       mapType,
       privacy,
+      image
     });
     await newMap.save();
     res.status(201).json(newMap);

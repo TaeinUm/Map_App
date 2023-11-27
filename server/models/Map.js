@@ -9,7 +9,7 @@ const mapSchema = new mongoose.Schema({
   vers: String,
   mapType: String,
   privacy: String,
-  image: { type: Buffer, required: false },
+  image: String
 });
 
 const Map = mongoose.model("Map", mapSchema);
