@@ -102,7 +102,7 @@ function Header() {
                 component={NavLink}
                 to={path}
                 style={({ isActive }) =>
-                  isActive ? { textDecoration: "underline" } : undefined
+                  isActive ? { fontWeight: "bold", color: "grey" } : undefined
                 }
               >
                 {title}
