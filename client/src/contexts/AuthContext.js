@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getLoggedIn, login, logout, getUserData } from "../api/authAPI";
 import {
@@ -7,7 +7,6 @@ import {
   CommunitySectionAPI,
 } from "../api/CommunitySectionAPI";
 import { CommunityContext } from "./CommunityContextVerTwo";
-import { MapContext } from "./MapContext";
 
 export const AuthContext = createContext();
 
@@ -19,7 +18,6 @@ export const AuthProvider = ({ children }) => {
   const [username, setUsername] = useState(""); // User Name
   const [userId, setUserId] = useState(""); // User ID
   const [profileImage, setProfileImage] = useState(null); // User's Profile Image
-  const { setMapId } = useContext(MapContext);
 
   const navigate = useNavigate();
   //const {doAuthenitication, doUserID} = CommunitySectionAPI;
@@ -94,7 +92,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/");
-    setMapId(null); // remove all the context data
     setUserId("");
     setUsername("");
     setIsAuthenticated(false);
