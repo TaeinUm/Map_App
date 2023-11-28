@@ -13,6 +13,7 @@ import axios from "axios";
 
 import { AuthContext } from "../../../contexts/AuthContext";
 import { MapContext } from "../../../contexts/MapContext";
+import { useNavigate } from "react-router-dom";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -41,6 +42,7 @@ function SaveTab({ onSave, mapLayer, map }) {
   const [versionSetting, setVersionSetting] = useState("");
   const [exportFile, setExportFile] = useState("");
   const [privacySetting, setPrivacySetting] = useState("");
+  const navigate = useNavigate();
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value);
@@ -114,6 +116,7 @@ function SaveTab({ onSave, mapLayer, map }) {
   const handleSave = async () => {
     if (!isAuthenticated) {
       alert("please log in");
+      navigate("/signin");
       return;
     }
 

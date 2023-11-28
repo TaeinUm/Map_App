@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -30,15 +31,13 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 const Regional = () => {
-  const { mapId } = useContext(MapContext);
-  const { userId, username } = useContext(AuthContext);
+  const { mapId, setMapId } = useContext(MapContext);
+  const { userId } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
-
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
   const [mapStyle, setMapStyle] = useState(
@@ -46,9 +45,11 @@ const Regional = () => {
   );
   const [tabValue, setTabValue] = useState("1");
   const [selectedCountry, setSelectedCountry] = useState("");
-  const [color, setColor] = useState("#FFFFFF");
-  const [opacity, setOpacity] = useState(0.5);
-  const [log, setLog] = useState([]);
+  const [styleSettings, setStyleSettings] = useState({
+    color: "#FFFFFF",
+    opacity: 0.5,
+    log: [],
+  });
 
   const [selectionType, setSelectionType] = useState("country");
 
@@ -57,122 +58,145 @@ const Regional = () => {
   };
 
   useEffect(() => {
-    setIsLoading(true);
-    const newMap = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v11",
-      center: [-74.006, 40.7128],
-      zoom: 2,
-    });
-    newMap.addControl(
-      new MapboxGeocoder({
-        accessToken: mapboxgl.accessToken,
-        mapboxgl: mapboxgl,
-      })
-    );
-    newMap.addControl(new mapboxgl.FullscreenControl());
-    newMap.addControl(new mapboxgl.NavigationControl());
-
-    newMap.on("load", async () => {
-      newMap.addSource("countries", {
-        type: "vector",
-        url: "mapbox://mapbox.country-boundaries-v1",
+    if (!map) {
+      setIsLoading(true);
+      const newMap = new mapboxgl.Map({
+        container: mapContainer.current,
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [-74.006, 40.7128],
+        zoom: 2,
       });
+      newMap.addControl(
+        new MapboxGeocoder({
+          accessToken: mapboxgl.accessToken,
+          mapboxgl: mapboxgl,
+        })
+      );
+      newMap.addControl(new mapboxgl.FullscreenControl());
+      newMap.addControl(new mapboxgl.NavigationControl());
 
-      newMap.addLayer({
-        id: "countries",
-        type: "fill",
-        source: "countries",
-        "source-layer": "country_boundaries",
-        paint: {
-          "fill-color": "#FFFFFF",
-          "fill-opacity": 0.4,
-        },
-      });
+      newMap.on("load", async () => {
+        newMap.addSource("countries", {
+          type: "vector",
+          url: "mapbox://mapbox.country-boundaries-v1",
+        });
 
-      if (mapId) {
-        try {
-          const data = await mapServiceAPI.getMapGraphicData(
-            userId,
-            username,
-            mapId
-          );
-          const mapLayer = data.mapLayer;
+        newMap.addLayer({
+          id: "countries",
+          type: "fill",
+          source: "countries",
+          "source-layer": "country_boundaries",
+          paint: {
+            "fill-color": "#FFFFFF",
+            "fill-opacity": 0.5,
+          },
+        });
 
-          if (mapLayer && data.mapType) {
-            newMap.addLayer(mapLayer);
-          } else {
-            console.error("Invalid map layer data");
+        if (mapId) {
+          try {
+            // Fetch map graphics data using mapId
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = JSON.parse(data.mapData);
+            setStyleSettings(mapLayer);
+            //drawExistingFlows(mapLayer.flows, newMap); color regions functions here?
+          } catch (error) {
+            console.error("Error loading map graphics:", error);
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
           }
-        } catch (error) {
-          console.error("Error loading map graphics: ", error);
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
         }
-      }
-
-      setMap(newMap);
-      const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-      setInitializeLayers(initialLayers);
-      setIsLoading(false);
-    });
-
-    return () => newMap.remove();
+      });
+    }
   }, []);
 
   useEffect(() => {
-    if (map && log.length > 0) {
+    if (map && styleSettings.log.length > 0) {
       const colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
-      const uniqueCountries = new Set();
+      const uniqueRegions = new Set();
 
-      log.forEach((entry) => {
-        if (entry.country && !uniqueCountries.has(entry.country)) {
-          colorExpression.push(entry.country, entry.color);
-          uniqueCountries.add(entry.country);
-        } else if (entry.continent) {
-          continents[entry.continent].forEach((country) => {
-            if (!uniqueCountries.has(country)) {
-              colorExpression.push(country, entry.color);
-              uniqueCountries.add(country);
-            }
-          });
+      styleSettings.log.forEach((entry) => {
+        if (!uniqueRegions.has(entry.region)) {
+          colorExpression.push(entry.region, entry.color);
+          uniqueRegions.add(entry.region);
         }
       });
       colorExpression.push("#FFFFFF");
 
       map.setPaintProperty("countries", "fill-color", colorExpression);
     }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
-    }
-  }, [map, log, continents]);
+  }, [map, styleSettings.log, continents]);
 
   useEffect(() => {
     if (map) {
       const countryLayer = map.getLayer("countries");
       if (countryLayer) {
-        map.setPaintProperty("countries", "fill-opacity", opacity);
+        map.setPaintProperty(
+          "countries",
+          "fill-opacity",
+          styleSettings.opacity
+        );
       }
     }
-  }, [map, opacity]);
+  }, [map, styleSettings.opacity]);
 
   const handleSelectionTypeChange = (event) => {
     setSelectionType(event.target.value);
   };
 
-  const handleCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
-  };
-
   const handleColorChange = (event) => {
-    setColor(event.target.value);
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      color: event.target.value,
+    }));
   };
 
-  const handleCountrySelect = (countryCode) => {
-    setSelectedCountry(countryCode);
+  const handleOpacityChange = (newValue) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      opacity: newValue,
+    }));
+  };
+
+  const handleCountrySelect = (region) => {
+    setSelectedCountry(region);
+  };
+
+  const updateRegionColor = (region) => {
+    let regionsToUpdate = [];
+
+    // if a user selects continent!
+    if (selectionType === "continent") {
+      regionsToUpdate = continents[region];
+    } else {
+      regionsToUpdate = [selectedCountry];
+    }
+
+    const updatedLog = [...styleSettings.log];
+
+    regionsToUpdate.forEach((regionCode) => {
+      // update logs
+      const existingIndex = updatedLog.findIndex(
+        (entry) => entry.region === regionCode
+      );
+      if (existingIndex !== -1) {
+        updatedLog[existingIndex] = {
+          region: regionCode,
+          color: styleSettings.color,
+        };
+      } else {
+        updatedLog.push({ region: regionCode, color: styleSettings.color });
+      }
+    });
+
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      log: updatedLog,
+    }));
+    updateMapColors();
   };
 
   const updateMapColors = () => {
@@ -181,11 +205,11 @@ const Regional = () => {
       if (countryLayer) {
         const colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
 
-        if (log.length === 0) {
+        if (styleSettings.log.length === 0) {
           colorExpression.push("XXX", "#FFFFFF");
         } else {
-          log.forEach(({ country, color }) => {
-            colorExpression.push(country, color);
+          styleSettings.log.forEach(({ region, color }) => {
+            colorExpression.push(region, color);
           });
         }
 
@@ -195,70 +219,19 @@ const Regional = () => {
     }
   };
 
-  const updateCountryColor = () => {
-    const updatedLog = log.filter((entry) => entry.country !== selectedCountry);
-    updatedLog.push({ country: selectedCountry, color: color });
-
-    setLog(updatedLog);
-    updateMapColors();
-  };
-
-  const handleContinentSelect = (continent) => {
-    const countriesInContinent = continents[continent];
-    if (!countriesInContinent || countriesInContinent.length === 0) {
-      console.error(`No countries found for continent: ${continent}`);
-      return;
-    }
-
-    const updatedLog = log.filter((entry) => entry.continent !== continent);
-
-    updatedLog.push({ continent, color });
-
-    setLog(updatedLog);
-    updateContColors();
-  };
-
-  const updateContColors = () => {
-    if (mapContainer) {
-      const colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
-
-      const uniqueCountries = new Set();
-
-      if (log.length === 0) {
-        colorExpression.push("XXX", "#FFFFFF");
-      } else {
-        log.forEach((entry) => {
-          if (entry.country && !uniqueCountries.has(entry.country)) {
-            colorExpression.push(entry.country, entry.color);
-            uniqueCountries.add(entry.country);
-          } else if (entry.continent) {
-            continents[entry.continent].forEach((country) => {
-              if (!uniqueCountries.has(country)) {
-                colorExpression.push(country, entry.color);
-                uniqueCountries.add(country);
-              }
-            });
-          }
-        });
-      }
-
-      colorExpression.push("#FFFFFF");
-      map.setPaintProperty("countries", "fill-color", colorExpression);
-    }
-  };
-
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
         title,
         version,
         privacy,
         "Regional Map",
-        mapLayer
+        JSON.stringify(styleSettings)
       );
+      setMapId(null);
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
@@ -340,7 +313,7 @@ const Regional = () => {
                   </Typography>
                   <input
                     type="color"
-                    value={color}
+                    value={styleSettings.color}
                     onChange={handleColorChange}
                     style={{ marginBottom: "30px" }}
                   />
@@ -350,11 +323,11 @@ const Regional = () => {
                     Adjust Opacity
                   </Typography>
                   <Slider
-                    value={opacity}
+                    value={styleSettings.opacity}
                     min={0}
                     max={1}
                     step={0.1}
-                    onChange={(e, newValue) => setOpacity(newValue)}
+                    onChange={(e, newValue) => handleOpacityChange(newValue)}
                     aria-labelledby="opacity-slider"
                     sx={{ marginBottom: "30px" }}
                   />
@@ -377,7 +350,7 @@ const Regional = () => {
                 </Box>
                 <Button
                   variant="contained"
-                  onClick={updateCountryColor}
+                  onClick={updateRegionColor}
                   sx={{ backgroundColor: "#fafafa", color: "black" }}
                 >
                   Update Color
@@ -405,7 +378,7 @@ const Regional = () => {
                   </Typography>
                   <input
                     type="color"
-                    value={color}
+                    value={styleSettings.color}
                     onChange={handleColorChange}
                     style={{ marginBottom: "30px" }}
                   />
@@ -415,19 +388,19 @@ const Regional = () => {
                     Adjust Opacity
                   </Typography>
                   <Slider
-                    value={opacity}
+                    value={styleSettings.opacity}
                     min={0}
                     max={1}
                     step={0.1}
-                    onChange={(e, newValue) => setOpacity(newValue)}
+                    onChange={(e, newValue) => handleOpacityChange(newValue)}
                     aria-labelledby="opacity-slider"
                     sx={{ marginBottom: "30px" }}
                   />
                 </Box>
 
                 <ContinentColorUpdater
-                  handleContinentSelect={handleContinentSelect}
-                  color={color}
+                  handleContinentSelect={updateRegionColor}
+                  color={styleSettings.color}
                 />
               </FormControl>
             )}
@@ -436,17 +409,17 @@ const Regional = () => {
                 Colored Region List
               </Typography>
               <Divider></Divider>
-              {log.map((entry, index) =>
+              {styleSettings.log.map((entry, index) =>
                 entry.country ? (
                   <Typography
                     key={index}
                     sx={{ color: "#fafafa" }}
-                  >{`${entry.country}: ${entry.color}`}</Typography>
+                  >{`${entry.region}: ${entry.color}`}</Typography>
                 ) : (
                   <Typography
                     key={index}
                     sx={{ color: "#fafafa" }}
-                  >{`${entry.continent}: ${entry.color}`}</Typography>
+                  >{`${entry.region}: ${entry.color}`}</Typography>
                 )
               )}
             </Box>
@@ -455,7 +428,7 @@ const Regional = () => {
             <ShareTab />
           </TabPanel>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
+            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
           </TabPanel>
         </TabContext>
       </Box>
