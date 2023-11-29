@@ -61,6 +61,7 @@ const ThreeD = () => {
   const [mapLayer, setMapLayer] = useState(null);
 
   const [tabValue, setTabValue] = useState("1");
+  const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
@@ -191,6 +192,7 @@ const ThreeD = () => {
           type: "FeatureCollection",
           features,
         };
+        setGeoJsonData(geojsonData);
 
         if (map && map.getSource("3d-data")) {
           map.getSource("3d-data").setData(geojsonData);
@@ -390,7 +392,7 @@ const ThreeD = () => {
             <ShareTab />
           </TabPanel>/>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} geojson={geoJsonData}/>
           </TabPanel>
           {/*{isMemoVisible && <Memo mapId={""} />}
           <Button
