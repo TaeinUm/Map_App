@@ -78,7 +78,11 @@ function MapGraphics({ open }) {
             "Basic Map",
           ].map((type, index) => (
             <Grid item xs={6} sm={4} key={type}>
-              <Card>
+              <Card
+                sx={{
+                  backgroundColor: isSelected(type) ? "lightgrey" : "white",
+                }}
+              >
                 <CardActionArea onClick={() => setSelectedType(type)}>
                   <CardMedia
                     component="img"
@@ -93,7 +97,6 @@ function MapGraphics({ open }) {
                       component="div"
                       style={{
                         textAlign: "center",
-                        textDecoration: isSelected(type) ? "underline" : "none", // Apply underline conditionally
                       }}
                     >
                       {type}
