@@ -34,7 +34,7 @@ const selectStyle = {
   borderTop: "1px solid #fafafa",
 };
 
-function SaveTab({ onSave, mapLayer, map }) {
+function SaveTab({ onSave, mapLayer, map, geojson }) {
   const { isAuthenticated } = useContext(AuthContext);
   const { mapId } = useContext(MapContext);
   const [title, setTitle] = useState("");
@@ -74,13 +74,11 @@ function SaveTab({ onSave, mapLayer, map }) {
       return;
     }
     try {
-      const mapJson = map.getStyle();
-      //return JSON.stringify(mapJson, null, 2); // Converts JSON object to string
-      const blob = new Blob([JSON.stringify(mapJson, null, 2)], {
+      const blob = new Blob([JSON.stringify(geojson, null, 2)], {
         type: "application/json",
       });
       const url = window.URL.createObjectURL(blob);
-      triggerDownload(url, "map.json");
+      triggerDownload(url, "terraCanvas.geo.json");
     } catch (error) {
       console.error("Error exporting map as JSON:", error);
       throw error;
@@ -116,6 +114,8 @@ function SaveTab({ onSave, mapLayer, map }) {
       alert("please log in");
       return;
     }
+
+    console.log("json: ", geojson);
 
     if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
       await exportMapAsImage(exportFile);
@@ -235,6 +235,22 @@ function SaveTab({ onSave, mapLayer, map }) {
           </FormControl>
         </Box>
       </Box>
+
+      <Typography sx={{ color: "#fafafa", margin: "30px" }}>
+        {" "}
+        You might not get the exact same geojson data as some data is protected
+        by Copyright.
+      </Typography>
+
+      <Typography sx={{ color: "#fafafa", margin: "30px" }}>
+        For example, If you fill color of a certain country, but you might get
+        selected countries' boundary data.
+      </Typography>
+
+      <Typography sx={{ color: "#fafafa", margin: "30px" }}>
+        If you want to see the beautiful design of your map, please use
+        TerraCanvas.
+      </Typography>
 
       <Button
         sx={{

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import { Box, Button, Typography, CircularProgress } from "@mui/material";
@@ -16,22 +17,24 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 function File() {
-  const { geojsonData, mapId } = useContext(MapContext);
-  const { userId, username } = useContext(AuthContext);
+  const { geojsonData, mapId, setMapId } = useContext(MapContext);
+  const { userId } = useContext(AuthContext);
   const mapContainer = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
   const [map, setMap] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [tabValue, setTabValue] = useState("1");
 
-  const [lineColor, setLineColor] = useState("#088");
-  const [lineOpacity, setLineOpacity] = useState(0.8);
-  const [waterColor, setWaterColor] = useState("#0000FF");
-  const [lineThickness, setLineThickness] = useState(2);
+  const [styleSettings, setStyleSettings] = useState({
+    lineColor: "#000000",
+    lineOpacity: 0.5,
+    waterColor: "#ffffff",
+    lineThickness: 2,
+    geojsonData: {},
+  });
 
   const sourceId = "uploadedGeoSource";
   const layerId = "uploaded-data-layer";
@@ -40,9 +43,44 @@ function File() {
     setTabValue(newValue);
   };
 
+  const setLineColor = (color) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      lineColor: color,
+    }));
+  };
+
+  const setLineOpacity = (opacity) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      lineOpacity: opacity,
+    }));
+  };
+
+  const setWaterColor = (color) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      waterColor: color,
+    }));
+  };
+
+  const setLineThickness = (thickness) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      lineThickness: thickness,
+    }));
+  };
+
+  const setStyleSettingsJson = (data) => {
+    setStyleSettings((prevSettings) => ({
+      ...prevSettings,
+      geojsonData: data,
+    }));
+  };
+
   useEffect(() => {
-    setIsMapLoaded(false);
     if (!map) {
+      setIsMapLoaded(false);
       const newMap = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/streets-v11",
@@ -60,6 +98,8 @@ function File() {
 
       newMap.on("load", async () => {
         if (geojsonData && !mapId) {
+          setStyleSettingsJson(geojsonData);
+
           newMap.addSource(sourceId, {
             type: "geojson",
             data: geojsonData,
@@ -70,72 +110,85 @@ function File() {
             type: "line",
             source: sourceId,
             paint: {
-              "line-color": lineColor,
-              "line-opacity": lineOpacity,
-              "line-width": lineThickness,
+              "line-color": styleSettings.lineColor,
+              "line-opacity": styleSettings.lineOpacity,
+              "line-width": styleSettings.lineThickness,
             },
           });
 
-          newMap.setPaintProperty("waterd", "fill-color", waterColor);
-        } else if (geojsonData && mapId) {
+          newMap.setPaintProperty(
+            "water",
+            "fill-color",
+            styleSettings.waterColor
+          );
+          setMap(newMap);
+          setIsMapLoaded(true);
+        } else if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
+            // Fetch map graphics data using mapId
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+            const mapLayer = JSON.parse(data.mapData);
+            setStyleSettings(mapLayer);
+            setStyleSettingsJson(data.geojsonData);
+            //drawExistingFlows(mapLayer.flows, newMap); color regions functions here?
+            newMap.addSource(sourceId, {
+              type: "geojson",
+              data: geojsonData,
+            });
+  
+            newMap.addLayer({
+              id: layerId,
+              type: "line",
+              source: sourceId,
+              paint: {
+                "line-color": styleSettings.lineColor,
+                "line-opacity": styleSettings.lineOpacity,
+                "line-width": styleSettings.lineThickness,
+              },
+            });
+  
+            newMap.setPaintProperty(
+              "water",
+              "fill-color",
+              styleSettings.waterColor
             );
-            const mapLayer = data.mapLayer;
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
           } catch (error) {
             console.error("Error loading map graphics:", error);
           } finally {
+            setMap(newMap);
             setIsMapLoaded(true);
           }
+        } else {
+          setMap(newMap);
+          setIsMapLoaded(true);
         }
-
-        setMap(newMap);
-        setIsMapLoaded(true);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
       });
-    }
-
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
     }
   }, [map, geojsonData]);
 
   const updateMapStyle = () => {
     if (map) {
-      map.setPaintProperty(layerId, "line-color", lineColor);
-      map.setPaintProperty(layerId, "line-opacity", lineOpacity);
-      map.setPaintProperty(layerId, "line-width", lineThickness);
+      map.setPaintProperty(layerId, "line-color", styleSettings.lineColor);
+      map.setPaintProperty(layerId, "line-opacity", styleSettings.lineOpacity);
+      map.setPaintProperty(layerId, "line-width", styleSettings.lineThickness);
 
-      map.setPaintProperty("water", "fill-color", waterColor);
+      map.setPaintProperty("water", "fill-color", styleSettings.waterColor);
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
         title,
         version,
         privacy,
         null,
-        mapLayer
+        JSON.stringify(styleSettings)
       );
+      setMapId(null);
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
@@ -186,7 +239,7 @@ function File() {
               </Typography>
               <input
                 type="color"
-                value={lineColor}
+                value={styleSettings.lineColor}
                 onChange={(e) => {
                   setLineColor(e.target.value);
                   updateMapStyle();
@@ -211,7 +264,7 @@ function File() {
                 min="0"
                 max="1"
                 step="0.1"
-                value={lineOpacity}
+                value={styleSettings.lineOpacity}
                 onChange={(e) => {
                   setLineOpacity(parseFloat(e.target.value));
                   updateMapStyle();
@@ -233,7 +286,7 @@ function File() {
               </Typography>
               <input
                 type="color"
-                value={waterColor}
+                value={styleSettings.waterColor}
                 onChange={(e) => {
                   setWaterColor(e.target.value);
                   updateMapStyle();
@@ -257,7 +310,7 @@ function File() {
                 min="1"
                 max="10"
                 step="1"
-                value={lineThickness}
+                value={styleSettings.lineThickness}
                 onChange={(e) => {
                   setLineThickness(parseInt(e.target.value));
                   updateMapStyle();
@@ -266,8 +319,8 @@ function File() {
             </Box>
           </TabPanel>
 
-          <TabPanel value="4" sx={{ height: "100%", overflow: "scroll" }}>
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+          <TabPanel value="3" sx={{ height: "100%", overflow: "scroll" }}>
+            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
           </TabPanel>
         </TabContext>
       </Box>
