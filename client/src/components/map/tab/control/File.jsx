@@ -17,7 +17,8 @@ mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 function File() {
-  const { geojsonData, mapId, setMapId } = useContext(MapContext);
+  const { geojsonData, mapId, setMapId, setGeojsonData } =
+    useContext(MapContext);
   const { userId } = useContext(AuthContext);
   const mapContainer = useRef(null);
   const theme = useTheme();
@@ -130,12 +131,13 @@ function File() {
             const mapLayer = JSON.parse(data.mapData);
             setStyleSettings(mapLayer);
             setStyleSettingsJson(data.geojsonData);
+            setGeojsonData(data.geojsonData);
             //drawExistingFlows(mapLayer.flows, newMap); color regions functions here?
             newMap.addSource(sourceId, {
               type: "geojson",
               data: geojsonData,
             });
-  
+
             newMap.addLayer({
               id: layerId,
               type: "line",
@@ -146,7 +148,7 @@ function File() {
                 "line-width": styleSettings.lineThickness,
               },
             });
-  
+
             newMap.setPaintProperty(
               "water",
               "fill-color",
@@ -194,6 +196,20 @@ function File() {
       console.error("Error saving map:", error);
       alert("Error saving map");
     }
+  };
+
+  const makeGeoJSON = () => {
+    const styledGeoJsonData = {
+      ...geojsonData,
+      style: {
+        lineColor: styleSettings.lineColor,
+        lineOpacity: styleSettings.lineOpacity,
+        waterColor: styleSettings.waterColor,
+        lineThickness: styleSettings.lineThickness,
+      },
+    };
+
+    return styledGeoJsonData;
   };
 
   return (
@@ -320,7 +336,12 @@ function File() {
           </TabPanel>
 
           <TabPanel value="3" sx={{ height: "100%", overflow: "scroll" }}>
-            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={styleSettings}
+              map={map}
+              geojson={makeGeoJSON()}
+            />
           </TabPanel>
         </TabContext>
       </Box>
