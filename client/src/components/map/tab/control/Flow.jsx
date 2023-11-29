@@ -344,6 +344,31 @@ const Flow = () => {
     return curveCoordinates;
   };
 
+  const exportToGeoJSON = () => {
+    const geojson = {
+      type: "FeatureCollection",
+      features: styleSettings.flows.map((flow) => ({
+        type: "Feature",
+        properties: {
+          id: flow.id,
+          log: flow.log,
+          color: flow.color,
+          curvature: flow.curvature,
+          lineWidth: flow.lineWidth,
+        },
+        geometry: {
+          type: "LineString",
+          coordinates: getCurvedLineCoordinates(
+            flow.start,
+            flow.end,
+            flow.curvature
+          ),
+        },
+      })),
+    };
+    return geojson;
+  };
+
   return (
     <Box
       sx={{
@@ -540,7 +565,12 @@ const Flow = () => {
           </TabPanel>
 
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={styleSettings}
+              map={map}
+              geojson={exportToGeoJSON()}
+            />
           </TabPanel>
         </TabContext>
       </Box>
