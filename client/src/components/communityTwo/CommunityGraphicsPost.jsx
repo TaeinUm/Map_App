@@ -181,6 +181,7 @@ import { useParams } from 'react-router-dom';
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
 import { postInfo } from './CommunityTwo';
 import { useContext } from 'react';
+import { FiShare, FiTrash } from "react-icons/fi";
 //const mongoose = require('mongoose');
 
 
@@ -198,7 +199,7 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
 }));
 
 function CommunityGraphicPost() {
-  const {postComment, getCommentsForAPost} = CommunitySectionAPI;
+  const {postComment, getCommentsForAPost, deleteComment} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
   //const { text } = useParams(); // Uncomment this when using in your routing setup
   const actualIndex = 1; // Replace with `const actualIndex = index.replace(/:/g, '');` when useParams is active
@@ -254,6 +255,21 @@ function CommunityGraphicPost() {
 
   const handleMessageChange = (event) => {
     setMessage(event.target.value);
+  };
+
+  const deleteCommentNow = async (commentId) => {
+    if(!localStorage.getItem("authentification")){
+      alert("You have not signed in yet");
+    }else{
+      if(postInfo.userId!==localStorage.getItem("newUserid")){
+        alert("You can not delete another user's comment");
+      }else{
+        let deletedData=await deleteComment(commentId);
+        let newerData= await getCommentsForAPost(postInfo._id);
+        setCommentsBuffer(newerData);
+      }
+    }
+
   };
 
   const handleSubmit = async () => {
@@ -350,6 +366,7 @@ function CommunityGraphicPost() {
            Comments Section
       </Typography>
       {commentsBuffer.map((comment) => (
+        <Box>
               <Typography
                 variant="h2"
                 //onClick={setupQuestionLocal(post)}
@@ -367,6 +384,10 @@ function CommunityGraphicPost() {
               >
                 {comment.commentContent}
               </Typography>
+              <IconButton onClick={(e)=>{deleteCommentNow(comment._id)}}>
+                <FiTrash/>
+              </IconButton>
+              </Box>
             ))}
       {/* {commentsBuffer.map((content, index) => (
               <Typography

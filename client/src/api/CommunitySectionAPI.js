@@ -463,5 +463,49 @@ const CommunitySectionAPI = {
       console.error("cannot unlike a map.");
     }
   },
+  deletePost: async (postID) => {
+    //const { isAuthenticated, userId, username } = AuthContext;
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/community/deletePost/${postID}`,
+        {
+          params: { postId: postID },
+        }
+      );
+      return response.data;
+      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+      //     postType,
+      //     postText,
+      //     postFile,
+      //     date,
+
+      //   }  );
+    } catch (error) {
+      console.error("cannot get a user's maps.");
+    }
+  },
+  deleteComment: async (commentID) => {
+    //const { isAuthenticated, userId, username } = AuthContext;
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/community/deleteComment/${commentID}`,
+        {
+          params: { commentId: commentID },
+        }
+      );
+      return response.data;
+      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
+
+      //     postType,
+      //     postText,
+      //     postFile,
+      //     date,
+
+      //   }  );
+    } catch (error) {
+      console.error("cannot get a user's maps.");
+    }
+  },
 };
 export default CommunitySectionAPI;

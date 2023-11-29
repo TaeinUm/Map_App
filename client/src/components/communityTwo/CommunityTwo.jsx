@@ -377,6 +377,8 @@ function CommunityTwo() {
     getMapsBySearch,
     likeMap,
     getPostsByUserId,
+    unlikeMap,
+    deletePost,
   } = CommunitySectionAPI;
   const [whiteBar, setWhiteBar] = useState("Trending Map Graphics");
   const handleSearchChange = async (event) => {
@@ -387,16 +389,21 @@ function CommunityTwo() {
       let users = [];
       console.log("Does the random bar " + event.target.value);
       users = await getMapsByUsername(event.target.value);
-      console.log(users);
-      //console.log("what is users: "+JSON.stringify(users[0]));
-      for (let user in users) {
-        //console.log("What is the user id: "+user._id)
-        console.log("what is users: " + users[user]._id);
-        repeat = await getPostsByUserId(users[user]._id);
+      console.log("Checking for undefined: "+users);
+      if(users){
+        
+      
+        console.log(users);
+        //console.log("what is users: "+JSON.stringify(users[0]));
+        for (let user in users) {
+          //console.log("What is the user id: "+user._id)
+          console.log("what is users: " + users[user]._id);
+          repeat = await getPostsByUserId(users[user]._id);
 
-        total = total.concat(repeat);
-        console.log("what is total: " + total);
-        setUserGraphics(total);
+          total = total.concat(repeat);
+          console.log("what is total: " + total);
+          setUserGraphics(total);
+        }
       }
     }
 
@@ -486,6 +493,45 @@ function CommunityTwo() {
   function giveALike(userId, postId) {
     let newData = likeMap(userId, postId);
   }
+  function giveAnUnlike(userId, postId) {
+    let newData = unlikeMap(userId, postId);
+  }
+  const deleteAUserPost = async(userId, postId)=> {
+    let total = [];
+      let repeat = [];
+      let users = [];
+    if(localStorage.getItem("authentification")){
+      if(localStorage.getItem("authentification")==="true"){
+
+      
+    
+        if (userId !== localStorage.getItem("newUserid")){
+          alert("You don't have permission to delete this post");
+          
+        }else{
+          let newData = await deletePost(postId);
+          let users = await getMapsByUsername(searchTerm);
+          console.log("Checking for undefined: "+users);
+          if(users){
+        
+      
+          console.log(users);
+          //console.log("what is users: "+JSON.stringify(users[0]));
+          for (let user in users) {
+            //console.log("What is the user id: "+user._id)
+            console.log("what is users: " + users[user]._id);
+            repeat = await getPostsByUserId(users[user]._id);
+
+            total = total.concat(repeat);
+            console.log("what is total: " + total);
+            setUserGraphics(total);
+          }
+      }
+        }
+    }}else{
+      alert("You have not signed in yet");
+    }
+  }
   let newData = "";
 
   useEffect(() => {
@@ -496,6 +542,7 @@ function CommunityTwo() {
         const data = await getTop5Trending();
         setTopGraphics(data);
         newData = await getAllPosts();
+        
         setUserGraphics(newData);
         //setAllGraphics(newData);
         console.log("How many graphics are there in total: " + newData.length);
@@ -782,12 +829,27 @@ function CommunityTwo() {
                   >
                     <FavoriteBorderIcon />
                   </IconButton>
+                  <IconButton
+                    aria-label="unlike a post"
+                    onClick={() =>
+                      giveAnUnlike(localStorage.getItem("newUserid"), graphic._id)
+                    }
+                  >
+                    Unlike
+                  </IconButton>
                   <IconButton aria-label="share">
                     <ShareIcon />
                   </IconButton>
                   <Button size="small" color="primary">
                     More
                   </Button>
+                  <IconButton aria-label="delete" onClick={()=>{
+                        deleteAUserPost(graphic.userId, graphic._id);
+                      }}>
+                      <HighlightOffIcon
+                       
+                      />
+                  </IconButton>
                 </CardActions>
               </StyledCard>
             </Grid>
@@ -969,12 +1031,22 @@ function CommunityTwo() {
                     >
                       <FavoriteBorderIcon />
                     </IconButton>
+                    <IconButton
+                    size="small"
+                    aria-label="unlike a post"
+                    onClick={() =>
+                      giveAnUnlike(localStorage.getItem("newUserid"), graphic._id)
+                    }
+                    >
+                      Unlike
+                    </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon />
                     </IconButton>
                     <Button size="small" color="primary">
                       More
                     </Button>
+                    
                   </CardActions>
                 </StyledCard>
               </Grid>
@@ -1194,3 +1266,31 @@ export default CommunityTwo;
             ))}
           </Box> */
 }
+
+
+{/* <div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation1 MuiCard-root css-uk0si">
+  <img class="MuiCardMedia-root MuiCardMedia-media MuiCardMedia-img css-rhsghg" src="https://cdn.kicksdigital.com/depictdatastudio.com/2018/09/depict-data-studio-charts-heat-maps.png" height="140" alt="Hello"/>
+  <div class="MuiCardContent-root css-1qw96cp">
+    <a class="MuiTypography-root MuiTypography-h6 MuiTypography-gutterBottom css-4an0mh" href="/communityGraphicPost/:Hello">Hello</a>
+  </div>
+  <div class="MuiCardActions-root MuiCardActions-spacing css-3zukih">
+    <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1yxmbwk" tabindex="0" type="button" aria-label="add to favorites">
+      <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-vubbuv" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="FavoriteBorderIcon">
+        <path d="M16.5 3c-1.74 0-3.41.81-4.5 2.09C10.91 3.81 9.24 3 7.5 3 4.42 3 2 5.42 2 8.5c0 3.78 3.4 6.86 8.55 11.54L12 21.35l1.45-1.32C18.6 15.36 22 12.28 22 8.5 22 5.42 19.58 3 16.5 3zm-4.4 15.55-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"></path>
+      </svg>
+      <span class="MuiTouchRipple-root css-w0pj6f"></span>
+    </button>
+    <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1yxmbwk" tabindex="0" type="button" aria-label="share">
+      <svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-vubbuv" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ShareIcon">
+        <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"></path>
+      </svg>
+      <span class="MuiTouchRipple-root css-w0pj6f"></span>
+    </button>
+    <button class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1rtnrqa" tabindex="0" type="button">
+      More
+      <span class="MuiTouchRipple-root css-w0pj6f"></span>
+    </button>
+  </div>
+</div> */}
+
+
