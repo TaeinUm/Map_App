@@ -48,29 +48,17 @@ function CommunityGraphicPost() {
   //let commentsBuffer = [];//getCommentsForAPost(postInfo._id);
 
   useEffect(() => {
-    // if(postInfo===null){
-    //   console.log("There is no record of postInfo");
-    //   return;
-    // }
     let newData = [];
     //let postId = localStorage.getItem("questionId");
-    //console.log("What is the postId "+postId);
     let postItemInfo = localStorage.getItem("postItem");
-    console.log("Do I have access to the CommunityTwo postInfo state variable: "+postInfo+"postId: "+postInfo._id+"postName: "+postInfo.postName);
+
     //let string = ""+postId;
     const fetchGraphics = async () => {
       try {
         newData= await getCommentsForAPost(postInfo._id);
         setCommentsBuffer(newData);
         //commentsBuffer = newData;
-        console.log("Do I have any items: " +JSON.stringify(newData));
-        
-        //setAllGraphics(newData);
-        // console.log("How many graphics are there in total: "+newData.length);
-        // console.log("is it possible "+newData[0].types);
-        // questions = newData.filter(post=>post.postType==="Questions");
-        // graphics = newData.filter(post=>post.postType==="map");
-        // console.log("What is the length of questions: "+ questions.length);
+
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
@@ -97,16 +85,13 @@ function CommunityGraphicPost() {
   const handleSubmit = async () => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
-    console.log("what is the current id: "+localStorage.getItem("newUserid"));
-    console.log("I hope that I get false: "+localStorage.getItem("authentification"));
     //console.log("Do I have any items: " +commentsBuffer.length);
     postComment(localStorage.getItem("newUserid"), postInfo._id, currentTimeSec, document.getElementById("prompt-textarea").value);
-    console.log('Submitted message:', message);
+    
     let refreshData= await getCommentsForAPost(postInfo._id);
     setCommentsBuffer(refreshData);
   };
 
-  console.log("What is the question title" + questionTitle);
 
   return (
     <Container maxWidth="md" sx={{ p: 3,  height: "100%"}}>
@@ -206,25 +191,7 @@ function CommunityGraphicPost() {
                 {comment.commentContent}
               </Typography>
             ))}
-      {/* {commentsBuffer.map((content, index) => (
-              <Typography
-                variant="h2"
-                
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                
-              >
-                {content}
-              </Typography>
-            ))} */}
+      {}
       </Paper>
 
     </Container>

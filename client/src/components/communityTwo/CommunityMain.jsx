@@ -143,22 +143,22 @@ function CommunityTwo() {
   } = CommunitySectionAPI;
   const [whiteBar, setWhiteBar] = useState("Trending Map Graphics");
   const handleSearchChange = async (event) => {
-    console.log("What is the event value " + event.target.value);
+   
     if (category === "category3") {
       let total = [];
       let repeat = [];
       let users = [];
-      console.log("Does the random bar " + event.target.value);
+      
       users = await getMapsByUsername(event.target.value);
-      console.log(users);
+      
       //console.log("what is users: "+JSON.stringify(users[0]));
       for (let user in users) {
         //console.log("What is the user id: "+user._id)
-        console.log("what is users: " + users[user]._id);
+       
         repeat = await getPostsByUserId(users[user]._id);
 
         total = total.concat(repeat);
-        console.log("what is total: " + total);
+        
         setUserGraphics(total);
       }
     }
@@ -170,9 +170,7 @@ function CommunityTwo() {
       if (category === "category3") {
         let repeat = [];
         let users = [];
-        console.log(
-          "Does the random bar " + document.getElementById("random-search-bar")
-        );
+        
         users = await getMapsByUsername(
           document.getElementById("random-search-bar")
         );
@@ -188,22 +186,6 @@ function CommunityTwo() {
     updateQuestionTitle(text);
   }
   function setupQuestionLocal(post) {
-    // if(localStorage.getItem("questionId")!=post._id){
-    // }
-    //localStorage.setItem("questionId", post._id);
-
-    // if(localStorage.getItem("questionContent")!=post.content){
-    // }
-    //localStorage.setItem("questionContent", post.content);
-
-    // if(localStorage.getItem("questionTitle")!=post.title){
-    // }
-    //localStorage.setItem("questionTitle", post.postName);
-
-    //navigate("/communityQuestionPost/:"+post.title);
-    //if (event )
-    //window.open("/communityQuestionPost/:"+post.title);
-    //setPostInfo(post);
     localStorage.setItem("postItem", post);
     postInfo = post;
     updatePostInfo(post);
@@ -244,7 +226,7 @@ function CommunityTwo() {
     } else if (event.target.value === "category2") {
       setWhiteBar("Map Graphics Idea");
     }
-    console.log("What is the current category? " + category);
+   
   };
   function giveALike(userId, postId) {
     let newData = likeMap(userId, postId);
@@ -261,17 +243,13 @@ function CommunityTwo() {
         newData = await getAllPosts();
         setUserGraphics(newData);
         //setAllGraphics(newData);
-        console.log("How many graphics are there in total: " + newData.length);
-        console.log("is it possible " + newData[0].types);
+      
         setQuestionBuffer(
           newData.filter((post) => post.postType === "Questions")
         );
         setTrendingBuffer(newData.filter((post) => post.postType === "map"));
         setIdeasBuffer(newData.filter((post) => post.postType === "Map Ideas"));
-        console.log(
-          "What is the length of TrendingBuffer? " + trendingBuffer.length
-        );
-        console.log("What is the length of questions: " + questions.length);
+       
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
@@ -281,14 +259,13 @@ function CommunityTwo() {
     if (localStorage.getItem("authentification") === "true") {
       setAuthentification(false);
     }
-    console.log("is my scoping wrong: " + newData);
+   
 
     //questions = newData.filter(post=>post.types==="Questions");
     // for (let key in newData){
     //   console.log((key));
     // }
 
-    console.log("What is the length of questions: " + questions.length);
     // ideas = newData.filter((post)=>(post.types==="Map Ideas"));
     // graphics = newData.filter((post)=>(post.types==="Map Graphics"));
     // userGraphics = newData.filter((post)=>(post.userId===localStorage.getItem("newUserid")))
@@ -299,125 +276,6 @@ function CommunityTwo() {
 
   let content = null;
 
-  // if (category === "category3"){
-  //   content=
-  //   <Box>
-  //   <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
-  //       User Posts:
-  //     </Typography>
-  //     <Box
-  //         sx={{
-  //           display: "flex-column",
-  //           width: "3250px",
-  //           gap: "10px",
-  //           mt: 5,
-  //           transition: "transform 0.5s",
-  //           //transform: `translateX(${scrollAmount}px)`,
-  //         }}
-  //         >
-  //           {userGraphics.map((post) => (
-  //             <Typography
-  //               variant="h2"
-
-  //               sx={{
-  //                 fontSize: "20px",
-  //                 color: "#FAFAFA",
-  //                 mb: 2,
-  //                 ml: 5,
-  //                 display: "flex",
-  //                 flexGrow: "1",
-  //                 fontWeight: "bold",
-  //               }}
-  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-  //               // component={NavLink}
-  //               // to={"/communityQuestionPost/:"+text}
-  //             >
-  //               {post.content}
-  //             </Typography>
-  //           ))}
-  //           {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
-  //             <Typography
-  //               variant="h2"
-  //               onClick={setupQuestionPost(text)}
-  //               sx={{
-  //                 fontSize: "20px",
-  //                 color: "#FAFAFA",
-  //                 mb: 2,
-  //                 ml: 5,
-  //                 display: "flex",
-  //                 flexGrow: "1",
-  //                 fontWeight: "bold",
-  //               }}
-  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-  //               component={NavLink}
-  //               to={"/communityQuestionPost/:"+text}
-  //             >
-  //               {text}
-  //             </Typography>
-  //           ))} */}
-  //         </Box>
-  //         </Box>;
-  // }
-
-  // if (category === "category2"){
-  //   content=
-  //   <Box>
-  //   <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
-  //       New Ideas:
-  //     </Typography>
-  //     <Box
-  //         sx={{
-  //           display: "flex-column",
-  //           width: "3250px",
-  //           gap: "10px",
-  //           mt: 5,
-  //           transition: "transform 0.5s",
-  //           //transform: `translateX(${scrollAmount}px)`,
-  //         }}
-  //         >
-  //           {/* {questions.map((post) => (
-  //             <Typography
-  //               variant="h2"
-  //               onClick={setupQuestionPost(text)}
-  //               sx={{
-  //                 fontSize: "20px",
-  //                 color: "#FAFAFA",
-  //                 mb: 2,
-  //                 ml: 5,
-  //                 display: "flex",
-  //                 flexGrow: "1",
-  //                 fontWeight: "bold",
-  //               }}
-  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-  //               component={NavLink}
-  //               to={"/communityQuestionPost/:"+text}
-  //             >
-  //               {post.content}
-  //             </Typography>
-  //           ))} */}
-  //           {ideas.map((post) => (
-  //             <Typography
-  //               variant="h2"
-  //               onClick={setupIdeasLocal(post)}
-  //               sx={{
-  //                 fontSize: "20px",
-  //                 color: "#FAFAFA",
-  //                 mb: 2,
-  //                 ml: 5,
-  //                 display: "flex",
-  //                 flexGrow: "1",
-  //                 fontWeight: "bold",
-  //               }}
-  //               //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-  //               // component={NavLink}
-  //               // to={"/communityQuestionIdea/:"+text}
-  //             >
-  //               {post.content}
-  //             </Typography>
-  //           ))}
-  //         </Box>
-  //         </Box>;
-  // }
   if (category === "category2") {
     content = (
       <Box>
@@ -457,26 +315,7 @@ function CommunityTwo() {
                 {post.postName}
               </Typography>
             ))}
-          {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
-              <Typography
-                variant="h2"
-                onClick={setupQuestionPost(text)}
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                component={NavLink}
-                to={"/communityQuestionPost/:"+text}
-              >
-                {text}
-              </Typography>
-            ))} */}
+          {}
         </Box>
       </Box>
     );
@@ -599,26 +438,7 @@ function CommunityTwo() {
                 {post.postName}
               </Typography>
             ))}
-          {/* {newQuestions.filter((text) => text.toLowerCase().includes(searchTerm.toLowerCase())).map((text, index) => (
-              <Typography
-                variant="h2"
-                onClick={setupQuestionPost(text)}
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                component={NavLink}
-                to={"/communityQuestionPost/:"+text}
-              >
-                {text}
-              </Typography>
-            ))} */}
+          {}
         </Box>
       </Box>
     );
@@ -631,26 +451,7 @@ function CommunityTwo() {
         </Typography>
 
         <Grid container spacing={4}>
-          {/* {graphics.map((post) => (
-              <Typography
-                variant="h2"
-                onClick={setupQuestionPost(text)}
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                // component={NavLink}
-                // to={"/communityQuestionPost/:"+text}
-              >
-                {post.content}
-              </Typography>
-            ))} */}
+          {}
           {trendingBuffer
             .filter((graphic) => graphic.postName.includes(searchTerm))
             .slice(startIndex, endIndex)
@@ -769,39 +570,23 @@ function CommunityTwo() {
                 onKeyDown={handleUserSearch}
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
-                    console.log("Enter key pressed");
+                    
                     if (category === "category1") {
-                      console.log(
-                        "Do I have the correct search term?" + searchTerm
-                      );
+                     
                       getQuestionsBySearch(searchTerm);
                     }
                     if (category === "category2") {
-                      console.log(
-                        "Do I have the correct search term?" + searchTerm
-                      );
+                      
                       getIdeasBySearch(searchTerm);
                     }
                     if (category === "category3") {
-                      console.log(
-                        "Do I have the correct search term?" + searchTerm
-                      );
+                     
                       getMapsByUsername(searchTerm);
                     }
                     if (category === "") {
-                      console.log(
-                        "Do I have the correct search term?" + searchTerm
-                      );
+                      
                       getMapsBySearch(searchTerm);
                     }
-                    // else if (category==="category3"){
-                    //   console.log("Do I have the correct search term?"+searchTerm);
-                    //   getMapsByUsername(searchTerm);
-                    // }else if (category==="category2"){
-                    //   console.log("Do I have the correct search term?"+searchTerm);
-                    //   getIdeasBySearch(searchTerm);
-                    // }
-                    // write your functionality here
                   }
                 }}
               />
@@ -832,89 +617,4 @@ function CommunityTwo() {
 export default CommunityTwo;
 
 {
-  /* <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
-        Trending Map Graphics
-      </Typography>
-
-
-      <Grid container spacing={4}>
-        {topGraphics
-          .filter((graphic) => graphic.title.toLowerCase().includes(searchTerm.toLowerCase()))
-          .slice(startIndex, endIndex)
-          .map((graphic, index) => (
-            <Grid item xs={12} sm={6} md={4} key={graphic.id}>
-              <StyledCard>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  image={graphic.image}
-                  alt={graphic.title}
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h6">
-                    {graphic.title}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <IconButton aria-label="add to favorites">
-                    <FavoriteBorderIcon />
-                  </IconButton>
-                  <IconButton aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                  <Button size="small" color="primary">
-                    More
-                  </Button>
-                </CardActions>
-              </StyledCard>
-            </Grid>
-        ))}
-      </Grid>
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-        <Pagination
-          count={Math.ceil(topGraphics.length / itemsPerPage)}
-          page={currentPage}
-          onChange={(_, page) => setCurrentPage(page)}
-          color="primary"
-          showFirstButton
-          showLastButton
-        />
-      </Box>
-
-      <Typography variant="h4" align="left" sx={{ my: 4, color: 'white' }}>
-        New Questions:
-      </Typography>
-      <Box 
-          sx={{
-            display: "flex-column",
-            width: "3250px",
-            gap: "10px",
-            mt: 5,
-            transition: "transform 0.5s",
-            //transform: `translateX(${scrollAmount}px)`,
-          }}
-          >
-            
-            {newQuestions.map((text, index) => (
-              <Typography
-                variant="h2"
-                
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                component={NavLink}
-                to={"/communityQuestionPost/:"+index}
-              >
-                {text}
-              </Typography>
-            ))}
-          </Box> */
 }
