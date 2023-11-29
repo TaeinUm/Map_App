@@ -241,6 +241,11 @@ const Regional = () => {
     }
   };
 
+  const makeGeoJSON = () => {
+    const extractedData = extractRegionalData(styleSettings);
+    return extractedData;
+  };
+
   return (
     <Box
       sx={{
@@ -434,7 +439,9 @@ const Regional = () => {
               onSave={handleSave}
               mapLayer={styleSettings}
               map={map}
-              geojson={extractRegionalData(styleSettings)}
+              geojson={() => {
+                makeGeoJSON();
+              }}
             />
           </TabPanel>
         </TabContext>
