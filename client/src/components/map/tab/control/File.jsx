@@ -201,11 +201,10 @@ function File() {
   const makeGeoJSON = () => {
     const styledGeoJsonData = {
       ...geojsonData,
-      style: {
-        lineColor: styleSettings.lineColor,
-        lineOpacity: styleSettings.lineOpacity,
-        waterColor: styleSettings.waterColor,
-        lineThickness: styleSettings.lineThickness,
+      paint: {
+        "line-color": styleSettings.lineColor,
+        "line-opacity": styleSettings.lineOpacity,
+        "line-width": styleSettings.lineThickness,
       },
     };
 

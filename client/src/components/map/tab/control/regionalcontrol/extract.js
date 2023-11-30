@@ -8,8 +8,10 @@ const extract = (styleSettings) => {
         ...feature,
         properties: {
           ...feature.properties,
-          color: colorMap[feature.properties.ISO_A3],
-          opacity: opacity,
+          paint: {
+            "fill-color": colorMap[feature.properties.ISO_A3],
+            "fill-opacity": opacity,
+          },
         },
       }));
 

@@ -351,10 +351,14 @@ const Flow = () => {
         type: "Feature",
         properties: {
           id: flow.id,
-          log: flow.log,
-          color: flow.color,
-          curvature: flow.curvature,
-          lineWidth: flow.lineWidth,
+          paint: {
+            "line-color": flow.color,
+            "line-width": flow.lineWidth,
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
         },
         geometry: {
           type: "LineString",
