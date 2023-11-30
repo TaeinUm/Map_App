@@ -27,7 +27,7 @@ import TabMenu from "../../editmap/TabMenu";
 import ContinentColorUpdater from "../../editmap/ContinentColorUpdater";
 import continents from "./regionalcontrol/continentsData";
 
-import extractRegionalData from "./regionalcontrol/extract";
+import extract from "./regionalcontrol/extract";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -52,6 +52,8 @@ const Regional = () => {
     opacity: 0.5,
     log: [],
   });
+
+  const [processedData, setProcessedData] = useState(null);
 
   const [selectionType, setSelectionType] = useState("country");
 
@@ -145,6 +147,13 @@ const Regional = () => {
       }
     }
   }, [map, styleSettings.opacity]);
+
+  useEffect(() => {
+    if (styleSettings) {
+      const newProcessedData = extract(styleSettings);
+      setProcessedData(newProcessedData);
+    }
+  }, [styleSettings]);
 
   const handleSelectionTypeChange = (event) => {
     setSelectionType(event.target.value);
@@ -240,11 +249,6 @@ const Regional = () => {
       console.error("Error saving map:", error);
       alert("Error saving map");
     }
-  };
-
-  const makeGeoJSON = () => {
-    const extractedData = extractRegionalData(styleSettings);
-    return extractedData;
   };
 
   return (
@@ -440,9 +444,7 @@ const Regional = () => {
               onSave={handleSave}
               mapLayer={styleSettings}
               map={map}
-              geojson={() => {
-                makeGeoJSON();
-              }}
+              geojson={processedData}
             />
           </TabPanel>
         </TabContext>
