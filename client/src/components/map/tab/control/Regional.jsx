@@ -67,6 +67,7 @@ const Regional = () => {
         style: "mapbox://styles/mapbox/streets-v11",
         center: [-74.006, 40.7128],
         zoom: 2,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({
