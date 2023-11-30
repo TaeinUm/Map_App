@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/JuyeeMyeong/CSE416_project#readme",
   "dependencies": {
+    "aws-sdk": "^2.1507.0",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "chai": "^4.3.10",
