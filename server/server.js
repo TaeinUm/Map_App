@@ -53,6 +53,11 @@ mongoose
     process.exit(1); // Exit the process on database connection failure
   });
 
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
+
 // Serve static files (React frontend)
 app.use(express.static(path.join(__dirname, "../client/build")));
 
