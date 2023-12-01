@@ -83,6 +83,7 @@ const ThreeD = () => {
         pitch: 45,
         bearing: -17.6,
         antialias: true,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({

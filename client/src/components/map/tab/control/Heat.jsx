@@ -82,6 +82,7 @@ const Heat = () => {
         style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({
