@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -52,10 +53,11 @@ const ThreeD = () => {
   const fileInputRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
 
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
@@ -119,8 +121,8 @@ const ThreeD = () => {
               username,
               mapId
             );
-            const mapLayer = data.mapLayer;
-
+            const mapLayer = JSON.parse(data.mapData);
+            setLocations(mapLayer);
             if (mapLayer && data.mapType) {
               newMap.addLayer(mapLayer);
             } else {
@@ -203,18 +205,35 @@ const ThreeD = () => {
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+        const originalVer = response.vers;
+        if (originalVer === "ver1") {
+          versionToPut = "ver2";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver3";
+        } else if (originalVer === "ver3") {
+          versionToPut = "ver1";
+          // Here, find the version1 having the same title & delete it from DB
+        }
+      }
+
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
-        title,
-        version,
+        titleToPut,
+        versionToPut,
         privacy,
         "3D-Bar Map",
-        mapLayer
+        JSON.stringify(locations)
       );
+      setMapId(null);
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
