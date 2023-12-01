@@ -16,9 +16,6 @@ export const MapProvider = ({ children }) => {
     setMapId(id);
     setMapType(type);
     setGeojsonData(data); // this should be mapLayer
-    if (id === null) {
-      mapServiceAPI.updateUserMapGraphics(userId, username, type, data, id);
-    }
     navigate("/mapedit");
   };
 

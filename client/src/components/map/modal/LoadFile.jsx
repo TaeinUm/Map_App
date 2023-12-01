@@ -42,6 +42,7 @@ function LoadFile({ open }) {
 
   const { updateMapContextAndNavigate } = useContext(MapContext);
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [geojson, setGeojson] = useState(null);
 
   /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {
@@ -158,7 +159,7 @@ function LoadFile({ open }) {
         if (JSON.stringify(geojsonData).size > 5 * 1024 * 1024) {
           alert("file size exceeds limit.");
         }
-        updateMapWithData(geojsonData);
+        setGeojson(geojsonData);
       } else {
         console.error("Could not parse geojsonData.");
       }
@@ -187,8 +188,8 @@ function LoadFile({ open }) {
   };
 
   //update map
-  const updateMapWithData = (geojsonData) => {
-    updateMapContextAndNavigate(null, null, geojsonData, navigate);
+  const updateMapWithData = () => {
+    updateMapContextAndNavigate(null, null, geojson, navigate);
   };
 
   return (
@@ -239,6 +240,7 @@ function LoadFile({ open }) {
               height: "50px",
               width: "200px",
             }}
+            onClick={updateMapWithData}
           >
             Load Map
           </Button>
