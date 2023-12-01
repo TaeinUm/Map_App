@@ -2,7 +2,14 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import { Box, CircularProgress, Slider, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Slider,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import { TabPanel, TabContext } from "@mui/lab";
 import { useMediaQuery, useTheme } from "@mui/material";
 
@@ -13,9 +20,27 @@ import mapServiceAPI from "../../../../api/mapServiceAPI";
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
 import MapMobile from "../../landing/MapMobile";
+import extractbasic from "./basiccontrol/extractbasic";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
+
+const selectStyle = {
+  margin: "5px",
+  ".MuiInputBase-input": { color: "#fafafa" },
+  ".MuiSelect-select": { color: "#fafafa" },
+  ".MuiOutlinedInput-notchedOutline": { borderColor: "#fafafa" },
+  "&:hover .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#fafafa",
+  },
+  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+    borderColor: "#fafafa",
+  },
+  "& .MuiSvgIcon-root": {
+    color: "#fafafa",
+  },
+  borderTop: "1px solid #fafafa",
+};
 
 const BasicStyles = () => {
   const [map, setMap] = useState(null);
@@ -27,37 +52,35 @@ const BasicStyles = () => {
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [labelText, setLabelText] = useState("");
+  const [geojsonData, setGeojsonData] = useState({
+    type: "FeatureCollection",
+    features: [],
+  });
+  const [processedgeojson, setProcessedGeojson] = useState({});
 
   const [styleSettings, setStyleSettings] = useState({
     visibility: {
       water: true,
-      parks: true,
-      buildings: true,
-      roads: true,
       labels: true,
       background: true,
-      landuse: true,
       waterway: true,
       boundary: true,
     },
     color: {
       water: "#DBE2E6",
-      parks: "#E6EAE9",
-      buildings: "#c0c0c8",
-      roads: "#ffffff",
       labels: "#78888a",
       background: "#EBF0F0",
-      landuse: "#d2f53c",
       waterway: "#b3cde3",
       boundary: "#f03b20",
     },
     fontSize: 12, // default font size
     fontFamily: "Arial Unicode MS Bold", // default font family
     lineWidth: {
-      roads: 1,
       boundary: 1,
       waterway: 1,
     },
+    labels: [],
   });
 
   const [mapStyle, setMapStyle] = useState(
@@ -68,26 +91,12 @@ const BasicStyles = () => {
   const layerSelector = {
     background: /land|landcover/,
     water: /water-depth|^water$/,
-    parks: /park/,
-    buildings: /building/,
-    roads: /road|bridge|tunnel/,
     labels: /label|place|poi/,
-    landuse: /landuse/,
     waterway: /^waterway$/,
     boundary: /boundary/,
   };
 
-  const categories = [
-    "water",
-    "parks",
-    "buildings",
-    "roads",
-    "labels",
-    "background",
-    "landuse",
-    "waterway",
-    "boundary",
-  ];
+  const categories = ["water", "labels", "background", "waterway", "boundary"];
 
   const colorClass = {
     fill: "fill-color",
@@ -194,6 +203,100 @@ const BasicStyles = () => {
     });
   }, [map, styleSettings, isMobile]);
 
+  useEffect(() => {
+    if (map) {
+      const addLabelOnClick = (e) => {
+        const coordinates = e.lngLat;
+        const labelId = `label-${Date.now()}`;
+        const newLabel = {
+          id: labelId,
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [coordinates.lng, coordinates.lat],
+          },
+          properties: {
+            title: labelText,
+          },
+        };
+
+        map.addSource(labelId, {
+          type: "geojson",
+          data: newLabel,
+        });
+
+        map.addLayer({
+          id: labelId,
+          type: "symbol",
+          source: labelId,
+          layout: {
+            "text-field": ["get", "title"],
+            "text-size": styleSettings.fontSize,
+            "text-anchor": "bottom",
+          },
+        });
+
+        setGeojsonData((prevData) => ({
+          ...prevData,
+          features: [...prevData.features, newLabel],
+        }));
+
+        setStyleSettings((prev) => ({
+          ...prev,
+          labels: [...prev.labels, newLabel],
+        }));
+      };
+
+      map.on("click", addLabelOnClick);
+
+      return () => map.off("click", addLabelOnClick);
+    }
+  }, [map, labelText]);
+
+  useEffect(() => {
+    if (styleSettings && geojsonData) {
+      console.log("Calling extractbasic with:", styleSettings, geojsonData);
+      setProcessedGeojson(extractbasic(geojsonData, styleSettings));
+    }
+  }, [geojsonData]);
+
+  useEffect(() => {
+    if (mapId && map) {
+      styleSettings.labels.forEach((label) => {
+        addLabelLayer(label);
+      });
+    }
+  }, [mapId, map]);
+
+  const addLabelLayer = (label) => {
+    if (!map.getLayer(label.id)) {
+      map.addSource(label.id, {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: label.coordinates,
+          },
+          properties: {
+            title: label.title,
+          },
+        },
+      });
+
+      map.addLayer({
+        id: label.id,
+        type: "symbol",
+        source: label.id,
+        layout: {
+          "text-field": ["get", "title"],
+          "text-size": styleSettings.fontSize,
+          "text-anchor": "bottom",
+        },
+      });
+    }
+  };
+
   // Handlers for changing style settings
   const handleCategoryColor = (category, color) => {
     setStyleSettings((prevSettings) => ({
@@ -228,7 +331,6 @@ const BasicStyles = () => {
   };
 
   const handleSave = async (title, version, privacy) => {
-    console.log("userId: ", userId);
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
@@ -329,6 +431,19 @@ const BasicStyles = () => {
                       <option value="Roboto Bold">Roboto Bold</option>
                     </select>
                   </div>
+                  <Box>
+                    <Typography sx={{ color: "#fafafa" }}>
+                      {" "}
+                      Type the Region Name and Click the location on the map
+                    </Typography>
+                    <TextField
+                      variant="outlined"
+                      value={labelText}
+                      onChange={(e) => setLabelText(e.target.value)}
+                      placeholder="Enter label text"
+                      sx={selectStyle}
+                    />
+                  </Box>
                   <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
                     Font size
                   </Typography>
@@ -337,18 +452,6 @@ const BasicStyles = () => {
                     onChange={(e, newValue) => handleFontSizeChange(newValue)}
                     min={8}
                     max={20}
-                    sx={{ marginBottom: "20px" }}
-                  />
-                  <Typography sx={{ color: "#fafafa", marginBottom: "10px" }}>
-                    Road Width
-                  </Typography>
-                  <Slider
-                    value={styleSettings.lineWidth.roads}
-                    onChange={(e, newValue) =>
-                      handleLineWidthChange("roads", newValue)
-                    }
-                    min={0.5}
-                    max={5}
                     sx={{ marginBottom: "20px" }}
                   />
 
@@ -384,6 +487,7 @@ const BasicStyles = () => {
                   onSave={handleSave}
                   mapLayer={styleSettings}
                   map={map}
+                  geojson={processedgeojson}
                 />
               </TabPanel>
             </TabContext>

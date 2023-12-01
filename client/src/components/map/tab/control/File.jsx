@@ -80,6 +80,7 @@ function File() {
   };
 
   useEffect(() => {
+    console.log(geojsonData);
     if (!map) {
       setIsMapLoaded(false);
       const newMap = new mapboxgl.Map({
@@ -112,10 +113,15 @@ function File() {
             geojsonData.features.forEach((feature, index) => {
               const layerId = `layer-${index}`;
               const featureType = feature.properties.type || "line";
-              let paint = feature.properties.paint || {
-                "line-color": styleSettings.lineColor,
-                "line-opacity": styleSettings.lineOpacity,
-                "line-width": styleSettings.lineThickness,
+              let paint = {
+                "line-color":
+                  feature.properties["line-color"] || styleSettings.lineColor,
+                "line-opacity":
+                  feature.properties["line-opacity"] ||
+                  styleSettings.lineOpacity,
+                "line-width":
+                  feature.properties["line-width"] ||
+                  styleSettings.lineThickness,
               };
 
               if (
@@ -142,7 +148,7 @@ function File() {
                 id: layerId,
                 type: featureType,
                 source: sourceId,
-                paint,
+                paint: feature.properties.paint || paint,
                 layout: feature.properties.layout || {},
               });
             });
