@@ -10,9 +10,6 @@ exports.searchMapByUserName = async (req, res) => {
             userId: userId,
             postType: "map"
         });
-        for(let map in maps){
-            console.log("What is the JSON: "+JSON.stringify(maps[map]));
-        }
         res.json(maps);
     } catch (error) {
         res.status(500).json({ message: error.message });
