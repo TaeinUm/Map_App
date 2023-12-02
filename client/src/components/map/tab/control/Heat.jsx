@@ -78,6 +78,12 @@ const Heat = () => {
     { latitude: "", longitude: "", name: "" },
   ]);
 
+  const [styleSettings, setStyleSettings] = useState({
+    latitude: 0,
+    longitude: 0,
+    value: 0,
+  });
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
@@ -280,7 +286,7 @@ const Heat = () => {
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
       let titleToPut = title;
       let versionToPut = "testVersion";
@@ -291,9 +297,9 @@ const Heat = () => {
 
       await mapServiceAPI.addMapGraphics(
         userId,
-        null, // This could be null if creating a new map
-        titleToPut,
-        versionToPut,
+        mapId, // This could be null if creating a new map
+        title,
+        version,
         privacy,
         "Heat Map",
         JSON.stringify(mapData)
