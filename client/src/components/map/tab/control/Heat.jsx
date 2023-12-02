@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -48,14 +47,13 @@ const selectStyle = {
 };
 
 const Heat = () => {
-  const { mapId, setMapId } = useContext(MapContext);
+  const { mapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
   const [initialLayers, setInitializeLayers] = useState(null);
   const [mapLayer, setMapLayer] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const navigate = useNavigate();
 
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
@@ -68,6 +66,12 @@ const Heat = () => {
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
   ]);
+
+  const [styleSettings, setStyleSettings] = useState({
+    latitude: 0,
+    longitude: 0,
+    value: 0,
+  });
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -150,11 +154,11 @@ const Heat = () => {
           try {
             const data = await mapServiceAPI.getMapGraphicData(
               userId,
-              username,
               mapId
             );
             const mapLayer = JSON.parse(data.mapData);
-            setLocations(mapLayer);
+            setStyleSettings(mapLayer);
+
             if (mapLayer && data.mapType) {
               newMap.addLayer(mapLayer);
             } else {
@@ -218,32 +222,16 @@ const Heat = () => {
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
-      let titleToPut = title;
-      let versionToPut = version;
-      if (mapId) {
-        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
-        titleToPut = response.mapName;
-        const originalVer = response.vers;
-        if (originalVer === "ver1") {
-          versionToPut = "ver2";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver3";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver1";
-          // Here, find the version1 having the same title & delete it from DB
-        }
-      }
-
       await mapServiceAPI.addMapGraphics(
         userId,
-        null, // This could be null if creating a new map
-        titleToPut,
-        versionToPut,
+        mapId, // This could be null if creating a new map
+        title,
+        version,
         privacy,
         "Heat Map",
-        JSON.stringify(locations)
+        JSON.stringify(styleSettings)
       );
       setMapId(null);
       navigate("/map");
