@@ -27,6 +27,8 @@ import TabMenu from "../../editmap/TabMenu";
 import ContinentColorUpdater from "../../editmap/ContinentColorUpdater";
 import continents from "./regionalcontrol/continentsData";
 
+import extractRegionalData from "./regionalcontrol/extract";
+
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
@@ -239,6 +241,11 @@ const Regional = () => {
     }
   };
 
+  const makeGeoJSON = () => {
+    const extractedData = extractRegionalData(styleSettings);
+    return extractedData;
+  };
+
   return (
     <Box
       sx={{
@@ -428,7 +435,14 @@ const Regional = () => {
             <ShareTab />
           </TabPanel>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={styleSettings} map={map} />
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={styleSettings}
+              map={map}
+              geojson={() => {
+                makeGeoJSON();
+              }}
+            />
           </TabPanel>
         </TabContext>
       </Box>
