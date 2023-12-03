@@ -65,6 +65,16 @@ const Heat = () => {
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
 
+  const [heatColors, setHeatColors] = useState({
+    0.0: "rgba(33, 102, 172, 0)",
+    0.2: "#0000FF", // Blue
+    0.4: "#00FFFF", // Cyan
+    0.6: "#00FF00", // Lime
+    0.8: "#FFFF00", // Yellow
+    1.0: "#FF0000", // Red
+  });
+  const [heatmapSize, setHeatmapSize] = useState(10);
+
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
   ]);
@@ -72,11 +82,35 @@ const Heat = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  
+
+  const handleColorChange = (density, color) => {
+    const numericDensity = parseFloat(density);
+    setHeatColors((prevColors) => ({
+      ...prevColors,
+      [numericDensity]: color,
+    }));
+  };
+
+  const calculateRadiusBasedOnValue = (value) => {
+    return Math.min(20, Math.max(5, value));
+  };
+
+  const updateHeatmapRadius = () => {
+    if (locations.length > 0) {
+      const averageValue =
+        locations.reduce((acc, loc) => acc + parseFloat(20 || 0), 0) /
+        locations.length;
+      const newRadius = calculateRadiusBasedOnValue(averageValue);
+
+      if (map) {
+        map.setPaintProperty("heatmap-layer", "heatmap-radius", newRadius);
+      }
+    }
+  };
 
   useEffect(() => {
-    setIsLoading(true);
     if (!map) {
+      setIsLoading(true);
       const newMap = new mapboxgl.Map({
         container: mapContainer.current,
         style: mapStyle,
@@ -148,38 +182,61 @@ const Heat = () => {
         });
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            // Fetch map graphics data using mapId
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
-            setLocations(mapLayer);
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            if (mapLayer.locations) setLocations(mapLayer.locations);
+            if (mapLayer.heatColors) setHeatColors(mapLayer.heatColors);
+            updateHeatmapColor();
+            handleSubmit();
           } catch (error) {
-            console.error("Error loading map graphics: ", error);
+            console.error("Error loading map graphics:", error);
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
           }
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
         }
-
-        setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
       });
     }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
-    }
-    setIsLoading(false);
   }, [map]);
+
+  useEffect(() => {
+    updateHeatmapColor();
+  }, [heatColors, map]);
+
+  useEffect(() => {
+    if (map && locations) {
+      updatePoint();
+      updateHeatmapRadius();
+    }
+  }, [locations, map]);
+
+  const updatePoint = () => {
+    if (!map) return;
+    const geojsonData = {
+      type: "FeatureCollection",
+      features: locations.map((location) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [
+            parseFloat(location.longitude),
+            parseFloat(location.latitude),
+          ],
+        },
+        properties: {
+          title: location.name,
+        },
+      })),
+    };
+
+    if (map.getSource("heatmap-data")) {
+      map.getSource("heatmap-data").setData(geojsonData);
+    }
+  };
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -191,18 +248,24 @@ const Heat = () => {
         const workbook = XLSX.read(data, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        const locations = XLSX.utils.sheet_to_json(worksheet);
+        const newLocations = XLSX.utils.sheet_to_json(worksheet).map((row) => ({
+          latitude: row.latitude,
+          longitude: row.longitude,
+          name: row.name,
+        }));
+
+        setLocations(newLocations);
 
         const geojsonData = {
           type: "FeatureCollection",
-          features: locations.map((location) => ({
+          features: newLocations.map((location) => ({
             type: "Feature",
             geometry: {
               type: "Point",
               coordinates: [location.longitude, location.latitude],
             },
             properties: {
-              intensity: location.value,
+              title: location.name,
             },
           })),
         };
@@ -221,20 +284,11 @@ const Heat = () => {
   const handleSave = async (title, version, privacy, mapLayer) => {
     try {
       let titleToPut = title;
-      let versionToPut = version;
-      if (mapId) {
-        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
-        titleToPut = response.mapName;
-        const originalVer = response.vers;
-        if (originalVer === "ver1") {
-          versionToPut = "ver2";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver3";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver1";
-          // Here, find the version1 having the same title & delete it from DB
-        }
-      }
+      let versionToPut = "testVersion";
+      const mapData = {
+        locations: locations,
+        heatColors: heatColors,
+      };
 
       await mapServiceAPI.addMapGraphics(
         userId,
@@ -243,7 +297,7 @@ const Heat = () => {
         versionToPut,
         privacy,
         "Heat Map",
-        JSON.stringify(locations)
+        JSON.stringify(mapData)
       );
       setMapId(null);
       navigate("/map");
@@ -255,27 +309,24 @@ const Heat = () => {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
 
-    const geojsonData = {
-      type: "FeatureCollection",
-      features: locations.map((location) => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            parseFloat(location.longitude),
-            parseFloat(location.latitude),
-          ],
-        },
-        properties: {
-          intensity: parseFloat(location.value),
-        },
-      })),
-    };
+    updatePoint();
+  };
 
-    if (map && map.getSource("heatmap-data")) {
-      map.getSource("heatmap-data").setData(geojsonData);
+  const updateHeatmapColor = () => {
+    const colorStops = Object.keys(heatColors)
+      .sort((a, b) => parseFloat(a) - parseFloat(b))
+      .map((key) => [parseFloat(key), heatColors[key]])
+      .flat();
+
+    if (map) {
+      map.setPaintProperty("heatmap-layer", "heatmap-color", [
+        "interpolate",
+        ["linear"],
+        ["heatmap-density"],
+        ...colorStops,
+      ]);
     }
   };
 
@@ -286,7 +337,14 @@ const Heat = () => {
   };
 
   const addNewRow = () => {
-    setLocations([...locations, { latitude: "", longitude: "", name: "" }]);
+    setLocations([
+      ...locations,
+      {
+        latitude: "",
+        longitude: "",
+        name: "",
+      },
+    ]);
   };
 
   const renderRow = (location, index) => (
@@ -312,8 +370,8 @@ const Heat = () => {
       <TableCell>
         <TextField
           type="text"
-          name="value"
-          value={location.value}
+          name="name"
+          value={location.name}
           onChange={(e) => handleInputChange(index, e)}
           sx={selectStyle}
         />
@@ -373,7 +431,7 @@ const Heat = () => {
                 Select Data File
               </Button>
               <Typography sx={{ color: "#fafafa", marginTop: "30px" }}>
-                Or Simply fill up 'latitude,' 'longitude,' and 'value' of the
+                Or Simply fill up 'latitude,' 'longitude,' and 'name' of the
                 location of the table below
               </Typography>
               <form onSubmit={handleSubmit} style={{ marginTop: "40px" }}>
@@ -387,7 +445,7 @@ const Heat = () => {
                         Longitude
                       </TableCell>
                       <TableCell sx={{ color: "#fafafa", fontSize: "18px" }}>
-                        Value
+                        Name
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -396,31 +454,24 @@ const Heat = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
-              {map && <HeatmapColorPicker map={map} />}
+              {map && (
+                <HeatmapColorPicker
+                  map={map}
+                  heatColors={heatColors}
+                  setHeatColors={handleColorChange}
+                  updateHeatmapColor={updateHeatmapColor}
+                />
+              )}
             </Container>
           </TabPanel>
-          {/*<TabPanel value="2">
-            <ShareTab />
-          </TabPanel>*/}
           <TabPanel value="3">
             <SaveTab
               onSave={handleSave}
-              mapLayer={mapLayer}
+              mapLayer={locations}
+              map={map}
               geojson={geoJsonData}
             />
           </TabPanel>
-          {/*{isMemoVisible && <Memo mapId={""} />}
-          <Button
-            sx={{
-              width: "100%",
-              height: "20px",
-              borderRadius: "0",
-              backgroundColor: "grey",
-            }}
-            onClick={toggleMemo}
-          >
-            {isMemoVisible ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-          </Button> */}
         </TabContext>
       </Box>
     </Box>

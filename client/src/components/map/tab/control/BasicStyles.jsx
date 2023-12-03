@@ -203,50 +203,60 @@ const BasicStyles = () => {
     });
   }, [map, styleSettings, isMobile]);
 
+  const addLabelOnClick = (e) => {
+    const coordinates = e.lngLat;
+    const labelId = `label-${Date.now()}`;
+    const newLabel = {
+      id: labelId,
+      type: "Feature",
+      geometry: {
+        type: "Point",
+        coordinates: [coordinates.lng, coordinates.lat],
+      },
+      properties: {
+        id: labelId,
+        type: "symbol",
+        source: labelId,
+        title: labelText,
+        layout: {
+          "text-field": ["get", "title"],
+          "text-size": styleSettings.fontSize,
+          "text-font": [styleSettings.fontFamily],
+          "text-anchor": "bottom",
+        },
+      },
+    };
+
+    map.addSource(labelId, {
+      type: "geojson",
+      data: newLabel,
+    });
+
+    map.addLayer({
+      id: labelId,
+      type: "symbol",
+      source: labelId,
+      layout: {
+        "text-field": ["get", "title"],
+        "text-size": styleSettings.fontSize,
+        "text-font": [styleSettings.fontFamily],
+        "text-anchor": "bottom",
+      },
+    });
+
+    setGeojsonData((prevData) => ({
+      ...prevData,
+      features: [...prevData.features, newLabel],
+    }));
+
+    setStyleSettings((prev) => ({
+      ...prev,
+      labels: [...prev.labels, newLabel],
+    }));
+  };
+
   useEffect(() => {
     if (map) {
-      const addLabelOnClick = (e) => {
-        const coordinates = e.lngLat;
-        const labelId = `label-${Date.now()}`;
-        const newLabel = {
-          id: labelId,
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [coordinates.lng, coordinates.lat],
-          },
-          properties: {
-            title: labelText,
-          },
-        };
-
-        map.addSource(labelId, {
-          type: "geojson",
-          data: newLabel,
-        });
-
-        map.addLayer({
-          id: labelId,
-          type: "symbol",
-          source: labelId,
-          layout: {
-            "text-field": ["get", "title"],
-            "text-size": styleSettings.fontSize,
-            "text-anchor": "bottom",
-          },
-        });
-
-        setGeojsonData((prevData) => ({
-          ...prevData,
-          features: [...prevData.features, newLabel],
-        }));
-
-        setStyleSettings((prev) => ({
-          ...prev,
-          labels: [...prev.labels, newLabel],
-        }));
-      };
-
       map.on("click", addLabelOnClick);
 
       return () => map.off("click", addLabelOnClick);
@@ -254,19 +264,10 @@ const BasicStyles = () => {
   }, [map, labelText]);
 
   useEffect(() => {
-    if (styleSettings && geojsonData) {
-      console.log("Calling extractbasic with:", styleSettings, geojsonData);
+    if (styleSettings && geojsonData.features) {
       setProcessedGeojson(extractbasic(geojsonData, styleSettings));
     }
   }, [geojsonData]);
-
-  useEffect(() => {
-    if (mapId && map) {
-      styleSettings.labels.forEach((label) => {
-        addLabelLayer(label);
-      });
-    }
-  }, [mapId, map]);
 
   const addLabelLayer = (label) => {
     if (!map.getLayer(label.id)) {
@@ -276,10 +277,10 @@ const BasicStyles = () => {
           type: "Feature",
           geometry: {
             type: "Point",
-            coordinates: label.coordinates,
+            coordinates: label.geometry.coordinates,
           },
           properties: {
-            title: label.title,
+            title: label.properties.title,
           },
         },
       });
@@ -289,13 +290,21 @@ const BasicStyles = () => {
         type: "symbol",
         source: label.id,
         layout: {
-          "text-field": ["get", "title"],
+          "text-field": label.properties.title,
           "text-size": styleSettings.fontSize,
           "text-anchor": "bottom",
         },
       });
     }
   };
+
+  useEffect(() => {
+    if (mapId && map) {
+      styleSettings.labels.forEach((label) => {
+        addLabelLayer(label);
+      });
+    }
+  }, [mapId, map, styleSettings.labels]);
 
   // Handlers for changing style settings
   const handleCategoryColor = (category, color) => {
