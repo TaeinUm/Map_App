@@ -163,6 +163,34 @@ const mapServiceAPI = {
       throw error;
     }
   },
+
+  storeLoadedMapGraphic: async (
+    userId,
+    title,
+    version,
+    privacy,
+    mapType,
+    mapLayer
+  ) => {
+    try {
+      const mapGraphicData = {
+        title,
+        version,
+        privacy,
+        mapType,
+        mapLayer,
+      };
+      let response;
+      response = await axios.post(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/loaded-map`,
+        mapGraphicData
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error adding map graphic:", error);
+      throw error;
+    }
+  },
 };
 
 export default mapServiceAPI;

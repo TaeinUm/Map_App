@@ -1,4 +1,15 @@
-const Map = require("../models/Map"); // Adjust the path and model name as needed
+const Map = require("../models/Map");
+const AWS = require('aws-sdk');
+
+// Configure AWS
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const s3 = new AWS.S3();
+
 
 // Get user maps
 const getUserMapGraphics = async (req, res) => {
@@ -158,6 +169,47 @@ const getMapGraphicData = async (req, res) => {
   }
 };
 
+const storeLoadedMapGraphic = async (req, res) => {
+  const { userId } = req.params;
+  const { title, version, privacy, mapType, mapLayer } = req.body;
+
+  try {
+    // Convert mapLayer string to a Buffer for uploading
+    const mapLayerBuffer = Buffer.from(mapLayer, 'utf-8');
+
+    // Generate a filename for S3
+    const fileName = `maps/${userId}-${Date.now()}.json`;
+
+    // Upload mapLayer to S3
+    const s3Response = await s3.upload({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: fileName,
+      Body: mapLayerBuffer,
+      ACL: 'public-read'
+    }).promise();
+
+    // Create a new map with the S3 URL
+    const newMap = new Map({
+      userId,
+      mapName: title,
+      mapDate: new Date(),
+      mapData: s3Response.Location,
+      memo: "",
+      vers: version,
+      mapType,
+      privacy,
+      image: "https://cdn.hswstatic.com/gif/maps.jpg"
+    });
+    await newMap.save();
+
+    res.status(201).json(newMap);
+  } catch (error) {
+    console.error("Error creating map graphic:", error);
+    res.status(500).json({ message: "Error creating map graphic" });
+  }
+};
+
+
 module.exports = {
   getUserMapGraphics,
   deleteUserMapGraphic,
@@ -167,4 +219,5 @@ module.exports = {
   addMapGraphic,
   updateMapGraphic,
   getMapGraphicData,
+  storeLoadedMapGraphic,
 };

@@ -228,17 +228,17 @@ function File() {
 
   const handleSave = async (title, version, privacy) => {
     try {
-      await mapServiceAPI.addMapGraphics(
+      await mapServiceAPI.storeLoadedMapGraphic(
         userId,
         mapId, // This could be null if creating a new map
         title,
         version,
         privacy,
-        null,
+        null, // mapType
         JSON.stringify(styleSettings)
       );
       setMapId(null);
-      navigate("/");
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
