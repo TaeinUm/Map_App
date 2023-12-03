@@ -64,6 +64,7 @@ const Point = () => {
   );
 
   const [tabValue, setTabValue] = useState("1");
+  const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
@@ -71,6 +72,26 @@ const Point = () => {
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
+  };
+
+  const generateGeoJsonFromMarkers = (markers) => {
+    const features = markers.map((marker) => {
+      return {
+        type: "Feature",
+        properties: {
+          name: marker.getPopup().getText(),
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
+        },
+      };
+    });
+
+    return {
+      type: "FeatureCollection",
+      features,
+    };
   };
 
   useEffect(() => {
@@ -148,6 +169,8 @@ const Point = () => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
+        e.preventDefault();
+        const newMarkers = [];
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -162,13 +185,19 @@ const Point = () => {
         });
 
         locations.forEach((location) => {
-          const marker = new mapboxgl.Marker()
-            .setLngLat([location.longitude, location.latitude])
-            .setPopup(new mapboxgl.Popup().setText(location.name))
-            .addTo(map);
+          if (map && location.latitude && location.longitude) {
+            const marker = new mapboxgl.Marker()
+              .setLngLat([location.longitude, location.latitude])
+              .setPopup(new mapboxgl.Popup().setText(location.name))
+              .addTo(map);
 
-          setMarkers((prevMarkers) => [...prevMarkers, marker]);
+            newMarkers.push(marker);
+          }
         });
+        const newMarkersCombined = [...markers, ...newMarkers];
+        setMarkers(newMarkersCombined);
+        const newGeoJsonData = generateGeoJsonFromMarkers(newMarkersCombined);
+        setGeoJsonData(newGeoJsonData);
       };
 
       reader.readAsArrayBuffer(file);
@@ -333,7 +362,12 @@ const Point = () => {
             </Container>
           </TabPanel>
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} />
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={mapLayer}
+              map={map}
+              geojson={geoJsonData}
+            />
           </TabPanel>
         </TabContext>
       </Box>

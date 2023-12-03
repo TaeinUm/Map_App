@@ -17,7 +17,7 @@ import { styled } from '@mui/material/styles';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { useParams } from 'react-router-dom';
 import { CommunityContext } from '../../contexts/CommunityContextVerTwo';
-import { postInfo } from './CommunityTwo';
+import { postInfo } from './CommunityMain';
 import { useContext } from 'react';
 //const mongoose = require('mongoose');
 
@@ -35,7 +35,7 @@ const StyledFooter = styled(Paper)(({ theme }) => ({
   marginTop: 'auto',
 }));
 
-function CommunityQuestionPost() {
+function CommunityGraphicPost() {
   const {postComment, getCommentsForAPost} = CommunitySectionAPI;
   const [message, setMessage] = useState('');
   //const { text } = useParams(); // Uncomment this when using in your routing setup
@@ -50,23 +50,15 @@ function CommunityQuestionPost() {
   useEffect(() => {
     let newData = [];
     //let postId = localStorage.getItem("questionId");
-    //console.log("What is the postId "+postId);
     let postItemInfo = localStorage.getItem("postItem");
-    console.log("Do I have access to the CommunityTwo postInfo state variable: "+postInfo+"postId: "+postInfo._id+"postName: "+postInfo.postName);
+
     //let string = ""+postId;
     const fetchGraphics = async () => {
       try {
         newData= await getCommentsForAPost(postInfo._id);
         setCommentsBuffer(newData);
         //commentsBuffer = newData;
-        console.log("Do I have any items: " +JSON.stringify(newData));
-        
-        //setAllGraphics(newData);
-        // console.log("How many graphics are there in total: "+newData.length);
-        // console.log("is it possible "+newData[0].types);
-        // questions = newData.filter(post=>post.postType==="Questions");
-        // graphics = newData.filter(post=>post.postType==="map");
-        // console.log("What is the length of questions: "+ questions.length);
+
       } catch (error) {
         console.error("Error fetching top graphics:", error);
       }
@@ -90,19 +82,16 @@ function CommunityQuestionPost() {
     setMessage(event.target.value);
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     // Handle your submission logic here
     const currentTimeSec = new Date();//date.getSeconds();
-    console.log("what is the current id: "+localStorage.getItem("newUserid"));
-    console.log("I hope that I get false: "+localStorage.getItem("authentification"));
     //console.log("Do I have any items: " +commentsBuffer.length);
     postComment(localStorage.getItem("newUserid"), postInfo._id, currentTimeSec, document.getElementById("prompt-textarea").value);
-    console.log('Submitted message:', message);
+    
     let refreshData= await getCommentsForAPost(postInfo._id);
     setCommentsBuffer(refreshData);
   };
 
-  console.log("What is the question title" + questionTitle);
 
   return (
     <Container maxWidth="md" sx={{ p: 3,  height: "100%"}}>
@@ -111,6 +100,22 @@ function CommunityQuestionPost() {
       <Typography variant="h4" gutterBottom color="white">
         {postInfo.postName}
       </Typography>
+
+      <Paper
+              
+              elevation={4}
+              data-cy="trending-graphic"
+              sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+            //   component={NavLink}
+            //   to={"/communityGraphicPost/:"+index}
+            >
+              <img
+                src={postInfo.postImages}
+                alt={postInfo.postName}
+                style={{ objectFit: "cover", width: "100%", height: "100%" }}
+              />
+            </Paper>
+
       <Typography variant="subtitle1" gutterBottom color="white">
         
       </Typography>
@@ -186,25 +191,7 @@ function CommunityQuestionPost() {
                 {comment.commentContent}
               </Typography>
             ))}
-      {/* {commentsBuffer.map((content, index) => (
-              <Typography
-                variant="h2"
-                
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                
-              >
-                {content}
-              </Typography>
-            ))} */}
+      {}
       </Paper>
 
     </Container>
@@ -212,4 +199,4 @@ function CommunityQuestionPost() {
   
 }
 
-export default CommunityQuestionPost;
+export default CommunityGraphicPost;

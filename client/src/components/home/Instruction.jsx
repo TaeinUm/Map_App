@@ -112,13 +112,14 @@ function Instruction() {
                 key={instruction.id}
                 onClick={() => handleButtonClick(instruction)}
                 sx={{
-                  color: "#fafafa",
                   height: "100px",
                   width: "100%",
-                  textDecoration:
+                  color:
                     selectedInstructionId === instruction.id
-                      ? "underline"
-                      : "none",
+                      ? "red"
+                      : "#fafafa",
+                  fontSize:
+                    selectedInstructionId === instruction.id ? "18px" : "14px",
                 }}
               >
                 {instruction.text}

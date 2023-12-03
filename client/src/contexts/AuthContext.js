@@ -92,6 +92,10 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
     navigate("/");
+    setUserId("");
+    setUsername("");
+    setIsAuthenticated(false);
+    setProfileImage(null);
   };
 
   return (

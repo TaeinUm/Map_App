@@ -3,8 +3,8 @@ import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
-//const API_BASE_URL = //"https://terracanvas-fb4c23ffbf5d.herokuapp.com"||;
-const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 //const [authenticated, setAuthenticated] = useState(false);
 //const [userID, setUserID] = useState("");
 //const {userID, authentified} = CommunityContext;
@@ -48,21 +48,6 @@ const CommunitySectionAPI = {
     //     return;
     // }
     try {
-      console.log("What is the userId:" + userID);
-      // console.log("What is the authenticated: "+authentified);
-      // const response = await
-      // axios
-      // .post(`${API_BASE_URL}/api/community/post`, {
-      //     userId: userId,
-      //     postType: postType,
-      //     postText: postText,
-      //     postFile: postFile,
-      // })
-      // .then(function(response){
-      //     console.log("makePost success");
-      //     console.log(response);
-      // })
-      // .catch((err) => console.log(err));
       const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
         userId: userID,
         content: content,
@@ -74,20 +59,7 @@ const CommunitySectionAPI = {
         attachedFile: attachedFile,
         postDate: postDate,
       });
-      // const response = await axios.post(`${API_BASE_URL}/api/community/post`,
-      //     {
-      //         //params:{userId, postType, postType, postFile, date},
-      //         params: {
-      //             userId: userID,
-      //             content: content,
-      //             likes: likes,
-      //             types: types,
-      //             image: image,
-      //             title: title},
-      //     }
-      // );
-      console.log("What is the userId:" + userID);
-      //console.log("What is the authenticated: "+authentified);
+      
       return response.data;
       //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post`,{
       //     content,
@@ -127,7 +99,7 @@ const CommunitySectionAPI = {
       const response = await axios.get(
         `${API_BASE_URL}/api/community/getAllPosts`
       );
-      //console.log("Am I getting the right data? "+JSON.stringify(response));
+     
       return response.data;
       //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
 
@@ -352,32 +324,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      // axios
-      // .post(`${API_BASE_URL}/api/community/postComment`, {
-      //     postId: postId,
-      //     userId: userId,
-      //     date: date,
-      //     commentText: commentText,
-      // })
-      // .then(function(response){
-      //     console.log("postComment success");
-      //     console.log(response);
-      // })
-      // .catch((err) => console.log(err));
-      //   const response = await axios.get(
-      //     `${API_BASE_URL}/api/community/comments/${postId}`,{
-      //         params:{postId},
-      //     }
-      //   );
-      //   return response.comments;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/postComment`,{
-      //     postId,
-      //     userId,
-      //     commentText,
-
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot post a comment.");
     }
@@ -398,27 +344,7 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      // axios
-      // .put(`${API_BASE_URL}/api/community/likeMap/${postId}`, {
-      //     userId: userId,
 
-      // })
-      // .then(function(response){
-      //     console.log("likeMap success");
-      //     console.log(response);
-      // })
-      // .catch((err) => console.log(err));
-      //   const response = await axios.get(
-      //     `${API_BASE_URL}/api/community/comments/${postId}`,{
-      //         params:{postId},
-      //     }
-      //   );
-      //   return response.comments;
-      //   return await CommunitySectionAPI("put", `${API_BASE_URL}/api/community/likeMap/${postId}`,{
-
-      //     userId,
-
-      //   }  );
     } catch (error) {
       console.error("cannot like a map.");
     }
@@ -438,27 +364,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      // axios
-      // .put(`${API_BASE_URL}/api/community/likeMap/${postId}`, {
-      //     userId: userId,
-
-      // })
-      // .then(function(response){
-      //     console.log("likeMap success");
-      //     console.log(response);
-      // })
-      // .catch((err) => console.log(err));
-      //   const response = await axios.get(
-      //     `${API_BASE_URL}/api/community/comments/${postId}`,{
-      //         params:{postId},
-      //     }
-      //   );
-      //   return response.comments;
-      //   return await CommunitySectionAPI("put", `${API_BASE_URL}/api/community/likeMap/${postId}`,{
-
-      //     userId,
-
-      //   }  );
     } catch (error) {
       console.error("cannot unlike a map.");
     }

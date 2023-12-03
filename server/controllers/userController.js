@@ -85,11 +85,14 @@ const getEmail = async (req, res) => {
 const getUsersByName = async (req, res) => {
   const { searchedUser } = req.params;
   const regexPattern = String(searchedUser);
-
   try {
     const users = await User.find({
       userName: { $regex: regexPattern, $options: "i" },
     });
+    // Check if any users were found
+    if (users.length === 0) {
+      return res.status(200).json({ message: "No users found" });
+    }
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);

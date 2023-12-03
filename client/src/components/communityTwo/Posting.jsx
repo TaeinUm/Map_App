@@ -4,11 +4,6 @@ import FileLoader from './FileLoader';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-//const mongoose = require('mongoose');
-//import { loginUser } from '../../../../server/controllers/userController';
-//const session = require('express-session');
-//var newId = new mongoose.mongo.ObjectId();
-//let hardCodedUserIds = [newId];
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState("Questions");
   const [privacyType, setPrivacyType] = useState("1");
@@ -17,12 +12,6 @@ function CommunityPostMapGraphic() {
   //const {userEmail} = AuthContext;
 
   function handlePostButton(){
-    console.log(document.getElementById("shabi-title").value);
-    console.log(document.getElementById("shabi-content").value);
-    console.log("Do I got a userid "+localStorage.getItem("newUserid"));
-    //let mongooseId = new mongoose.Types.ObjectId(localStorage.getItem("newUserid"));
-    //console.log("Is there a userEmail: "+userEmail);
-    //console.log("What is the userId from post: "+newId);
     const currentTimeSec = new Date();
     makePost(localStorage.getItem("newUserid"), document.getElementById("shabi-content").value, 0, postType, document.getElementById("shabi-file").files[0], document.getElementById("shabi-title").value, parseInt(privacyType), document.getElementById("shabi-file").files[0], currentTimeSec);
     alert("You are being directed to the community landing page");
@@ -77,9 +66,7 @@ function CommunityPostMapGraphic() {
         placeholder="Enter the title of your post here" 
         style={{ backgroundColor: 'white' }}
       />
-<br></br>
-<br></br>
-  <br></br>
+
 <Typography variant="h5" gutterBottom style={{ textAlign: 'left' }}>
         Contents
       </Typography>
@@ -93,9 +80,7 @@ function CommunityPostMapGraphic() {
         style={{ backgroundColor: 'white' }}
       />
 
-<br></br>
-<br></br>
-<br></br>
+
 
       <Box display="flex" justifyContent="space-between" marginTop="1rem">
         <Button variant="contained" color="primary" component="label">

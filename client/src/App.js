@@ -39,16 +39,10 @@ import ThreeD from "./components/map/tab/control/ThreeD";
 import MapMobile from "./components/map/landing/MapMobile";
 
 /****         Community           ****/
-import CommunityTwo from "./components/communityTwo/CommunityTwo";
-import CommunityTwoMapIdeaPostings from "./components/communityTwo/CommunityTwoMapIdeasPostingsPage";
-import CommunityPostMapGraphic from "./components/communityTwo/CommunityPostMapGraphic";
-import CommunityTrendingMapGraphics from "./components/communityTwo/CommunityTrendingMapGraphics";
-import CommunityTwoQuestions from "./components/communityTwo/CommunityQuestions";
-import CommunityTwoMapIdeas from "./components/communityTwo/CommunityMapIdeas";
-import CommunityUserName from "./components/communityTwo/CommunityUserName";
-import CommunityTwoMapIdeasPostingsPage from "./components/communityTwo/CommunityTwoMapIdeasPostingsPage";
-import CommunityQuestionPost from "./components/communityTwo/CommunityQuestionPost";
-import CommunityGraphicPost from "./components/communityTwo/CommunityGraphicsPost";
+import CommunityTwo from "./components/communityTwo/CommunityMain";
+import PostMapGraphic from "./components/communityTwo/Posting";
+import TrendingMapGraphics from "./components/communityTwo/TrendingMapGraphics";
+import Post from "./components/communityTwo/Post";
 
 import NotFound from "./components/common/NotFound";
 
@@ -77,39 +71,27 @@ function App() {
                 <Route path="/community" element={<CommunityTwo />} />
                 <Route
                   path="/communityMapIdeasPostings"
-                  element={<CommunityTwoMapIdeaPostings />}
+                  element={<Post />}
                 />
                 <Route
-                  path="/communityPostMapGraphic"
-                  element={<CommunityPostMapGraphic />}
+                  path="/PostMapGraphic"
+                  element={<PostMapGraphic />}
                 />
                 <Route
-                  path="/communityTrendingMaps"
-                  element={<CommunityTrendingMapGraphics />}
-                />
-                <Route
-                  path="/communityQuestions"
-                  element={<CommunityTwoQuestions />}
-                />
-                <Route
-                  path="/communityMapIdeas"
-                  element={<CommunityTwoMapIdeas />}
-                />
-                <Route
-                  path="/communityUserName"
-                  element={<CommunityUserName />}
+                  path="/TrendingMaps"
+                  element={<TrendingMapGraphics />}
                 />
                 <Route
                   path="/communityMapIdeaPost/:index"
-                  element={<CommunityTwoMapIdeasPostingsPage />}
+                  element={<Post />}
                 />
                 <Route
-                  path="/communityQuestionPost/:postsTitle"
-                  element={<CommunityQuestionPost />}
+                  path="/CommunityQuestionPost/:postsTitle"
+                  element={<Post />}
                 />
                 <Route
-                  path="/communityGraphicPost/:postsTitle"
-                  element={<CommunityGraphicPost />}
+                  path="/CommunityGraphicPost/:postsTitle"
+                  element={<Post />}
                 />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/signin" element={<SignIn />} />

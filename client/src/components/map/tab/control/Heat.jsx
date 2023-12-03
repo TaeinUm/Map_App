@@ -61,6 +61,7 @@ const Heat = () => {
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/dark-v11");
 
   const [tabValue, setTabValue] = useState("1");
+  const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
@@ -69,6 +70,7 @@ const Heat = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -201,6 +203,8 @@ const Heat = () => {
             },
           })),
         };
+
+        setGeoJsonData(geojsonData);
 
         if (map && map.getSource("heatmap-data")) {
           map.getSource("heatmap-data").setData(geojsonData);
@@ -379,7 +383,11 @@ const Heat = () => {
             <ShareTab />
           </TabPanel>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} />
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={mapLayer}
+              geojson={geoJsonData}
+            />
           </TabPanel>
           {/*{isMemoVisible && <Memo mapId={""} />}
           <Button

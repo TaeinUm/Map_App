@@ -23,13 +23,11 @@ function MapList({ searchQuery }) {
         if (!Array.isArray(userInfo)) {
           return;
         }
-
         const filteredData = userInfo
-          .filter(
-            (item) =>
-              item &&
-              item.mapName &&
-              item.mapName.toLowerCase().includes(searchQuery.toLowerCase())
+          .filter((item) =>
+            item?.mapName
+              ?.toLowerCase()
+              .includes(searchQuery?.toLowerCase() ?? "")
           )
           .sort((a, b) => new Date(b.mapDate) - new Date(a.mapDate));
 
@@ -83,10 +81,20 @@ function MapList({ searchQuery }) {
         <Typography
           type="button"
           onClick={toLoginPage}
-          sx={{ textDecoration: "underline", color: "blue", margin: "40px" }}
+          sx={{
+            backgroundColor: "black",
+            color: "#fafafa",
+            width: "180px",
+            height: "40px",
+            borderRadius: "5px",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "50px auto",
+            boxShadow: "5px 3px 5px grey",
+          }}
         >
           {" "}
-          Click here to login.{" "}
+          Click here to login →{" "}
         </Typography>
       )}
       {mapListData
