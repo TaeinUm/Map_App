@@ -73,6 +73,7 @@ const Heat = () => {
     0.8: "#FFFF00", // Yellow
     1.0: "#FF0000", // Red
   });
+  const [heatmapSize, setHeatmapSize] = useState(10);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
@@ -103,7 +104,7 @@ const Heat = () => {
   const updateHeatmapRadius = () => {
     if (locations.length > 0) {
       const averageValue =
-        locations.reduce((acc, loc) => acc + parseFloat(loc.value || 0), 0) /
+        locations.reduce((acc, loc) => acc + parseFloat(20 || 0), 0) /
         locations.length;
       const newRadius = calculateRadiusBasedOnValue(averageValue);
 
