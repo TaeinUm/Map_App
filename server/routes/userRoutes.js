@@ -21,4 +21,6 @@ router.get("/:userId/email", userController.getEmail);
 // Route to get users by name
 router.get("/:searchedUser", userController.getUsersByName);
 
+router.post("/send_recovery_email", userController.sendEmail);
+
 module.exports = router;

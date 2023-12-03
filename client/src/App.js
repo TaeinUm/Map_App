@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import { CommunityProvider } from "./contexts/CommunityContextVerTwo";
+import { PasswordRecoveryProvider } from "./contexts/PasswordRecoveryContext";
 
 /****         CSS          ****/
 import "./styles/App.css";
@@ -18,6 +19,7 @@ import Home from "./components/home/Home";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import Profile from "./components/common/Profile";
+import OTPPage from "./components/auth/OTPPage";
 
 /****         Policy           ****/
 import PrivacyPolicy from "./components/policy/PrivacyPolicy";
@@ -55,6 +57,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
+          <PasswordRecoveryProvider>
           <CommunityProvider>
             <MapProvider>
               <Header />
@@ -111,6 +114,7 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/OTPpage" element={<OTPPage/>}/>
 
                 <Route path="/termsconditions" element={<Termsconditions />} />
                 <Route path="/privacypolicy" element={<PrivacyPolicy />} />
@@ -120,6 +124,7 @@ function App() {
               </Routes>
             </MapProvider>
           </CommunityProvider>
+          </PasswordRecoveryProvider>
         </AuthProvider>
         <Footer />
       </BrowserRouter>
