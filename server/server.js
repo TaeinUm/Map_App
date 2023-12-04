@@ -2,12 +2,13 @@
 require("dotenv").config();
 
 // Import required modules
-const express = require("express");
-const mongoose = require("mongoose");
-const path = require("path");
-const cors = require("cors");
-const session = require("express-session");
-const MongoStore = require("connect-mongo");
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+const cors = require('cors');
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
+const nodemailer = require("nodemailer");
 
 // Import route handlers
 const authRoutes = require("./routes/authRoutes");
@@ -23,7 +24,12 @@ const PORT = process.env.PORT || 8080;
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
-app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
+app.use(express.json()); // Parse incoming JSON payloads
+app.use(express.urlencoded({ limit: "25mb" }));
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 // Configure session management
 app.use(

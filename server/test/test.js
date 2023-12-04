@@ -298,6 +298,118 @@ describe('Community API Endpoints', function() {
     });
 });
 
+describe('MAP API Test', () => {
+    let createdMapId;
+  
+    it('creates a new map graphic', function(done) {
+      const mapData = {
+        userId: "656475c6343f5c79b529a476",
+        title: "New Map",
+        mapType: "Type1",
+        version: "1.0",
+        privacy: "public"
+      };
+  
+      request(app)
+        .post(`/api/mapgraphics/${mapData.userId}/map-graphics`)
+        .send(mapData)
+        .expect('Content-Type', /json/)
+        .expect(201)
+        .end(function(err, res) {
+          if (err) return done(err);
+          createdMapId = res.body._id;
+          // Additional assertions for the created map graphic
+          done();
+        });
+    });
+  
+    it('updates an existing map graphic', function(done) {
+      const userId = "656475c6343f5c79b529a476";
+      const mapId = createdMapId;
+      const updateData = { mapType: "UpdatedType", mapLayer: "UpdatedLayer" };
+  
+      request(app)
+        .put(`/api/mapgraphics/${userId}/map-graphics/${mapId}`)
+        .send(updateData)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          // Additional assertions for the updated map graphic
+          done();
+        });
+    });
+  
+    it('updates memo content for a map graphic', function(done) {
+      const userId = "656475c6343f5c79b529a476";
+      const mapId = createdMapId;
+      const memoContent = "New memo content";
+  
+      request(app)
+        .put(`/api/mapgraphics/${userId}/${mapId}/memo`)
+        .send({ memoContent })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          // Additional assertions for the updated memo
+          done();
+        });
+    });
+  
+    it('retrieves memo content of a map graphic', function(done) {
+      const userId = "656475c6343f5c79b529a476";
+      const mapId = createdMapId;
+  
+      request(app)
+        .get(`/api/mapgraphics/${userId}/${mapId}/memo`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          // Additional assertions for memo content structure
+          done();
+        });
+    });
+  
+    it('retrieves a specific map graphic', function(done) {
+      const userId = "656475c6343f5c79b529a476";
+      const mapId = createdMapId;
+  
+      request(app)
+        .get(`/api/mapgraphics/${userId}/map-graphics/${mapId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          // Additional assertions for the specific map graphic
+          done();
+        });
+    });
+  
+    it('deletes a map graphic', function(done) {
+      const userId = "656475c6343f5c79b529a476";
+  
+      if (!createdMapId) {
+        throw new Error("Map ID not set. Map creation test may have failed.");
+      }
+  
+      request(app)
+        .delete(`/api/mapgraphics/${userId}/map-graphics/${createdMapId}`)
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+          expect(res.body).to.include({
+            message: 'Map graphic deleted successfully'
+          });
+          done();
+        });
+    });
+  });
+  
+
+
 // Close the mongoose connection after the tests are done
 after(function(done) {
   mongoose.disconnect()
