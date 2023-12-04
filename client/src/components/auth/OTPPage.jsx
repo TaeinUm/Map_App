@@ -3,8 +3,10 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { PasswordRecoveryContext } from '../../contexts/PasswordRecoveryContext';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const OTPPage = () => {
+  const navigate = useNavigate();
   const {otp} = useContext(PasswordRecoveryContext);
   const [enteredOtp, setEnteredOtp] = useState('');
   const handleChange = (event) => {
@@ -15,6 +17,12 @@ const OTPPage = () => {
     // Handle OTP verification or other actions here
     //alert(`Entered OTP: ${otp}`);
     console.log("You have entered the otp: "+enteredOtp);
+    console.log("what is the actual otp: "+otp);
+    if (enteredOtp == otp){
+        navigate("/NewPasswordPage");
+    }else{
+        alert("You entered the wrong otp");
+    }
   };
 
   return (

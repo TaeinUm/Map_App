@@ -6,6 +6,31 @@ describe("Community Question Posting Page", () => {
   it("should display the home page correctly", () => {
     cy.contains("Trending Map Graphics").should("be.visible");
   });
+
+  describe("Questions page", ()=>{
+    it("should contain the text Questions", ()=>{
+      cy.get("[data-cy=community-select-bar]").find("[data-cy=question-page]").click();
+      cy.wait(3000);
+      cy.get("[data-cy=community-select-bar]").should("have.value", "category1");
+    });
+    it("should contain the text New Questions", ()=>{
+      cy.contains("New Questions").should("exist");
+    });
+    it("should display the words comments section when a post is clicked on", ()=>{
+      cy.contains("[data-cy=questions-buffer]").first().click();
+      cy.wait(3000);
+      cy.scrollTo("bottom");
+      cy.contains("Comments Section").should("exist");
+      
+    });
+    it("should allow comments to be typed into the comment box when a post is clicked on", ()=>{
+      cy.get("[data-cy=comments-textarea]").type("Test comment one");
+      cy.get("comment-button").click();
+      cy.wait(3000);
+      cy.contains("Test comment one").should("exist");
+    });
+  });
+  
 });
 
   // describe("Trending Section", () => {

@@ -345,7 +345,7 @@ function CommunityTwo() {
               md={4}
               key={graphic._id}
               m={2}
-              data-cy="community-trending-graphics"
+              data-cy="community-user-name-graphics"
             >
               <StyledCard>
                 <Paper
@@ -431,6 +431,7 @@ function CommunityTwo() {
                   flexGrow: "1",
                   fontWeight: "bold",
                 }}
+                data-cy="questions-buffer"
                 //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
                 component={NavLink}
                 to={"/communityQuestionPost/:" + post.postName}
@@ -527,6 +528,7 @@ function CommunityTwo() {
         <StyledToolbar sx={{ color: "black" }}>
           {/* Left side - Title */}
           <Typography
+            data-cy="current-category"
             variant="h6"
             noWrap
             sx={{ display: { xs: "none", sm: "block" } }}
@@ -543,6 +545,7 @@ function CommunityTwo() {
             }}
           >
             <Select
+              data-cy="community-select-bar"
               value={category}
               onChange={handleCategoryChange}
               displayEmpty
@@ -551,8 +554,8 @@ function CommunityTwo() {
             >
               <MenuItem value="">Trending Map Graphics</MenuItem>
               <MenuItem value={"category2"}>Map Graphic Idea</MenuItem>
-              <MenuItem value={"category1"}>Question</MenuItem>
-              <MenuItem value={"category3"}>User Name</MenuItem>
+              <MenuItem value={"category1"} data-cy="question-page">Question</MenuItem>
+              <MenuItem value={"category3"} data-cy="user-name">User Name</MenuItem>
 
               {/* ... other categories */}
             </Select>
@@ -564,6 +567,7 @@ function CommunityTwo() {
               <StyledInputBase
                 id="random-search-bar"
                 data-cy="community-search-bar"
+                name="search-posts"
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
                 onChange={handleSearchChange}
