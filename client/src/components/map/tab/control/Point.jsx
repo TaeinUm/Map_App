@@ -77,11 +77,11 @@ const Point = () => {
   };
 
   const generateGeoJsonFromMarkers = (markers) => {
-    const features = markers.map((marker) => {
+    const features = markers.map(({ marker, name }) => {
       return {
         type: "Feature",
         properties: {
-          name: marker.getPopup().getText(),
+          name: name,
         },
         geometry: {
           type: "Point",
@@ -89,7 +89,7 @@ const Point = () => {
         },
       };
     });
-
+  
     return {
       type: "FeatureCollection",
       features,
@@ -174,18 +174,23 @@ const Point = () => {
 
   useEffect(() => {
     if (map) {
-      locations.forEach((location) => {
-        if (map && location.latitude && location.longitude) {
+      const newMarkers = locations.map((location) => {
+        if (location.latitude && location.longitude) {
+          const popup = new mapboxgl.Popup().setText(location.name);
           const marker = new mapboxgl.Marker()
             .setLngLat([location.longitude, location.latitude])
-            .setPopup(new mapboxgl.Popup().setText(location.name))
+            .setPopup(popup)
             .addTo(map);
-
-          setMarkers((prevMarkers) => [...prevMarkers, marker]);
+  
+          return { marker, name: location.name };
         }
-      });
+      }).filter(Boolean); // Filter out undefined entries
+  
+      setMarkers(newMarkers);
+      const newGeoJsonData = generateGeoJsonFromMarkers(newMarkers);
+      setGeoJsonData(newGeoJsonData);
     }
-  }, [map, locations]) 
+  }, [map, locations]);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];

@@ -269,6 +269,7 @@ const ThreeD = () => {
       type: "FeatureCollection",
       features,
     };
+    setGeoJsonData(geojsonData);
 
     // Update map source with new data
     if (map && map.getSource("3d-data")) {
@@ -446,7 +447,7 @@ const ThreeD = () => {
             <ShareTab />
           </TabPanel>/>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} geojson={geoJsonData}/>
+            <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} geojson={geoJsonData}/>
           </TabPanel>
           {/*{isMemoVisible && <Memo mapId={""} />}
           <Button
