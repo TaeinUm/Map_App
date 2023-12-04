@@ -225,7 +225,8 @@ test('creates a new map graphic', async () => {
         title: "New Map",
         mapType: "Type1",
         version: "1.0",
-        privacy: "public"
+        privacy: "public",
+        mapImage: ""
     };
 
     const createResponse = await request(app)

@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8080;
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
-app.use(express.json()); // Parse incoming JSON payloads
+app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
 app.use(express.urlencoded({ limit: "25mb" }));
 
 // Configure session management
