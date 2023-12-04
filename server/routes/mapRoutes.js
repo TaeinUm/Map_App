@@ -7,10 +7,7 @@ const router = express.Router();
 router.get("/:userId/map-graphics", mapController.getUserMapGraphics);
 
 // Route to delete a map graphic
-router.delete(
-  "/:userId/map-graphics/:mapId",
-  mapController.deleteUserMapGraphic
-);
+router.delete("/:userId/map-graphics/:mapId",mapController.deleteUserMapGraphic);
 
 // Route to get memo content of a map graphic
 router.get("/:userId/:mapId/memo", mapController.getMemoContent);
@@ -29,5 +26,8 @@ router.put("/:userId/map-graphics/:mapId", mapController.updateMapGraphic);
 
 // Route to get a specific map graphic
 router.get("/:userId/map-graphics/:mapId", mapController.getMapGraphicData);
+
+// Route to store loaded map graphic
+router.post("/:userId/loaded-map", mapController.storeLoadedMapGraphic);
 
 module.exports = router;

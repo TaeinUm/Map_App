@@ -85,28 +85,17 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
     }
   };
 
-  const exportMapAsImage = async (format) => {
-    if (!isAuthenticated) {
-      alert("please log in");
-      return;
-    }
-    // Replace these with the actual values from your map
-    const longitude = map.getCenter().lng;
-    const latitude = map.getCenter().lat;
-    const zoom = map.getZoom();
+  const exportMapAsImage = (export_type) => {
+    if (!map) return;
+    const canvas = map.getCanvas();
 
-    // Construct the URL for the Static Images API
-    const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/1024x768?access_token=${mapboxgl.accessToken}&format=${format}`;
+    // Set the default format to 'png' if not specified
+    const format = export_type || "png";
+    const mimeType = `image/${format}`;
 
-    try {
-      const response = await axios.get(url, { responseType: "arraybuffer" });
-      const blob = new Blob([response.data], { type: `image/${format}` });
-      const downloadUrl = window.URL.createObjectURL(blob);
-      triggerDownload(downloadUrl, `map.${format}`);
-    } catch (error) {
-      console.error("Error exporting map as image:", error);
-      throw error;
-    }
+    // Convert the canvas to a data URL of the specified format
+    const imageUrl = canvas.toDataURL(mimeType);
+    triggerDownload(imageUrl, `terraMap.${format}`);
   };
 
   const handleSave = async () => {
@@ -115,10 +104,8 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
       return;
     }
 
-    console.log("json: ", geojson);
-
-    if (exportFile === "jpg" || exportFile === "png" || exportFile === "pdf") {
-      await exportMapAsImage(exportFile);
+    if (exportFile === "jpg" || exportFile === "png" || exportFile === "jpeg") {
+      exportMapAsImage(exportFile);
     } else if (exportFile === "json") {
       exportMapAsJson();
     }
@@ -200,9 +187,8 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
               name="exportFile"
             >
               <MenuItem value="none">NONE</MenuItem>
-              <MenuItem value="jpg">JPG</MenuItem>
               <MenuItem value="png">PNG</MenuItem>
-              <MenuItem value="pdf">PDF</MenuItem>
+              <MenuItem value="jpeg">JPG</MenuItem>
               <MenuItem value="json">JSON</MenuItem>
             </Select>
           </FormControl>

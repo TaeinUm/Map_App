@@ -132,7 +132,8 @@ const mapServiceAPI = {
     version,
     privacy,
     mapType,
-    mapLayer
+    mapLayer,
+    mapImage
   ) => {
     try {
       const mapGraphicData = {
@@ -141,6 +142,7 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
+        mapImage,
       };
       let response;
       if (mapId) {
@@ -157,6 +159,36 @@ const mapServiceAPI = {
         );
       }
 
+      return response.data;
+    } catch (error) {
+      console.error("Error adding map graphic:", error);
+      throw error;
+    }
+  },
+
+  storeLoadedMapGraphic: async (
+    userId,
+    title,
+    version,
+    privacy,
+    mapType,
+    mapLayer,
+    mapImage
+  ) => {
+    try {
+      const mapGraphicData = {
+        title,
+        version,
+        privacy,
+        mapType,
+        mapLayer,
+        mapImage,
+      };
+      let response;
+      response = await axios.post(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/loaded-map`,
+        mapGraphicData
+      );
       return response.data;
     } catch (error) {
       console.error("Error adding map graphic:", error);

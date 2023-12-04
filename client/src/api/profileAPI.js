@@ -7,8 +7,8 @@ import React, { useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
-const BASE_URL = "http://localhost:8080";
-  //"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 const profileAPI = {
   //upate profile image

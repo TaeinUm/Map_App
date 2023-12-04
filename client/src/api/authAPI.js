@@ -1,8 +1,7 @@
 import axios from "axios";
 
-
-const BASE_URL = "http://localhost:8080";
-//"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const BASE_URL =
+  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 //const navigate = useNavigate();
 
@@ -65,12 +64,14 @@ axios.interceptors.request.use(
 //get Loggedin status, profile Image, user name, user ID
 const sendEmail = async (OneTime, resetEmail) => {
   try {
-    const response = await axios
-    .post(`${BASE_URL}/api/users/send_recovery_email`, {
-      OTP: OneTime,
-      recipient_email: resetEmail,
-    });
-    
+    const response = await axios.post(
+      `${BASE_URL}/api/users/send_recovery_email`,
+      {
+        OTP: OneTime,
+        recipient_email: resetEmail,
+      }
+    );
+
     //console.log("Am I getting the right data? "+JSON.stringify(response));
     return response.data;
     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
@@ -84,7 +85,6 @@ const sendEmail = async (OneTime, resetEmail) => {
   } catch (error) {
     console.error("cannot send a password reset email.");
   }
-      
-  }
+};
 
 export { getLoggedIn, login, logout, register, getUserData, sendEmail };

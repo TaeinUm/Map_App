@@ -2,12 +2,12 @@
 require("dotenv").config();
 
 // Import required modules
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const cors = require('cors');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const express = require("express");
+const mongoose = require("mongoose");
+const path = require("path");
+const cors = require("cors");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const nodemailer = require("nodemailer");
 
 // Import route handlers
@@ -24,12 +24,8 @@ const PORT = process.env.PORT || 8080;
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
-app.use(express.json()); // Parse incoming JSON payloads
+app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
 app.use(express.urlencoded({ limit: "25mb" }));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  next();
-});
 
 // Configure session management
 app.use(
@@ -58,6 +54,11 @@ mongoose
     console.error("Could not connect to MongoDB:", err);
     process.exit(1); // Exit the process on database connection failure
   });
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 // Serve static files (React frontend)
 app.use(express.static(path.join(__dirname, "../client/build")));

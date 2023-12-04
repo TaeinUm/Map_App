@@ -42,6 +42,7 @@ function LoadFile({ open }) {
 
   const { updateMapContextAndNavigate } = useContext(MapContext);
   const [selectedFileName, setSelectedFileName] = useState("");
+  const [geojson, setGeojson] = useState();
 
   /** ------------------- functions for processing kml file format  ------------------- **/
   const read = (file) => {

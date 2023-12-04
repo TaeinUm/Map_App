@@ -307,7 +307,8 @@ describe('MAP API Test', () => {
         title: "New Map",
         mapType: "Type1",
         version: "1.0",
-        privacy: "public"
+        privacy: "public",
+        mapImage: "",
       };
   
       request(app)

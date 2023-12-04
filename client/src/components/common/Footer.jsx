@@ -9,8 +9,7 @@ function Footer() {
         justifyContent: "space-between",
         alignItems: "center",
         background: "black",
-        width: "100vw",
-        height: "80px",
+        width: "100%",
         px: 3,
         "@media (max-width: 768px)": {
           display: "none",
