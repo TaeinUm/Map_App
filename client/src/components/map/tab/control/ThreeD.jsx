@@ -114,11 +114,7 @@ const ThreeD = () => {
 
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = data.mapLayer;
 
             if (mapLayer && data.mapType) {
@@ -392,7 +388,11 @@ const ThreeD = () => {
             <ShareTab />
           </TabPanel>/>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} geojson={geoJsonData}/>
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={mapLayer}
+              geojson={geoJsonData}
+            />
           </TabPanel>
           {/*{isMemoVisible && <Memo mapId={""} />}
           <Button

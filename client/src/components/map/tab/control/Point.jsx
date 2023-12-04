@@ -128,11 +128,7 @@ const Point = () => {
 
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = data.mapLayer;
 
             if (mapLayer && data.mapType) {

@@ -109,7 +109,7 @@ const addMapGraphic = async (req, res) => {
       vers: version,
       mapType,
       privacy,
-      image: "https://cdn.hswstatic.com/gif/maps.jpg"
+      image: "https://cdn.hswstatic.com/gif/maps.jpg",
     });
     await newMap.save();
     res.status(201).json(newMap);

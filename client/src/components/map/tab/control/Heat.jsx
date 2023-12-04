@@ -70,7 +70,6 @@ const Heat = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
-  
 
   useEffect(() => {
     setIsLoading(true);
@@ -145,11 +144,7 @@ const Heat = () => {
         });
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = data.mapLayer;
 
             if (mapLayer && data.mapType) {
