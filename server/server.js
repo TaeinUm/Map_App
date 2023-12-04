@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 8080;
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
-app.use(express.json()); // Parse incoming JSON payloads
+app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
 app.use(express.urlencoded({ limit: "25mb" }));
 
 // Configure session management
@@ -54,6 +54,11 @@ mongoose
     console.error("Could not connect to MongoDB:", err);
     process.exit(1); // Exit the process on database connection failure
   });
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 // Serve static files (React frontend)
 app.use(express.static(path.join(__dirname, "../client/build")));

@@ -1,7 +1,18 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User"); // Adjust the path according to your structure
-const sharp = require("sharp");
+const AWS = require('aws-sdk');
+const path = require('path');
+const fs = require('fs');
 const nodemailer = require("nodemailer");
+
+// Configure AWS
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const s3 = new AWS.S3();
 
 // Update user profile image
 const updateProfilePicture = async (req, res) => {
@@ -9,26 +20,33 @@ const updateProfilePicture = async (req, res) => {
   const file = req.file;
 
   try {
-    // Resize the image
-    const resizedImageBuffer = await sharp(file.path)
-      .resize(100, 100) // Resize to 200x200 pixels or as needed
-      .toBuffer();
+    // Generate a filename
+    const fileName = `profileImages/${userId}-${Date.now()}${path.extname(file.originalname)}`;
 
-    // Find the user and update their profile picture
+    // Upload to S3
+    const s3Response = await s3.upload({
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: fileName,
+      Body: fs.createReadStream(file.path),
+      ACL: 'public-read' // or another ACL as per your requirements
+    }).promise();
+
+    // Find the user and update their profile picture URL
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.profileImage = resizedImageBuffer;
+    user.profileImage = s3Response.Location;
     await user.save();
 
-    res.status(200).json({ message: "Profile picture updated successfully" });
+    // Delete the local file after uploading to S3
+    fs.unlinkSync(file.path);
+
+    res.status(200).json({ message: "Profile picture updated successfully", imageUrl: s3Response.Location });
   } catch (error) {
     console.error("Error updating profile picture:", error);
-    res
-      .status(500)
-      .json({ message: "Error updating profile picture: " + error.message });
+    res.status(500).json({ message: "Error updating profile picture: " + error.message });
   }
 };
 

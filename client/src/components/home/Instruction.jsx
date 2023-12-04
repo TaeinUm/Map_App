@@ -82,11 +82,11 @@ function Instruction() {
         <Box
           sx={{
             position: "absolute",
-            height: "100%",
+            height: "78%",
             width: "15px",
             background: "linear-gradient(to bottom, #ff6a00, #ee0979)",
             left: "10%",
-            top: 0,
+            bottom: 55,
             zIndex: 0,
           }}
         />
@@ -112,14 +112,14 @@ function Instruction() {
                 key={instruction.id}
                 onClick={() => handleButtonClick(instruction)}
                 sx={{
+                  color: "#fafafa",
                   height: "100px",
                   width: "100%",
-                  color:
-                    selectedInstructionId === instruction.id
-                      ? "red"
-                      : "#fafafa",
-                  fontSize:
-                    selectedInstructionId === instruction.id ? "18px" : "14px",
+                  justifyContent: "right",
+                  paddingRight: "50px",
+                  fontWeight: selectedInstructionId === instruction.id ? "bold" : "normal",
+                  fontSize: selectedInstructionId === instruction.id ? "12pt" : "10pt",
+                  color: selectedInstructionId === instruction.id ? "white" : "gray"
                 }}
               >
                 {instruction.text}
