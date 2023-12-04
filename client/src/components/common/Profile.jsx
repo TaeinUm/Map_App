@@ -106,7 +106,7 @@ const Profile = () => {
     //check if the user's logged in (has username and id)
     if (username && userId) {
       setProfile(profileImage);
-      fetchPosts();
+      fetchPosts(userId);
       fetchEmail();
     }
   }, [userId, username]);
@@ -198,25 +198,71 @@ const Profile = () => {
               <CardContent
                 sx={{
                   width: "90%",
-                  display: "flex",
                   flexWrap: "wrap",
                   justifyContent: "space-between",
                 }}
               >
                 {Array.isArray(posts) &&
                   posts.map((post, index) => (
-                    <CardMedia
-                      key={index}
-                      component="img"
-                      image={post.image}
-                      alt={`Post ${index}`}
+                    <Box
                       sx={{
-                        width: "200px",
-                        height: "200px",
-                        backgroundColor: "grey",
+                        display: "flex",
+                        width: "90%",
+                        height: "100px",
+                        backgroundColor: "#465065",
                         margin: "10px",
+                        borderRadius: "5px",
                       }}
-                    />
+                    >
+                      <CardMedia
+                        key={index}
+                        component="img"
+                        image={
+                          post.postImages ||
+                          "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
+                        }
+                        alt={`Post ${index}`}
+                        sx={{
+                          width: "80px",
+                          height: "80px",
+                          backgroundColor: "grey",
+                          margin: "10px",
+                        }}
+                      />
+                      <Box>
+                        <Typography
+                          sx={{
+                            color: "#fafafa",
+                            textAlign: "left",
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {post.postName}
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#fafafa", textAlign: "left" }}
+                        >
+                          {(() => {
+                            const date = new Date();
+                            const year = date.getFullYear();
+                            const month = date.getMonth() + 1;
+                            const day = date.getDate();
+
+                            const formattedMonth =
+                              month < 10 ? `0${month}` : month;
+                            const formattedDay = day < 10 ? `0${day}` : day;
+
+                            return `${year}-${formattedMonth}-${formattedDay}`;
+                          })()}
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#fafafa", textAlign: "left" }}
+                        >
+                          comments: {post.interactions}
+                        </Typography>
+                      </Box>
+                    </Box>
                   ))}
               </CardContent>
             </CardActionArea>
