@@ -215,6 +215,7 @@ const ThreeD = () => {
         }
       }
 
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
         mapId, // This could be null if creating a new map
@@ -222,7 +223,8 @@ const ThreeD = () => {
         versionToPut,
         privacy,
         "3D-Bar Map",
-        JSON.stringify(locations)
+        JSON.stringify(locations),
+        mapImage
       );
       setMapId(null);
       navigate("/map");

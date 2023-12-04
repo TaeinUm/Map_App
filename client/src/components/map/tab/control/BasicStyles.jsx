@@ -340,6 +340,7 @@ const BasicStyles = () => {
   };
 
   const handleSave = async (title, version, privacy) => {
+    const mapImage = map.getCanvas().toDataURL();
     try {
       await mapServiceAPI.addMapGraphics(
         userId,
@@ -348,10 +349,11 @@ const BasicStyles = () => {
         version,
         privacy,
         "Basic Map",
-        JSON.stringify(styleSettings)
+        JSON.stringify(styleSettings),
+        mapImage,
       );
       setMapId(null);
-      navigate("/");
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);

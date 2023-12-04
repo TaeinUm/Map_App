@@ -227,6 +227,7 @@ function File() {
   };
 
   const handleSave = async (title, version, privacy) => {
+    const mapImage = map.getCanvas().toDataURL();
     try {
       await mapServiceAPI.storeLoadedMapGraphic(
         userId,
@@ -235,7 +236,8 @@ function File() {
         version,
         privacy,
         null, // mapType
-        JSON.stringify(styleSettings)
+        JSON.stringify(styleSettings),
+        mapImage,
       );
       setMapId(null);
       navigate("/map");

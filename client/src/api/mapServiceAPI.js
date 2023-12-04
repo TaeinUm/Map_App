@@ -132,7 +132,8 @@ const mapServiceAPI = {
     version,
     privacy,
     mapType,
-    mapLayer
+    mapLayer,
+    mapImage
   ) => {
     try {
       const mapGraphicData = {
@@ -141,6 +142,7 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
+        mapImage,
       };
       let response;
       if (mapId) {
@@ -170,7 +172,8 @@ const mapServiceAPI = {
     version,
     privacy,
     mapType,
-    mapLayer
+    mapLayer,
+    mapImage
   ) => {
     try {
       const mapGraphicData = {
@@ -179,6 +182,7 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
+        mapImage
       };
       let response;
       response = await axios.post(

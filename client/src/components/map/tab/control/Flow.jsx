@@ -303,6 +303,7 @@ const Flow = () => {
         }
       }
 
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
         null, // This could be null if creating a new map
@@ -310,10 +311,11 @@ const Flow = () => {
         versionToPut,
         privacy,
         "Flow Map",
-        JSON.stringify(styleSettings)
+        JSON.stringify(styleSettings),
+        mapImage,
       );
       setMapId(null);
-      navigate("/");
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);

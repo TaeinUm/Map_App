@@ -290,6 +290,7 @@ const Heat = () => {
         heatColors: heatColors,
       };
 
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
         null, // This could be null if creating a new map
@@ -297,7 +298,8 @@ const Heat = () => {
         versionToPut,
         privacy,
         "Heat Map",
-        JSON.stringify(mapData)
+        JSON.stringify(mapData),
+        mapImage,
       );
       setMapId(null);
       navigate("/map");
