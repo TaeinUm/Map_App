@@ -15,6 +15,7 @@ import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 // Styled component for container
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
@@ -141,6 +142,24 @@ const Profile = () => {
     navigate("/map");
   };
 
+  const handlePostClick = (post) => {
+    let path = "";
+    switch (post.type) {
+      case "map":
+        path = `/communityGraphicPost/:${post.postName}`;
+        break;
+      case "Questions":
+        path = `/communityQuestionPost/:${post.postName}`;
+        break;
+      case "Map Ideas":
+        path = `/communityMapIdeaPost/:${post.postName}`;
+        break;
+      default:
+        break;
+    }
+    navigate(path);
+  };
+
   return (
     <ResponsiveContainer>
       <Grid container spacing={2}>
@@ -181,7 +200,7 @@ const Profile = () => {
               borderRadius: "20px",
             }}
           >
-            <CardActionArea
+            <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -198,25 +217,30 @@ const Profile = () => {
               <CardContent
                 sx={{
                   width: "90%",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
                 {Array.isArray(posts) &&
                   posts.map((post, index) => (
-                    <Box
+                    <CardActionArea
+                      key={post.id || index}
+                      onClick={() => {
+                        handlePostClick(post);
+                      }}
                       sx={{
                         display: "flex",
+                        justifyContent: "flex-start",
                         width: "90%",
                         height: "100px",
                         backgroundColor: "#465065",
                         margin: "10px",
                         borderRadius: "5px",
+                        zIndex: "2",
                       }}
                     >
                       <CardMedia
                         key={index}
-                        component="img"
                         image={
                           post.postImages ||
                           "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
@@ -244,7 +268,7 @@ const Profile = () => {
                           sx={{ color: "#fafafa", textAlign: "left" }}
                         >
                           {(() => {
-                            const date = new Date();
+                            const date = new Date(post.postDate);
                             const year = date.getFullYear();
                             const month = date.getMonth() + 1;
                             const day = date.getDate();
@@ -262,10 +286,10 @@ const Profile = () => {
                           comments: {post.interactions}
                         </Typography>
                       </Box>
-                    </Box>
+                    </CardActionArea>
                   ))}
               </CardContent>
-            </CardActionArea>
+            </Box>
           </Card>
         </Grid>
 
