@@ -234,7 +234,7 @@ describe("MAP API Test", () => {
       version: "1.0",
       privacy: "public",
       image: "https://cdn.hswstatic.com/gif/maps.jpg",
-      mapLayer: "sampleLayer",
+      mapLayer: "",
     };
 
     const createResponse = await request(app)

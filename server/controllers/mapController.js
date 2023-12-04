@@ -110,22 +110,27 @@ const addMapGraphic = async (req, res) => {
   const { title, mapType, mapLayer, version, privacy, mapImage } = req.body;
 
   try {
-    const buffer = Buffer.from(
-      mapImage.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    );
-    const fileType = mapImage.split(";")[0].split("/")[1];
+    let uploadResult = "";
+    if (mapImage === "") {
+      uploadResult = "https://cdn.hswstatic.com/gif/maps.jpg";
+    } else {
+      const buffer = Buffer.from(
+        mapImage.replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      );
+      const fileType = mapImage.split(";")[0].split("/")[1];
 
-    const params = {
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: `map-images/${userId}-${Date.now()}.${fileType}`,
-      Body: buffer,
-      ContentType: `image/${fileType}`,
-      ACL: "public-read",
-    };
+      const params = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: `map-images/${userId}-${Date.now()}.${fileType}`,
+        Body: buffer,
+        ContentType: `image/${fileType}`,
+        ACL: "public-read",
+      };
 
-    // Upload to S3
-    const uploadResult = await s3.upload(params).promise();
+      // Upload to S3
+      uploadResult = await s3.upload(params).promise();
+    }
 
     const newMap = new Map({
       userId,
