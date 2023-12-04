@@ -80,7 +80,6 @@ function File() {
   };
 
   useEffect(() => {
-    console.log(geojsonData);
     if (!map) {
       setIsMapLoaded(false);
       const newMap = new mapboxgl.Map({
@@ -107,63 +106,17 @@ function File() {
             type: "geojson",
             data: geojsonData,
           });
-          console.log("geojsonData: ", geojsonData);
 
-          if (geojsonData.features) {
-            geojsonData.features.forEach((feature, index) => {
-              const layerId = `layer-${index}`;
-              const featureType = feature.properties.type || "line";
-              let paint = {
-                "line-color":
-                  feature.properties["line-color"] || styleSettings.lineColor,
-                "line-opacity":
-                  feature.properties["line-opacity"] ||
-                  styleSettings.lineOpacity,
-                "line-width":
-                  feature.properties["line-width"] ||
-                  styleSettings.lineThickness,
-              };
-
-              if (
-                feature.properties.type === "line" &&
-                feature.properties.paint
-              ) {
-                if (paint["line-color"]) {
-                  setLineColor(paint["line-color"]);
-                }
-                if (paint["line-opacity"]) {
-                  setLineOpacity(paint["line-opacity"]);
-                }
-                if (paint["line-width"]) {
-                  setLineThickness(paint["line-width"]);
-                }
-              } else if (
-                feature.properties.type !== "line" &&
-                feature.properties.paint
-              ) {
-                paint = feature.properties.paint;
-              }
-
-              newMap.addLayer({
-                id: layerId,
-                type: featureType,
-                source: sourceId,
-                paint: feature.properties.paint || paint,
-                layout: feature.properties.layout || {},
-              });
-            });
-          } else {
-            newMap.addLayer({
-              id: layerId,
-              type: "line",
-              source: sourceId,
-              paint: {
-                "line-color": styleSettings.lineColor,
-                "line-opacity": styleSettings.lineOpacity,
-                "line-width": styleSettings.lineThickness,
-              },
-            });
-          }
+          newMap.addLayer({
+            id: layerId,
+            type: "line",
+            source: sourceId,
+            paint: {
+              "line-color": styleSettings.lineColor,
+              "line-opacity": styleSettings.lineOpacity,
+              "line-width": styleSettings.lineThickness,
+            },
+          });
 
           newMap.setPaintProperty(
             "water",

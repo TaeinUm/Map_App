@@ -49,6 +49,20 @@ const profileAPI = {
     }
   },
 
+  //update user details info, if not changed, x change those info
+  updateUserPassword: async (newEmail, newPassword) => {
+    try {
+      const response = await axios.put(`${BASE_URL}/api/users/updatePassword`, {
+        email: newEmail,
+        password: newPassword,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user details:", error);
+      throw error;
+    }
+  },
+
   // Get all postings by userId
   getPostings: async (userId) => {
     try {

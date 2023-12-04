@@ -1,21 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Modal, Box, Typography, TextField, Button } from "@mui/material";
+import { PasswordRecoveryContext } from "../../../contexts/PasswordRecoveryContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { sendEmail } from "../../../api/authAPI";
+
 
 function PasswordReset({ open, handleClose }) {
   /***       useState section         ***/
   const [resetEmail, setResetEmail] = useState("");
+  //const {setEmail} = useContext(PasswordRecoveryContext);
+  const { setEmail, setOTP } = useContext(PasswordRecoveryContext);
+
+  const navigate = useNavigate();
 
   /***       handle password reset function        ***/
   const handlePasswordResetRequest = async () => {
     const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(resetEmail);
+    
 
     if (!isValidEmail) {
       alert("Please enter a valid email address.");
       return;
     }
-
+    const OTP = Math.floor(Math.random() * 9000 + 1000);
+      console.log(OTP);
+      setOTP(OTP);
+    setEmail(resetEmail);
+    sendEmail(OTP, resetEmail);
+    
+    navigate("/OTPpage");
     handleClose();
-    alert(" RESET FUNCTIONALITY IS NEEDED !  not yet :)");
+    //navigate("/OTPpage");
+    //alert(" RESET FUNCTIONALITY IS NEEDED !  not yet :)");
     return;
   };
 

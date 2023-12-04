@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import { CommunityProvider } from "./contexts/CommunityContextVerTwo";
+import { PasswordRecoveryProvider } from "./contexts/PasswordRecoveryContext";
 
 /****         CSS          ****/
 import "./styles/App.css";
@@ -18,6 +19,8 @@ import Home from "./components/home/Home";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import Profile from "./components/common/Profile";
+import OTPPage from "./components/auth/OTPPage";
+import NewPasswordPage from "./components/auth/ResetPassword";
 
 /****         Policy           ****/
 import PrivacyPolicy from "./components/policy/PrivacyPolicy";
@@ -49,59 +52,63 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
-          <CommunityProvider>
-            <MapProvider>
-              <Header />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/mapedit" element={<MapEditing />} />
-                <Route path="/map" element={<MapLanding />} />
-                <Route path="/mapedit/basic" element={<BasicStyles />} />
-                <Route path="/mapedit/flow" element={<Flow />} />
-                <Route path="/mapedit/heat" element={<Heat />} />
-                <Route path="/mapedit/point" element={<Point />} />
-                <Route path="/mapedit/regional" element={<Regional />} />
-                <Route path="/mapedit/3d" element={<ThreeD />} />
-                <Route path="/mapedit/file" element={<File />} />
-                <Route path="/mobilemap" element={<MapMobile />} />
+          <PasswordRecoveryProvider>
+            <CommunityProvider>
+              <MapProvider>
+                <Header />
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/mapedit" element={<MapEditing />} />
+                  <Route path="/map" element={<MapLanding />} />
+                  <Route path="/mapedit/basic" element={<BasicStyles />} />
+                  <Route path="/mapedit/flow" element={<Flow />} />
+                  <Route path="/mapedit/heat" element={<Heat />} />
+                  <Route path="/mapedit/point" element={<Point />} />
+                  <Route path="/mapedit/regional" element={<Regional />} />
+                  <Route path="/mapedit/3d" element={<ThreeD />} />
+                  <Route path="/mapedit/file" element={<File />} />
+                  <Route path="/mobilemap" element={<MapMobile />} />
 
-                <Route path="/community" element={<CommunityTwo />} />
-                <Route
-                  path="/communityMapIdeasPostings"
-                  element={<Post />}
-                />
-                <Route
-                  path="/PostMapGraphic"
-                  element={<PostMapGraphic />}
-                />
-                <Route
-                  path="/TrendingMaps"
-                  element={<TrendingMapGraphics />}
-                />
-                <Route
-                  path="/communityMapIdeaPost/:index"
-                  element={<Post />}
-                />
-                <Route
-                  path="/CommunityQuestionPost/:postsTitle"
-                  element={<Post />}
-                />
-                <Route
-                  path="/CommunityGraphicPost/:postsTitle"
-                  element={<Post />}
-                />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/profile" element={<Profile />} />
+                  <Route path="/community" element={<CommunityTwo />} />
+                  <Route path="/communityMapIdeasPostings" element={<Post />} />
+                  <Route path="/PostMapGraphic" element={<PostMapGraphic />} />
+                  <Route
+                    path="/TrendingMaps"
+                    element={<TrendingMapGraphics />}
+                  />
+                  <Route
+                    path="/communityMapIdeaPost/:index"
+                    element={<Post />}
+                  />
+                  <Route
+                    path="/CommunityQuestionPost/:postsTitle"
+                    element={<Post />}
+                  />
+                  <Route
+                    path="/CommunityGraphicPost/:postsTitle"
+                    element={<Post />}
+                  />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/OTPpage" element={<OTPPage />} />
+                  <Route
+                    path="/NewPasswordPage"
+                    element={<NewPasswordPage />}
+                  />
 
-                <Route path="/termsconditions" element={<Termsconditions />} />
-                <Route path="/privacypolicy" element={<PrivacyPolicy />} />
-                <Route path="/contact" element={<Contact />} />
+                  <Route
+                    path="/termsconditions"
+                    element={<Termsconditions />}
+                  />
+                  <Route path="/privacypolicy" element={<PrivacyPolicy />} />
+                  <Route path="/contact" element={<Contact />} />
 
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </MapProvider>
-          </CommunityProvider>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </MapProvider>
+            </CommunityProvider>
+          </PasswordRecoveryProvider>
         </AuthProvider>
         <Footer />
       </BrowserRouter>
