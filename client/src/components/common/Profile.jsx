@@ -142,21 +142,23 @@ const Profile = () => {
     navigate("/map");
   };
 
-  const handlePostClick = (post) => {
-    let path = "";
-    switch (post.type) {
+  const generatePath = (postName, postType) => {
+    console.log("postname: ", postName);
+    console.log("postType: ", postType);
+    switch (postType) {
       case "map":
-        path = `/communityGraphicPost/:${post.postName}`;
-        break;
+        return `/communityGraphicPost/${postName}`;
       case "Questions":
-        path = `/communityQuestionPost/:${post.postName}`;
-        break;
+        return `/communityQuestionPost/${postName}`;
       case "Map Ideas":
-        path = `/communityMapIdeaPost/:${post.postName}`;
-        break;
+        return `/communityMapIdeaPost/${postName}`;
       default:
-        break;
+        return "#";
     }
+  };
+
+  const handlePostClick = (postName, postType) => {
+    const path = generatePath(postName, postType);
     navigate(path);
   };
 
@@ -225,9 +227,9 @@ const Profile = () => {
                   posts.map((post, index) => (
                     <CardActionArea
                       key={post.id || index}
-                      onClick={() => {
-                        handlePostClick(post);
-                      }}
+                      onClick={() =>
+                        handlePostClick(post.postName, post.postType)
+                      }
                       sx={{
                         display: "flex",
                         justifyContent: "flex-start",
@@ -240,7 +242,6 @@ const Profile = () => {
                       }}
                     >
                       <CardMedia
-                        key={index}
                         image={
                           post.postImages ||
                           "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
