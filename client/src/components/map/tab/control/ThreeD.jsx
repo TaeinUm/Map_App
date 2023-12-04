@@ -114,14 +114,10 @@ const ThreeD = () => {
             "fill-extrusion-opacity": 0.6,
           },
         });
-
+        
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
             setLocations(mapLayer);
             if (mapLayer && data.mapType) {
@@ -241,6 +237,49 @@ const ThreeD = () => {
       alert("Error saving map");
     }
   };
+
+  useEffect(() => {
+    if (!map) return;
+
+    // Convert locations to GeoJSON features
+    const features = locations.map((location) => {
+      const height = location.value * 5; // Adjust this multiplier as needed
+      const deltaLon = 0.05; // Adjust delta for longitude
+      const deltaLat = 0.05; // Adjust delta for latitude
+
+      // Create polygon coordinates
+      const coordinates = [
+        [location.longitude - deltaLon, location.latitude - deltaLat],
+        [location.longitude + deltaLon, location.latitude - deltaLat],
+        [location.longitude + deltaLon, location.latitude + deltaLat],
+        [location.longitude - deltaLon, location.latitude + deltaLat],
+        [location.longitude - deltaLon, location.latitude - deltaLat],
+      ];
+
+      // Return GeoJSON feature
+      return {
+        type: "Feature",
+        properties: {
+          height: height,
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [coordinates],
+        },
+      };
+    });
+
+    // Create GeoJSON object
+    const geojsonData = {
+      type: "FeatureCollection",
+      features,
+    };
+
+    // Update map source with new data
+    if (map && map.getSource("3d-data")) {
+      map.getSource("3d-data").setData(geojsonData);
+    }
+  }, [map, locations])
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];

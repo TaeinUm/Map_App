@@ -140,7 +140,6 @@ const Point = () => {
           try {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
-            //console.log("mapLayer", mapLayer.locations);
             if (mapLayer.locations) setLocations(mapLayer.locations);
             newMap.addLayer(mapLayer);
           } catch (error) {
@@ -157,7 +156,6 @@ const Point = () => {
         setMap(newMap);
         const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
         setInitializeLayers(initialLayers);
-        console.log(newMap.getStyle());
       });
     }
     if (map) {
@@ -186,56 +184,6 @@ const Point = () => {
       });
     }
   }, [map, locations]) 
-
-
-  // useEffect(() => {
-  //   if (map && locations) {
-  //     updatePoint();
-  //     updatePointmapRadius();
-  //   }
-  // }, [locations, map]);
-
-  // const updatePoint = () => {
-  //   if (!map) return;
-  //   const geojsonData = {
-  //     type: "FeatureCollection",
-  //     features: locations.map((location) => ({
-  //       type: "Feature",
-  //       geometry: {
-  //         type: "Point",
-  //         coordinates: [
-  //           parseFloat(location.longitude),
-  //           parseFloat(location.latitude),
-  //         ],
-  //       },
-  //       properties: {
-  //         title: location.name,
-  //       },
-  //     })),
-  //   };
-
-  //   if (map.getSource("pointmap-data")) {
-  //     map.getSource("pointmap-data").setData(geojsonData);
-  //   }
-  // };
-
-  // function calculateRadiusBasedOnValue(value) {
-  //   return Math.min(20, Math.max(5, value));
-  // };
-
-  // function updatePointmapRadius() {
-  //   if (locations.length > 0) {
-  //     const averageValue =
-  //       locations.reduce((acc, loc) => acc + parseFloat(20 || 0), 0) /
-  //       locations.length;
-  //     const newRadius = calculateRadiusBasedOnValue(averageValue);
-
-  //     if (map) {
-  //       map.setPaintProperty("pointmap-layer", "pointmap-radius", newRadius);
-  //     }
-  //   }
-  // };
-  
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
