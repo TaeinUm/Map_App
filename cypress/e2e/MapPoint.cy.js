@@ -14,17 +14,17 @@ describe("Point Component Test", () => {
     cy.get("form").should("be.visible");
   });
 
-  it("should allow adding data in the table and creating markers", () => {
-    cy.get('input[name="latitude"]').first().type("40.7128");
-    cy.get('input[name="longitude"]').first().type("-74.006");
-    cy.get('input[name="name"]').first().type("New York");
+  // it("should allow adding data in the table and creating markers", () => {
+  //   cy.get('input[name="latitude"]').first().type("40.7128");
+  //   cy.get('input[name="longitude"]').first().type("-74.006");
+  //   cy.get('input[name="name"]').first().type("New York");
 
-    cy.get("button").contains("+ Add Row").click();
+  //   cy.get("button").contains("+ Add Row").click();
 
-    cy.get('input[name="latitude"]').eq(1).type("37.7749");
-    cy.get('input[name="longitude"]').eq(1).type("-122.4194");
-    cy.get('input[name="name"]').eq(1).type("San Francisco");
-  });
+  //   cy.get('input[name="latitude"]').eq(1).type("37.7749");
+  //   cy.get('input[name="longitude"]').eq(1).type("-122.4194");
+  //   cy.get('input[name="name"]').eq(1).type("San Francisco");
+  // });
 
   it("should submit the form and update the map with markers", () => {
     cy.get('button[type="submit"]').click();

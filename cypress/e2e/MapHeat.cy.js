@@ -17,13 +17,13 @@ describe("Heat Component Test", () => {
   it("should allow adding data in the table", () => {
     cy.get('input[name="latitude"]').first().type("40.7128");
     cy.get('input[name="longitude"]').first().type("-74.006");
-    cy.get('input[name="value"]').first().type("10");
+    cy.get('input[name="name"]').first().type("10");
 
     cy.get("button").contains("+ Add Row").click();
 
     cy.get('input[name="latitude"]').eq(1).type("37.7749");
     cy.get('input[name="longitude"]').eq(1).type("-122.4194");
-    cy.get('input[name="value"]').eq(1).type("15");
+    cy.get('input[name="name"]').eq(1).type("15");
   });
 
   it("should submit the form and update the map", () => {

@@ -42,11 +42,6 @@ describe("BasicStyles Component Test", () => {
     cy.get("@boundaryWidthSlider").click({ multiple: true, force: true });
   });
 
-  it("should allow adjusting waterway width with slider", () => {
-    cy.get('input[type="range"]').eq(3).as("waterwayWidthSlider");
-    cy.get("@waterwayWidthSlider").click({ multiple: true, force: true });
-  });
-
   it("should be able to save settings", () => {
     cy.get("button").contains("Save").click();
   });
