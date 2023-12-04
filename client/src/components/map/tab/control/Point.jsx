@@ -51,8 +51,6 @@ const Point = () => {
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
   const [markers, setMarkers] = useState([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -77,19 +75,24 @@ const Point = () => {
   };
 
   const generateGeoJsonFromMarkers = (markers) => {
-    const features = markers.map(({ marker, name }) => {
-      return {
-        type: "Feature",
-        properties: {
-          name: name,
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
-        },
-      };
-    });
-  
+    const features = markers
+      .map(({ marker, name }) => {
+        if (marker && marker instanceof mapboxgl.Marker) {
+          return {
+            type: "Feature",
+            properties: {
+              name: name,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
+            },
+          };
+        }
+        return null;
+      })
+      .filter((feature) => feature !== null);
+
     return {
       type: "FeatureCollection",
       features,
@@ -144,10 +147,9 @@ const Point = () => {
             // newMap.addLayer(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
-          } 
-          finally {
-            setMap(newMap)
-            setIsLoading(false)
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
           }
         } else {
           setMap(newMap);
@@ -155,18 +157,7 @@ const Point = () => {
         }
 
         setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
       });
-    }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
     }
 
     setIsLoading(false);
@@ -174,18 +165,19 @@ const Point = () => {
 
   useEffect(() => {
     if (map) {
-      const newMarkers = locations.map((location) => {
-        if (location.latitude && location.longitude) {
-          const popup = new mapboxgl.Popup().setText(location.name);
-          const marker = new mapboxgl.Marker()
-            .setLngLat([location.longitude, location.latitude])
-            .setPopup(popup)
-            .addTo(map);
-  
-          return { marker, name: location.name };
-        }
-      }).filter(Boolean); // Filter out undefined entries
-  
+      const validLocations = locations.filter(
+        (location) => location.latitude && location.longitude
+      );
+      const newMarkers = validLocations.map((location) => {
+        const popup = new mapboxgl.Popup().setText(location.name);
+        const marker = new mapboxgl.Marker()
+          .setLngLat([location.longitude, location.latitude])
+          .setPopup(popup)
+          .addTo(map);
+
+        return { marker, name: location.name };
+      });
+
       setMarkers(newMarkers);
       const newGeoJsonData = generateGeoJsonFromMarkers(newMarkers);
       setGeoJsonData(newGeoJsonData);
@@ -320,7 +312,7 @@ const Point = () => {
         privacy,
         "Point Map",
         JSON.stringify(mapData),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");
@@ -416,7 +408,7 @@ const Point = () => {
           <TabPanel value="3">
             <SaveTab
               onSave={handleSave}
-              mapLayer={mapLayer}
+              mapLayer={locations}
               map={map}
               geojson={geoJsonData}
             />
