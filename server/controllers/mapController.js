@@ -108,9 +108,23 @@ const updateMemoContent = async (req, res) => {
 // Create map graphic
 const addMapGraphic = async (req, res) => {
   const { userId } = req.params;
-  const { title, mapType, mapLayer, version, privacy } = req.body;
+  const { title, mapType, mapLayer, version, privacy, mapImage } = req.body;
 
   try {
+    const buffer = Buffer.from(mapImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+    const fileType = mapImage.split(';')[0].split('/')[1];
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `map-images/${userId}-${Date.now()}.${fileType}`,
+      Body: buffer,
+      ContentType: `image/${fileType}`,
+      ACL: 'public-read'
+    };
+
+    // Upload to S3
+    const uploadResult = await s3.upload(params).promise();
+
     const newMap = new Map({
       userId,
       mapName: title,
@@ -120,7 +134,7 @@ const addMapGraphic = async (req, res) => {
       vers: version,
       mapType,
       privacy,
-      image: "https://cdn.hswstatic.com/gif/maps.jpg"
+      image: uploadResult.Location,
     });
     await newMap.save();
     res.status(201).json(newMap);
@@ -171,7 +185,7 @@ const getMapGraphicData = async (req, res) => {
 
 const storeLoadedMapGraphic = async (req, res) => {
   const { userId } = req.params;
-  const { title, version, privacy, mapType, mapLayer } = req.body;
+  const { title, version, privacy, mapType, mapLayer, mapImage } = req.body;
 
   try {
     // Convert mapLayer string to a Buffer for uploading
@@ -180,6 +194,10 @@ const storeLoadedMapGraphic = async (req, res) => {
     // Generate a filename for S3
     const fileName = `maps/${userId}-${Date.now()}.json`;
 
+    // thumbnail image
+    const buffer = Buffer.from(mapImage.replace(/^data:image\/\w+;base64,/, ""), 'base64');
+    const fileType = mapImage.split(';')[0].split('/')[1];
+
     // Upload mapLayer to S3
     const s3Response = await s3.upload({
       Bucket: process.env.AWS_S3_BUCKET,
@@ -187,6 +205,18 @@ const storeLoadedMapGraphic = async (req, res) => {
       Body: mapLayerBuffer,
       ACL: 'public-read'
     }).promise();
+
+    // image
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: `map-images/${userId}-${Date.now()}.${fileType}`,
+      Body: buffer,
+      ContentType: `image/${fileType}`,
+      ACL: 'public-read'
+    };
+
+    // Upload the image to S3
+    const uploadResult = await s3.upload(params).promise();
 
     // Create a new map with the S3 URL
     const newMap = new Map({
@@ -198,7 +228,7 @@ const storeLoadedMapGraphic = async (req, res) => {
       vers: version,
       mapType,
       privacy,
-      image: "https://cdn.hswstatic.com/gif/maps.jpg"
+      image: uploadResult.Location,
     });
     await newMap.save();
 
