@@ -83,7 +83,7 @@ function App() {
                   element={<TrendingMapGraphics />}
                 />
                 <Route
-                  path="/communityMapIdeaPost/:index"
+                  path="/communityMapIdeaPost/:postsTitle"
                   element={<Post />}
                 />
                 <Route
