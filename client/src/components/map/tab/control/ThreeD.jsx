@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -52,19 +53,18 @@ const ThreeD = () => {
   const fileInputRef = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
 
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [locations, setLocations] = useState([
-    { latitude: "", longitude: "", name: "" },
+    { latitude: "", longitude: "", name: "", value: "" },
   ]);
 
   const handleTabChange = (event, newValue) => {
@@ -81,6 +81,7 @@ const ThreeD = () => {
         pitch: 45,
         bearing: -17.6,
         antialias: true,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({
@@ -115,31 +116,16 @@ const ThreeD = () => {
         if (mapId) {
           try {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
-            const mapLayer = data.mapLayer;
-
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            const mapLayer = JSON.parse(data.mapData);
+            setLocations(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
           }
         }
 
         setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
         setIsMapLoaded(true);
       });
-    }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
     }
   }, [map, mapStyle]);
 
@@ -199,24 +185,87 @@ const ThreeD = () => {
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+        const originalVer = response.vers;
+        if (originalVer === "ver1") {
+          versionToPut = "ver2";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver3";
+        } else if (originalVer === "ver3") {
+          versionToPut = "ver1";
+          // Here, find the version1 having the same title & delete it from DB
+        }
+      }
+
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
         mapId, // This could be null if creating a new map
-        title,
-        version,
+        titleToPut,
+        versionToPut,
         privacy,
         "3D-Bar Map",
-        mapLayer
+        JSON.stringify(locations),
+        mapImage
       );
+      setMapId(null);
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
       alert("Error saving map");
     }
   };
+
+  useEffect(() => {
+    if (!map) return;
+
+    // Convert locations to GeoJSON features
+    const features = locations.map((location) => {
+      const height = location.value * 5; // Adjust this multiplier as needed
+      const deltaLon = 0.05; // Adjust delta for longitude
+      const deltaLat = 0.05; // Adjust delta for latitude
+
+      // Create polygon coordinates
+      const coordinates = [
+        [location.longitude - deltaLon, location.latitude - deltaLat],
+        [location.longitude + deltaLon, location.latitude - deltaLat],
+        [location.longitude + deltaLon, location.latitude + deltaLat],
+        [location.longitude - deltaLon, location.latitude + deltaLat],
+        [location.longitude - deltaLon, location.latitude - deltaLat],
+      ];
+
+      // Return GeoJSON feature
+      return {
+        type: "Feature",
+        properties: {
+          height: height,
+        },
+        geometry: {
+          type: "Polygon",
+          coordinates: [coordinates],
+        },
+      };
+    });
+
+    // Create GeoJSON object
+    const geojsonData = {
+      type: "FeatureCollection",
+      features,
+    };
+    setGeoJsonData(geojsonData);
+
+    // Update map source with new data
+    if (map && map.getSource("3d-data")) {
+      map.getSource("3d-data").setData(geojsonData);
+    }
+  }, [map, locations]);
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];
@@ -390,7 +439,8 @@ const ThreeD = () => {
           <TabPanel value="3">
             <SaveTab
               onSave={handleSave}
-              mapLayer={mapLayer}
+              mapLayer={locations}
+              map={map}
               geojson={geoJsonData}
             />
           </TabPanel>

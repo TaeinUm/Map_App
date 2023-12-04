@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
@@ -47,14 +48,13 @@ const selectStyle = {
 };
 
 const Point = () => {
-  const { mapId } = useContext(MapContext);
+  const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
   const [markers, setMarkers] = useState([]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
@@ -75,18 +75,23 @@ const Point = () => {
   };
 
   const generateGeoJsonFromMarkers = (markers) => {
-    const features = markers.map((marker) => {
-      return {
-        type: "Feature",
-        properties: {
-          name: marker.getPopup().getText(),
-        },
-        geometry: {
-          type: "Point",
-          coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
-        },
-      };
-    });
+    const features = markers
+      .map(({ marker, name }) => {
+        if (marker && marker instanceof mapboxgl.Marker) {
+          return {
+            type: "Feature",
+            properties: {
+              name: name,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
+            },
+          };
+        }
+        return null;
+      })
+      .filter((feature) => feature !== null);
 
     return {
       type: "FeatureCollection",
@@ -102,6 +107,7 @@ const Point = () => {
         style: mapStyle,
         center: [-74.006, 40.7128],
         zoom: 2,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({
@@ -113,6 +119,13 @@ const Point = () => {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", async () => {
+        newMap.addSource("pointmap-data", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [],
+          },
+        });
         newMap.addLayer({
           id: "country-boundaries",
           type: "fill",
@@ -129,35 +142,47 @@ const Point = () => {
         if (mapId) {
           try {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
-            const mapLayer = data.mapLayer;
-
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            const mapLayer = JSON.parse(data.mapData);
+            if (mapLayer.locations) setLocations(mapLayer.locations);
+            // newMap.addLayer(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
+          } finally {
+            setMap(newMap);
+            setIsLoading(false);
           }
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
         }
 
         setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
-        console.log(newMap.getStyle());
       });
-    }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
     }
 
     setIsLoading(false);
   }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      const validLocations = locations.filter(
+        (location) => location.latitude && location.longitude
+      );
+      const newMarkers = validLocations.map((location) => {
+        const popup = new mapboxgl.Popup().setText(location.name);
+        const marker = new mapboxgl.Marker()
+          .setLngLat([location.longitude, location.latitude])
+          .setPopup(popup)
+          .addTo(map);
+
+        return { marker, name: location.name };
+      });
+
+      setMarkers(newMarkers);
+      const newGeoJsonData = generateGeoJsonFromMarkers(newMarkers);
+      setGeoJsonData(newGeoJsonData);
+    }
+  }, [map, locations]);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -256,18 +281,41 @@ const Point = () => {
     });
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+        const originalVer = response.vers;
+        if (originalVer === "ver1") {
+          versionToPut = "ver2";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver3";
+        } else if (originalVer === "ver2") {
+          versionToPut = "ver1";
+          // Here, find the version1 having the same title & delete it from DB
+        }
+      }
+
+      const mapData = {
+        locations: locations,
+      };
+
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
-        username,
-        mapId, // This could be null if creating a new map
-        title,
-        version,
+        null, // This could be null if creating a new map
+        titleToPut,
+        versionToPut,
         privacy,
         "Point Map",
-        mapLayer
+        JSON.stringify(mapData),
+        mapImage
       );
+      setMapId(null);
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
@@ -360,7 +408,7 @@ const Point = () => {
           <TabPanel value="3">
             <SaveTab
               onSave={handleSave}
-              mapLayer={mapLayer}
+              mapLayer={locations}
               map={map}
               geojson={geoJsonData}
             />

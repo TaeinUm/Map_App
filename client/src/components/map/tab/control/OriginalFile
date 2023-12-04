@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+{
+  /*import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -80,6 +81,7 @@ function File() {
   };
 
   useEffect(() => {
+    console.log(geojsonData);
     if (!map) {
       setIsMapLoaded(false);
       const newMap = new mapboxgl.Map({
@@ -227,17 +229,17 @@ function File() {
 
   const handleSave = async (title, version, privacy) => {
     try {
-      await mapServiceAPI.storeLoadedMapGraphic(
+      await mapServiceAPI.addMapGraphics(
         userId,
         mapId, // This could be null if creating a new map
         title,
         version,
         privacy,
-        null, // mapType
+        null,
         JSON.stringify(styleSettings)
       );
       setMapId(null);
-      navigate("/map");
+      navigate("/");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
@@ -295,54 +297,6 @@ function File() {
                 marginBottom: "30px",
               }}
             >
-              {/* Color Picker for Line */}
-              <Typography variant="body1" sx={{ textAlign: "left" }}>
-                Select Line Color:
-              </Typography>
-              <input
-                type="color"
-                value={styleSettings.lineColor}
-                onChange={(e) => {
-                  setLineColor(e.target.value);
-                  updateMapStyle();
-                }}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                color: "#fafafa",
-                justifyContent: "space-between",
-                marginBottom: "30px",
-              }}
-            >
-              {/* Opacity Slider for Line */}
-              <Typography variant="body1" sx={{ textAlign: "left" }}>
-                Adjust Line Opacity:
-              </Typography>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
-                value={styleSettings.lineOpacity}
-                onChange={(e) => {
-                  setLineOpacity(parseFloat(e.target.value));
-                  updateMapStyle();
-                }}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                color: "#fafafa",
-                justifyContent: "space-between",
-                marginBottom: "30px",
-              }}
-            >
-              {/* Color Picker for Water */}
               <Typography variant="body1" sx={{ textAlign: "left" }}>
                 Select Water Color:
               </Typography>
@@ -351,30 +305,6 @@ function File() {
                 value={styleSettings.waterColor}
                 onChange={(e) => {
                   setWaterColor(e.target.value);
-                  updateMapStyle();
-                }}
-              />
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                color: "#fafafa",
-                justifyContent: "space-between",
-              }}
-            >
-              {/* Line Thickness Slider */}
-              <Typography variant="body1" sx={{ textAlign: "left" }}>
-                Adjust Line Thickness:
-              </Typography>
-              <input
-                type="range"
-                min="1"
-                max="10"
-                step="1"
-                value={styleSettings.lineThickness}
-                onChange={(e) => {
-                  setLineThickness(parseInt(e.target.value));
                   updateMapStyle();
                 }}
               />
@@ -396,3 +326,5 @@ function File() {
 }
 
 export default File;
+*/
+}

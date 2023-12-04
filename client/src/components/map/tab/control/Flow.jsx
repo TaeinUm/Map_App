@@ -120,6 +120,7 @@ const Flow = () => {
         style: "mapbox://styles/mapbox/streets-v11",
         center: [-74.006, 40.7128],
         zoom: 2,
+        preserveDrawingBuffer: true,
       });
       newMap.addControl(
         new MapboxGeocoder({
@@ -302,6 +303,7 @@ const Flow = () => {
         }
       }
 
+      const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
         null, // This could be null if creating a new map
@@ -309,10 +311,11 @@ const Flow = () => {
         versionToPut,
         privacy,
         "Flow Map",
-        JSON.stringify(styleSettings)
+        JSON.stringify(styleSettings),
+        mapImage,
       );
       setMapId(null);
-      navigate("/");
+      navigate("/map");
       alert("Map saved successfully");
     } catch (error) {
       console.error("Error saving map:", error);
@@ -351,10 +354,14 @@ const Flow = () => {
         type: "Feature",
         properties: {
           id: flow.id,
-          log: flow.log,
-          color: flow.color,
-          curvature: flow.curvature,
-          lineWidth: flow.lineWidth,
+          paint: {
+            "line-color": flow.color,
+            "line-width": flow.lineWidth,
+          },
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
         },
         geometry: {
           type: "LineString",

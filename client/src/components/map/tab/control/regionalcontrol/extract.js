@@ -3,13 +3,16 @@ import geojsonData from "../geojson/countries.geo.json";
 const extract = (styleSettings) => {
   const filterGeoJsonData = (geojsonData, countryCodes, colorMap, opacity) => {
     const filteredFeatures = geojsonData.features
-      .filter((feature) => countryCodes.includes(feature.properties.ISO_A3))
+      .filter((feature) => countryCodes.includes(feature.id))
       .map((feature) => ({
         ...feature,
         properties: {
           ...feature.properties,
-          color: colorMap[feature.properties.ISO_A3],
-          opacity: opacity,
+          type: "fill",
+          paint: {
+            "fill-color": colorMap[feature.id],
+            "fill-opacity": opacity,
+          },
         },
       }));
 
