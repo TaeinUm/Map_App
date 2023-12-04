@@ -59,8 +59,6 @@ const ThreeD = () => {
 
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
@@ -114,7 +112,7 @@ const ThreeD = () => {
             "fill-extrusion-opacity": 0.6,
           },
         });
-        
+
         if (mapId) {
           try {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
@@ -126,18 +124,8 @@ const ThreeD = () => {
         }
 
         setMap(newMap);
-        const initialLayers = newMap.getStyle().layers.map((layer) => layer.id);
-        setInitializeLayers(initialLayers);
         setIsMapLoaded(true);
       });
-    }
-    if (map) {
-      const currentLayers = map.getStyle().layers;
-      const addedLayers = currentLayers.filter(
-        (layer) => !initialLayers.includes(layer.id)
-      );
-      const addedLayersJson = JSON.stringify(addedLayers, null, 2);
-      setMapLayer(addedLayersJson);
     }
   }, [map, mapStyle]);
 
@@ -277,7 +265,7 @@ const ThreeD = () => {
     if (map && map.getSource("3d-data")) {
       map.getSource("3d-data").setData(geojsonData);
     }
-  }, [map, locations])
+  }, [map, locations]);
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];
@@ -449,7 +437,12 @@ const ThreeD = () => {
             <ShareTab />
           </TabPanel>/>*/}
           <TabPanel value="3">
-            <SaveTab onSave={handleSave} mapLayer={mapLayer} map={map} geojson={geoJsonData}/>
+            <SaveTab
+              onSave={handleSave}
+              mapLayer={locations}
+              map={map}
+              geojson={geoJsonData}
+            />
           </TabPanel>
           {/*{isMemoVisible && <Memo mapId={""} />}
           <Button

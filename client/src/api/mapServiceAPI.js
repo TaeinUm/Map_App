@@ -182,7 +182,7 @@ const mapServiceAPI = {
         privacy,
         mapType,
         mapLayer,
-        mapImage
+        mapImage,
       };
       let response;
       response = await axios.post(
