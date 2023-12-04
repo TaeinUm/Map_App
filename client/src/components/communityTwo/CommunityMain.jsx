@@ -103,6 +103,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString('ko-KR', options);
+};
+
 const StyledToolbar = styled(Toolbar)({
   justifyContent: "space-between",
 });
@@ -276,55 +281,11 @@ function CommunityTwo() {
 
   let content = null;
 
-  if (category === "category2") {
-    content = (
-      <Box>
-        <Typography variant="h4" align="left" sx={{ my: 4, color: "white" }}>
-          Map Ideas:
-        </Typography>
-        <Box
-          sx={{
-            display: "flex-column",
-            height: "1000px",
-            width: "3250px",
-            gap: "10px",
-            mt: 5,
-            transition: "transform 0.5s",
-            //transform: `translateX(${scrollAmount}px)`,
-          }}
-        >
-          {ideasBuffer
-            .filter((post) => post.postName.includes(searchTerm))
-            .map((post) => (
-              <Typography
-                variant="h2"
-                onMouseEnter={() => setupQuestionLocal(post)}
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                component={NavLink}
-                to={"/communityQuestionPost/:" + post.postName}
-              >
-                {post.postName}
-              </Typography>
-            ))}
-          {}
-        </Box>
-      </Box>
-    );
-  }
   if (category === "category3") {
     content = (
       <Box>
         <Typography variant="h4" align="left" sx={{ my: 4, color: "white" }}>
-          Username Posts:
+          Username Posts
         </Typography>
         <Box
           sx={{
@@ -347,6 +308,8 @@ function CommunityTwo() {
               m={2}
               data-cy="community-user-name-graphics"
             >
+
+              
               <StyledCard>
                 <Paper
                   key={index}
@@ -400,50 +363,231 @@ function CommunityTwo() {
     );
   }
 
+
+  // if (category === "category3") {
+  //   content = (
+  //     <Box sx={{ mt: 5, maxWidth: "100%" }}>
+  //       <Typography variant="h4" align="left" sx={{ mb: 4, color: "white" }}>
+  //         User Name
+  //       </Typography>
+  //       <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+  //         {questionBuffer
+  //           .filter(post => post.postName.includes(searchTerm))
+  //           .map(post => (
+
+              
+  //             <Grid
+  //               type="button"
+  //               item
+  //               xs={12}
+  //               sm={6}
+  //               sx={{bgcolor : "black"}}
+  //               md={4}
+  //               key={post._id}
+  //               data-cy="community-user-name-graphics"
+  //             >
+
+  //               <Box sx={{ display: 'flex', alignItems: 'left' }}>
+  //               <img
+  //                 src={post.postImages || "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"}
+  //                 alt="Image"
+  //                 height="160"
+  //                 width="160"
+  //                 style={{ borderRadius: '4px',marginBottom : "12px", marginTop : "12px", marginLeft : "12px", marginRight : "20px"}} // 필요에 따라 스타일 조정
+  //               />
+  //               <Box>
+
+  //                 <Typography
+  //                     gutterBottom
+  //                     variant="h6"
+                      
+  //                     sx={{ fontStyle: "none", color: "white", textDecoration: "none", textAlign: "left"}}
+  //                     onMouseEnter={() => setupQuestionLocal(post)}
+  //                     component={NavLink}
+  //                     to={"/communityGraphicPost/:" + post.postName}
+  //                     > 
+  //                     <Box sx={{ textAlign: 'left', fontWeight: 'bold', marginTop: "20px" }}>
+  //                     {post.postName}
+  //                     </Box>
+                      
+  //                   </Typography>
+
+  //                   {/* <Box sx={{ bgcolor: 'black', color: 'white', mb: 2, padding: '16px', borderRadius: '4px', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+  //               <Box sx={{ bgcolor: 'lightblue', width: '100px', height: '100px', mr: 2 }} /> */}
+  //               <Box sx={{ textAlign: 'left' }}>
+  //                 <Typography sx={{ color: 'white', textDecoration: 'none' }}>
+  //                   Author: {post.author || "Unknown"}
+  //                 </Typography>
+  //                 <Typography sx={{ color: 'white', textDecoration: 'none' }}>
+  //                   {post.postDate || "Date not available"}
+  //                 </Typography>
+  //                 <Typography
+  //                   sx={{
+  //                     color: 'white',
+  //                     textDecoration: 'none',
+  //                     display: '-webkit-box',
+  //                     WebkitLineClamp: 3,
+  //                     WebkitBoxOrient: 'vertical',
+  //                     overflow: 'hidden',
+  //                     textOverflow: 'ellipsis',
+  //                   }}
+  //                 >
+  //                   {post.content || "No content available"}
+  //                 </Typography>
+  //               </Box>
+  //               </Box>
+  //             </Box>
+  //             </Grid>
+  //         ))}
+  //       </Box>
+  //     </Box>
+  //   );
+  // }
+
   if (category === "category1") {
     content = (
-      <Box>
-        <Typography variant="h4" align="left" sx={{ my: 4, color: "white" }}>
-          New Questions:
+      <Box sx={{ mt: 5, maxWidth: "100%" }}>
+        <Typography variant="h4" align="left" sx={{ mb: 4, color: "white" }}>
+          New Questions
         </Typography>
-        <Box
-          sx={{
-            display: "flex-column",
-            width: "3250px",
-            gap: "10px",
-            mt: 5,
-            transition: "transform 0.5s",
-            //transform: `translateX(${scrollAmount}px)`,
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {questionBuffer
-            .filter((post) => post.postName.includes(searchTerm))
-            .map((post) => (
-              <Typography
-                variant="h2"
-                onMouseEnter={() => setupQuestionLocal(post)}
-                sx={{
-                  fontSize: "20px",
-                  color: "#FAFAFA",
-                  mb: 2,
-                  ml: 5,
-                  display: "flex",
-                  flexGrow: "1",
-                  fontWeight: "bold",
-                }}
+            .filter(post => post.postName.includes(searchTerm))
+            .map(post => (
+
+              
+              <Grid
+                type="button"
+                item
+                xs={12}
+                sm={6}
+                sx={{bgcolor : "black"}}
+                md={4}
+                key={post._id}
                 data-cy="questions-buffer"
-                //onClick={updatePostIdAndNavigate(index, '/communityQuestionPost/:'+index)}
-                component={NavLink}
-                to={"/communityQuestionPost/:" + post.postName}
               >
-                {post.postName}
-              </Typography>
-            ))}
-          {}
+
+                <Box sx={{ display: 'flex', alignItems: 'left' }}>
+                <img
+                  src={post.postImages || "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"}
+                  alt="Image"
+                  height="160"
+                  width="160"
+                  style={{ borderRadius: '4px',marginBottom : "12px", marginTop : "12px", marginLeft : "12px", marginRight : "20px"}} // 필요에 따라 스타일 조정
+                />
+                <Box>
+
+                  <Typography
+                      gutterBottom
+                      variant="h6"
+                      
+                      sx={{ fontStyle: "none", color: "white", textDecoration: "none", textAlign: "left"}}
+                      onMouseEnter={() => setupQuestionLocal(post)}
+                      component={NavLink}
+                      to={"/communityQuestionPost/:" + post.postName}
+                      > 
+                      <Box sx={{ textAlign: 'left', fontWeight: 'bold', marginTop: "20px" }}>
+                      {post.postName}
+                      </Box>
+                      
+                    </Typography>
+
+                    {/* <Box sx={{ bgcolor: 'black', color: 'white', mb: 2, padding: '16px', borderRadius: '4px', display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                <Box sx={{ bgcolor: 'lightblue', width: '100px', height: '100px', mr: 2 }} /> */}
+                <Box sx={{ textAlign: 'left' }}>
+                  <Typography sx={{ color: 'white', textDecoration: 'none' }}>
+                    Author: {post.author || "Unknown"}
+                  </Typography>
+                  <Typography sx={{ color: 'white', textDecoration: 'none' }}>
+                    {post.postDate || "Date not available"}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: 'white',
+                      textDecoration: 'none',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {post.content || "No content available"}
+                  </Typography>
+                </Box>
+                </Box>
+              </Box>
+              </Grid>
+          ))}
         </Box>
       </Box>
     );
   }
+  
+  if (category === "category2") {
+    content = (
+      <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: '10px',
+        mt: 5
+      }}>
+        {ideasBuffer && ideasBuffer.length > 0 && ideasBuffer
+    .filter((post) => post.postName.includes(searchTerm))
+    .map((post, index) => (
+            <Card 
+              key={post._id} // 고유한 key를 추가하는 것이 좋습니다.
+              sx={{ maxWidth: 345, mb: 2, bgcolor: 'black' }} // bgcolor shorthand 사용
+              component={NavLink} 
+              to={"/communityMapIdeaPost/:" + post.postName}
+              
+            >
+              <CardMedia
+                component="img"
+                height="140"
+                image={post.postImages || "https://wallpapers.com/images/hd/living-planet-earth-4e6ueybd5ba1mkqp.jpg"}
+                alt="Image"
+              />
+              <CardContent>
+              <Typography variant="h5" component="div" sx={{ color: "#FAFAFA", marginBottom: "10px"}}>
+                    {post.postName}
+                  </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right' }}>
+                  <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  {post.author || "Author"}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right' }}>
+                  <Typography variant="subtitle1" sx={{ color: 'white' , marginBottom: "10px"}}>
+                  {post.postDate || "2020-10-12 12AM"}
+                  </Typography>
+                </Box>
+                {/* <Typography variant="body2" sx={{ color: "#FAFAFA", textAlign: 'left' }}>
+                    {post.content || "Content content"}
+                  </Typography> */}
+                  <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'white',
+                              textAlign: 'left',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              mb: 2, // margin-bottom을 추가하여 카드의 여백을 조정할 수 있습니다.
+                            }}
+                          >
+                  {post.content || "Content content"}
+                </Typography>
+  
+              </CardContent>
+            </Card>
+        ))}
+      </Box>
+    );
+  }
+
   if (category === "") {
     content = (
       <Box>
@@ -479,8 +623,16 @@ function CommunityTwo() {
                       onMouseEnter={() => setupQuestionLocal(graphic)}
                       component={NavLink}
                       to={"/communityGraphicPost/:" + graphic.postName}
+                      sx={{textDecoration: "none", color: "black",}}
                     >
                       {graphic.postName}
+                      <Typography align="left" sx={{color: "black" }}>
+                        Author: Unknown
+                      </Typography>
+
+                      <Typography align="left" sx={{color: "black" }}>
+                      {formatDate(graphic.postDate)}
+                      </Typography>
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -518,8 +670,75 @@ function CommunityTwo() {
             showLastButton
           />
         </Box>
+        <Box>
+        <Typography variant="h4" align="left" sx={{ my: 4, color: "white" }}>
+          Map Graphic Ideas
+        </Typography>
+        </Box>
+
+        <Box sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+        gap: '10px',
+        mt: 5
+      }}>
+        {ideasBuffer && ideasBuffer.length > 0 && ideasBuffer
+    .filter((post) => post.postName.includes(searchTerm))
+    .map((post, index) => (
+            <Card 
+              key={post._id} // 고유한 key를 추가하는 것이 좋습니다.
+              sx={{ maxWidth: 345, mb: 2, bgcolor: 'black' }} // bgcolor shorthand 사용
+              component={NavLink} 
+              to={"/communityMapIdeaPost/:" + post.postName}
+              
+            >
+              <CardMedia
+                component="img"
+                height="140"
+                image={post.postImages || "https://wallpapers.com/images/hd/living-planet-earth-4e6ueybd5ba1mkqp.jpg"}
+                alt="Image"
+              />
+              <CardContent>
+              <Typography variant="h5" component="div" sx={{ color: "#FAFAFA", marginBottom: "10px"}}>
+                    {post.postName}
+                  </Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right' }}>
+                  <Typography variant="subtitle1" sx={{ color: 'white' }}>
+                  {post.author || "Author"}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'right' }}>
+                  <Typography variant="subtitle1" sx={{ color: 'white' , marginBottom: "10px"}}>
+                  {post.postDate || "2020-10-12 12AM"}
+                  </Typography>
+                </Box>
+                {/* <Typography variant="body2" sx={{ color: "#FAFAFA", textAlign: 'left' }}>
+                    {post.content || "Content content"}
+                  </Typography> */}
+                  <Typography
+                            variant="body2"
+                            sx={{
+                              color: 'white',
+                              textAlign: 'left',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 3,
+                              WebkitBoxOrient: 'vertical',
+                              mb: 2, // margin-bottom을 추가하여 카드의 여백을 조정할 수 있습니다.
+                            }}
+                          >
+                  {post.content || "Content content"}
+                </Typography>
+  
+              </CardContent>
+            </Card>
+        ))}
+      </Box>
+
       </Box>
     );
+    
   }
 
   return (
