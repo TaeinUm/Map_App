@@ -56,7 +56,7 @@ function Header() {
     <AppBar
       position="static"
       height="100px"
-      sx={{ background: "linear-gradient(#465065, #282c34)", color: "#FAFAFA" }}
+      sx={{ background: "linear-gradient(#465065, #282c34)", color: "grey" }}
     >
       <Toolbar
         sx={{
@@ -102,7 +102,7 @@ function Header() {
                 component={NavLink}
                 to={path}
                 style={({ isActive }) =>
-                  isActive ? { fontWeight: "bold", color: "grey" } : undefined
+                  isActive ? { fontWeight: "bold", color: "white" } : undefined
                 }
               >
                 {title}

@@ -116,6 +116,13 @@ const Point = () => {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", async () => {
+        newMap.addSource("pointmap-data", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [],
+          },
+        });
         newMap.addLayer({
           id: "country-boundaries",
           type: "fill",
@@ -131,21 +138,20 @@ const Point = () => {
 
         if (mapId) {
           try {
-            const data = await mapServiceAPI.getMapGraphicData(
-              userId,
-              username,
-              mapId
-            );
+            const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
-            setLocations(mapLayer);
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
+            //console.log("mapLayer", mapLayer.locations);
+            if (mapLayer.locations) setLocations(mapLayer.locations);
+            newMap.addLayer(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
+          } finally {
+            setMap(newMap)
+            setIsLoading(false)
           }
+        } else {
+          setMap(newMap);
+          setIsLoading(false);
         }
 
         setMap(newMap);
@@ -165,6 +171,71 @@ const Point = () => {
 
     setIsLoading(false);
   }, [map]);
+
+  useEffect(() => {
+    if (map) {
+      locations.forEach((location) => {
+        if (map && location.latitude && location.longitude) {
+          const marker = new mapboxgl.Marker()
+            .setLngLat([location.longitude, location.latitude])
+            .setPopup(new mapboxgl.Popup().setText(location.name))
+            .addTo(map);
+
+          setMarkers((prevMarkers) => [...prevMarkers, marker]);
+        }
+      });
+    }
+  }, [map, locations]) 
+
+
+  // useEffect(() => {
+  //   if (map && locations) {
+  //     updatePoint();
+  //     updatePointmapRadius();
+  //   }
+  // }, [locations, map]);
+
+  // const updatePoint = () => {
+  //   if (!map) return;
+  //   const geojsonData = {
+  //     type: "FeatureCollection",
+  //     features: locations.map((location) => ({
+  //       type: "Feature",
+  //       geometry: {
+  //         type: "Point",
+  //         coordinates: [
+  //           parseFloat(location.longitude),
+  //           parseFloat(location.latitude),
+  //         ],
+  //       },
+  //       properties: {
+  //         title: location.name,
+  //       },
+  //     })),
+  //   };
+
+  //   if (map.getSource("pointmap-data")) {
+  //     map.getSource("pointmap-data").setData(geojsonData);
+  //   }
+  // };
+
+  // function calculateRadiusBasedOnValue(value) {
+  //   return Math.min(20, Math.max(5, value));
+  // };
+
+  // function updatePointmapRadius() {
+  //   if (locations.length > 0) {
+  //     const averageValue =
+  //       locations.reduce((acc, loc) => acc + parseFloat(20 || 0), 0) /
+  //       locations.length;
+  //     const newRadius = calculateRadiusBasedOnValue(averageValue);
+
+  //     if (map) {
+  //       map.setPaintProperty("pointmap-layer", "pointmap-radius", newRadius);
+  //     }
+  //   }
+  // };
+  
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -281,6 +352,10 @@ const Point = () => {
         }
       }
 
+      const mapData = {
+        locations: locations,
+      };
+
       await mapServiceAPI.addMapGraphics(
         userId,
         null, // This could be null if creating a new map
@@ -288,7 +363,7 @@ const Point = () => {
         versionToPut,
         privacy,
         "Point Map",
-        JSON.stringify(locations)
+        JSON.stringify(mapData)
       );
       setMapId(null);
       navigate("/map");
