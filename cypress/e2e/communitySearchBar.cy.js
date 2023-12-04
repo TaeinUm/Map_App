@@ -11,7 +11,7 @@ describe("Community Page", () => {
 //    it("should display top 3 trending graphics", () => {
 //      cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
 //    });
-  });
+//  });
 
 //  describe("Community Search Bar On Trending Map Graphics Page", ()=>{
 //    it("should exist", ()=>{
