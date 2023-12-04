@@ -141,10 +141,11 @@ const Point = () => {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
             if (mapLayer.locations) setLocations(mapLayer.locations);
-            newMap.addLayer(mapLayer);
+            // newMap.addLayer(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
-          } finally {
+          } 
+          finally {
             setMap(newMap)
             setIsLoading(false)
           }
@@ -163,6 +164,7 @@ const Point = () => {
       const addedLayers = currentLayers.filter(
         (layer) => !initialLayers.includes(layer.id)
       );
+
       const addedLayersJson = JSON.stringify(addedLayers, null, 2);
       setMapLayer(addedLayersJson);
     }

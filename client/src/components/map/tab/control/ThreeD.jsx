@@ -66,7 +66,7 @@ const ThreeD = () => {
   const [geoJsonData, setGeoJsonData] = useState(null);
 
   const [locations, setLocations] = useState([
-    { latitude: "", longitude: "", name: "" },
+    { latitude: "", longitude: "", name: "", value: "" },
   ]);
 
   const handleTabChange = (event, newValue) => {
@@ -120,11 +120,6 @@ const ThreeD = () => {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
             setLocations(mapLayer);
-            if (mapLayer && data.mapType) {
-              newMap.addLayer(mapLayer);
-            } else {
-              console.error("Invalid map layer data");
-            }
           } catch (error) {
             console.error("Error loading map graphics: ", error);
           }
