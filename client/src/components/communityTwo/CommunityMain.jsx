@@ -346,6 +346,9 @@ function CommunityTwo() {
               key={graphic._id}
               m={2}
               data-cy="community-user-name-graphics"
+              onMouseEnter={() => setupQuestionLocal(graphic)}
+                    component={NavLink}
+                    to={"/communityGraphicPost/:" + graphic.postName}
             >
               <StyledCard>
                 <Paper
@@ -438,6 +441,32 @@ function CommunityTwo() {
               >
                 {post.postName}
               </Typography>
+              // <Box sx={{ display: 'flex', alignItems: 'center' }} onMouseEnter={() => setupQuestionLocal(post)} component={NavLink}
+              //    to={"/communityQuestionPost/:" + post.postName}>
+              //     <Box sx={{ bgcolor: 'lightblue', width: '100px', height: '100px', mr: 2 }} />
+              //     <Box>
+              //       <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>
+              //         {post.postName}
+              //       </Typography>
+              //       <Typography sx={{ mb: 1 }}>
+              //         Author: {post.author}
+              //       </Typography>
+              //       <Typography sx={{ mb: 1 }}>
+              //         {post.date}
+              //       </Typography>
+              //       <Typography
+              //         sx={{
+              //           display: '-webkit-box',
+              //           WebkitLineClamp: 3,
+              //           WebkitBoxOrient: 'vertical',
+              //           overflow: 'hidden',
+              //           textOverflow: 'ellipsis',
+              //         }}
+              //       >
+              //         {post.content || "No content available"}
+              //       </Typography>
+              //     </Box>
+              //   </Box>
             ))}
           {}
         </Box>
@@ -464,8 +493,11 @@ function CommunityTwo() {
                 md={4}
                 key={graphic._id}
                 data-cy="community-trending-graphics"
+                onMouseEnter={() => setupQuestionLocal(graphic)}
+                      component={NavLink}
+                      to={"/communityGraphicPost/:" + graphic.postName}
               >
-                <StyledCard>
+                <StyledCard >
                   <CardMedia
                     component="img"
                     height="140"
