@@ -1,4 +1,4 @@
-import geojsonData from "../geojson/countries.geojson";
+import geojsonData from "../geojson/countries.geo.json";
 
 const extract = (styleSettings) => {
   const filterGeoJsonData = (geojsonData, countryCodes, colorMap, opacity) => {
