@@ -139,6 +139,7 @@ function CommunityGraphicPost() {
         {/* ... more comments ... */}
       
         <TextField
+  data-cy="comment-textarea"
   id="prompt-textarea"
   multiline
   rows={4}
@@ -163,7 +164,7 @@ function CommunityGraphicPost() {
 
         <br></br><br></br>
         <br></br>
-        <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }} disabled={authentification}>
+        <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mt: 2 }} disabled={authentification} data-cy="comment-button">
           Post Comment
         </Button>
         <br></br>

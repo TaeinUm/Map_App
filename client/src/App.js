@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { MapProvider } from "./contexts/MapContext";
 import { CommunityProvider } from "./contexts/CommunityContextVerTwo";
+import { PasswordRecoveryProvider } from "./contexts/PasswordRecoveryContext";
 
 /****         CSS          ****/
 import "./styles/App.css";
@@ -18,6 +19,8 @@ import Home from "./components/home/Home";
 import SignIn from "./components/auth/SignIn";
 import SignUp from "./components/auth/SignUp";
 import Profile from "./components/common/Profile";
+import OTPPage from "./components/auth/OTPPage";
+import NewPasswordPage from "./components/auth/ResetPassword";
 
 /****         Policy           ****/
 import PrivacyPolicy from "./components/policy/PrivacyPolicy";
@@ -27,12 +30,12 @@ import Contact from "./components/policy/Contact";
 /****         Map           ****/
 import MapLanding from "./components/map/MapLanding";
 import MapEditing from "./components/map/MapEditing";
-import File from "./components/map/tab/control/File";
+//import File from "./components/map/tab/control/File";
 import BasicStyles from "./components/map/tab/control/BasicStyles";
 import Flow from "./components/map/tab/control/Flow";
 import Heat from "./components/map/tab/control/Heat";
 import Point from "./components/map/tab/control/Point";
-import Regional from "./components/map/tab/control/Regional";
+//import Regional from "./components/map/tab/control/Regional";
 import ThreeD from "./components/map/tab/control/ThreeD";
 import MapMobile from "./components/map/landing/MapMobile";
 
@@ -49,6 +52,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <AuthProvider>
+          <PasswordRecoveryProvider>
           <CommunityProvider>
             <MapProvider>
               <Header />
@@ -60,9 +64,9 @@ function App() {
                 <Route path="/mapedit/flow" element={<Flow />} />
                 <Route path="/mapedit/heat" element={<Heat />} />
                 <Route path="/mapedit/point" element={<Point />} />
-                <Route path="/mapedit/regional" element={<Regional />} />
+                {/* <Route path="/mapedit/regional" element={<Regional />} /> */}
                 <Route path="/mapedit/3d" element={<ThreeD />} />
-                <Route path="/mapedit/file" element={<File />} />
+                {/* <Route path="/mapedit/file" element={<File />} /> */}
                 <Route path="/mobilemap" element={<MapMobile />} />
 
                 <Route path="/community" element={<CommunityTwo />} />
@@ -93,6 +97,8 @@ function App() {
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/signin" element={<SignIn />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/OTPpage" element={<OTPPage/>}/>
+                <Route path="/NewPasswordPage" element={<NewPasswordPage/>}/>
 
                 <Route path="/termsconditions" element={<Termsconditions />} />
                 <Route path="/privacypolicy" element={<PrivacyPolicy />} />
@@ -102,6 +108,7 @@ function App() {
               </Routes>
             </MapProvider>
           </CommunityProvider>
+          </PasswordRecoveryProvider>
         </AuthProvider>
         <Footer />
       </BrowserRouter>

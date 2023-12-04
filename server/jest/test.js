@@ -80,46 +80,18 @@ describe('User API Endpoints', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toHaveProperty('email');
     });
+
+    test('retrieves users by name', async () => {
+      const searchedUser = "Taein";
+      const response = await request(app)
+          .get(`/api/users/${searchedUser}`);
   
-    // Get Users by Name
-    // test('retrieves users by name successfully', async () => {
-    //   const name = 'Taein Um';
-  
-    //   const response = await request(app)
-    //     .get(`/api/users/${name}`)
-    //     .query({ name });
-  
-    //   expect(response.statusCode).toBe(200);
-    //   expect(Array.isArray(response.body)).toBeTruthy();
-    // });
+      expect(response.statusCode).toBe(200);
+      expect(Array.isArray(response.body)).toBeTruthy(); // Check if the response is an array of users
+  });
   });
 
-
-
 describe('Community API Endpoints', () => {
-  // test('creates a new post successfully', async () => {
-  //     const postData = {
-  //       userId: "65487c7a94678f7bd6d43689".toString(),
-  //       postDate: "2020-01-01",
-  //       content: "Hello World",
-  //       attachedFile: "",
-  //       interactions: 9,
-  //       postType: "map",
-  //       postImages: "https://raw.githubusercontent.com/rougier/matplotlib-3d/master/doc/bar.png",
-  //       postName: "Hello",
-  //       visibility: 1
-  //     };
-
-  //     const response = await request(app)
-  //         .post('/api/community/post')
-  //         .send(postData);
-
-  //     expect(response.statusCode).toBe(201);
-  //     expect(response.body).toMatchObject({
-  //         userId: postData.userId,
-  //         content: postData.content,
-  //     });
-  // });
   test('creates and then deletes a new post successfully', async () => {
     const postData = {
         userId: "65487c7a94678f7bd6d43689",
@@ -243,6 +215,94 @@ test('creates and then deletes a new comment successfully', async () => {
   });
 });
 
+
+describe('MAP API Test', () => {
+  let createdMapId;
+  // Global variable to store mapId
+test('creates a new map graphic', async () => {
+    const mapData = {
+        userId: "656475c6343f5c79b529a476",
+        title: "New Map",
+        mapType: "Type1",
+        version: "1.0",
+        privacy: "public"
+    };
+
+    const createResponse = await request(app)
+        .post(`/api/mapgraphics/${mapData.userId}/map-graphics`)
+        .send(mapData);
+
+    expect(createResponse.statusCode).toBe(201);
+    createdMapId = createResponse.body._id; // Store the mapId for deletion test
+    // Add assertions for the created map graphic
+});
+
+test('updates an existing map graphic', async () => {
+  const userId = "656475c6343f5c79b529a476";
+  const mapId = createdMapId;
+  const updateData = { mapType: "UpdatedType", mapLayer: "UpdatedLayer" };
+
+  const response = await request(app)
+      .put(`/api/mapgraphics/${userId}/map-graphics/${mapId}`)
+      .send(updateData);
+
+  expect(response.statusCode).toBe(200);
+  // Add assertions for the updated map graphic
+});
+
+test('updates memo content for a map graphic', async () => {
+  const userId = "656475c6343f5c79b529a476";
+  const mapId = createdMapId;
+  const memoContent = "New memo content";
+
+  const response = await request(app)
+      .put(`/api/mapgraphics/${userId}/${mapId}/memo`)
+      .send({ memoContent });
+
+  expect(response.statusCode).toBe(200);
+  // Add assertions for the updated memo
+});
+
+test('retrieves memo content of a map graphic', async () => {
+  const userId = "656475c6343f5c79b529a476";
+  const mapId = createdMapId;
+
+  const response = await request(app)
+      .get(`/api/mapgraphics/${userId}/${mapId}/memo`);
+
+  expect(response.statusCode).toBe(200);
+  // Add assertions for memo content structure
+});
+
+
+test('retrieves a specific map graphic', async () => {
+  const userId = "656475c6343f5c79b529a476";
+  const mapId = createdMapId;
+
+  const response = await request(app)
+      .get(`/api/mapgraphics/${userId}/map-graphics/${mapId}`);
+
+  expect(response.statusCode).toBe(200);
+  // Add assertions for the specific map graphic
+});
+
+test('deletes a map graphic', async () => {
+    const userId = "656475c6343f5c79b529a476";
+
+    // Ensure the mapId is set before attempting to delete
+    if (!createdMapId) {
+        throw new Error("Map ID not set. Map creation test may have failed.");
+    }
+
+    const deleteResponse = await request(app)
+        .delete(`/api/mapgraphics/${userId}/map-graphics/${createdMapId}`);
+
+    expect(deleteResponse.statusCode).toBe(200);
+    expect(deleteResponse.body).toMatchObject({
+        message: 'Map graphic deleted successfully'
+    });
+});
+});
 
 afterAll(function(done) {
   mongoose.disconnect()
