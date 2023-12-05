@@ -3,7 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
-const BASE_URL =
+const API_BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
 
 const CommunitySectionAPI = {
