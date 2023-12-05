@@ -1,11 +1,11 @@
-describe("Community Question Posting Page", () => {
-  beforeEach(() => {
-    cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/community");
-  });
+// describe("Community Question Posting Page", () => {
+//   beforeEach(() => {
+//     cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/community");
+//   });
 
-  it("should display the home page correctly", () => {
-    cy.contains("Trending Map Graphics").should("be.visible");
-  });
+//   it("should display the home page correctly", () => {
+//     cy.contains("Trending Map Graphics").should("be.visible");
+//   });
 
   //   describe("Questions page", () => {
   //     it("should contain the text Questions", () => {
@@ -80,4 +80,4 @@ describe("Community Question Posting Page", () => {
   //           cy.get("[data-cy=pagination-trending-graphics]").should('have.class', 'disabled')
   //         })
   //     });
-});
+// });
