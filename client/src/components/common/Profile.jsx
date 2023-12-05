@@ -142,23 +142,21 @@ const Profile = () => {
     navigate("/map");
   };
 
-  const generatePath = (postName, postType) => {
-    console.log("postname: ", postName);
-    console.log("postType: ", postType);
+  const generatePath = (postId, postType) => {
     switch (postType) {
       case "map":
-        return `/communityGraphicPost/${postName}`;
+        return `/posts/map/${postId}`;
       case "Questions":
-        return `/communityQuestionPost/${postName}`;
+        return `/posts/Questions/${postId}`;
       case "Map Ideas":
-        return `/communityMapIdeaPost/${postName}`;
+        return `/posts/Map%20Ideas/${postId}`;
       default:
         return "#";
     }
   };
 
-  const handlePostClick = (postName, postType) => {
-    const path = generatePath(postName, postType);
+  const handlePostClick = (postId, postType) => {
+    const path = generatePath(postId, postType);
     navigate(path);
   };
 
@@ -237,9 +235,7 @@ const Profile = () => {
                   posts.map((post, index) => (
                     <CardActionArea
                       key={post.id || index}
-                      onClick={() =>
-                        handlePostClick(post.postName, post.postType)
-                      }
+                      onClick={() => handlePostClick(post._id, post.postType)}
                       sx={{
                         display: "flex",
                         justifyContent: "flex-start",
