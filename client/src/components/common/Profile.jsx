@@ -205,22 +205,32 @@ const Profile = () => {
             <Box
               sx={{
                 display: "flex",
+                height: "600px",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                zIndex: "2",
               }}
             >
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: "bold", margin: "10px" }}
-              >
-                Your Postings on Community
-              </Typography>
+              <Box>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                    marginTop: "10px",
+                    height: "100px",
+                    color: "black",
+                  }}
+                >
+                  Your Postings on Community
+                </Typography>
+              </Box>
               <CardContent
                 sx={{
                   width: "90%",
                   display: "flex",
                   flexDirection: "column",
+                  overflow: "scroll",
                 }}
               >
                 {Array.isArray(posts) &&
@@ -261,6 +271,10 @@ const Profile = () => {
                             textAlign: "left",
                             fontSize: "24px",
                             fontWeight: "bold",
+                            maxWidth: "250px",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
                           }}
                         >
                           {post.postName}
