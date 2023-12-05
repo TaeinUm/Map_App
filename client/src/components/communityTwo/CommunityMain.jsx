@@ -224,7 +224,7 @@ function CommunityMain() {
 
   return (
     <Container
-      maxWidth="lg"
+      maxWidth="100%"
       sx={{
         paddingBottom: 4,
         margin: "10px",
