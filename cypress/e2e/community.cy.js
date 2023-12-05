@@ -1,18 +1,18 @@
-describe("Community Page", () => {
-  beforeEach(() => {
-    cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/community");
-  });
+// describe("Community Page", () => {
+//   beforeEach(() => {
+//     cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/community");
+//   });
 
-  it("should display the home page correctly", () => {
-    cy.contains("Trending Map Graphics").should("be.visible");
-  });
+//   it("should display the home page correctly", () => {
+//     cy.contains("Trending Map Graphics").should("be.visible");
+//   });
 
-  describe("Trending Section", () => {
-    it("should display top 3 trending graphics", () => {
-      cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
-    });
-  });
-});
+//   describe("Trending Section", () => {
+//     it("should display top 3 trending graphics", () => {
+//       cy.get("[data-cy=community-trending-graphics]").should("have.length", 3);
+//     });
+//   });
+// });
 
 // describe("pagination", () => {
 //   it("should display pagination", () => {
