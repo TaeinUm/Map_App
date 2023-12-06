@@ -41,7 +41,7 @@ import MapMobile from "./components/map/landing/MapMobile";
 
 /****         Community           ****/
 import CommunityTwo from "./components/communityTwo/CommunityMain";
-import PostMapGraphic from "./components/communityTwo/Posting";
+import Posting from "./components/communityTwo/Posting";
 import TrendingMapGraphics from "./components/communityTwo/TrendingMapGraphics";
 import Post from "./components/communityTwo/Post";
 
@@ -70,24 +70,12 @@ function App() {
                   <Route path="/mobilemap" element={<MapMobile />} />
 
                   <Route path="/community" element={<CommunityTwo />} />
-                  <Route path="/communityMapIdeasPostings" element={<Post />} />
-                  <Route path="/PostMapGraphic" element={<PostMapGraphic />} />
+                  <Route path="/PostMapGraphic" element={<Posting />} />
                   <Route
                     path="/TrendingMaps"
                     element={<TrendingMapGraphics />}
                   />
-                  <Route
-                    path="/communityMapIdeaPost/:index"
-                    element={<Post />}
-                  />
-                  <Route
-                    path="/CommunityQuestionPost/:postsTitle"
-                    element={<Post />}
-                  />
-                  <Route
-                    path="/CommunityGraphicPost/:postsTitle"
-                    element={<Post />}
-                  />
+                  <Route path="/posts/:postType/:postId" element={<Post />} />
                   <Route path="/signup" element={<SignUp />} />
                   <Route path="/signin" element={<SignIn />} />
                   <Route path="/profile" element={<Profile />} />
