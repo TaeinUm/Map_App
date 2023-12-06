@@ -15,6 +15,7 @@ import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 // Styled component for container
 const ResponsiveContainer = styled(Box)(({ theme }) => ({
@@ -106,7 +107,7 @@ const Profile = () => {
     //check if the user's logged in (has username and id)
     if (username && userId) {
       setProfile(profileImage);
-      fetchPosts();
+      fetchPosts(userId);
       fetchEmail();
     }
   }, [userId, username]);
@@ -139,6 +140,24 @@ const Profile = () => {
   // when Create Your Map button's clicked
   const handleCreateMapClick = () => {
     navigate("/map");
+  };
+
+  const generatePath = (postId, postType) => {
+    switch (postType) {
+      case "map":
+        return `/posts/map/${postId}`;
+      case "Questions":
+        return `/posts/Questions/${postId}`;
+      case "Map Ideas":
+        return `/posts/Map%20Ideas/${postId}`;
+      default:
+        return "#";
+    }
+  };
+
+  const handlePostClick = (postId, postType) => {
+    const path = generatePath(postId, postType);
+    navigate(path);
   };
 
   return (
@@ -181,45 +200,107 @@ const Profile = () => {
               borderRadius: "20px",
             }}
           >
-            <CardActionArea
+            <Box
               sx={{
                 display: "flex",
+                height: "600px",
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "center",
+                zIndex: "2",
               }}
             >
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: "bold", margin: "10px" }}
-              >
-                Your Postings on Community
-              </Typography>
+              <Box>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: "bold",
+                    marginTop: "10px",
+                    height: "100px",
+                    color: "black",
+                  }}
+                >
+                  Your Postings on Community
+                </Typography>
+              </Box>
               <CardContent
                 sx={{
                   width: "90%",
                   display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  overflow: "scroll",
                 }}
               >
                 {Array.isArray(posts) &&
                   posts.map((post, index) => (
-                    <CardMedia
-                      key={index}
-                      component="img"
-                      image={post.image}
-                      alt={`Post ${index}`}
+                    <CardActionArea
+                      key={post.id || index}
+                      onClick={() => handlePostClick(post._id, post.postType)}
                       sx={{
-                        width: "200px",
-                        height: "200px",
-                        backgroundColor: "grey",
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        width: "90%",
+                        height: "100px",
+                        backgroundColor: "#465065",
                         margin: "10px",
+                        borderRadius: "5px",
+                        zIndex: "2",
                       }}
-                    />
+                    >
+                      <CardMedia
+                        image={
+                          post.postImages ||
+                          "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
+                        }
+                        alt={`Post ${index}`}
+                        sx={{
+                          width: "80px",
+                          height: "80px",
+                          backgroundColor: "grey",
+                          margin: "10px",
+                        }}
+                      />
+                      <Box>
+                        <Typography
+                          sx={{
+                            color: "#fafafa",
+                            textAlign: "left",
+                            fontSize: "24px",
+                            fontWeight: "bold",
+                            maxWidth: "250px",
+                            overflow: "hidden",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {post.postName}
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#fafafa", textAlign: "left" }}
+                        >
+                          {(() => {
+                            const date = new Date(post.postDate);
+                            const year = date.getFullYear();
+                            const month = date.getMonth() + 1;
+                            const day = date.getDate();
+
+                            const formattedMonth =
+                              month < 10 ? `0${month}` : month;
+                            const formattedDay = day < 10 ? `0${day}` : day;
+
+                            return `${year}-${formattedMonth}-${formattedDay}`;
+                          })()}
+                        </Typography>
+                        <Typography
+                          sx={{ color: "#fafafa", textAlign: "left" }}
+                        >
+                          comments: {post.interactions}
+                        </Typography>
+                      </Box>
+                    </CardActionArea>
                   ))}
               </CardContent>
-            </CardActionArea>
+            </Box>
           </Card>
         </Grid>
 
