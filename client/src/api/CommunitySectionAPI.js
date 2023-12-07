@@ -3,8 +3,7 @@ import { AuthContext } from "../contexts/AuthContext";
 import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
-const API_BASE_URL =
-  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+const API_BASE_URL = "http://localhost:8080";
 
 const CommunitySectionAPI = {
   //make a post
@@ -188,6 +187,7 @@ const CommunitySectionAPI = {
       console.error("cannot unlike a map.");
     }
   },
+
   deletePost: async (postID) => {
     try {
       const response = await axios.delete(
@@ -198,20 +198,35 @@ const CommunitySectionAPI = {
       );
       return response.data;
     } catch (error) {
-      console.error("cannot get a user's maps.");
+      console.error("cannot delete a user's post.");
     }
   },
+
+  deleteAllComment: async (postId) => {
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/community/deleteAllComment/${postId}`,
+        {
+          params: { postId: postId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("cannot delete comments.");
+    }
+  },
+
   deleteComment: async (commentID) => {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/api/community/deleteComment/${commentID}`,
+        `${API_BASE_URL}/api/community/deleteAllComment/${commentID}`,
         {
           params: { commentId: commentID },
         }
       );
       return response.data;
     } catch (error) {
-      console.error("cannot get a user's maps.");
+      console.error("cannot delete a comment.");
     }
   },
 

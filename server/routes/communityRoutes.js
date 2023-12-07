@@ -14,6 +14,12 @@ router.get("/getallComments", commentController.getAllComments);
 // Remove comments
 router.delete("/deleteComment/:commentId", commentController.deleteComment);
 
+// Remove all comments
+router.delete(
+  "/deleteAllComment/:postId",
+  commentController.deleteCommentsByPostId
+);
+
 // Remove post
 router.delete("/deletePost/:postId", postController.deletePost);
 

@@ -51,7 +51,7 @@ exports.writePost = async (req, res) => {
       postName,
       visibility,
       attachedFile,
-      postDate: new Date()
+      postDate: new Date(),
     });
 
     await newPost.save();
@@ -64,28 +64,28 @@ exports.writePost = async (req, res) => {
 
 exports.deletePost = async (req, res) => {
   try {
-      const postId = req.params.postId;
+    const postId = req.params.postId;
 
-      // Check if the postId is valid
-      if (!mongoose.Types.ObjectId.isValid(postId)) {
-          return res.status(400).json({ message: "Invalid post ID" });
-      }
+    // Check if the postId is valid
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      return res.status(400).json({ message: "Invalid post ID" });
+    }
 
-      // Find the post and delete it
-      const deletedPost = await Post.findByIdAndDelete(postId);
+    // Find the post and delete it
+    const deletedPost = await Post.findByIdAndDelete(postId);
+    await Comment.deleteMany({ postId: postId });
 
-      // If no post was found to delete
-      if (!deletedPost) {
-          return res.status(404).json({ message: "Post not found" });
-      }
+    // If no post was found to delete
+    if (!deletedPost) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
-      res.status(200).json({ message: "Post deleted successfully", deletedPost });
+    res.status(200).json({ message: "Post deleted successfully", deletedPost });
   } catch (error) {
-      console.error('Error deleting post:', error);
-      res.status(500).json({ message: error.message });
+    console.error("Error deleting post:", error);
+    res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.likePost = async (req, res) => {
   try {
