@@ -73,7 +73,6 @@ exports.deletePost = async (req, res) => {
 
     // Find the post and delete it
     const deletedPost = await Post.findByIdAndDelete(postId);
-    await Comment.deleteMany({ postId: postId });
 
     // If no post was found to delete
     if (!deletedPost) {
