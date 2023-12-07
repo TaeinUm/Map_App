@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User"); // Adjust the path according to your structure
-const session = require("express-session");
+const jwt = require('jsonwebtoken');
 
 // Register a new user
 const registerUser = async (req, res) => {
@@ -43,16 +43,15 @@ const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ message: "Password is incorrect" });
     }
-    // User is authenticated, create session
-    req.session.userId = user._id;
-    req.session.save((err) => {
-      if (err) {
-        return res
-          .status(500)
-          .json({ message: "Error saving session: " + err.message });
-      }
-      res.json({ message: "Logged in successfully", userId: user._id });
-    });
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } // Token expires in 1 hour
+    );
+
+    res.json({ message: "Logged in successfully", token });
   } catch (error) {
     res.status(500).json({ message: "Error logging in: " + error.message });
   }

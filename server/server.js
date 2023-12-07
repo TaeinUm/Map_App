@@ -8,7 +8,7 @@ const path = require("path");
 const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
-const nodemailer = require("nodemailer");
+const authenticateToken = require('./middleware/authenticateToken');
 
 // Import route handlers
 const authRoutes = require("./routes/authRoutes");
@@ -27,18 +27,21 @@ app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
 app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
 app.use(express.urlencoded({ limit: "25mb" }));
 
-// Configure session management
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET, // Secret key for signing the session ID cookie
-    resave: false, // Avoid resaving sessions that haven't been modified
-    saveUninitialized: false, // Don't create session until something is stored
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Use MongoDB for session storage
-    cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
-  })
-);
+// // Configure session management
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET, // Secret key for signing the session ID cookie
+//     resave: false, // Avoid resaving sessions that haven't been modified
+//     saveUninitialized: false, // Don't create session until something is stored
+//     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Use MongoDB for session storage
+//     cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
+//   })
+// );
 
 // Define routes
+// app.get('/api/protected', authenticateToken, (req, res) => {
+//   res.send('This is a protected route');
+// });
 app.use("/auth", authRoutes); // Routes for authentication
 app.use("/api", postRoutes); // Routes for post-related operations
 app.use("/api/users", userRoutes); // Routes for user-related operations
