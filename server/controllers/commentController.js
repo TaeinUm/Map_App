@@ -51,7 +51,6 @@ exports.deleteComment = async (req, res) => {
 
 exports.deleteCommentsByPostId = async (req, res) => {
   try {
-    console.log("here!");
     const postId = req.params.postId;
     await Comment.deleteMany({ postId: postId });
     res.status(200).send({ message: "Post and comments deleted successfully" });
