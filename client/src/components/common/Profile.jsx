@@ -10,10 +10,12 @@ import {
   CardMedia,
   CardContent,
 } from "@mui/material";
+import { FiTrash } from "react-icons/fi";
 
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
 import profileAPI from "../../api/profileAPI";
+import CommunitySectionAPI from "../../api/CommunitySectionAPI";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
@@ -160,6 +162,22 @@ const Profile = () => {
     navigate(path);
   };
 
+  const handleDeletePost = async (event, postId) => {
+    event.stopPropagation();
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?"
+    );
+    try {
+      await CommunitySectionAPI.deleteAllComment(postId);
+      await CommunitySectionAPI.deletePost(postId);
+
+      setPosts(posts.filter((post) => post._id !== postId));
+      alert("Post deleted successfully.");
+    } catch (error) {
+      console.error("Failed to delete post", error);
+    }
+  };
+
   return (
     <ResponsiveContainer>
       <Grid container spacing={2}>
@@ -235,7 +253,6 @@ const Profile = () => {
                   posts.map((post, index) => (
                     <CardActionArea
                       key={post.id || index}
-                      onClick={() => handlePostClick(post._id, post.postType)}
                       sx={{
                         display: "flex",
                         justifyContent: "flex-start",
@@ -248,6 +265,7 @@ const Profile = () => {
                       }}
                     >
                       <CardMedia
+                        onClick={() => handlePostClick(post._id, post.postType)}
                         image={
                           post.postImages ||
                           "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
@@ -260,42 +278,61 @@ const Profile = () => {
                           margin: "10px",
                         }}
                       />
-                      <Box>
-                        <Typography
+                      <Box
+                        onClick={() => handlePostClick(post._id, post.postType)}
+                        sx={{
+                          display: "flex",
+                          width: "80%",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            sx={{
+                              color: "#fafafa",
+                              textAlign: "left",
+                              fontSize: "24px",
+                              fontWeight: "bold",
+                              maxWidth: "250px",
+                              overflow: "hidden",
+                              whiteSpace: "nowrap",
+                              textOverflow: "ellipsis",
+                            }}
+                          >
+                            {post.postName}
+                          </Typography>
+                          <Typography
+                            sx={{ color: "#fafafa", textAlign: "left" }}
+                          >
+                            {(() => {
+                              const date = new Date(post.postDate);
+                              const year = date.getFullYear();
+                              const month = date.getMonth() + 1;
+                              const day = date.getDate();
+
+                              const formattedMonth =
+                                month < 10 ? `0${month}` : month;
+                              const formattedDay = day < 10 ? `0${day}` : day;
+
+                              return `${year}-${formattedMonth}-${formattedDay}`;
+                            })()}
+                          </Typography>
+                          <Typography
+                            sx={{ color: "#fafafa", textAlign: "left" }}
+                          >
+                            comments: {post.interactions}
+                          </Typography>
+                        </Box>
+                        <Button
+                          onClick={(event) => handleDeletePost(event, post._id)}
                           sx={{
+                            marginRight: "0",
                             color: "#fafafa",
-                            textAlign: "left",
-                            fontSize: "24px",
-                            fontWeight: "bold",
-                            maxWidth: "250px",
-                            overflow: "hidden",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
+                            zIndex: "4",
                           }}
                         >
-                          {post.postName}
-                        </Typography>
-                        <Typography
-                          sx={{ color: "#fafafa", textAlign: "left" }}
-                        >
-                          {(() => {
-                            const date = new Date(post.postDate);
-                            const year = date.getFullYear();
-                            const month = date.getMonth() + 1;
-                            const day = date.getDate();
-
-                            const formattedMonth =
-                              month < 10 ? `0${month}` : month;
-                            const formattedDay = day < 10 ? `0${day}` : day;
-
-                            return `${year}-${formattedMonth}-${formattedDay}`;
-                          })()}
-                        </Typography>
-                        <Typography
-                          sx={{ color: "#fafafa", textAlign: "left" }}
-                        >
-                          comments: {post.interactions}
-                        </Typography>
+                          <FiTrash />
+                        </Button>
                       </Box>
                     </CardActionArea>
                   ))}
