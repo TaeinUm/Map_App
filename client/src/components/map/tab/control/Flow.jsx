@@ -354,6 +354,7 @@ const Flow = () => {
         type: "Feature",
         properties: {
           id: flow.id,
+          source: "flow",
           paint: {
             "line-color": flow.color,
             "line-width": flow.lineWidth,

@@ -81,6 +81,7 @@ const Point = () => {
           return {
             type: "Feature",
             properties: {
+              source: "pointmap-data",
               name: name,
             },
             geometry: {
@@ -124,18 +125,6 @@ const Point = () => {
           data: {
             type: "FeatureCollection",
             features: [],
-          },
-        });
-        newMap.addLayer({
-          id: "country-boundaries",
-          type: "fill",
-          source: {
-            type: "vector",
-            url: "mapbox://mapbox.country-boundaries-v1",
-          },
-          "source-layer": "country_boundaries",
-          paint: {
-            "fill-opacity": 0,
           },
         });
 

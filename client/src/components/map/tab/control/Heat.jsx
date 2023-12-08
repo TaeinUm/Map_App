@@ -229,6 +229,7 @@ const Heat = () => {
         },
         properties: {
           title: location.name,
+          source: "heatmap-data",
         },
       })),
     };
@@ -299,7 +300,7 @@ const Heat = () => {
         privacy,
         "Heat Map",
         JSON.stringify(mapData),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");

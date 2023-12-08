@@ -161,6 +161,7 @@ const ThreeD = () => {
           return {
             type: "Feature",
             properties: {
+              source: "3d-data",
               height: height,
             },
             geometry: {
@@ -245,6 +246,7 @@ const ThreeD = () => {
       return {
         type: "Feature",
         properties: {
+          source: "3d-data",
           height: height,
         },
         geometry: {
