@@ -2,13 +2,13 @@
 require("dotenv").config();
 
 // Import required modules
-const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const cors = require('cors');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const nodemailer = require("nodemailer");
+const express = require("express");
+const mongoose = require("mongoose");
+const path = require("path");
+const cors = require("cors");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const authenticateToken = require('./middleware/authenticateToken');
 
 // Import route handlers
 const authRoutes = require("./routes/authRoutes");
@@ -24,25 +24,24 @@ const PORT = process.env.PORT || 8080;
 
 // Apply middleware
 app.use(cors()); // Enable Cross-Origin Resource Sharing (CORS)
-app.use(express.json()); // Parse incoming JSON payloads
+app.use(express.json({ limit: "50mb" })); // Parse incoming JSON payloads
 app.use(express.urlencoded({ limit: "25mb" }));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  next();
-});
 
-// Configure session management
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET, // Secret key for signing the session ID cookie
-    resave: false, // Avoid resaving sessions that haven't been modified
-    saveUninitialized: false, // Don't create session until something is stored
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Use MongoDB for session storage
-    cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
-  })
-);
+// // Configure session management
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET, // Secret key for signing the session ID cookie
+//     resave: false, // Avoid resaving sessions that haven't been modified
+//     saveUninitialized: false, // Don't create session until something is stored
+//     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }), // Use MongoDB for session storage
+//     cookie: { secure: process.env.NODE_ENV === "production" }, // Use secure cookies in production
+//   })
+// );
 
 // Define routes
+// app.get('/api/protected', authenticateToken, (req, res) => {
+//   res.send('This is a protected route');
+// });
 app.use("/auth", authRoutes); // Routes for authentication
 app.use("/api", postRoutes); // Routes for post-related operations
 app.use("/api/users", userRoutes); // Routes for user-related operations
@@ -58,6 +57,11 @@ mongoose
     console.error("Could not connect to MongoDB:", err);
     process.exit(1); // Exit the process on database connection failure
   });
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 
 // Serve static files (React frontend)
 app.use(express.static(path.join(__dirname, "../client/build")));

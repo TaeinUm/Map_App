@@ -5,30 +5,8 @@ import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL =
   "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
-//const [authenticated, setAuthenticated] = useState(false);
-//const [userID, setUserID] = useState("");
-//const {userID, authentified} = CommunityContext;
-// let userID = "";
-// let authentified = false;
-
-// export function setUserID(userId){
-//     userID = userId;
-// }
-
-// export function setAuthentified(value){
-//     authentified=value;
-// }
 
 const CommunitySectionAPI = {
-  // doAuthenitication: (value)=>{
-  //     let autheniticated = value;
-  //     return autheniticated;
-  // },
-  // doUserID: (userId)=>{
-  //     let userID = userId;
-  //     return userID;
-  // },
-
   //make a post
   makePost: async (
     userID,
@@ -41,12 +19,6 @@ const CommunitySectionAPI = {
     attachedFile,
     postDate
   ) => {
-    //const { isAuthenticated, userId, username } = AuthContext;
-
-    // if (!isAuthenticated) {
-    //     console.error("User is not authenticated");
-    //     return;
-    // }
     try {
       const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
         userId: userID,
@@ -59,16 +31,8 @@ const CommunitySectionAPI = {
         attachedFile: attachedFile,
         postDate: postDate,
       });
-      
-      return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post`,{
-      //     content,
-      //     likes,
-      //     types,
-      //     image,
-      //     title,
 
-      //   }  );
+      return response.data;
     } catch (error) {
       console.error("cannot make a post.");
     }
@@ -82,14 +46,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get sample posts.");
     }
@@ -99,81 +55,24 @@ const CommunitySectionAPI = {
       const response = await axios.get(
         `${API_BASE_URL}/api/community/getAllPosts`
       );
-     
+
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get all posts of a certain type.");
     }
   },
-  // deletePost: async (postId) => {
-  //     try {
-  //         const response = await axios.delete(
-  //         `${API_BASE_URL}/api/community/deletePost/${postId}`,{
-  //             params:{postId},
-  //         }
-  //         );
-  //         return response.data;
-  //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
 
-  //     //     postType,
-  //     //     postText,
-  //     //     postFile,
-  //     //     date,
-
-  //     //   }  );
-  //     } catch (error) {
-  //         console.error("cannot get a user's maps.");
-  //     }
-  // },
-  // updatePost: async (postId, postType) => {
-  //     try {
-  //         const response = await axios.put(
-  //         `${API_BASE_URL}/api/community/updatePost/${postId}`,{
-  //             params:{postId, postType},
-  //         }
-  //         );
-  //         return response.data;
-  //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-  //     //     postType,
-  //     //     postText,
-  //     //     postFile,
-  //     //     date,
-
-  //     //   }  );
-  //     } catch (error) {
-  //         console.error("cannot get a user's maps.");
-  //     }
-  // },
   getMapsByUsername: async (searchedUser) => {
-    //const { isAuthenticated, userId, username } = AuthContext;
     try {
       const response = await axios.get(
         `${API_BASE_URL}/api/users/${encodeURIComponent(searchedUser)}`
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get a user's maps.");
     }
   },
   getPostsByUserId: async (userID) => {
-    //const { isAuthenticated, userId, username } = AuthContext;
     try {
       const response = await axios.get(
         `${API_BASE_URL}/api/community/getMapsByUsername/${userID}`,
@@ -182,14 +81,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get a user's maps.");
     }
@@ -203,14 +94,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get questions for a query.");
     }
@@ -224,14 +107,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get ideas for a query.");
     }
@@ -245,14 +120,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get maps for a query.");
     }
@@ -266,52 +133,14 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
       console.error("cannot get post.");
     }
   },
-  // getComments: async (postId) => {
-  //     const { isAuthenticated, userId, username } = useContext(AuthContext);
-
-  //     if (!isAuthenticated) {
-  //         console.error("User is not authenticated");
-  //         return;
-  //     }
-  //     try {
-  //         const response = await axios.get(
-  //         `${API_BASE_URL}/api/community/getComments/${postId}`,{
-  //             params:{postId},
-  //         }
-  //         );
-  //         return response.data;
-  //     //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-  //     //     postType,
-  //     //     postText,
-  //     //     postFile,
-  //     //     date,
-
-  //     //   }  );
-  //     } catch (error) {
-  //         console.error("cannot get comments.");
-  //     }
-  // },
 
   postComment: async (userID, postId, date, content) => {
     const { isAuthenticated, userId, username } = AuthContext;
 
-    // if (!isAuthenticated) {
-    //     console.error("User is not authenticated");
-    //     return;
-    // }
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/community/postComment`,
@@ -332,10 +161,6 @@ const CommunitySectionAPI = {
   likeMap: async (userID, postId) => {
     const { isAuthenticated, userId, username } = AuthContext;
 
-    // if (!isAuthenticated) {
-    //     console.error("User is not authenticated");
-    //     return;
-    // }
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/community/likeMap/${postId}`,
@@ -344,7 +169,6 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-
     } catch (error) {
       console.error("cannot like a map.");
     }
@@ -352,10 +176,6 @@ const CommunitySectionAPI = {
   unlikeMap: async (userID, postId) => {
     const { isAuthenticated, userId, username } = AuthContext;
 
-    // if (!isAuthenticated) {
-    //     console.error("User is not authenticated");
-    //     return;
-    // }
     try {
       const response = await axios.put(
         `${API_BASE_URL}/api/community/unlikeMap/${postId}`,
@@ -368,8 +188,8 @@ const CommunitySectionAPI = {
       console.error("cannot unlike a map.");
     }
   },
+
   deletePost: async (postID) => {
-    //const { isAuthenticated, userId, username } = AuthContext;
     try {
       const response = await axios.delete(
         `${API_BASE_URL}/api/community/deletePost/${postID}`,
@@ -378,39 +198,50 @@ const CommunitySectionAPI = {
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
-      console.error("cannot get a user's maps.");
+      console.error("cannot delete a user's post.");
     }
   },
-  deleteComment: async (commentID) => {
-    //const { isAuthenticated, userId, username } = AuthContext;
+
+  deleteAllComment: async (postId) => {
     try {
       const response = await axios.delete(
-        `${API_BASE_URL}/api/community/deleteComment/${commentID}`,
+        `${API_BASE_URL}/api/community/deleteAllComment/${postId}`,
+        {
+          params: { postId: postId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("cannot delete comments.");
+    }
+  },
+
+  deleteComment: async (commentID) => {
+    try {
+      const response = await axios.delete(
+        `${API_BASE_URL}/api/community/deleteAllComment/${commentID}`,
         {
           params: { commentId: commentID },
         }
       );
       return response.data;
-      //   return await CommunitySectionAPI("post", `${API_BASE_URL}/api/community/post/${userId}`,{
-
-      //     postType,
-      //     postText,
-      //     postFile,
-      //     date,
-
-      //   }  );
     } catch (error) {
-      console.error("cannot get a user's maps.");
+      console.error("cannot delete a comment.");
+    }
+  },
+
+  getPostDetails: async (postType, postId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE_URL}/api/community/${postType}/${postId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+      throw error;
     }
   },
 };
+
 export default CommunitySectionAPI;
