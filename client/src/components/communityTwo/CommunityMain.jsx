@@ -141,14 +141,28 @@ function CommunityMain() {
     setWhiteBar(event.target.value);
   };
 
-  const renderAllPosts = () => (
+  const searchPosts = (posts) => {
+    return posts.filter((post) =>
+      post.postName.toLowerCase().includes(searchTerm.toLowerCase())
+      // You can add more conditions here to search in other fields
+    );
+  };
+
+  const renderAllPosts = () => {
+  // Filter posts for each category based on the search term
+  const filteredUserGraphics = searchPosts(userGraphics);
+  const filteredQuestionBuffer = searchPosts(questionBuffer);
+  const filteredTrendingBuffer = searchPosts(trendingBuffer);
+  const filteredIdeasBuffer = searchPosts(ideasBuffer);
+
+  return (
     <>
       <Box sx={{ mt: "20px" }}>
         <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
           Trending Map Graphics
         </Typography>
         <PaginatedPosts
-          posts={userGraphics}
+          posts={filteredUserGraphics}
           page={userGraphicsPage}
           setPage={setUserGraphicsPage}
           itemsPerPage={3}
@@ -159,7 +173,7 @@ function CommunityMain() {
           Questions
         </Typography>
         <PaginatedPosts
-          posts={questionBuffer}
+          posts={filteredQuestionBuffer}
           page={questionPage}
           setPage={setQuestionPage}
           itemsPerPage={3}
@@ -170,7 +184,7 @@ function CommunityMain() {
           Map Graphics Ideas
         </Typography>
         <PaginatedPosts
-          posts={ideasBuffer}
+          posts={filteredIdeasBuffer}
           page={ideasPage}
           setPage={setIdeasPage}
           itemsPerPage={3}
@@ -178,48 +192,64 @@ function CommunityMain() {
       </Box>
     </>
   );
+};
 
-  const renderMapGraphics = () => (
-    <>
-    <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
-      Trending Map Graphics
-    </Typography>
-    <PaginatedPosts
-      posts={trendingBuffer}
-      page={trendingPage}
-      setPage={setTrendingPage}
-      itemsPerPage={9}
-    />
-    </>
-  );
 
-  const renderQuestion = () => (
+const renderMapGraphics = () => {
+  const filteredMapGraphics = searchPosts(trendingBuffer);
+
+  return (
     <>
       <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
-        Questions
+        Trending Map Graphics
       </Typography>
       <PaginatedPosts
-        posts={questionBuffer}
-        page={questionPage}
-        setPage={setQuestionPage}
+        posts={filteredMapGraphics}
+        page={trendingPage}
+        setPage={setTrendingPage}
         itemsPerPage={9}
       />
     </>
   );
+};
 
-  const renderIdeas = () => (
-    <>
-      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
-        Map Graphics Idea
-      </Typography>
-      <PaginatedPosts
-        posts={ideasBuffer}
-        page={ideasPage}
-        setPage={setIdeasPage}
-        itemsPerPage={9}
-      />
-    </>
-  );
+
+  const renderQuestion = () => {
+    const filteredQuestions = searchPosts(questionBuffer);
+  
+    return (
+      <>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Questions
+        </Typography>
+        <PaginatedPosts
+          posts={filteredQuestions}
+          page={questionPage}
+          setPage={setQuestionPage}
+          itemsPerPage={9}
+        />
+      </>
+    );
+  };
+
+  const renderIdeas = () => {
+    const filteredIdeas = searchPosts(ideasBuffer);
+  
+    return (
+      <>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Map Graphics Idea
+        </Typography>
+        <PaginatedPosts
+          posts={filteredIdeas}
+          page={ideasPage}
+          setPage={setIdeasPage}
+          itemsPerPage={9}
+        />
+      </>
+    );
+  };
+  
 
   const renderAllUserName = () => (
     <PaginatedPosts
@@ -256,6 +286,7 @@ function CommunityMain() {
     <Container
       sx={{
         mt: "10px",
+        minHeight: "100vh"
       }}
     >
       <Box
