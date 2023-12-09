@@ -133,10 +133,12 @@ function File() {
         console.log(mapId);
         if (mapId) {
           const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
-          console.log("Data received:", data);
-          const mapLayer = JSON.parse(data.mapData);
-          setStyleSettings(mapLayer);
-          setGeojsonData(mapLayer.geojsonData);
+
+          const response = await fetch(data.mapData);
+          //const mapLayer = JSON.parse(data.mapData);
+          const jsonData = await response.json();
+          setStyleSettings(jsonData);
+          setGeojsonData(jsonData.geojsonData);
         }
 
         if (geojsonData && geojsonData.features) {

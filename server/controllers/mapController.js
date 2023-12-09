@@ -184,29 +184,6 @@ const getMapGraphicData = async (req, res) => {
       return res.status(200).json({ message: "Map graphic not found" });
     }
 
-    console.log(mapGraphic);
-    // Check if mapData starts with the S3 URL
-    if (mapGraphic.mapData.startsWith("https://terracanvas.s3.")) {
-      try {
-        const response = await fetch(mapGraphic.mapData);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Check if the response is JSON
-        const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Oops, we haven't got JSON!");
-        }
-
-        const jsonData = await response.json();
-        mapGraphic.mapData = jsonData;
-      } catch (error) {
-        console.error("Error fetching JSON from S3:", error);
-        return res.json({ mapData: mapGraphic.mapData, error: error.message });
-      }
-    }
-
     res.json(mapGraphic);
   } catch (error) {
     console.error("Error fetching map graphic data:", error);
