@@ -118,12 +118,6 @@ const Heat = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
 
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
@@ -245,6 +239,7 @@ const Heat = () => {
       const reader = new FileReader();
 
       reader.onload = (e) => {
+        e.preventDefault();
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -267,6 +262,7 @@ const Heat = () => {
             },
             properties: {
               title: location.name,
+              source: "heatmap-data",
             },
           })),
         };
@@ -285,7 +281,15 @@ const Heat = () => {
   const handleSave = async (title, version, privacy, mapLayer) => {
     try {
       let titleToPut = title;
-      let versionToPut = "testVersion";
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+
+        const originalVer = response.vers;
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
+      }
       const mapData = {
         locations: locations,
         heatColors: heatColors,

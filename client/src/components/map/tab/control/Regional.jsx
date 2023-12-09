@@ -71,12 +71,7 @@ const Regional = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
+
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -234,15 +229,25 @@ const Regional = () => {
   const handleSave = async (title, version, privacy) => {
     const mapImage = map.getCanvas().toDataURL();
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+
+        const originalVer = response.vers;
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
+      }
       await mapServiceAPI.addMapGraphics(
         userId,
         mapId, // This could be null if creating a new map
-        title,
-        version,
+        titleToPut,
+        versionToPut,
         privacy,
         "Regional Map",
         JSON.stringify(styleSettings),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");

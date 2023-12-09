@@ -122,12 +122,7 @@ const Flow = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
+
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -180,7 +175,7 @@ const Flow = () => {
 
       const flowId = `flow-${startCountry}-${startCity}-${endCountry}-${endCity}-${Date.now()}`;
 
-      if (!map.getLayer(flowId)) {
+      if (map) {
         map.addLayer({
           id: flowId,
           type: "line",
@@ -292,15 +287,10 @@ const Flow = () => {
       if (mapId) {
         const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
         titleToPut = response.mapName;
+
         const originalVer = response.vers;
-        if (originalVer === "ver1") {
-          versionToPut = "ver2";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver3";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver1";
-          // Here, find the version1 having the same title & delete it from DB
-        }
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
       }
 
       const mapImage = map.getCanvas().toDataURL();
@@ -312,7 +302,7 @@ const Flow = () => {
         privacy,
         "Flow Map",
         JSON.stringify(styleSettings),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");
