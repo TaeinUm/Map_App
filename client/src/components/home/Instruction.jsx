@@ -82,11 +82,11 @@ function Instruction() {
         <Box
           sx={{
             position: "absolute",
-            height: "78%",
+            height: "80%",
             width: "15px",
             background: "linear-gradient(to bottom, #ff6a00, #ee0979)",
-            left: "10%",
-            bottom: 55,
+            left: "5%",
+            bottom: 35,
             zIndex: 0,
           }}
         />
@@ -94,7 +94,7 @@ function Instruction() {
         <Box
           sx={{
             display: "flex",
-            gap: "40px",
+            gap: "60px",
             width: "100%",
             justifyContent: "center",
           }}
