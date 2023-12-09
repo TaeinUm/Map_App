@@ -15,10 +15,13 @@ The goal for this project is to create a web application that develops how users
     - express : 4.18.2
     - express-session : 1.17.3
     - ...
-
 More details are in package.json
 
-### Features
+### Structures
+    - Frontend Directory: client
+    - Backend Directory: server
+
+### App Features
     - Map Editing and Storing
     - Map Posting and Sharing
     - Community Features: Posting Questions, Idea
