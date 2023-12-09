@@ -59,7 +59,9 @@ const Point = () => {
   const [map, setMap] = useState(null);
   const mapContainer = useRef(null);
   const fileInputRef = useRef(null);
-  const [mapStyle, setMapStyle] = useState("mapbox://styles/mapbox/light-v11");
+  const [mapStyle, setMapStyle] = useState(
+    "mapbox://styles/mapbox/streets-v11"
+  );
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
