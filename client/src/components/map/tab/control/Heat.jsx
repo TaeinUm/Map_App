@@ -208,6 +208,27 @@ const Heat = () => {
     }
   }, [locations, map]);
 
+  useEffect(() => {
+    if (geoJsonData && geoJsonData.features) {
+      const updatedFeatures = geoJsonData.features.map((feature) => {
+        return {
+          ...feature,
+          properties: {
+            ...feature.properties,
+            heatColors: heatColors,
+          },
+        };
+      });
+
+      const updatedGeoJsonData = {
+        ...geoJsonData,
+        features: updatedFeatures,
+      };
+
+      setGeoJsonData(updatedGeoJsonData);
+    }
+  }, [geoJsonData, heatColors]);
+
   const updatePoint = () => {
     if (!map) return;
     const geojsonData = {
@@ -224,9 +245,12 @@ const Heat = () => {
         properties: {
           title: location.name,
           source: "heatmap-data",
+          heatColors: heatColors,
         },
       })),
     };
+
+    setGeoJsonData(geojsonData);
 
     if (map.getSource("heatmap-data")) {
       map.getSource("heatmap-data").setData(geojsonData);
@@ -263,6 +287,7 @@ const Heat = () => {
             properties: {
               title: location.name,
               source: "heatmap-data",
+              heatColors: heatColors,
             },
           })),
         };

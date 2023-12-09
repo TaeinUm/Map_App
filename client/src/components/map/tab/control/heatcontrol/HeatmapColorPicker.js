@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Typography, Box } from "@mui/material";
 
-const HeatmapColorPicker = ({
-  map,
-  heatColors,
-  setHeatColors,
-  updateHeatmapColor,
-}) => {
+const HeatmapColorPicker = ({ heatColors, setHeatColors }) => {
   return (
     <Box sx={{ marginTop: "40px" }}>
       {Object.entries(heatColors).map(([key, value]) => (

@@ -24,15 +24,19 @@ function File() {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   const [styleSettings, setStyleSettings] = useState({
-    lineColor: "#000000",
-    lineOpacity: 0.5,
-    waterColor: "#ffffff",
-    lineThickness: 2,
     geojsonData: {},
   });
 
   const sourceId = "uploadedGeoSource";
   const layerId = "uploaded-data-layer";
+
+  const layerSelector = {
+    background: /land|landcover/,
+    water: /water-depth|^water$/,
+    labels: /label|place|poi/,
+    waterway: /^waterway$/,
+    boundary: /boundary/,
+  };
 
   useEffect(() => {
     if (!map) {
@@ -44,6 +48,7 @@ function File() {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
+
       newMap.addControl(
         new MapboxGeocoder({
           accessToken: mapboxgl.accessToken,
@@ -54,64 +59,131 @@ function File() {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", async () => {
-        if (geojsonData && !mapId) {
-          newMap.addSource(sourceId, {
-            type: "geojson",
-            data: geojsonData,
-          });
-          console.log("geojsonData: ", geojsonData);
-
-          if (geojsonData.features) {
-            geojsonData.features.forEach((feature, index) => {
-              const layerId = `layer-${index}`;
-              const featureType = feature.properties.type || "line";
-              let paint = {
-                "line-color":
-                  feature.properties["line-color"] || styleSettings.lineColor,
-                "line-opacity":
-                  feature.properties["line-opacity"] ||
-                  styleSettings.lineOpacity,
-                "line-width":
-                  feature.properties["line-width"] ||
-                  styleSettings.lineThickness,
-              };
-
-              if (
-                feature.properties.type !== "line" &&
-                feature.properties.paint
-              ) {
-                paint = feature.properties.paint;
-              }
+        if (geojsonData && !mapId && geojsonData.features) {
+          geojsonData.features.forEach((feature, index) => {
+            const layerId = `layer-${index}`;
+            if (feature.properties.source === "pointmap-data") {
+              newMap.addLayer({
+                id: `pointmap-data-layer-${index}`,
+                type: "circle",
+                source: {
+                  type: "geojson",
+                  data: geojsonData,
+                },
+                paint: feature.properties.paint,
+              });
+            } else if (feature.properties.source === "3d-data") {
+              newMap.addLayer({
+                id: `3d-data-layer-${index}`,
+                type: "fill-extrusion",
+                source: {
+                  type: "geojson",
+                  data: geojsonData,
+                },
+                paint: {
+                  "fill-extrusion-height": feature.properties.height,
+                  "fill-extrusion-base": 0,
+                  "fill-extrusion-color": "blue",
+                  "fill-extrusion-opacity": 0.6,
+                },
+              });
+            } else if (feature.properties.source === "heatmap-data") {
+              let heatColorArray = Object.entries(feature.properties.heatColors)
+                .sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]))
+                .flatMap((entry) => [parseFloat(entry[0]), entry[1]]);
 
               newMap.addLayer({
-                id: layerId,
-                type: featureType,
-                source: sourceId,
-                paint: feature.properties.paint || paint,
-                layout: feature.properties.layout || {},
+                id: `heatmap-data-layer-${index}`,
+                type: "heatmap",
+                source: {
+                  type: "geojson",
+                  data: geojsonData,
+                },
+                maxzoom: 20,
+                paint: {
+                  "heatmap-color": [
+                    "interpolate",
+                    ["linear"],
+                    ["heatmap-density"],
+                    ...heatColorArray,
+                  ],
+                },
               });
-            });
-          } else {
-            newMap.addLayer({
-              id: layerId,
-              type: "line",
-              source: sourceId,
-              paint: {
-                "line-color": styleSettings.lineColor,
-                "line-opacity": styleSettings.lineOpacity,
-                "line-width": styleSettings.lineThickness,
-              },
-            });
-          }
+            } else if (
+              feature.properties.source === "water" ||
+              feature.properties.source === "background" ||
+              feature.properties.source === "waterway"
+            ) {
+              newMap.getStyle().layers.forEach((layer) => {
+                const { id, type } = layer;
+                if (layerSelector[feature.properties.source].test(id)) {
+                  if (type === "line" || type === "fill") {
+                    newMap.setPaintProperty(
+                      id,
+                      type === "line" ? "line-color" : "fill-color",
+                      feature.properties.paint[
+                        type === "line" ? "line-color" : "fill-color"
+                      ]
+                    );
+                    newMap.setPaintProperty(
+                      id,
+                      type === "line" ? "line-opacity" : "fill-opacity",
+                      feature.properties.paint[
+                        type === "line" ? "line-opacity" : "fill-opacity"
+                      ]
+                    );
+                  }
 
-          newMap.setPaintProperty(
-            "water",
-            "fill-color",
-            styleSettings.waterColor
-          );
+                  if (type === "line") {
+                    newMap.setPaintProperty(
+                      id,
+                      "line-width",
+                      feature.properties.paint["line-width"]
+                    );
+                  }
+                }
+              });
+            } else if (feature.properties.source === "flow") {
+              const flowLayerId = `flow-layer-${index}`;
+              newMap.addLayer({
+                id: flowLayerId,
+                type: "line",
+                source: {
+                  type: "geojson",
+                  data: geojsonData,
+                },
+                paint: {
+                  "line-color": feature.properties.paint["line-color"],
+                  "line-width": feature.properties.paint["line-width"],
+                },
+                layout: {
+                  "line-join": feature.properties.layout["line-join"],
+                  "line-cap": feature.properties.layout["line-cap"],
+                },
+              });
+            } else if (feature.properties.source === "countries") {
+              const layerId = `country-${feature.id}`;
+
+              newMap.addSource("countries", {
+                type: "vector",
+                url: "mapbox://mapbox.country-boundaries-v1",
+              });
+              const countryId = feature.id;
+
+              newMap.addLayer({
+                id: "countries",
+                type: "fill",
+                source: "countries",
+                "source-layer": "country_boundaries",
+                filter: ["==", ["get", "iso_3166_1_alpha_3"], countryId],
+                paint: feature.properties.paint,
+              });
+            }
+          });
+
           setMap(newMap);
           setIsMapLoaded(true);
-        } else if (mapId) {
+        } else if (!mapId) {
           newMap.addSource(sourceId, {
             type: "geojson",
             data: geojsonData,
@@ -122,25 +194,18 @@ function File() {
             type: "line",
             source: sourceId,
             paint: {
-              "line-color": styleSettings.lineColor,
-              "line-opacity": styleSettings.lineOpacity,
-              "line-width": styleSettings.lineThickness,
+              "line-color": "#000000",
+              "line-width": 2,
             },
           });
-
-          newMap.setPaintProperty(
-            "water",
-            "fill-color",
-            styleSettings.waterColor
-          );
+          setIsMapLoaded(true);
         } else {
           setMap(newMap);
           setIsMapLoaded(true);
         }
       });
     }
-  }, [map, geojsonData]);
-
+  }, [map, geojsonData, mapId]);
   return (
     <Box
       sx={{

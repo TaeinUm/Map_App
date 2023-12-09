@@ -135,7 +135,6 @@ const Point = () => {
               "circle-color",
               mapLayer.color
             );
-            // newMap.addLayer(mapLayer);
           } catch (error) {
             console.error("Error loading map graphics: ", error);
           } finally {
@@ -159,7 +158,6 @@ const Point = () => {
       const validLocations = locations.filter(
         (loc) => loc.latitude && loc.longitude
       );
-      console.log(validLocations);
 
       addPointsToMap(validLocations);
     }
