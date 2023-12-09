@@ -174,6 +174,7 @@ const mapServiceAPI = {
 
   storeLoadedMapGraphic: async (
     userId,
+    mapId,
     title,
     version,
     privacy,

@@ -1,34 +1,106 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Slider, Typography } from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { TabContext, TabPanel } from "@mui/lab";
 
 import { MapContext } from "../../../../contexts/MapContext";
 import mapServiceAPI from "../../../../api/mapServiceAPI";
 import { AuthContext } from "../../../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import ExportTab from "../ExportTab";
+import TabMenu from "../../editmap/TabMenu";
+import SaveTab from "../SaveTab";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
 
 function File() {
-  const { geojsonData, mapId, setGeojsonData } = useContext(MapContext);
+  const { geojsonData, mapId, setGeojsonData, setMapId } =
+    useContext(MapContext);
   const { userId } = useContext(AuthContext);
   const mapContainer = useRef(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const navigate = useNavigate();
 
   const [map, setMap] = useState(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isLine, setIsLine] = useState(true);
+  const [tabValue, setTabValue] = useState("1");
 
   const [styleSettings, setStyleSettings] = useState({
-    geojsonData: {},
+    geojsonData: geojsonData,
+    lineColor: "#000000",
+    lineWidth: 2,
+    lineOpacity: 1.0,
   });
 
   const sourceId = "uploadedGeoSource";
   const layerId = "uploaded-data-layer";
+
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
+  const handleLineColorChange = (color) => {
+    const newColor = color.hex || color;
+    const newSettings = { ...styleSettings, lineColor: newColor };
+    setStyleSettings(newSettings);
+  };
+
+  const handleLineWidthChange = (event, newValue) => {
+    const newSettings = { ...styleSettings, lineWidth: newValue };
+    setStyleSettings(newSettings);
+  };
+
+  const handleLineOpacityChange = (event, newValue) => {
+    const newSettings = { ...styleSettings, lineOpacity: newValue };
+    setStyleSettings(newSettings);
+  };
+
+  const updateGeojsonWithLineStyle = (geojsonData, styleSettings) => {
+    // Check if geojsonData has features, if not, initialize it
+    const features =
+      geojsonData && geojsonData.features ? geojsonData.features : [];
+
+    const newFeatures =
+      features.length === 0
+        ? [
+            {
+              type: "Feature",
+              properties: {
+                source: "line-data",
+                paint: {
+                  "line-color": styleSettings.lineColor,
+                  "line-width": styleSettings.lineWidth,
+                  "line-opacity": styleSettings.lineOpacity,
+                },
+              },
+            },
+          ]
+        : features.map((feature) => {
+            return {
+              ...feature,
+              properties: {
+                ...feature.properties,
+                source: "line-data",
+                paint: {
+                  "line-color": styleSettings.lineColor,
+                  "line-width": styleSettings.lineWidth,
+                  "line-opacity": styleSettings.lineOpacity,
+                },
+              },
+            };
+          });
+
+    return {
+      ...geojsonData,
+      features: newFeatures,
+    };
+  };
 
   const layerSelector = {
     background: /land|landcover/,
@@ -49,12 +121,6 @@ function File() {
         preserveDrawingBuffer: true,
       });
 
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -64,10 +130,20 @@ function File() {
           url: "mapbox://mapbox.country-boundaries-v1",
         });
 
-        if (geojsonData && !mapId && geojsonData.features) {
+        console.log(mapId);
+        if (mapId) {
+          const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
+          console.log("Data received:", data);
+          const mapLayer = JSON.parse(data.mapData);
+          setStyleSettings(mapLayer);
+          setGeojsonData(mapLayer.geojsonData);
+        }
+
+        if (geojsonData && geojsonData.features) {
           geojsonData.features.forEach((feature, index) => {
             const layerId = `layer-${index}`;
             if (feature.properties.source === "pointmap-data") {
+              setIsLine(false);
               newMap.addLayer({
                 id: `pointmap-data-layer-${index}`,
                 type: "circle",
@@ -78,6 +154,7 @@ function File() {
                 paint: feature.properties.paint,
               });
             } else if (feature.properties.source === "3d-data") {
+              setIsLine(false);
               newMap.addLayer({
                 id: `3d-data-layer-${index}`,
                 type: "fill-extrusion",
@@ -93,6 +170,7 @@ function File() {
                 },
               });
             } else if (feature.properties.source === "heatmap-data") {
+              setIsLine(false);
               let heatColorArray = Object.entries(feature.properties.heatColors)
                 .sort((a, b) => parseFloat(a[0]) - parseFloat(b[0]))
                 .flatMap((entry) => [parseFloat(entry[0]), entry[1]]);
@@ -119,6 +197,7 @@ function File() {
               feature.properties.source === "background" ||
               feature.properties.source === "waterway"
             ) {
+              setIsLine(false);
               newMap.getStyle().layers.forEach((layer) => {
                 const { id, type } = layer;
                 if (layerSelector[feature.properties.source].test(id)) {
@@ -149,6 +228,7 @@ function File() {
                 }
               });
             } else if (feature.properties.source === "flow") {
+              setIsLine(false);
               const flowLayerId = `flow-layer-${index}`;
               newMap.addLayer({
                 id: flowLayerId,
@@ -167,6 +247,7 @@ function File() {
                 },
               });
             } else if (feature.properties.source === "countries") {
+              setIsLine(false);
               const layerId = `country-${feature.id}`;
               const countryId = feature.id;
 
@@ -178,12 +259,37 @@ function File() {
                 filter: ["==", ["get", "iso_3166_1_alpha_3"], countryId],
                 paint: feature.properties.paint,
               });
+            } else if (feature.properties.source === "line-data") {
+              setIsLine(false);
+              newMap.addLayer({
+                id: `line-${feature.id}`,
+                type: "line",
+                source: { type: "geojson", data: geojsonData },
+                paint: feature.properties.paint,
+              });
+            } else {
+              setIsLine(true);
+              newMap.addSource(sourceId, {
+                type: "geojson",
+                data: geojsonData,
+              });
+
+              newMap.addLayer({
+                id: layerId,
+                type: "line",
+                source: sourceId,
+                paint: {
+                  "line-color": "#000000",
+                  "line-width": 2,
+                },
+              });
             }
           });
 
           setMap(newMap);
           setIsMapLoaded(true);
-        } else if (!mapId) {
+        } else if (geojsonData) {
+          setIsLine(true);
           newMap.addSource(sourceId, {
             type: "geojson",
             data: geojsonData,
@@ -199,13 +305,83 @@ function File() {
             },
           });
           setIsMapLoaded(true);
+          setMap(newMap);
         } else {
+          setIsLine(false);
           setMap(newMap);
           setIsMapLoaded(true);
         }
       });
     }
   }, [map, geojsonData, mapId]);
+
+  useEffect(() => {
+    const updateMapLayer = () => {
+      if (map && map.getLayer(layerId)) {
+        if (styleSettings.lineColor) {
+          map.setPaintProperty(layerId, "line-color", styleSettings.lineColor);
+        }
+        if (styleSettings.lineWidth) {
+          map.setPaintProperty(layerId, "line-width", styleSettings.lineWidth);
+        }
+        if (styleSettings.lineOpacity) {
+          map.setPaintProperty(
+            layerId,
+            "line-opacity",
+            styleSettings.lineOpacity
+          );
+        }
+      }
+    };
+
+    if (isLine && map) {
+      updateMapLayer();
+    }
+  }, [styleSettings, map]);
+
+  // useEffect hook to update geojsonData when styleSettings change
+  useEffect(() => {
+    const updatedGeojsonData = updateGeojsonWithLineStyle(
+      geojsonData,
+      styleSettings
+    );
+    if (isLine && map) {
+      setGeojsonData(updatedGeojsonData);
+    }
+  }, [styleSettings]);
+
+  const handleSave = async (title, version, privacy) => {
+    const mapImage = map.getCanvas().toDataURL();
+    try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+
+        const originalVer = response.vers;
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
+      }
+      await mapServiceAPI.storeLoadedMapGraphic(
+        userId,
+        mapId, // This could be null if creating a new map
+        titleToPut,
+        versionToPut,
+        privacy,
+        null,
+        JSON.stringify(styleSettings),
+        mapImage
+      );
+      setMapId(null);
+      navigate("/map");
+      alert("Map saved successfully");
+    } catch (error) {
+      console.error("Error saving map:", error);
+      alert("Error saving map");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -224,15 +400,104 @@ function File() {
           <CircularProgress />
         </div>
       )}
-      <Box
-        sx={{
-          width: isMobile ? "100%" : "40%",
-          overflow: "scroll",
-          height: isMobile ? "50%" : "auto",
-        }}
-      >
-        <ExportTab map={map} />
-      </Box>
+
+      {isLine ? (
+        <Box
+          sx={{
+            width: isMobile ? "100%" : "40%",
+            overflow: "scroll",
+            height: isMobile ? "50%" : "auto",
+          }}
+        >
+          <TabContext value={tabValue}>
+            <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
+            <TabPanel value="1">
+              <Box>
+                <Box
+                  width="100%"
+                  sx={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Typography
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                  >
+                    Select Line Color
+                  </Typography>
+                  <input
+                    type="color"
+                    value={styleSettings.lineColor || "#000000"}
+                    onChange={(event) =>
+                      handleLineColorChange(event.target.value)
+                    }
+                    style={{ marginBottom: "30px" }}
+                  />
+                </Box>
+
+                <Box
+                  width="100%"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    margin: "20px 0",
+                  }}
+                >
+                  <Typography
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                  >
+                    Select Line Width
+                  </Typography>
+                  <Slider
+                    value={styleSettings.lineWidth || 2}
+                    min={1}
+                    max={10}
+                    step={0.1}
+                    onChange={handleLineWidthChange}
+                  />
+                </Box>
+
+                <Box
+                  width="100%"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    margin: "20px 0",
+                  }}
+                >
+                  <Typography
+                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                  >
+                    Select Line Opacity
+                  </Typography>
+                  <Slider
+                    value={styleSettings.lineOpacity || 1.0}
+                    min={0}
+                    max={1}
+                    step={0.01}
+                    onChange={handleLineOpacityChange}
+                  />
+                </Box>
+              </Box>
+            </TabPanel>
+            <TabPanel value="3">
+              <SaveTab
+                onSave={handleSave}
+                mapLayer={styleSettings}
+                map={map}
+                geojson={geojsonData}
+              />
+            </TabPanel>
+          </TabContext>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            width: isMobile ? "100%" : "40%",
+            overflow: "scroll",
+            height: isMobile ? "50%" : "auto",
+          }}
+        >
+          <ExportTab map={map} />
+        </Box>
+      )}
     </Box>
   );
 }
