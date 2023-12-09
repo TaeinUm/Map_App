@@ -59,6 +59,11 @@ function File() {
       newMap.addControl(new mapboxgl.NavigationControl());
 
       newMap.on("load", async () => {
+        newMap.addSource("countries", {
+          type: "vector",
+          url: "mapbox://mapbox.country-boundaries-v1",
+        });
+
         if (geojsonData && !mapId && geojsonData.features) {
           geojsonData.features.forEach((feature, index) => {
             const layerId = `layer-${index}`;
@@ -163,15 +168,10 @@ function File() {
               });
             } else if (feature.properties.source === "countries") {
               const layerId = `country-${feature.id}`;
-
-              newMap.addSource("countries", {
-                type: "vector",
-                url: "mapbox://mapbox.country-boundaries-v1",
-              });
               const countryId = feature.id;
 
               newMap.addLayer({
-                id: "countries",
+                id: layerId,
                 type: "fill",
                 source: "countries",
                 "source-layer": "country_boundaries",
