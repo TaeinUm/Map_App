@@ -35,11 +35,11 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
         marginBottom: "50px",
       }}
     >
-      <Typography
+      {/* <Typography
         sx={{ color: "#fafafa", fontSize: "38px", marginBottom: "20px" }}
       >
         Title Here
-      </Typography>
+      </Typography> */}
 
       <Grid
         container
@@ -88,6 +88,15 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
         color="primary"
         showFirstButton
         showLastButton
+        sx={{
+          '& .MuiPaginationItem-root': {
+            color: 'white',
+            '&.Mui-selected': {
+              // backgroundColor: '#ffccbc',
+              // color: '#d84315',
+            },
+          },
+        }}
       />
     </Box>
   );

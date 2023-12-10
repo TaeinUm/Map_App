@@ -1,10 +1,15 @@
-import React from "react";
-import "../../styles/policy.css";
 
+import "../../styles/policy.css";
+import React, { useState, useEffect } from "react";
 
 function Termsconditions() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  
   return (
-    <div className="terms-conditions">
+    <div className="terms-conditions"  style={{ height: "100vh" }}>
       <h1><b>Terms and Conditions (EXAMPLE)</b></h1>
       <p>Last updated: 2023.11.12</p>
       <p>Please red these terms and conditions of use carefully before accessing, 

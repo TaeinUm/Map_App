@@ -1,6 +1,11 @@
-import React from "react";
+
+import React, { useState, useEffect } from "react";
 
 function Contact() {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="terms-conditions" style={{ height: "100vh" }}>
       <h1>

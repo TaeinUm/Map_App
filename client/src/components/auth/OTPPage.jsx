@@ -1,48 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PasswordRecoveryContext } from '../../contexts/PasswordRecoveryContext';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { PasswordRecoveryContext } from '../../contexts/PasswordRecoveryContext';
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
 
 const OTPPage = () => {
   const navigate = useNavigate();
-  const {otp} = useContext(PasswordRecoveryContext);
+  const { otp } = useContext(PasswordRecoveryContext);
   const [enteredOtp, setEnteredOtp] = useState('');
+
   const handleChange = (event) => {
     setEnteredOtp(event.target.value);
   };
 
   const handleSubmit = () => {
-    // Handle OTP verification or other actions here
-    //alert(`Entered OTP: ${otp}`);
-    console.log("You have entered the otp: "+enteredOtp);
-    console.log("what is the actual otp: "+otp);
-    if (enteredOtp == otp){
-        navigate("/NewPasswordPage");
-    }else{
-        alert("You entered the wrong otp");
+    console.log("You have entered the otp: " + enteredOtp);
+    console.log("what is the actual otp: " + otp);
+    if (enteredOtp == otp) {
+      navigate("/NewPasswordPage");
+    } else {
+      alert("You entered the wrong otp");
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Enter OTP</h2>
-      <form>
-        <TextField
-          label="OTP"
-          variant="outlined"
-          type="text"
-          value={enteredOtp}
-          onChange={handleChange}
-          inputProps={{ maxLength: 6 }}
-        />
-        <br />
-        <Button variant="contained" color="primary" onClick={handleSubmit}>
-          Submit
-        </Button>
-      </form>
-    </div>
+    <Container maxWidth="xs" style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      minHeight: '100vh', 
+      height: '100%'
+    }}>
+      <Card>
+        <CardContent>
+          <Typography variant="h5" component="h2" style={{ marginBottom: '20px' }}>
+            Enter OTP
+          </Typography>
+          <form>
+            <TextField
+              label="OTP"
+              variant="outlined"
+              type="text"
+              value={enteredOtp}
+              onChange={handleChange}
+              fullWidth
+              inputProps={{ maxLength: 6 }}
+              style={{ marginBottom: '20px' }}
+            />
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={handleSubmit}
+              fullWidth
+              style={{
+                backgroundColor: 'black',
+                color: 'white',
+              }}
+            >
+              Submit
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+    </Container>
   );
 };
 

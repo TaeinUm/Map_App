@@ -10,6 +10,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { register } from "../../api/authAPI";
+import SignUpImage from '../../assets/images/SignUpImage.png';
 
 function SignUp() {
   /****       useState section      ****/
@@ -118,6 +119,7 @@ function SignUp() {
         alignItems="center"
         flex="1"
         width="50%"
+        height="100vh" // Set the height of the container
         sx={{
           "@media (max-width: 768px)": {
             display: "none",
@@ -125,7 +127,7 @@ function SignUp() {
         }}
       >
         <img
-          src="https://picsum.photos/id/43/1280/831.jpg"
+          src={SignUpImage}
           alt="Background"
           style={{
             objectFit: "cover",
@@ -146,7 +148,7 @@ function SignUp() {
         flex="1"
         bgcolor="white"
       >
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold" }}>
+        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold", mb: "60px" }}>
           TerraCanvas
         </Typography>
         <Box width="70%">
