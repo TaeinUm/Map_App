@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
   Typography,
-  Container,
   CircularProgress,
   Table,
   TableHead,
@@ -51,8 +49,6 @@ const Heat = () => {
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [initialLayers, setInitializeLayers] = useState(null);
-  const [mapLayer, setMapLayer] = useState(null);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
@@ -64,20 +60,72 @@ const Heat = () => {
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
 
   const [heatColors, setHeatColors] = useState({
-    0.0: "rgba(33, 102, 172, 0)",
+    0.0: "rgba(33, 102, 172, 0)", //black
     0.2: "#0000FF", // Blue
     0.4: "#00FFFF", // Cyan
     0.6: "#00FF00", // Lime
     0.8: "#FFFF00", // Yellow
     1.0: "#FF0000", // Red
   });
-  const [heatmapSize, setHeatmapSize] = useState(10);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
   ]);
+
+  const applyChange = (newLocations, newHeatColors, newGeoJsonData) => {
+    setUndoStack([
+      ...undoStack,
+      {
+        locations: locations,
+        heatColors: heatColors,
+        geoJsonData: geoJsonData,
+      },
+    ]);
+    setRedoStack([]);
+    setLocations(newLocations);
+    setHeatColors(newHeatColors);
+    setGeoJsonData(newGeoJsonData);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([
+        ...redoStack,
+        {
+          locations: locations,
+          heatColors: heatColors,
+          geoJsonData: geoJsonData,
+        },
+      ]);
+      setUndoStack(undoStack.slice(0, -1));
+      setLocations(previousState.locations);
+      setHeatColors(previousState.heatColors);
+      setGeoJsonData(previousState.geoJsonData);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([
+        ...undoStack,
+        {
+          locations: locations,
+          heatColors: heatColors,
+          geoJsonData: geoJsonData,
+        },
+      ]);
+      setRedoStack(redoStack.slice(0, -1));
+      setLocations(nextState.locations);
+      setHeatColors(nextState.heatColors);
+      setGeoJsonData(nextState.geoJsonData);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -85,27 +133,11 @@ const Heat = () => {
 
   const handleColorChange = (density, color) => {
     const numericDensity = parseFloat(density);
-    setHeatColors((prevColors) => ({
-      ...prevColors,
+    const newHeatColors = {
+      ...heatColors,
       [numericDensity]: color,
-    }));
-  };
-
-  const calculateRadiusBasedOnValue = (value) => {
-    return Math.min(20, Math.max(5, value));
-  };
-
-  const updateHeatmapRadius = () => {
-    if (locations.length > 0) {
-      const averageValue =
-        locations.reduce((acc, loc) => acc + parseFloat(20 || 0), 0) /
-        locations.length;
-      const newRadius = calculateRadiusBasedOnValue(averageValue);
-
-      if (map) {
-        map.setPaintProperty("heatmap-layer", "heatmap-radius", newRadius);
-      }
-    }
+    };
+    applyChange(locations, newHeatColors, geoJsonData);
   };
 
   useEffect(() => {
@@ -145,6 +177,15 @@ const Heat = () => {
               9,
               3,
             ],
+            "heatmap-radius": {
+              stops: [
+                [5, 20],
+                [10, 20],
+                [15, 15],
+                [20, 15],
+              ],
+            },
+            "heatmap-opacity": 0.8,
             "heatmap-color": [
               "interpolate",
               ["linear"],
@@ -162,16 +203,6 @@ const Heat = () => {
               1,
               "red",
             ],
-            "heatmap-radius": [
-              "interpolate",
-              ["linear"],
-              ["zoom"],
-              0,
-              2,
-              9,
-              20,
-            ],
-            "heatmap-opacity": 0.8,
           },
         });
         if (mapId) {
@@ -198,62 +229,44 @@ const Heat = () => {
   }, [map]);
 
   useEffect(() => {
-    updateHeatmapColor();
-  }, [heatColors, map]);
-
-  useEffect(() => {
-    if (map && locations) {
-      updatePoint();
-      updateHeatmapRadius();
+    if (map && geoJsonData && geoJsonData.features) {
+      console.log(geoJsonData);
+      updateHeatmapColor();
+      map.getSource("heatmap-data").setData(geoJsonData);
     }
-  }, [locations, map]);
-
-  useEffect(() => {
-    if (geoJsonData && geoJsonData.features) {
-      const updatedFeatures = geoJsonData.features.map((feature) => {
-        return {
-          ...feature,
-          properties: {
-            ...feature.properties,
-            heatColors: heatColors,
-          },
-        };
-      });
-
-      const updatedGeoJsonData = {
-        ...geoJsonData,
-        features: updatedFeatures,
-      };
-
-      setGeoJsonData(updatedGeoJsonData);
-    }
-  }, [geoJsonData, heatColors]);
+  }, [map, geoJsonData, heatColors]);
 
   const updatePoint = () => {
     if (!map) return;
-    const geojsonData = {
-      type: "FeatureCollection",
-      features: locations.map((location) => ({
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            parseFloat(location.longitude),
-            parseFloat(location.latitude),
-          ],
-        },
-        properties: {
-          title: location.name,
-          source: "heatmap-data",
-          heatColors: heatColors,
-        },
-      })),
-    };
+    if (map && locations.length > 0) {
+      const validLocations = locations.filter(
+        (loc) => loc.latitude && loc.longitude
+      );
 
-    setGeoJsonData(geojsonData);
+      const geojson = {
+        type: "FeatureCollection",
+        features: validLocations.map((location) => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [
+              parseFloat(location.longitude),
+              parseFloat(location.latitude),
+            ],
+          },
+          properties: {
+            title: location.name,
+            source: "heatmap-data",
+            heatColors: heatColors,
+          },
+        })),
+      };
 
-    if (map.getSource("heatmap-data")) {
-      map.getSource("heatmap-data").setData(geojsonData);
+      applyChange(validLocations, heatColors, geojson);
+
+      if (map.getSource("heatmap-data")) {
+        map.getSource("heatmap-data").setData(geojson);
+      }
     }
   };
 
@@ -274,9 +287,7 @@ const Heat = () => {
           name: row.name,
         }));
 
-        setLocations(newLocations);
-
-        const geojsonData = {
+        const geojson = {
           type: "FeatureCollection",
           features: newLocations.map((location) => ({
             type: "Feature",
@@ -292,10 +303,10 @@ const Heat = () => {
           })),
         };
 
-        setGeoJsonData(geojsonData);
+        applyChange(newLocations, heatColors, geojson);
 
         if (map && map.getSource("heatmap-data")) {
-          map.getSource("heatmap-data").setData(geojsonData);
+          map.getSource("heatmap-data").setData(geojson);
         }
       };
 
@@ -303,7 +314,7 @@ const Heat = () => {
     }
   };
 
-  const handleSave = async (title, version, privacy, mapLayer) => {
+  const handleSave = async (title, version, privacy) => {
     try {
       let titleToPut = title;
       let versionToPut = version;
@@ -369,14 +380,15 @@ const Heat = () => {
   };
 
   const addNewRow = () => {
-    setLocations([
+    const newLocations = [
       ...locations,
       {
         latitude: "",
         longitude: "",
         name: "",
       },
-    ]);
+    ];
+    applyChange(newLocations, heatColors, geoJsonData);
   };
 
   const renderRow = (location, index) => (
@@ -441,7 +453,29 @@ const Heat = () => {
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
           <TabPanel value="1">
-            <Container>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Button
+                  onClick={undo}
+                  disabled={undoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Undo
+                </Button>
+                <Button
+                  onClick={redo}
+                  disabled={redoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Redo
+                </Button>
+              </Box>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
                 Choose an EXCEL file that contains 'latitude,' 'longitude,' and
                 'name' columns
@@ -494,7 +528,7 @@ const Heat = () => {
                   updateHeatmapColor={updateHeatmapColor}
                 />
               )}
-            </Container>
+            </Box>
           </TabPanel>
           <TabPanel value="3">
             <SaveTab
