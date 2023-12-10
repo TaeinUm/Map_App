@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import { Box, CircularProgress, Slider, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Slider,
+  Typography,
+  Button,
+} from "@mui/material";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { TabContext, TabPanel } from "@mui/lab";
 
@@ -38,6 +43,36 @@ function File() {
     lineOpacity: 1.0,
   });
 
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+
+  const applyChange = (newState) => {
+    setUndoStack([...undoStack, styleSettings]);
+    setRedoStack([]);
+    setStyleSettings(newState);
+    updateMapWithNewSettings(newState);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([...redoStack, styleSettings]);
+      setUndoStack(undoStack.slice(0, -1));
+      setStyleSettings(previousState);
+      updateMapWithNewSettings(previousState);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([...undoStack, styleSettings]);
+      setRedoStack(redoStack.slice(0, -1));
+      setStyleSettings(nextState);
+      updateMapWithNewSettings(nextState);
+    }
+  };
+
   const sourceId = "uploadedGeoSource";
   const layerId = "uploaded-data-layer";
 
@@ -48,17 +83,27 @@ function File() {
   const handleLineColorChange = (color) => {
     const newColor = color.hex || color;
     const newSettings = { ...styleSettings, lineColor: newColor };
-    setStyleSettings(newSettings);
+    applyChange(newSettings);
   };
 
   const handleLineWidthChange = (event, newValue) => {
     const newSettings = { ...styleSettings, lineWidth: newValue };
-    setStyleSettings(newSettings);
+    applyChange(newSettings);
   };
 
   const handleLineOpacityChange = (event, newValue) => {
     const newSettings = { ...styleSettings, lineOpacity: newValue };
-    setStyleSettings(newSettings);
+    applyChange(newSettings);
+  };
+
+  // Function to update map based on style settings
+  const updateMapWithNewSettings = (newSettings) => {
+    if (!map) return;
+    if (isLine && map.getLayer(layerId)) {
+      map.setPaintProperty(layerId, "line-color", newSettings.lineColor);
+      map.setPaintProperty(layerId, "line-width", newSettings.lineWidth);
+      map.setPaintProperty(layerId, "line-opacity", newSettings.lineOpacity);
+    }
   };
 
   const updateGeojsonWithLineStyle = (geojsonData, styleSettings) => {
@@ -130,7 +175,6 @@ function File() {
           url: "mapbox://mapbox.country-boundaries-v1",
         });
 
-        console.log(mapId);
         if (mapId) {
           const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
 
@@ -416,11 +460,37 @@ function File() {
             <TabPanel value="1">
               <Box>
                 <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginBottom: "30px",
+                  }}
+                >
+                  <Button
+                    onClick={undo}
+                    disabled={undoStack.length === 0}
+                    sx={{ background: "#fafafa" }}
+                  >
+                    Undo
+                  </Button>
+                  <Button
+                    onClick={redo}
+                    disabled={redoStack.length === 0}
+                    sx={{ background: "#fafafa" }}
+                  >
+                    Redo
+                  </Button>
+                </Box>
+                <Box
                   width="100%"
                   sx={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <Typography
-                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                    sx={{
+                      width: "100%",
+                      color: "#fafafa",
+                      textAlign: "left",
+                    }}
                   >
                     Select Line Color
                   </Typography>
@@ -443,7 +513,11 @@ function File() {
                   }}
                 >
                   <Typography
-                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                    sx={{
+                      width: "100%",
+                      color: "#fafafa",
+                      textAlign: "left",
+                    }}
                   >
                     Select Line Width
                   </Typography>
@@ -465,7 +539,11 @@ function File() {
                   }}
                 >
                   <Typography
-                    sx={{ width: "100%", color: "#fafafa", textAlign: "left" }}
+                    sx={{
+                      width: "100%",
+                      color: "#fafafa",
+                      textAlign: "left",
+                    }}
                   >
                     Select Line Opacity
                   </Typography>

@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
   Typography,
-  Container,
   CircularProgress,
   Table,
   TableHead,
@@ -62,10 +60,36 @@ const ThreeD = () => {
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", value: "" },
   ]);
+
+  const applyChange = (newState) => {
+    setUndoStack([...undoStack, locations]);
+    setRedoStack([]);
+    setLocations(newState);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([...redoStack, locations]);
+      setUndoStack(undoStack.slice(0, -1));
+      setLocations(previousState);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([...undoStack, locations]);
+      setRedoStack(redoStack.slice(0, -1));
+      setLocations(nextState);
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -145,7 +169,7 @@ const ThreeD = () => {
           value: row.value,
         }));
 
-        setLocations(newLocations);
+        applyChange(newLocations);
 
         const features = locations.map((location) => {
           const height = location.value * 50;
@@ -192,6 +216,7 @@ const ThreeD = () => {
           type: "FeatureCollection",
           features,
         };
+
         setGeoJsonData(geojsonData);
 
         if (map && map.getSource("3d-data")) {
@@ -240,71 +265,84 @@ const ThreeD = () => {
   useEffect(() => {
     if (!map) return;
 
-    // Convert locations to GeoJSON features
-    const features = locations.map((location) => {
-      const height = location.value * 50;
-      const deltaLon = 0.09;
-      const deltaLat = 0.09;
+    if (map && locations.length > 0) {
+      const validLocations = locations.filter(
+        (loc) => loc.latitude && loc.longitude
+      );
 
-      // Create polygon coordinates
-      const coordinates = [
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) + deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) + deltaLon,
-          parseFloat(location.latitude) + deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) + deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-      ];
+      // Convert locations to GeoJSON features
+      const features = validLocations.map((location) => {
+        const height = location.value * 50;
+        const deltaLon = 0.09;
+        const deltaLat = 0.09;
 
-      // Return GeoJSON feature
-      return {
-        type: "Feature",
-        properties: {
-          source: "3d-data",
-          height: height,
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [coordinates],
-        },
+        // Create polygon coordinates
+        const coordinates = [
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) + deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) + deltaLon,
+            parseFloat(location.latitude) + deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) + deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+        ];
+
+        // Return GeoJSON feature
+        return {
+          type: "Feature",
+          properties: {
+            source: "3d-data",
+            height: height,
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [coordinates],
+          },
+        };
+      });
+
+      // Create GeoJSON object
+      const geojsonData = {
+        type: "FeatureCollection",
+        features,
       };
-    });
 
-    // Create GeoJSON object
-    const geojsonData = {
-      type: "FeatureCollection",
-      features,
-    };
-    setGeoJsonData(geojsonData);
+      setGeoJsonData(geojsonData);
 
-    // Update map source with new data
-    if (map && map.getSource("3d-data")) {
-      map.getSource("3d-data").setData(geojsonData);
+      // Update map source with new data
+      if (map && map.getSource("3d-data")) {
+        map.getSource("3d-data").setData(geojsonData);
+      }
     }
   }, [map, locations]);
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];
-    newLocations[index][e.target.name] = e.target.value;
+    const value = e.target.value;
+    newLocations[index][e.target.name] = parseFloat(value);
     setLocations(newLocations);
   };
 
   const addNewRow = () => {
-    setLocations([...locations, { latitude: "", longitude: "", name: "" }]);
+    const newLocations = [
+      ...locations,
+      { latitude: "", longitude: "", value: "" },
+    ];
+    applyChange(newLocations);
+    setLocations(newLocations);
   };
 
   const renderRow = (location, index) => (
@@ -347,58 +385,66 @@ const ThreeD = () => {
       return;
     }
 
-    // Convert locations to GeoJSON features
-    const features = locations.map((location) => {
-      const height = location.value * 50;
-      const deltaLon = 0.09;
-      const deltaLat = 0.09;
+    if (map && locations.length > 0) {
+      const validLocations = locations.filter(
+        (loc) => loc.latitude && loc.longitude
+      );
 
-      // Create polygon coordinates
-      const coordinates = [
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) + deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) + deltaLon,
-          parseFloat(location.latitude) + deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) + deltaLat,
-        ],
-        [
-          parseFloat(location.longitude) - deltaLon,
-          parseFloat(location.latitude) - deltaLat,
-        ],
-      ];
+      // Convert locations to GeoJSON features
+      const features = validLocations.map((location) => {
+        const height = location.value * 50;
+        const deltaLon = 0.09;
+        const deltaLat = 0.09;
 
-      // Return GeoJSON feature
-      return {
-        type: "Feature",
-        properties: {
-          height: height,
-        },
-        geometry: {
-          type: "Polygon",
-          coordinates: [coordinates],
-        },
+        // Create polygon coordinates
+        const coordinates = [
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) + deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) + deltaLon,
+            parseFloat(location.latitude) + deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) + deltaLat,
+          ],
+          [
+            parseFloat(location.longitude) - deltaLon,
+            parseFloat(location.latitude) - deltaLat,
+          ],
+        ];
+
+        // Return GeoJSON feature
+        return {
+          type: "Feature",
+          properties: {
+            height: height,
+          },
+          geometry: {
+            type: "Polygon",
+            coordinates: [coordinates],
+          },
+        };
+      });
+
+      // Create GeoJSON object
+      const geojsonData = {
+        type: "FeatureCollection",
+        features,
       };
-    });
 
-    // Create GeoJSON object
-    const geojsonData = {
-      type: "FeatureCollection",
-      features,
-    };
+      applyChange(validLocations);
 
-    // Update map source with new data
-    if (map && map.getSource("3d-data")) {
-      map.getSource("3d-data").setData(geojsonData);
+      // Update map source with new data
+      if (map && map.getSource("3d-data")) {
+        map.getSource("3d-data").setData(geojsonData);
+      }
     }
   };
 
@@ -431,7 +477,29 @@ const ThreeD = () => {
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
           <TabPanel value="1">
-            <Container>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Button
+                  onClick={undo}
+                  disabled={undoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Undo
+                </Button>
+                <Button
+                  onClick={redo}
+                  disabled={redoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Redo
+                </Button>
+              </Box>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
                 Choose an EXCEL file that contains 'latitude,' 'longitude,'
                 'name,' and 'value' columns
@@ -476,7 +544,7 @@ const ThreeD = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
-            </Container>
+            </Box>
           </TabPanel>
           <TabPanel value="3">
             <SaveTab

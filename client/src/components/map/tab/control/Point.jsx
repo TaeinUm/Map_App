@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
   Typography,
-  Container,
   CircularProgress,
   Table,
   TableHead,
@@ -65,17 +63,61 @@ const Point = () => {
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
   ]);
 
+  const applyChange = (newLocations, newPointColor) => {
+    setUndoStack([
+      ...undoStack,
+      { locations: locations, pointColor: pointColor },
+    ]);
+    setRedoStack([]);
+    setLocations(newLocations);
+    setPointColor(newPointColor);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([
+        ...redoStack,
+        { locations: locations, pointColor: pointColor },
+      ]);
+      setUndoStack(undoStack.slice(0, -1));
+      setLocations(previousState.locations);
+      colorChange(previousState.pointColor);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([
+        ...undoStack,
+        { locations: locations, pointColor: pointColor },
+      ]);
+      setRedoStack(redoStack.slice(0, -1));
+      setLocations(nextState.locations);
+      colorChange(nextState.pointColor);
+    }
+  };
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  const handleColorChange = (e) => {
-    const newColor = e.target.value;
+  const handleColorChange = (newColor) => {
+    applyChange(locations, newColor);
+    if (map.getLayer("point-layer")) {
+      map.setPaintProperty("point-layer", "circle-color", newColor);
+    }
+  };
+
+  const colorChange = (newColor) => {
     setPointColor(newColor);
     if (map.getLayer("point-layer")) {
       map.setPaintProperty("point-layer", "circle-color", newColor);
@@ -223,7 +265,7 @@ const Point = () => {
                 name: row.name,
               }));
 
-            setLocations(newLocations);
+            applyChange(newLocations, pointColor);
           }
         });
       };
@@ -234,13 +276,20 @@ const Point = () => {
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];
-    const { name, value } = e.target;
-    newLocations[index][name] = value;
+    const value = e.target.value;
+    newLocations[index][e.target.name] =
+      e.target.name === "Latitude" || e.target.name === "Longitude"
+        ? parseFloat(value)
+        : value;
     setLocations(newLocations);
   };
 
   const addNewRow = () => {
-    setLocations([...locations, { latitude: "", longitude: "", name: "" }]);
+    const newLocations = [
+      ...locations,
+      { latitude: "", longitude: "", name: "" },
+    ];
+    applyChange(newLocations, pointColor);
   };
 
   const renderRow = (location, index) => (
@@ -282,6 +331,7 @@ const Point = () => {
       (loc) => loc.latitude && loc.longitude
     );
 
+    applyChange(validLocations, pointColor);
     addPointsToMap(validLocations);
   };
 
@@ -354,7 +404,29 @@ const Point = () => {
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
           <TabPanel value="1">
-            <Container>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Button
+                  onClick={undo}
+                  disabled={undoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Undo
+                </Button>
+                <Button
+                  onClick={redo}
+                  disabled={redoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Redo
+                </Button>
+              </Box>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
                 Choose an EXCEL file that contains 'latitude,' 'longitude,' and
                 'name' columns
@@ -411,10 +483,12 @@ const Point = () => {
                 <input
                   type="color"
                   value={pointColor}
-                  onChange={handleColorChange}
+                  onChange={(e) => {
+                    handleColorChange(e.target.value);
+                  }}
                 />
               </Box>
-            </Container>
+            </Box>
           </TabPanel>
           <TabPanel value="3">
             <SaveTab

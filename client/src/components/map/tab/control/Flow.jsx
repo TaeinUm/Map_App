@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   TextField,
@@ -88,6 +87,35 @@ const Flow = () => {
       Lyon: { lat: 45.7219, lng: 5.081 },
       Marseille: { lat: 43.4369, lng: 5.2153 },
     },
+  };
+
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+
+  const applyChange = (newState) => {
+    setUndoStack([...undoStack, styleSettings]);
+    setRedoStack([]);
+    setStyleSettings(newState);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([...redoStack, styleSettings]);
+      setUndoStack(undoStack.slice(0, -1));
+      setStyleSettings(previousState);
+      drawExistingFlows(previousState.flows, map);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([...undoStack, styleSettings]);
+      setRedoStack(redoStack.slice(0, -1));
+      setStyleSettings(nextState);
+      drawExistingFlows(nextState.flows, map);
+    }
   };
 
   const handleTabChange = (event, newValue) => {
@@ -213,20 +241,19 @@ const Flow = () => {
 
       const flowLog = `${startCountry}, ${startCity} -> ${endCountry}, ${endCity}`;
 
-      setStyleSettings((prevSettings) => {
-        const newFlow = {
-          id: flowId,
-          log: flowLog,
-          start: startPoint,
-          end: endPoint,
-          color: regionColor,
-          curvature: styleSettings.lineCurvature,
-          lineWidth: styleSettings.lineWidth,
-        };
-        return {
-          ...prevSettings,
-          flows: [...prevSettings.flows, newFlow],
-        };
+      const newFlow = {
+        id: flowId,
+        log: flowLog,
+        start: startPoint,
+        end: endPoint,
+        color: regionColor,
+        curvature: styleSettings.lineCurvature,
+        lineWidth: styleSettings.lineWidth,
+      };
+
+      applyChange({
+        ...styleSettings,
+        flows: [...styleSettings.flows, newFlow],
       });
 
       setStartCountry("");
@@ -237,6 +264,13 @@ const Flow = () => {
   };
 
   const drawExistingFlows = (flows, mapInstance) => {
+    styleSettings.flows.forEach((existingFlow) => {
+      if (mapInstance.getLayer(existingFlow.id)) {
+        mapInstance.removeLayer(existingFlow.id);
+        mapInstance.removeSource(existingFlow.id);
+      }
+    });
+
     flows.forEach((flow) => {
       if (!mapInstance.getLayer(flow.id)) {
         // Add the layer for each flow
@@ -398,6 +432,28 @@ const Flow = () => {
 
           <TabPanel value="1">
             <div>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Button
+                  onClick={undo}
+                  disabled={undoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Undo
+                </Button>
+                <Button
+                  onClick={redo}
+                  disabled={redoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Redo
+                </Button>
+              </Box>
               <Box
                 sx={{
                   display: "flex",
