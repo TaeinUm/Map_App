@@ -230,7 +230,6 @@ const Heat = () => {
 
   useEffect(() => {
     if (map && geoJsonData && geoJsonData.features) {
-      console.log(geoJsonData);
       updateHeatmapColor();
       map.getSource("heatmap-data").setData(geoJsonData);
     }
