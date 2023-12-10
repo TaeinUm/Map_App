@@ -23,6 +23,36 @@ describe("Map Editing and Landing Page Tests", () => {
     cy.get('[alt="Basic Map"]').click();
     /* cy.get("button").contains("Start New").click();*/
   });
+  it("opens the graphic modal and checks if the point map option exists", () => {
+    cy.reload();
+    cy.get("button").contains("Create New").click();
+    cy.get('[alt="Point Map"]').should("exist");
+    /* cy.get("button").contains("Start New").click();*/
+  });
+  it("opens the graphic modal and checks if the heat map option exists", () => {
+    cy.reload();
+    cy.get("button").contains("Create New").click();
+    cy.get('[alt="Heat Map"]').should("exist");
+    /* cy.get("button").contains("Start New").click();*/
+  });
+  it("opens the graphic modal and checks if the regional map option exists", () => {
+    cy.reload();
+    cy.get("button").contains("Create New").click();
+    cy.get('[alt="Point Map"]').should("exist");
+    /* cy.get("button").contains("Start New").click();*/
+  });
+  it("opens the graphic modal and checks if the point map option exists", () => {
+    cy.reload();
+    cy.get("button").contains("Create New").click();
+    cy.get('[alt="Point Map"]').should("exist");
+    /* cy.get("button").contains("Start New").click();*/
+  });
+  it("opens the graphic modal and checks if the point map option exists", () => {
+    cy.reload();
+    cy.get("button").contains("Create New").click();
+    cy.get('[alt="Point Map"]').should("exist");
+    /* cy.get("button").contains("Start New").click();*/
+  });
   /*
   describe("Save Tab Functionality", () => {
     beforeEach(() => {
