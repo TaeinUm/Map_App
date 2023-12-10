@@ -9,10 +9,14 @@ const Home = () => {
   return (
     <Box sx={{ fontFamily: "Arial", width: "100%", m: "auto", p: 2 }}>
       {/* TOP5 Trending Map Graphics */}
-      <Trending />
+      <Box sx={{ mt: "20px" }}>
+        <Trending />
+      </Box>
 
       {/* Simple Instruction */}
-      <Instruction />
+      <Box sx={{ mt: "120px" }}>
+        <Instruction />
+      </Box>
     </Box>
   );
 };

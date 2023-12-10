@@ -1,10 +1,17 @@
-import React from "react";
-import "../../styles/policy.css";
 
+import "../../styles/policy.css";
+import React, { useState, useEffect } from "react";
 
 function PrivacyPolicy() {
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
   return (
-    <div className="privacy-policy">
+    
+    <div className="privacy-policy"  style={{ height: "100vh" }}>
       <h1><b>Privacy Policy (Example)</b></h1>
       <p>Last updated:2023.11.12</p>
       <br></br>

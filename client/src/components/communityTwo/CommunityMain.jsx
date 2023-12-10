@@ -85,7 +85,7 @@ function CommunityMain() {
   const [ideasPage, setIdeasPage] = useState(1);
   const [usernamePage, setUsernamePage] = useState(1);
 
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState("All");
   const [whiteBar, setWhiteBar] = useState("All");
   const { getAllPosts } = CommunitySectionAPI;
 
@@ -141,55 +141,115 @@ function CommunityMain() {
     setWhiteBar(event.target.value);
   };
 
-  const renderAllPosts = () => (
+  const searchPosts = (posts) => {
+    return posts.filter((post) =>
+      post.postName.toLowerCase().includes(searchTerm.toLowerCase())
+      // You can add more conditions here to search in other fields
+    );
+  };
+
+  const renderAllPosts = () => {
+  // Filter posts for each category based on the search term
+  const filteredUserGraphics = searchPosts(userGraphics);
+  const filteredQuestionBuffer = searchPosts(questionBuffer);
+  const filteredTrendingBuffer = searchPosts(trendingBuffer);
+  const filteredIdeasBuffer = searchPosts(ideasBuffer);
+
+  return (
     <>
+      <Box sx={{ mt: "20px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Trending Map Graphics
+        </Typography>
+        <PaginatedPosts
+          posts={filteredUserGraphics}
+          page={userGraphicsPage}
+          setPage={setUserGraphicsPage}
+          itemsPerPage={3}
+        />
+      </Box>
+      <Box>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Questions
+        </Typography>
+        <PaginatedPosts
+          posts={filteredQuestionBuffer}
+          page={questionPage}
+          setPage={setQuestionPage}
+          itemsPerPage={3}
+        />
+      </Box>
+      <Box>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Map Graphics Ideas
+        </Typography>
+        <PaginatedPosts
+          posts={filteredIdeasBuffer}
+          page={ideasPage}
+          setPage={setIdeasPage}
+          itemsPerPage={3}
+        />
+      </Box>
+    </>
+  );
+};
+
+
+const renderMapGraphics = () => {
+  const filteredMapGraphics = searchPosts(trendingBuffer);
+
+  return (
+    <>
+      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        Trending Map Graphics
+      </Typography>
       <PaginatedPosts
-        posts={userGraphics}
-        page={userGraphicsPage}
-        setPage={setUserGraphicsPage}
-        itemsPerPage={3}
-      />
-      <PaginatedPosts
-        posts={questionBuffer}
-        page={questionPage}
-        setPage={setQuestionPage}
-        itemsPerPage={3}
-      />
-      <PaginatedPosts
-        posts={ideasBuffer}
-        page={ideasPage}
-        setPage={setIdeasPage}
-        itemsPerPage={3}
+        posts={filteredMapGraphics}
+        page={trendingPage}
+        setPage={setTrendingPage}
+        itemsPerPage={9}
       />
     </>
   );
+};
 
-  const renderMapGraphics = () => (
-    <PaginatedPosts
-      posts={trendingBuffer}
-      page={trendingPage}
-      setPage={setTrendingPage}
-      itemsPerPage={9}
-    />
-  );
 
-  const renderQuestion = () => (
-    <PaginatedPosts
-      posts={questionBuffer}
-      page={questionPage}
-      setPage={setQuestionPage}
-      itemsPerPage={9}
-    />
-  );
+  const renderQuestion = () => {
+    const filteredQuestions = searchPosts(questionBuffer);
+  
+    return (
+      <>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Questions
+        </Typography>
+        <PaginatedPosts
+          posts={filteredQuestions}
+          page={questionPage}
+          setPage={setQuestionPage}
+          itemsPerPage={9}
+        />
+      </>
+    );
+  };
 
-  const renderIdeas = () => (
-    <PaginatedPosts
-      posts={ideasBuffer}
-      page={ideasPage}
-      setPage={setIdeasPage}
-      itemsPerPage={9}
-    />
-  );
+  const renderIdeas = () => {
+    const filteredIdeas = searchPosts(ideasBuffer);
+  
+    return (
+      <>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+          Map Graphics Idea
+        </Typography>
+        <PaginatedPosts
+          posts={filteredIdeas}
+          page={ideasPage}
+          setPage={setIdeasPage}
+          itemsPerPage={9}
+        />
+      </>
+    );
+  };
+  
 
   const renderAllUserName = () => (
     <PaginatedPosts
@@ -224,88 +284,93 @@ function CommunityMain() {
 
   return (
     <Container
-      maxWidth="100%"
       sx={{
-        paddingBottom: 4,
-        margin: "10px",
-        marginBottom: "50px",
+        mt: "10px",
+        minHeight: "100vh"
       }}
     >
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderRadius: "5px" }}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          p: "30px",
+        }}
       >
-        <StyledToolbar sx={{ color: "black" }}>
-          <Typography
-            data-cy="current-category"
-            variant="h6"
-            noWrap
-            sx={{
-              display: { xs: "none", sm: "block" },
-              color: "black",
-              width: "300px",
-              textAlign: "left",
-            }}
+        <AppBar
+          position="static"
+          color="default"
+          elevation={0}
+          sx={{
+            borderRadius: "5px",
+            width: "85%",
+          }}
+        >
+          <StyledToolbar
+            sx={{ color: "black" }}
           >
-            {whiteBar}
-          </Typography>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "flex", md: "flex" },
-              justifyContent: "center",
-            }}
-          >
+            {/* <Typography
+              data-cy="current-category"
+              variant="h6"
+              noWrap
+              sx={{
+                display: { xs: "none", sm: "block" },
+                color: "black",
+                width: "300px",
+                textAlign: "left",
+              }}
+            >
+              {whiteBar}
+            </Typography> */}
             {/* Dropdown Menu for selecting categories */}
-            <Select
-              data-cy="community-select-bar"
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={category}
-              onChange={handleCategoryChange}
-              displayEmpty
-              inputProps={{ "aria-label": "Select category" }}
-              sx={{ mr: 2, bgcolor: "white", width: "200px" }}
-            >
-              <MenuItem value="All">All</MenuItem>
-              <MenuItem value="Trending Map Graphics">
-                Trending Map Graphics
-              </MenuItem>
-              <MenuItem value="Questions">Questions</MenuItem>
-              <MenuItem value="Map Ideas">Map Graphics Idea</MenuItem>
-              <MenuItem value="User Name">User Name</MenuItem>
-            </Select>
+            <Box sx={{ display: "flex", justifyContent: "space-between"}}>
+              <Select
+                data-cy="community-select-bar"
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={category}
+                onChange={handleCategoryChange}
+                displayEmpty
+                inputProps={{ "aria-label": "Select category" }}
+                sx={{ mr: "50px", bgcolor: "white", width: "250px", textAlign: "left" }}
+              >
+                <MenuItem value="All">All</MenuItem>
+                <MenuItem value="Trending Map Graphics">
+                  Trending Map Graphics
+                </MenuItem>
+                <MenuItem value="Questions">Questions</MenuItem>
+                <MenuItem value="Map Ideas">Map Graphics Idea</MenuItem>
+                <MenuItem value="User Name">User Name</MenuItem>
+              </Select>
 
-            {/* Search Bar */}
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </Search>
-          </Box>
-          <Box sx={{ display: { xs: "none", sm: "block" } }}>
-            <Button
-              component={Link}
-              to={`/PostMapGraphic/`}
-              variant="contained"
-              startIcon={<AddIcon />}
-              sx={{ mr: 2 }}
-              disabled={authentification}
-            >
-              Post
-            </Button>
-          </Box>
-        </StyledToolbar>
-      </AppBar>
-      {content}
+              {/* Search Bar */}
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ "aria-label": "search" }}
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  sx={{ width: "500px" }}
+                />
+              </Search>
+            </Box>
+          </StyledToolbar>
+        </AppBar>
+        <Box sx={{ mt: "13px", mr: "20px" }}>
+          <Button
+            component={Link}
+            to={`/PostMapGraphic/`}
+            variant="contained"
+            startIcon={<AddIcon />}
+            disabled={authentification}
+          >
+            Post
+          </Button>
+        </Box>
+      </Box>
+      <Box>{content}</Box>
     </Container>
   );
 }

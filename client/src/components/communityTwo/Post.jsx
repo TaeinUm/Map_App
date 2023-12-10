@@ -43,6 +43,9 @@ function Post() {
   const [commentsBuffer, setCommentsBuffer] = useState([]);
   const [questionTitle, setQuestionTitle] = useState("");
   const [authentification, setAuthentification] = useState(true);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const fetchPostDetails = async () => {
@@ -101,15 +104,37 @@ function Post() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ p: 3, height: "100%" }}>
-      <Paper sx={{ my: 2, p: 2, backgroundColor: "#333" }}>
-        <Typography variant="h4" gutterBottom color="white">
+    <Container maxWidth="md" sx={{ minHeight: '100vh', p: 3, height: "100%" }}>
+      <Paper sx={{ my: 2, p: 2, backgroundColor: "#fff" }}>
+        <Typography variant="h4" gutterBottom color="black" sx={{marginBottom: "10px", marginTop: "20px"}}>
           {postInfo.postName}
         </Typography>
+        <Typography variant="h7" gutterBottom color="gray">
+          {postInfo.userId}
+        </Typography>
+        <br></br>
+        <Typography variant="h7" gutterBottom color="gray">
+        {new Date(postInfo.postDate).toLocaleString('en-US', {
+              year: 'numeric',
+              month: '2-digit',
+              day: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            }).replace(',', '').replace(/:/g, ':')}
+        </Typography>
+        <br></br>
+        <Typography variant="h7" gutterBottom color="gray">
+          {postInfo.postType}
+        </Typography>
+
+        <br></br>
+        <br></br>
+        <hr/>
 
         <Paper
           elevation={4}
-          sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+          sx={{ width: "auto", height: "auto", bgcolor: "grey" }}
         >
           <img
             src={postInfo.postImages}
@@ -132,11 +157,12 @@ function Post() {
           {postInfo.content}
         </Typography>
         <Divider sx={{ my: 2, bgcolor: "white" }} />
-        <Typography variant="h4" gutterBottom color="white" sx={{ mt: 3 }}>
+        <hr/>
+        {/* <Typography variant="h4" gutterBottom color="white" sx={{ mt: 3 }}>
           Comments Section
-        </Typography>
+        </Typography> */}
 
-        <Typography variant="h6" gutterBottom color="white">
+        <Typography variant="h6" gutterBottom color="black">
           Comments ({commentsBuffer.length})
         </Typography>
         <TextField
@@ -152,7 +178,7 @@ function Post() {
           sx={{
             backgroundColor: "white",
             "& .MuiOutlinedInput-root": {
-              "& fieldset": { borderColor: "white" },
+              "& fieldset": { borderColor: "black" },
             },
           }}
         />
@@ -163,15 +189,55 @@ function Post() {
           sx={{ mt: 2 }}
           disabled={authentification}
           data-cy="comment-button"
+          style={{
+            backgroundColor: 'black',
+            color: 'white',
+          }}
         >
           Post Comment
         </Button>
 
-        {commentsBuffer.map((comment, index) => (
+        {/* {commentsBuffer.map((comment, index) => (
           <Typography key={index} sx={{ color: "#FAFAFA", mb: 2, ml: 5 }}>
             {comment.commentContent}
           </Typography>
-        ))}
+        ))} */}
+        <br></br>
+        <br></br>
+
+{commentsBuffer.map((comment, index) => (
+  <Paper 
+    key={index} 
+    sx={{ 
+      bgcolor: 'background.paper', 
+      mb: 2, 
+      p: 2, 
+      display: 'flex', 
+      alignItems: 'center', 
+      width: '100%'
+    }}
+  >
+    <AccountCircleIcon sx={{ mr: 2, color: 'action.active' }} />
+    <Box sx={{ textAlign: 'left', width: '100%' }}>
+      <Typography variant="subtitle2" color="text.primary">
+        {comment.userId || 'Anonymous'}
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        {comment.commentContent}
+      </Typography>
+      <Typography variant="caption" display="block" color="text.secondary" sx={{ mt: 1 }}>
+        {new Date(comment.commentDate).toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })}
+      </Typography>
+    </Box>
+  </Paper>
+))}
       </Paper>
     </Container>
   );

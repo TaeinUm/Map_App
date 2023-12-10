@@ -19,6 +19,11 @@ import {
   Hidden,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import LogoutIcon from "@mui/icons-material/Logout"; // Import logout icon
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import profile icon
+import LoginIcon from '@mui/icons-material/Login'; // Icon for Sign In
+import PersonAddIcon from '@mui/icons-material/PersonAdd'; // Icon for Sign Up
+
 import TerraCanvas from "../../assets/images/TerraCanvas.png";
 
 function Header() {
@@ -55,17 +60,17 @@ function Header() {
   return (
     <AppBar
       position="static"
-      height="100px"
-      sx={{ background: "linear-gradient(#465065, #282c34)", color: "grey" }}
+      sx={{ background: "linear-gradient(#465065, #282c34)", color: "grey", p: 0 }}
     >
       <Toolbar
         sx={{
           alignContent: "center",
           justifyContent: "space-between",
-          padding: "1rem 2rem",
+          height: "auto",
+          p: 0
         }}
       >
-        <Box sx={{ display: "flex", flex: 1 }}>
+        <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
           <Link to="/">
             <CardMedia
               type="button"
@@ -74,7 +79,7 @@ function Header() {
               alt="logo"
               style={{
                 objectFit: "cover",
-                height: "60px",
+                height: "40px",
                 width: "auto",
               }}
             />
@@ -93,9 +98,10 @@ function Header() {
         </Hidden>
 
         {isDesktop && (
-          <Box sx={{ display: "flex", flex: 2, justifyContent: "center" }}>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             {navLinks.map(({ title, path }) => (
               <Button
+                sx={{ fontFamily: "Roboto", fontSize: "18px", justifyContent: "space-between", ml: "10px", mr: "10px", pb: 0 }}
                 key={title}
                 size="large"
                 color="inherit"
@@ -112,7 +118,7 @@ function Header() {
         )}
 
         {isDesktop && (
-          <Box sx={{ display: "flex", flex: 1, justifyContent: "flex-end" }}>
+          <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
             {isAuthenticated ? (
               <>
                 <Button
@@ -121,19 +127,20 @@ function Header() {
                   onClick={handleLogout}
                   to="/"
                   sx={{
-                    width: 100,
-                    height: 40,
-                    backgroundColor: "#FAFAFA",
+                    minWidth: "auto",
+                    padding: "10px",
+                    backgroundColor: "transparent",
                     color: "#282c34",
-                    border: "none",
                     marginRight: "20px",
-                    borderRadius: "5px",
                     "&:hover": {
-                      backgroundColor: "primary.light",
+                      color: "white",
+                      fontWeight: "bold"
                     },
+                    color: "grey",
                   }}
                 >
-                  Logout
+                  <LogoutIcon sx={{ mr: "2px" }}/> {/* Logout icon */}
+                  logout
                 </Button>
                 <Button
                   size="large"
@@ -141,18 +148,18 @@ function Header() {
                   color="inherit"
                   to="/profile"
                   sx={{
-                    width: 100,
-                    height: 40,
-                    backgroundColor: "#FAFAFA",
+                    minWidth: "auto",
+                    padding: "10px",
+                    backgroundColor: "transparent",
                     color: "#282c34",
-                    border: "none",
-                    marginRight: "20px",
-                    borderRadius: "5px",
                     "&:hover": {
-                      backgroundColor: "primary.light",
+                      color: "white",
+                      fontWeight: "bold"
                     },
+                    color: "grey",
                   }}
                 >
+                  <AccountCircleIcon sx={{ mr: "3px" }}/> {/* Profile icon */}
                   Profile
                 </Button>
               </>
@@ -160,25 +167,29 @@ function Header() {
               <>
                 {authLinks.map(({ title, path }) => (
                   <Button
-                    key={title}
-                    size="large"
-                    color="inherit"
-                    component={NavLink}
-                    to={path}
-                    sx={{
-                      width: 100,
-                      height: 40,
-                      backgroundColor: "#FAFAFA",
-                      color: "#282c34",
-                      border: "none",
-                      marginRight: "20px",
-                      borderRadius: "5px",
-                      "&:hover": {
-                        backgroundColor: "primary.light",
-                      },
-                    }}
-                  >
-                    {title}
+                  key={title}
+                  size="large"
+                  color="inherit"
+                  component={NavLink}
+                  to={path}
+                  sx={{
+                    minWidth: 'auto',
+                    padding: '10px',
+                    backgroundColor: 'transparent',
+                    color: '#282c34',
+                    marginRight: '20px',
+                    "&:hover": {
+                      color: "white",
+                      fontWeight: "bold"
+                    },
+                    color: "grey",
+                  }}
+                >
+                    {title === "Sign In"
+                      ? <><LoginIcon sx={{ mr: 1 }}/> Sign In</>
+                      : title === "Sign Up"
+                      ? <><PersonAddIcon sx={{ mr: 1 }}/> Sign Up</>
+                      : title}
                   </Button>
                 ))}
               </>
