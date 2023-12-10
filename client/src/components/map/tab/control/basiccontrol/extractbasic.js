@@ -32,6 +32,7 @@ const processGeoJsonData = (geojsonData, settings, category) => {
         properties: {
           ...feature.properties,
           type,
+          source: category,
           paint: {
             "fill-color": color,
             "fill-opacity": 0.1,

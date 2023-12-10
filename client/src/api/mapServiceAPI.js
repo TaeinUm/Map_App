@@ -145,7 +145,8 @@ const mapServiceAPI = {
         mapImage,
       };
       let response;
-      if (mapId) {
+      {
+        /*if (mapId) {
         // Update existing map graphic if mapId is provided
         response = await axios.put(
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics/${mapId}`,
@@ -157,7 +158,12 @@ const mapServiceAPI = {
           `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
           mapGraphicData
         );
+      } */
       }
+      response = await axios.post(
+        `${API_BASE_URL}/api/mapgraphics/${userId}/map-graphics`,
+        mapGraphicData
+      );
 
       return response.data;
     } catch (error) {
@@ -168,6 +174,7 @@ const mapServiceAPI = {
 
   storeLoadedMapGraphic: async (
     userId,
+    mapId,
     title,
     version,
     privacy,

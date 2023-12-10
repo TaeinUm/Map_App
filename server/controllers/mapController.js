@@ -183,6 +183,7 @@ const getMapGraphicData = async (req, res) => {
     if (!mapGraphic) {
       return res.status(200).json({ message: "Map graphic not found" });
     }
+
     res.json(mapGraphic);
   } catch (error) {
     console.error("Error fetching map graphic data:", error);

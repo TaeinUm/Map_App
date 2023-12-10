@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   CircularProgress,
@@ -87,6 +86,46 @@ const BasicStyles = () => {
     "mapbox://styles/mapbox/streets-v12"
   );
   const [tabValue, setTabValue] = useState("1");
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+
+  const applyChange = (newState) => {
+    setUndoStack([...undoStack, styleSettings]);
+    setRedoStack([]);
+    setStyleSettings(newState);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([...redoStack, styleSettings]);
+      setUndoStack(undoStack.slice(0, -1));
+      setStyleSettings(previousState);
+      styleSettings.labels.forEach((label) => {
+        if (map.getLayer(label.id)) {
+          map.removeLayer(label.id);
+          map.removeSource(label.id);
+        }
+      });
+      previousState.labels.forEach(addLabelLayer);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([...undoStack, styleSettings]);
+      setRedoStack(redoStack.slice(0, -1));
+      setStyleSettings(nextState);
+      styleSettings.labels.forEach((label) => {
+        if (map.getLayer(label.id)) {
+          map.removeLayer(label.id);
+          map.removeSource(label.id);
+        }
+      });
+      nextState.labels.forEach(addLabelLayer);
+    }
+  };
 
   const layerSelector = {
     background: /land|landcover/,
@@ -120,12 +159,7 @@ const BasicStyles = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
+
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -249,10 +283,15 @@ const BasicStyles = () => {
       features: [...prevData.features, newLabel],
     }));
 
-    setStyleSettings((prev) => ({
-      ...prev,
-      labels: [...prev.labels, newLabel],
-    }));
+    setStyleSettings((prev) => {
+      const newState = {
+        ...prev,
+        labels: [...prev.labels, newLabel],
+      };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   useEffect(() => {
@@ -308,49 +347,84 @@ const BasicStyles = () => {
 
   // Handlers for changing style settings
   const handleCategoryColor = (category, color) => {
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      color: { ...prevSettings.color, [category]: color },
-    }));
+    setStyleSettings((prevSettings) => {
+      const newState = {
+        ...prevSettings,
+        color: { ...prevSettings.color, [category]: color },
+      };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   const handleVisibilityChange = (category, isVisible) => {
-    setStyleSettings((prev) => ({
-      ...prev,
-      visibility: { ...prev.visibility, [category]: isVisible },
-    }));
+    setStyleSettings((prev) => {
+      const newState = {
+        ...prev,
+        visibility: { ...prev.visibility, [category]: isVisible },
+      };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   const handleFontSizeChange = (fontSize) => {
-    setStyleSettings((prev) => ({ ...prev, fontSize }));
+    setStyleSettings((prev) => {
+      const newState = { ...prev, fontSize };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   const handleFontFamilyChange = (fontFamily) => {
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      fontFamily: fontFamily,
-    }));
+    setStyleSettings((prevSettings) => {
+      const newState = {
+        ...prevSettings,
+        fontFamily: fontFamily,
+      };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   const handleLineWidthChange = (category, width) => {
-    setStyleSettings((prev) => ({
-      ...prev,
-      lineWidth: { ...prev.lineWidth, [category]: width },
-    }));
+    setStyleSettings((prev) => {
+      const newState = {
+        ...prev,
+        lineWidth: { ...prev.lineWidth, [category]: width },
+      };
+
+      applyChange(newState);
+      return newState;
+    });
   };
 
   const handleSave = async (title, version, privacy) => {
     const mapImage = map.getCanvas().toDataURL();
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+
+        const originalVer = response.vers;
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
+      }
       await mapServiceAPI.addMapGraphics(
         userId,
         mapId, // This could be null if creating a new map
-        title,
-        version,
+        titleToPut,
+        versionToPut,
         privacy,
         "Basic Map",
         JSON.stringify(styleSettings),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");
@@ -383,12 +457,41 @@ const BasicStyles = () => {
               <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
               <TabPanel value="1">
-                <div>
-                  <h3 style={{ color: "#fafafa", textAlign: "left" }}>
+                <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "30px",
+                    }}
+                  >
+                    <Button
+                      onClick={undo}
+                      disabled={undoStack.length === 0}
+                      sx={{ background: "#fafafa" }}
+                    >
+                      Undo
+                    </Button>
+                    <Button
+                      onClick={redo}
+                      disabled={redoStack.length === 0}
+                      sx={{ background: "#fafafa" }}
+                    >
+                      Redo
+                    </Button>
+                  </Box>
+                  <Typography
+                    variant="h4"
+                    style={{
+                      color: "#fafafa",
+                      textAlign: "left",
+                      marginBottom: "20px",
+                    }}
+                  >
                     Basic Styles
-                  </h3>
+                  </Typography>
                   {categories.map((category) => (
-                    <div
+                    <Box
                       key={category}
                       style={{
                         display: "flex",
@@ -397,8 +500,8 @@ const BasicStyles = () => {
                         marginBottom: "10px",
                       }}
                     >
-                      <label>{category}: </label>
-                      <div style={{ display: "flex", marginBottom: "10px" }}>
+                      <Typography>{category}: </Typography>
+                      <Box style={{ display: "flex", marginBottom: "10px" }}>
                         <input
                           type="color"
                           value={styleSettings.color[category]}
@@ -407,7 +510,7 @@ const BasicStyles = () => {
                           }
                           disabled={!styleSettings.visibility[category]}
                         />
-                        <label>Visible: </label>
+                        <Typography>Visible: </Typography>
                         <input
                           type="checkbox"
                           checked={styleSettings.visibility[category]}
@@ -415,10 +518,10 @@ const BasicStyles = () => {
                             handleVisibilityChange(category, e.target.checked)
                           }
                         />
-                      </div>
-                    </div>
+                      </Box>
+                    </Box>
                   ))}
-                  <div
+                  <Box
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
@@ -426,7 +529,9 @@ const BasicStyles = () => {
                       marginBottom: "20px",
                     }}
                   >
-                    <label style={{ marginBottom: "10px" }}>Font Style: </label>
+                    <Typography style={{ marginBottom: "10px" }}>
+                      Font Style:{" "}
+                    </Typography>
                     <select
                       value={styleSettings.fontFamily}
                       onChange={(e) => handleFontFamilyChange(e.target.value)}
@@ -441,7 +546,7 @@ const BasicStyles = () => {
                       <option value="Roboto Regular">Roboto Regular</option>
                       <option value="Roboto Bold">Roboto Bold</option>
                     </select>
-                  </div>
+                  </Box>
                   <Box>
                     <Typography sx={{ color: "#fafafa" }}>
                       {" "}
@@ -491,7 +596,7 @@ const BasicStyles = () => {
                     max={5}
                     sx={{ marginBottom: "20px" }}
                   />
-                </div>
+                </Box>
               </TabPanel>
               <TabPanel value="3">
                 <SaveTab
