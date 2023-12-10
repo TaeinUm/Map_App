@@ -59,7 +59,7 @@ function CommunityPostMapGraphic() {
           backgroundColor: 'white', // 배경색을 흰색으로 변경
           color: 'black', // 텍스트 색상을 검은색으로 변경 (가독성을 위해)
           width: isMobile ? '100%' : '70%',
-          maxWidth: isMobile ? 'none' : '800px',
+          maxWidth: isMobile ? 'none' : '1000px',
           margin: 'auto',
           overflow: 'hidden',
         }}
@@ -115,7 +115,8 @@ function CommunityPostMapGraphic() {
             placeholder="Enter the content of your post here"
             style={{ backgroundColor: 'white' }}
           />
-
+          <br></br>
+          <br></br>
           <Box display="flex" justifyContent="space-between" marginTop="1rem">
            <Button variant="contained" color="primary" style={{
                backgroundColor: 'black',
@@ -134,7 +135,8 @@ function CommunityPostMapGraphic() {
               <input id="shabi-file" type="file" hidden />
             </Button>
           </Box>
-          
+          <br></br>
+          <br></br>
           <Box display="flex" justifyContent="center" marginTop="1rem">
             <Button variant="contained" color="secondary" size="large" style={{
                 backgroundColor: 'black',
