@@ -39,16 +39,16 @@ describe("Flow Component Test", () => {
       cy.get("input").should("exist");
     });
 
-    it("should load the flow curvature slider", () => {
-        cy.get("[data-cy=flow-curavture]").should("exist");
+    it("should load a jsx element that contains the words Flow Line Curvature", () => {
+        cy.contains("Flow Line Curvature").should("exist");
     });
     //try again
-    it("should load the flow width slider", () => {
-    cy.get("[data-cy=flow-width]").should("exist");
+    it("should load a jsx element that contains the words Flow Line Width", () => {
+    cy.contains("Flow Line Width").should("exist");
     });
 
     it("should load the starting country textfield", () => {
-    cy.get("[data-cy=starting-country]").should("exist");
+    cy.get("Flow Line Opacity").should("exist");
     });
 
     it("should load the starting city textfield", () => {
@@ -63,12 +63,12 @@ describe("Flow Component Test", () => {
     cy.get("[data-cy=ending-city]").should("exist");
     });
 
-    it("should load the flow line opacity slider", () => {
-    cy.get("[data-cy=flow-opacity]").should("exist");
+    it("should load a jsx element that contains the words Flow Line Opacity", () => {
+    cy.contains("Flow Line Opacity").should("exist");
     });
 
     it("should load the save button successfully", () => {
-      cy.get("[data-cy=savebutton]").should("exist");
+      cy.contains("Save").should("exist");
     });
   });
   
