@@ -36,7 +36,7 @@ describe("Point Component Test", () => {
     // });
   
     it("should load the color input", () => {
-      cy.get("[data-cy=flowmap-color]").should("exist");
+      cy.get("#flowmap-color").should("exist");
     });
 
     it("should load the flow curvature slider", () => {

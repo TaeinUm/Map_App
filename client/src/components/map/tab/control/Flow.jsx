@@ -423,7 +423,7 @@ const Flow = () => {
                   type="color"
                   value={regionColor}
                   onChange={flowColorChange}
-                  data-cy="flowmap-color"
+                  id="flowmap-color"
                 />
               </Box>
               <CurveSlider
