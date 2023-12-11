@@ -9,6 +9,7 @@ const extract = (styleSettings) => {
         properties: {
           ...feature.properties,
           type: "fill",
+          source: "countries",
           paint: {
             "fill-color": colorMap[feature.id],
             "fill-opacity": opacity,

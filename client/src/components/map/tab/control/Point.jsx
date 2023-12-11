@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
   Typography,
-  Container,
   CircularProgress,
   Table,
   TableHead,
@@ -25,7 +23,6 @@ import mapServiceAPI from "../../../../api/mapServiceAPI";
 
 import SaveTab from "../SaveTab";
 import TabMenu from "../../editmap/TabMenu";
-import MarkerStylePicker from "./pointcontrol/MarkerStylePicker";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoiamF5c3VkZnlyIiwiYSI6ImNsb3dxa2hiZjAyb2Mya3Fmb3Znd2k4b3EifQ.36cU7lvMqTDdgy--bqDV-A";
@@ -51,7 +48,8 @@ const Point = () => {
   const { mapId, setMapId } = useContext(MapContext);
   const { userId, username } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [markers, setMarkers] = useState([]);
+  const [pointColor, setPointColor] = useState("#FF5733");
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const navigate = useNavigate();
@@ -65,38 +63,65 @@ const Point = () => {
 
   const [tabValue, setTabValue] = useState("1");
   const [geoJsonData, setGeoJsonData] = useState(null);
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
 
   const [locations, setLocations] = useState([
     { latitude: "", longitude: "", name: "" },
   ]);
 
+  const applyChange = (newLocations, newPointColor) => {
+    setUndoStack([
+      ...undoStack,
+      { locations: locations, pointColor: pointColor },
+    ]);
+    setRedoStack([]);
+    setLocations(newLocations);
+    setPointColor(newPointColor);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([
+        ...redoStack,
+        { locations: locations, pointColor: pointColor },
+      ]);
+      setUndoStack(undoStack.slice(0, -1));
+      setLocations(previousState.locations);
+      colorChange(previousState.pointColor);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([
+        ...undoStack,
+        { locations: locations, pointColor: pointColor },
+      ]);
+      setRedoStack(redoStack.slice(0, -1));
+      setLocations(nextState.locations);
+      colorChange(nextState.pointColor);
+    }
+  };
+
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  const generateGeoJsonFromMarkers = (markers) => {
-    const features = markers
-      .map(({ marker, name }) => {
-        if (marker && marker instanceof mapboxgl.Marker) {
-          return {
-            type: "Feature",
-            properties: {
-              name: name,
-            },
-            geometry: {
-              type: "Point",
-              coordinates: [marker.getLngLat().lng, marker.getLngLat().lat],
-            },
-          };
-        }
-        return null;
-      })
-      .filter((feature) => feature !== null);
+  const handleColorChange = (newColor) => {
+    applyChange(locations, newColor);
+    if (map.getLayer("point-layer")) {
+      map.setPaintProperty("point-layer", "circle-color", newColor);
+    }
+  };
 
-    return {
-      type: "FeatureCollection",
-      features,
-    };
+  const colorChange = (newColor) => {
+    setPointColor(newColor);
+    if (map.getLayer("point-layer")) {
+      map.setPaintProperty("point-layer", "circle-color", newColor);
+    }
   };
 
   useEffect(() => {
@@ -109,12 +134,7 @@ const Point = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
+
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -126,16 +146,22 @@ const Point = () => {
             features: [],
           },
         });
+
+        // Add a new layer for the points
         newMap.addLayer({
-          id: "country-boundaries",
-          type: "fill",
-          source: {
-            type: "vector",
-            url: "mapbox://mapbox.country-boundaries-v1",
-          },
-          "source-layer": "country_boundaries",
+          id: "point-layer",
+          type: "circle",
+          source: "pointmap-data",
+          maxzoom: 20,
           paint: {
-            "fill-opacity": 0,
+            "circle-radius": {
+              base: 10,
+              stops: [
+                [12, 2],
+                [22, 180],
+              ],
+            },
+            "circle-color": pointColor,
           },
         });
 
@@ -144,7 +170,13 @@ const Point = () => {
             const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
             const mapLayer = JSON.parse(data.mapData);
             if (mapLayer.locations) setLocations(mapLayer.locations);
-            // newMap.addLayer(mapLayer);
+            if (mapLayer.color) setPointColor(mapLayer.color);
+            addPointsToMap(mapLayer.locations);
+            newMap.setPaintProperty(
+              "point-layer",
+              "circle-color",
+              mapLayer.color
+            );
           } catch (error) {
             console.error("Error loading map graphics: ", error);
           } finally {
@@ -164,25 +196,51 @@ const Point = () => {
   }, [map]);
 
   useEffect(() => {
-    if (map) {
+    if (map && locations.length > 0) {
       const validLocations = locations.filter(
-        (location) => location.latitude && location.longitude
+        (loc) => loc.latitude && loc.longitude
       );
-      const newMarkers = validLocations.map((location) => {
-        const popup = new mapboxgl.Popup().setText(location.name);
-        const marker = new mapboxgl.Marker()
-          .setLngLat([location.longitude, location.latitude])
-          .setPopup(popup)
-          .addTo(map);
 
-        return { marker, name: location.name };
-      });
-
-      setMarkers(newMarkers);
-      const newGeoJsonData = generateGeoJsonFromMarkers(newMarkers);
-      setGeoJsonData(newGeoJsonData);
+      addPointsToMap(validLocations);
     }
-  }, [map, locations]);
+  }, [locations]);
+
+  const addPointsToMap = (location) => {
+    // Check if the map has already been loaded
+    if (!map) return;
+
+    // Convert location data into GeoJSON features
+    const geoJson = {
+      type: "FeatureCollection",
+      features: location.map((loc) => ({
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [parseFloat(loc.longitude), parseFloat(loc.latitude)],
+        },
+        properties: {
+          title: loc.name,
+          source: "pointmap-data",
+          paint: {
+            "circle-radius": {
+              base: 10,
+              stops: [
+                [12, 2],
+                [22, 180],
+              ],
+            },
+            "circle-color": pointColor,
+          },
+        },
+      })),
+    };
+
+    if (map.getSource("pointmap-data")) {
+      map.getSource("pointmap-data").setData(geoJson);
+    }
+
+    setGeoJsonData(geoJson);
+  };
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -191,34 +249,25 @@ const Point = () => {
 
       reader.onload = (e) => {
         e.preventDefault();
-        const newMarkers = [];
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        const locations = XLSX.utils.sheet_to_json(worksheet);
+        const fileLcations = XLSX.utils.sheet_to_json(worksheet);
 
-        const map = new mapboxgl.Map({
-          container: "map",
-          style: mapStyle,
-          center: [-74.006, 40.7128],
-          zoom: 2,
-        });
-
-        locations.forEach((location) => {
+        fileLcations.forEach((location) => {
           if (map && location.latitude && location.longitude) {
-            const marker = new mapboxgl.Marker()
-              .setLngLat([location.longitude, location.latitude])
-              .setPopup(new mapboxgl.Popup().setText(location.name))
-              .addTo(map);
+            const newLocations = XLSX.utils
+              .sheet_to_json(worksheet)
+              .map((row) => ({
+                latitude: row.latitude,
+                longitude: row.longitude,
+                name: row.name,
+              }));
 
-            newMarkers.push(marker);
+            applyChange(newLocations, pointColor);
           }
         });
-        const newMarkersCombined = [...markers, ...newMarkers];
-        setMarkers(newMarkersCombined);
-        const newGeoJsonData = generateGeoJsonFromMarkers(newMarkersCombined);
-        setGeoJsonData(newGeoJsonData);
       };
 
       reader.readAsArrayBuffer(file);
@@ -227,12 +276,20 @@ const Point = () => {
 
   const handleInputChange = (index, e) => {
     const newLocations = [...locations];
-    newLocations[index][e.target.name] = e.target.value;
+    const value = e.target.value;
+    newLocations[index][e.target.name] =
+      e.target.name === "Latitude" || e.target.name === "Longitude"
+        ? parseFloat(value)
+        : value;
     setLocations(newLocations);
   };
 
   const addNewRow = () => {
-    setLocations([...locations, { latitude: "", longitude: "", name: "" }]);
+    const newLocations = [
+      ...locations,
+      { latitude: "", longitude: "", name: "" },
+    ];
+    applyChange(newLocations, pointColor);
   };
 
   const renderRow = (location, index) => (
@@ -268,17 +325,14 @@ const Point = () => {
   );
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    locations.forEach((location) => {
-      if (map && location.latitude && location.longitude) {
-        const marker = new mapboxgl.Marker()
-          .setLngLat([location.longitude, location.latitude])
-          .setPopup(new mapboxgl.Popup().setText(location.name))
-          .addTo(map);
+    if (e) e.preventDefault();
 
-        setMarkers((prevMarkers) => [...prevMarkers, marker]);
-      }
-    });
+    const validLocations = locations.filter(
+      (loc) => loc.latitude && loc.longitude
+    );
+
+    applyChange(validLocations, pointColor);
+    addPointsToMap(validLocations);
   };
 
   const handleSave = async (title, version, privacy) => {
@@ -288,25 +342,21 @@ const Point = () => {
       if (mapId) {
         const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
         titleToPut = response.mapName;
+
         const originalVer = response.vers;
-        if (originalVer === "ver1") {
-          versionToPut = "ver2";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver3";
-        } else if (originalVer === "ver2") {
-          versionToPut = "ver1";
-          // Here, find the version1 having the same title & delete it from DB
-        }
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
       }
 
       const mapData = {
         locations: locations,
+        color: pointColor,
       };
 
       const mapImage = map.getCanvas().toDataURL();
       await mapServiceAPI.addMapGraphics(
         userId,
-        null, // This could be null if creating a new map
+        mapId,
         titleToPut,
         versionToPut,
         privacy,
@@ -314,6 +364,7 @@ const Point = () => {
         JSON.stringify(mapData),
         mapImage
       );
+
       setMapId(null);
       navigate("/map");
       alert("Map saved successfully");
@@ -321,11 +372,6 @@ const Point = () => {
       console.error("Error saving map:", error);
       alert("Error saving map");
     }
-  };
-
-  const removeAllMarkers = () => {
-    markers.forEach((marker) => marker.remove());
-    setMarkers([]);
   };
 
   return (
@@ -358,7 +404,29 @@ const Point = () => {
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
           <TabPanel value="1">
-            <Container>
+            <Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: "30px",
+                }}
+              >
+                <Button
+                  onClick={undo}
+                  disabled={undoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Undo
+                </Button>
+                <Button
+                  onClick={redo}
+                  disabled={redoStack.length === 0}
+                  sx={{ background: "#fafafa" }}
+                >
+                  Redo
+                </Button>
+              </Box>
               <Typography sx={{ color: "#fafafa", marginBottom: "30px" }}>
                 Choose an EXCEL file that contains 'latitude,' 'longitude,' and
                 'name' columns
@@ -403,7 +471,24 @@ const Point = () => {
                 <Button onClick={addNewRow}>+ Add Row</Button>
                 <Button type="submit">Submit</Button>
               </form>
-            </Container>
+              <Box
+                sx={{
+                  display: "flex",
+                  color: "#fafafa",
+                  justifyContent: "space-between",
+                  marginTop: "20px",
+                }}
+              >
+                <Typography>Select Point Color: </Typography>
+                <input
+                  type="color"
+                  value={pointColor}
+                  onChange={(e) => {
+                    handleColorChange(e.target.value);
+                  }}
+                />
+              </Box>
+            </Box>
           </TabPanel>
           <TabPanel value="3">
             <SaveTab

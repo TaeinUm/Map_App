@@ -36,7 +36,6 @@ exports.writePost = async (req, res) => {
       attachedFile,
     } = req.body;
 
-    // 데이터 유효성 검증
     if (!userId || !content) {
       return res.status(400).json({ message: "Missing required fields" });
     }

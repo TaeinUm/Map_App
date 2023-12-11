@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import * as mapboxgl from "mapbox-gl";
-import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
 import {
   Box,
   Button,
@@ -56,6 +55,34 @@ const Regional = () => {
   const [processedData, setProcessedData] = useState(null);
 
   const [selectionType, setSelectionType] = useState("country");
+  const [undoStack, setUndoStack] = useState([]);
+  const [redoStack, setRedoStack] = useState([]);
+
+  const applyChange = (newState) => {
+    setUndoStack([...undoStack, styleSettings]);
+    setRedoStack([]);
+    setStyleSettings(newState);
+  };
+
+  const undo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setRedoStack([...redoStack, styleSettings]);
+      setUndoStack(undoStack.slice(0, -1));
+      updateMapColors();
+      setStyleSettings(previousState);
+    }
+  };
+
+  const redo = () => {
+    if (redoStack.length > 0) {
+      const nextState = redoStack[redoStack.length - 1];
+      setUndoStack([...undoStack, styleSettings]);
+      setRedoStack(redoStack.slice(0, -1));
+      setStyleSettings(nextState);
+      updateMapColors();
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -71,12 +98,7 @@ const Regional = () => {
         zoom: 2,
         preserveDrawingBuffer: true,
       });
-      newMap.addControl(
-        new MapboxGeocoder({
-          accessToken: mapboxgl.accessToken,
-          mapboxgl: mapboxgl,
-        })
-      );
+
       newMap.addControl(new mapboxgl.FullscreenControl());
       newMap.addControl(new mapboxgl.NavigationControl());
 
@@ -119,19 +141,8 @@ const Regional = () => {
   }, []);
 
   useEffect(() => {
-    if (map && styleSettings.log.length > 0) {
-      const colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
-      const uniqueRegions = new Set();
-
-      styleSettings.log.forEach((entry) => {
-        if (!uniqueRegions.has(entry.region)) {
-          colorExpression.push(entry.region, entry.color);
-          uniqueRegions.add(entry.region);
-        }
-      });
-      colorExpression.push("#FFFFFF");
-
-      map.setPaintProperty("countries", "fill-color", colorExpression);
+    if (map && styleSettings.log.length >= 0) {
+      updateMapColors();
     }
   }, [map, styleSettings.log, continents]);
 
@@ -160,17 +171,14 @@ const Regional = () => {
   };
 
   const handleColorChange = (event) => {
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      color: event.target.value,
-    }));
+    const newColor = event.target.value;
+    const newState = { ...styleSettings, color: newColor };
+    setStyleSettings(newState);
   };
 
   const handleOpacityChange = (newValue) => {
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      opacity: newValue,
-    }));
+    const newState = { ...styleSettings, opacity: newValue };
+    setStyleSettings(newState);
   };
 
   const handleCountrySelect = (region) => {
@@ -204,45 +212,55 @@ const Regional = () => {
       }
     });
 
-    setStyleSettings((prevSettings) => ({
-      ...prevSettings,
-      log: updatedLog,
-    }));
+    const newState = { ...styleSettings, log: updatedLog };
+    applyChange(newState);
     updateMapColors();
   };
 
   const updateMapColors = () => {
-    if (map) {
-      const countryLayer = map.getLayer("countries");
-      if (countryLayer) {
-        const colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
+    if (map && map.getLayer("countries")) {
+      let colorExpression;
 
-        if (styleSettings.log.length === 0) {
-          colorExpression.push("XXX", "#FFFFFF");
-        } else {
-          styleSettings.log.forEach(({ region, color }) => {
-            colorExpression.push(region, color);
-          });
-        }
-
+      if (styleSettings.log.length === 0) {
+        // If log is empty, set a default color for all countries
+        //colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
+        //colorExpression.push(["literal", ["*"]], "#FFFFFF");
+        colorExpression = "#FFFFFF";
+      } else {
+        // Construct a match expression for the log entries
+        colorExpression = ["match", ["get", "iso_3166_1_alpha_3"]];
+        styleSettings.log.forEach(({ region, color }) => {
+          colorExpression.push(region, color);
+        });
         colorExpression.push("#FFFFFF");
-        map.setPaintProperty("countries", "fill-color", colorExpression);
       }
+
+      map.setPaintProperty("countries", "fill-color", colorExpression);
     }
   };
 
   const handleSave = async (title, version, privacy) => {
     const mapImage = map.getCanvas().toDataURL();
     try {
+      let titleToPut = title;
+      let versionToPut = version;
+      if (mapId) {
+        const response = await mapServiceAPI.getMapGraphicData(userId, mapId);
+        titleToPut = response.mapName;
+
+        const originalVer = response.vers;
+        const versionNumber = parseInt(originalVer.replace("ver", ""), 10);
+        versionToPut = "ver" + (versionNumber + 1);
+      }
       await mapServiceAPI.addMapGraphics(
         userId,
         mapId, // This could be null if creating a new map
-        title,
-        version,
+        titleToPut,
+        versionToPut,
         privacy,
         "Regional Map",
         JSON.stringify(styleSettings),
-        mapImage,
+        mapImage
       );
       setMapId(null);
       navigate("/map");
@@ -283,6 +301,28 @@ const Regional = () => {
           <TabMenu tabValue={tabValue} handleTabChange={handleTabChange} />
 
           <TabPanel value="1">
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                marginBottom: "30px",
+              }}
+            >
+              <Button
+                onClick={undo}
+                disabled={undoStack.length === 0}
+                sx={{ background: "#fafafa" }}
+              >
+                Undo
+              </Button>
+              <Button
+                onClick={redo}
+                disabled={redoStack.length === 0}
+                sx={{ background: "#fafafa" }}
+              >
+                Redo
+              </Button>
+            </Box>
             <RadioGroup
               row
               value={selectionType}
