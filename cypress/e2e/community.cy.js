@@ -11,13 +11,13 @@ describe("Community Page", () => {
     cy.contains("All").should("exist");
   });
   it("should contain the words trending map graphics", () => {
-    cy.get("Trending Map Graphics").should("exist");
+    cy.contains("Trending Map Graphics").should("exist");
   });
   it("should contain the word Questions", () => {
-    cy.get("Questions").should("exist");
+    cy.contains("Questions").should("exist");
   });
   it("should contain the words Map Graphics Ideas", () => {
-    cy.contain("Map Graphics Ideas").should("exist");
+    cy.contains("Map Graphics Ideas").should("exist");
   });
   it("should load the make post button correctly", () => {
     cy.contains("Post").should("exist");

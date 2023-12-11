@@ -48,7 +48,7 @@ describe("Flow Component Test", () => {
     });
 
     it("should load the starting country textfield", () => {
-    cy.get("Flow Line Opacity").should("exist");
+    cy.get("[data-cy=starting-country]").should("exist");
     });
 
     it("should load the starting city textfield", () => {
