@@ -470,9 +470,11 @@ const Flow = () => {
                   type="color"
                   value={regionColor}
                   onChange={flowColorChange}
+                  id="flowmap-color"
                 />
               </Box>
               <CurveSlider
+                data-cy="flowcurvature"
                 value={styleSettings.lineCurvature}
                 onChange={(e, newVal) =>
                   setStyleSettings((prev) => ({
@@ -482,6 +484,7 @@ const Flow = () => {
                 }
               />
               <LineWidthSlider
+                data-cy="flowwidth"
                 value={styleSettings.lineWidth}
                 onChange={(e, newVal) =>
                   setStyleSettings((prev) => ({ ...prev, lineWidth: newVal }))
@@ -497,6 +500,7 @@ const Flow = () => {
                 <TextField
                   select
                   data-testid="start-country-select"
+                  data-cy="starting-country"
                   label="Choose Start Country"
                   value={startCountry}
                   onChange={handleStartCountryChange}
@@ -518,6 +522,7 @@ const Flow = () => {
                   select
                   label="Choose Start City"
                   data-testid="start-city-select"
+                  data-cy="starting-city"
                   value={startCity}
                   onChange={handleStartCityChange}
                   helperText="Please select the start city"
@@ -544,6 +549,7 @@ const Flow = () => {
                   select
                   label="Choose End Country"
                   data-testid="end-country-select"
+                  data-cy="ending-country"
                   value={endCountry}
                   onChange={handleEndCountryChange}
                   helperText="Please select the end country"
@@ -564,6 +570,7 @@ const Flow = () => {
                   select
                   label="Choose End City"
                   data-testid="end-city-select"
+                  data-cy="ending-city"
                   value={endCity}
                   onChange={handleEndCityChange}
                   helperText="Please select the end city"
@@ -601,6 +608,7 @@ const Flow = () => {
                 <li
                   style={{ listStyle: "none", color: "#fafafa" }}
                   key={flow.id}
+                  data-cy={`flow-${key}`}
                 >
                   {flow.log} {flow.color}
                 </li>
@@ -608,6 +616,7 @@ const Flow = () => {
             </ul>
 
             <OpacitySlider
+              data-cy="flow-map-line-opacity-slider"
               value={styleSettings.lineOpacity}
               onChange={(e, newVal) =>
                 setStyleSettings((prev) => ({
@@ -624,6 +633,7 @@ const Flow = () => {
               mapLayer={styleSettings}
               map={map}
               geojson={exportToGeoJSON()}
+              data-cy="savebutton"
             />
           </TabPanel>
         </TabContext>

@@ -162,6 +162,7 @@ function CommunityMain() {
           Trending Map Graphics
         </Typography>
         <PaginatedPosts
+          data-cy="all-posts-trending"
           posts={filteredUserGraphics}
           page={userGraphicsPage}
           setPage={setUserGraphicsPage}
@@ -173,6 +174,7 @@ function CommunityMain() {
           Questions
         </Typography>
         <PaginatedPosts
+          data-cy="all-posts-questions"
           posts={filteredQuestionBuffer}
           page={questionPage}
           setPage={setQuestionPage}
@@ -184,6 +186,7 @@ function CommunityMain() {
           Map Graphics Ideas
         </Typography>
         <PaginatedPosts
+          data-cy="all-posts-ideas"
           posts={filteredIdeasBuffer}
           page={ideasPage}
           setPage={setIdeasPage}
@@ -337,8 +340,8 @@ const renderMapGraphics = () => {
                 <MenuItem value="Trending Map Graphics">
                   Trending Map Graphics
                 </MenuItem>
-                <MenuItem value="Questions">Questions</MenuItem>
-                <MenuItem value="Map Ideas">Map Graphics Idea</MenuItem>
+                <MenuItem data-cy="community-selector-questions" value="Questions">Questions</MenuItem>
+                <MenuItem data-cy="community-selector-ideas" value="Map Ideas">Map Graphics Idea</MenuItem>
                 <MenuItem value="User Name">User Name</MenuItem>
               </Select>
 
@@ -360,6 +363,7 @@ const renderMapGraphics = () => {
         </AppBar>
         <Box sx={{ mt: "13px", mr: "20px" }}>
           <Button
+            data-cy="community-make-post-button"
             component={Link}
             to={`/PostMapGraphic/`}
             variant="contained"
