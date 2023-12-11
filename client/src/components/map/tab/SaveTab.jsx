@@ -110,7 +110,11 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
       exportMapAsJson();
     }
 
-    onSave(title, versionSetting, privacySetting);
+    if (mapId) {
+      onSave(title, "ver", privacySetting);
+    } else if (!mapId) {
+      onSave(title, "ver1", privacySetting);
+    }
   };
 
   return (
@@ -135,35 +139,6 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
               name="title"
             />
           </FormControl>
-        </Box>
-      )}
-      {!mapId && (
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginY: 3,
-          }}
-        >
-          <Typography sx={{ color: "#fafafa", textAlign: "left" }}>
-            Version Setting
-          </Typography>
-          <Box>
-            <FormControl margin="normal" sx={{ width: "100%" }}>
-              <Select
-                size="small"
-                value={versionSetting}
-                onChange={handleVersionSettingChange}
-                sx={selectStyle}
-                name="versionSetting"
-              >
-                <MenuItem value="ver1">Ver 1.</MenuItem>
-                <MenuItem value="ver2">Ver 2.</MenuItem>
-                <MenuItem value="ver3">Ver 3.</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
         </Box>
       )}
       <Box
