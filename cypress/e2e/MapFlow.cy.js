@@ -1,4 +1,4 @@
-describe("Point Component Test", () => {
+describe("Flow Component Test", () => {
     beforeEach(() => {
       cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/map");
       cy.wait(2000);
@@ -40,7 +40,7 @@ describe("Point Component Test", () => {
     });
 
     it("should load the flow curvature slider", () => {
-        cy.get('[data-cy="flowcurvature"]').should("exist");
+        cy.get(".yodat").should("exist");
     });
     
     it("should load the flow width slider", () => {
@@ -62,7 +62,7 @@ describe("Point Component Test", () => {
     it("should load the ending city textfield", () => {
     cy.get("[data-cy=ending-city]").should("exist");
     });
-    
+
     it("should load the flow line opacity slider", () => {
     cy.get("[data-cy=flow-map-line-opacity-slider]").should("exist");
     });

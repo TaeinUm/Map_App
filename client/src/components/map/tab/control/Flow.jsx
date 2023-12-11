@@ -427,6 +427,7 @@ const Flow = () => {
                 />
               </Box>
               <CurveSlider
+                class="yodat"
                 data-cy="flowcurvature"
                 value={styleSettings.lineCurvature}
                 onChange={(e, newVal) =>

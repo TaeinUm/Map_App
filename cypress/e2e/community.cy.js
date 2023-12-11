@@ -20,26 +20,30 @@ describe("Community Page", () => {
     cy.get("[data-cy=all-posts-ideas]").should("exist");
   });
   it("should load the make post button correctly", () => {
-    cy.get("[data-cy=community-make-post-button]").should("exist");
+    cy.get("button").contains("Post").should("exist");
   });
   it("should have the make post button as disabled", () => {
-    cy.get("[data-cy=community-make-post-button]").should("be.disabled");
+    cy.get("button").contains("Post").should("be.disabled");
   });
   it("should load the questions posts once Questions is selected", () => {
-    cy.get("[data-cy=community-select-bar]").find("[data-cy=community-selector-questions]").should("exist");
+    cy.get("[data-cy=community-select-bar]").click();
+    cy.contains("Questions").should("exist");
   });
   it("should load the ideas posts once Ideas is selected", () => {
-    cy.get("[data-cy=community-select-bar]").find("[data-cy=community-selector-ideas]").should("exist");
+    cy.get("[data-cy=community-select-bar]").click();
+    cy.contains("Map Graphics Idea").should("exist");
   });
   it("should load the questions posts once Questions is selected", () => {
-    cy.get("[data-cy=community-select-bar]").find("[data-cy=community-selector-questions]").click();
-    cy.wait(2000);
-    cy.contains("Map Ideas").should("exist");
-  });
-  it("should load the ideas posts once Ideas is selected", () => {
-    cy.get("[data-cy=community-select-bar]").find("[data-cy=community-selector-ideas]").click();
+    cy.get("[data-cy=community-select-bar]").click();
+    cy.contains("Questions").click();
     cy.wait(2000);
     cy.contains("Questions").should("exist");
+  });
+  it("should load the ideas posts once Ideas is selected", () => {
+    cy.get("[data-cy=community-select-bar]").
+    cy.contains("Map Graphics Idea").click();
+    cy.wait(2000);
+    cy.contains("Map Graphics Idea").should("exist");
 
   });
   
