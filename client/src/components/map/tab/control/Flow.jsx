@@ -604,11 +604,11 @@ const Flow = () => {
               Flows:
             </Typography>
             <ul>
-              {styleSettings.flows.map((flow) => (
+              {styleSettings.flows.map((flow, index) => (
                 <li
                   style={{ listStyle: "none", color: "#fafafa" }}
                   key={flow.id}
-                  data-cy={`flow-${key}`}
+                  data-cy={`flow-${index}`}
                 >
                   {flow.log} {flow.color}
                 </li>
