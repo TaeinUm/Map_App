@@ -475,7 +475,7 @@ const Flow = () => {
               </Box>
               <CurveSlider
                 class="yodat"
-                data-cy="flowcurvature"
+                //data-cy="flowcurvature"
                 value={styleSettings.lineCurvature}
                 onChange={(e, newVal) =>
                   setStyleSettings((prev) => ({
@@ -485,7 +485,7 @@ const Flow = () => {
                 }
               />
               <LineWidthSlider
-                data-cy="flowwidth"
+                //data-cy="flowwidth"
                 value={styleSettings.lineWidth}
                 onChange={(e, newVal) =>
                   setStyleSettings((prev) => ({ ...prev, lineWidth: newVal }))
@@ -617,7 +617,7 @@ const Flow = () => {
             </ul>
 
             <OpacitySlider
-              data-cy="flow-map-line-opacity-slider"
+              //data-cy="flow-map-line-opacity-slider"
               value={styleSettings.lineOpacity}
               onChange={(e, newVal) =>
                 setStyleSettings((prev) => ({

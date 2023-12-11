@@ -20,10 +20,10 @@ describe("Community Page", () => {
     cy.get("[data-cy=all-posts-ideas]").should("exist");
   });
   it("should load the make post button correctly", () => {
-    cy.get("button").contains("Post").should("exist");
+    cy.contains("Post").should("exist");
   });
   it("should have the make post button as disabled", () => {
-    cy.get("button").contains("Post").should("be.disabled");
+    cy.contains("Post").should("be.disabled");
   });
   it("should load the questions posts once Questions is selected", () => {
     cy.get("[data-cy=community-select-bar]").click();

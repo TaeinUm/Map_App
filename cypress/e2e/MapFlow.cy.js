@@ -40,11 +40,11 @@ describe("Flow Component Test", () => {
     });
 
     it("should load the flow curvature slider", () => {
-        cy.get(".yodat").should("exist");
+        cy.get("[data-cy=flow-curavture]").should("exist");
     });
     //try again
     it("should load the flow width slider", () => {
-    cy.get("[data-cy=flowwidth]").should("exist");
+    cy.get("[data-cy=flow-width]").should("exist");
     });
 
     it("should load the starting country textfield", () => {
@@ -64,7 +64,7 @@ describe("Flow Component Test", () => {
     });
 
     it("should load the flow line opacity slider", () => {
-    cy.get("[data-cy=flow-map-line-opacity-slider]").should("exist");
+    cy.get("[data-cy=flow-opacity]").should("exist");
     });
 
     it("should load the save button successfully", () => {
