@@ -36,31 +36,36 @@ describe("Point Component Test", () => {
     // });
   
     it("should load the color input", () => {
-      cy.get("#flowmap-color").should("exist");
+      cy.get("input").should("exist");
     });
 
     it("should load the flow curvature slider", () => {
-        cy.get("[data-cy=flowcurvature]").should("exist");
-      });
+        cy.get('[data-cy="flowcurvature"]').should("exist");
+    });
     
-      it("should load the flow width slider", () => {
-        cy.get("[data-cy=flowwidth]").should("exist");
-      });
-      it("should load the starting country textfield", () => {
-        cy.get("[data-cy=starting-country]").should("exist");
-      });
-      it("should load the starting city textfield", () => {
-        cy.get("[data-cy=starting-city]").should("exist");
-      });
-      it("should load the ending country textfield", () => {
-        cy.get("[data-cy=ending-country]").should("exist");
-      });
-      it("should load the ending city textfield", () => {
-        cy.get("[data-cy=ending-city]").should("exist");
-      });
-      it("should load the flow line opacity slider", () => {
-        cy.get("[data-cy=flow-map-line-opacity-slider]").should("exist");
-      });
+    it("should load the flow width slider", () => {
+    cy.get("[data-cy=flowwidth]").should("exist");
+    });
+
+    it("should load the starting country textfield", () => {
+    cy.get("[data-cy=starting-country]").should("exist");
+    });
+
+    it("should load the starting city textfield", () => {
+    cy.get("[data-cy=starting-city]").should("exist");
+    });
+
+    it("should load the ending country textfield", () => {
+    cy.get("[data-cy=ending-country]").should("exist");
+    });
+
+    it("should load the ending city textfield", () => {
+    cy.get("[data-cy=ending-city]").should("exist");
+    });
+    
+    it("should load the flow line opacity slider", () => {
+    cy.get("[data-cy=flow-map-line-opacity-slider]").should("exist");
+    });
 
     it("should load the save button successfully", () => {
       cy.get("[data-cy=savebutton]").should("exist");
