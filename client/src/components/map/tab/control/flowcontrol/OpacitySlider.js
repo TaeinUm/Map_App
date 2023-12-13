@@ -3,7 +3,7 @@ import { Box, Slider, Typography } from "@mui/material";
 
 const OpacitySlider = ({ value, onChange }) => {
   return (
-    <Box sx={{ padding: "20px" }}>
+    <Box data-cy="flow-opacity" sx={{ padding: "20px" }}>
       <Typography gutterBottom sx={{ color: "#Fafafa" }}>
         Flow Line Opacity
       </Typography>

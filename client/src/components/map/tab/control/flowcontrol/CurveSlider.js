@@ -3,7 +3,7 @@ import { Box, Slider, Typography } from "@mui/material";
 
 const CurveSlider = ({ value, onChange }) => {
   return (
-    <Box sx={{ padding: "10px" }}>
+    <Box data-cy="flow-curvature" sx={{ padding: "10px" }}>
       <Typography gutterBottom sx={{ color: "#fafafa" }}>
         Flow Line Curvature
       </Typography>

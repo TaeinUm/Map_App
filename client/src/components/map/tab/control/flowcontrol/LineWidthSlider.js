@@ -3,7 +3,7 @@ import { Box, Slider, Typography } from "@mui/material";
 
 const LineWidthSlider = ({ value, onChange }) => {
   return (
-    <Box sx={{ padding: "10px", marginBottom: "30px" }}>
+    <Box data-cy="flow-width" sx={{ padding: "10px", marginBottom: "30px" }}>
       <Typography gutterBottom sx={{ color: "#fafafa" }}>
         Flow Line Width
       </Typography>

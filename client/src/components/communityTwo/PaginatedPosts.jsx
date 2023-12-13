@@ -22,8 +22,10 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
     navigate(`/posts/${post.postType}/${post._id}`);
   };
 
+  const sortedPosts = posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+
   const startIndex = (page - 1) * itemsPerPage;
-  const paginatedPosts = posts.slice(startIndex, startIndex + itemsPerPage);
+  const paginatedPosts = sortedPosts.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <Box

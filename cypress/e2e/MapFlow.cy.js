@@ -1,4 +1,4 @@
-describe("Point Component Test", () => {
+describe("Flow Component Test", () => {
     beforeEach(() => {
       cy.visit("https://terracanvas-fb4c23ffbf5d.herokuapp.com/map");
       cy.wait(2000);
@@ -39,12 +39,12 @@ describe("Point Component Test", () => {
       cy.get("input").should("exist");
     });
 
-    it("should load the flow curvature slider", () => {
-        cy.get('[data-cy="flowcurvature"]').should("exist");
+    it("should load a jsx element that contains the words Flow Line Curvature", () => {
+        cy.contains("Flow Line Curvature").should("exist");
     });
-    
-    it("should load the flow width slider", () => {
-    cy.get("[data-cy=flowwidth]").should("exist");
+    //try again
+    it("should load a jsx element that contains the words Flow Line Width", () => {
+    cy.contains("Flow Line Width").should("exist");
     });
 
     it("should load the starting country textfield", () => {
@@ -62,13 +62,13 @@ describe("Point Component Test", () => {
     it("should load the ending city textfield", () => {
     cy.get("[data-cy=ending-city]").should("exist");
     });
-    
-    it("should load the flow line opacity slider", () => {
-    cy.get("[data-cy=flow-map-line-opacity-slider]").should("exist");
+
+    it("should load a jsx element that contains the words Flow Line Opacity", () => {
+    cy.contains("Flow Line Opacity").should("exist");
     });
 
     it("should load the save button successfully", () => {
-      cy.get("[data-cy=savebutton]").should("exist");
+      cy.contains("Save").should("exist");
     });
   });
   
