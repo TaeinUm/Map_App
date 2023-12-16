@@ -45,10 +45,12 @@ function Post() {
   const [commentsBuffer, setCommentsBuffer] = useState([]);
   const [questionTitle, setQuestionTitle] = useState("");
   const [authentification, setAuthentification] = useState(true);
+  const [isLiked, setIsLiked] = useState(false);
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
+  
   useEffect(() => {
     const fetchPostDetails = async () => {
       try {
@@ -61,6 +63,8 @@ function Post() {
         }
         setQuestionTitle(response.postName);
         setPostInfo(response);
+        const userId = localStorage.getItem("newUserid"); 
+        setIsLiked(response.likes.includes(userId));
       } catch (error) {
         console.error("Error fetching post details:", error);
       }
@@ -102,6 +106,44 @@ function Post() {
       setMessage(""); // Reset message field after submission
     } catch (error) {
       console.error("Error posting comment:", error);
+    }
+  };
+
+
+  const fetchPostDetails = async () => {
+    try {
+      const response = await CommunitySectionAPI.getPostDetails(postType, postId);
+      if (!response) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setQuestionTitle(response.postName);
+      setPostInfo(response);
+      const userId = localStorage.getItem("newUserid"); 
+      setIsLiked(response.likes.includes(userId));
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      const userId = localStorage.getItem("newUserid");
+      await CommunitySectionAPI.newlikePost(userId, postId);
+      console.log(userId)
+      console.log(isLiked)
+      setIsLiked(!isLiked);
+      if (isLiked) {
+        // 이미 좋아요를 눌렀다면, 좋아요 제거
+        await CommunitySectionAPI.unlikeMap(userId, postId);
+      } else {
+        // 좋아요를 누르지 않았다면, 좋아요 추가
+        await CommunitySectionAPI.likeMap(userId, postId);
+      }
+
+      await fetchPostDetails();
+
+    } catch (error) {
+      console.error("Error updating like status:", error);
     }
   };
 
@@ -205,22 +247,43 @@ function Post() {
             },
           }}
         />
-        <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSubmit}
-            sx={{ mt: 2 }}
-            disabled={authentification}
-            data-cy="comment-button"
-            style={{
-              backgroundColor: 'black',
-              color: 'white',
-            }}
-          >
-            Post Comment
-          </Button>
-        </Box>
+
+      <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-start" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleLike}
+                sx={{ mt: 2 }}
+                disabled={authentification}
+                data-cy="comment-button"
+                style={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                }}
+              >
+                {isLiked ? 'Unlike Post' : 'Like Post'}
+              </Button>
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "flex-end"}}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+                sx={{ mt: 2 }}
+                disabled={authentification}
+                data-cy="comment-button"
+                style={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                }}
+              >
+                Post Comment
+              </Button>
+          </Box>
+      </Box>
+
 
         {/* {commentsBuffer.map((comment, index) => (
           <Typography key={index} sx={{ color: "#FAFAFA", mb: 2, ml: 5 }}>

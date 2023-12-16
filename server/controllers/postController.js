@@ -101,6 +101,44 @@ exports.likePost = async (req, res) => {
   }
 };
 
+exports.newlikePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    const userId = req.body.userId; 
+
+    if (!mongoose.Types.ObjectId.isValid(postId) || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid post ID or user ID" });
+    }
+
+    console.log("TEST")
+    console.log(postId)
+    console.log(userId)
+
+    const post = await Post.findById(postId);
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    const isLiked = post.likes.includes(userId);
+    const update = isLiked
+      ? { $pull: { likes: userId } } 
+      : { $push: { likes: userId } }; 
+
+    const updatedPost = await Post.findByIdAndUpdate(postId, update, { new: true });
+    res.json({
+      message: isLiked ? "Like removed successfully" : "Like added successfully",
+      updatedPost
+    });
+  } catch (error) {
+    console.error("Error in likePost:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
 // Unlike a map
 exports.unlikePost = async (req, res) => {
   try {

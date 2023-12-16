@@ -11,7 +11,8 @@ const postSchema = new mongoose.Schema({
   postType: String,
   postImages: String,
   postName: String,
-  visibility: Number
+  visibility: Number,
+  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 const Post = mongoose.model('Post', postSchema, 'posts');
