@@ -27,6 +27,7 @@ exports.writePost = async (req, res) => {
   try {
     const {
       userId,
+      userName,
       content,
       interactions,
       postType,
@@ -43,6 +44,7 @@ exports.writePost = async (req, res) => {
     const newPost = new Post({
       _id: new mongoose.Types.ObjectId(),
       userId,
+      userName,
       content,
       interactions,
       postType,
@@ -52,11 +54,10 @@ exports.writePost = async (req, res) => {
       attachedFile,
       postDate: new Date(),
     });
-
     await newPost.save();
     res.status(201).json(newPost);
   } catch (error) {
-    console.error(error); // This will log the full error object
+    console.error(error);
     res.status(500).json({ message: error.message });
   }
 };

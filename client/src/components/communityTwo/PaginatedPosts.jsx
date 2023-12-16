@@ -73,7 +73,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                   {post.postName}
                 </Typography>
                 <Typography variant="overline" display="block" gutterBottom>
-                  Author: {post.userId || "here! get author name"}
+                  Posted by {post.userName || "here! get author name"}
                 </Typography>
                 <Typography variant="overline" display="block" gutterBottom>
                   Date: {new Date(post.postDate).toLocaleDateString()}

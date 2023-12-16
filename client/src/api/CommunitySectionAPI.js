@@ -10,6 +10,7 @@ const CommunitySectionAPI = {
   //make a post
   makePost: async (
     userID,
+    username,
     content,
     likes,
     types,
@@ -22,6 +23,7 @@ const CommunitySectionAPI = {
     try {
       const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
         userId: userID,
+        userName: username,
         content: content,
         interactions: likes,
         postType: types,
@@ -31,12 +33,12 @@ const CommunitySectionAPI = {
         attachedFile: attachedFile,
         postDate: postDate,
       });
-
       return response.data;
     } catch (error) {
-      console.error("cannot make a post.");
+      console.error("Error making the post: ", error);
     }
   },
+
   getSamplePosts: async () => {
     try {
       const response = await axios.get(
@@ -50,6 +52,7 @@ const CommunitySectionAPI = {
       console.error("cannot get sample posts.");
     }
   },
+
   getAllPosts: async () => {
     try {
       const response = await axios.get(
@@ -72,6 +75,7 @@ const CommunitySectionAPI = {
       console.error("cannot get a user's maps.");
     }
   },
+
   getPostsByUserId: async (userID) => {
     try {
       const response = await axios.get(
@@ -85,6 +89,7 @@ const CommunitySectionAPI = {
       console.error("cannot get a user's maps.");
     }
   },
+
   getQuestionsBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -98,6 +103,7 @@ const CommunitySectionAPI = {
       console.error("cannot get questions for a query.");
     }
   },
+
   getIdeasBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -111,6 +117,7 @@ const CommunitySectionAPI = {
       console.error("cannot get ideas for a query.");
     }
   },
+
   getMapsBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -124,6 +131,7 @@ const CommunitySectionAPI = {
       console.error("cannot get maps for a query.");
     }
   },
+  
   getCommentsForAPost: async (postID) => {
     try {
       const response = await axios.get(
@@ -173,6 +181,7 @@ const CommunitySectionAPI = {
       console.error("cannot like a map.");
     }
   },
+  
   unlikeMap: async (userID, postId) => {
     const { isAuthenticated, userId, username } = AuthContext;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import {
   Box,
   Typography,
@@ -13,6 +13,7 @@ import {
   useTheme
 } from '@mui/material';
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
+import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function CommunityPostMapGraphic() {
@@ -26,11 +27,15 @@ function CommunityPostMapGraphic() {
   // 현재 화면이 모바일 크기인지 확인하는 미디어 쿼리 훅
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { username } = useContext(AuthContext);
+
   function handlePostButton() {
     // Post button event handler logic
     const currentTimeSec = new Date();
+
     makePost(
       localStorage.getItem('newUserid'),
+      username,
       document.getElementById('shabi-content').value,
       0,
       postType,
