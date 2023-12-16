@@ -29,24 +29,36 @@ function CommunityPostMapGraphic() {
 
   const { username } = useContext(AuthContext);
 
-  function handlePostButton() {
-    // Post button event handler logic
-    const currentTimeSec = new Date();
-
-    makePost(
-      localStorage.getItem('newUserid'),
-      username,
-      document.getElementById('shabi-content').value,
-      0,
-      postType,
-      document.getElementById('shabi-file').files[0],
-      document.getElementById('shabi-title').value,
-      parseInt(privacyType),
-      document.getElementById('shabi-file').files[0],
-      currentTimeSec
-    );
-    alert('You are being directed to the community landing page');
-    navigate('/community');
+  async function handlePostButton() {
+    try {
+      // Post button event handler logic
+      const currentTimeSec = new Date();
+  
+      const response = await makePost(
+        localStorage.getItem('newUserid'),
+        username,
+        document.getElementById('shabi-content').value,
+        0,
+        postType,
+        document.getElementById('shabi-file').files[0],
+        document.getElementById('shabi-title').value,
+        parseInt(privacyType),
+        document.getElementById('shabi-file').files[0],
+        currentTimeSec
+      );
+  
+      if (response && response.success) {
+        alert('Post created successfully!');
+        navigate('/community');
+      } else {
+        // Handle the case where the post creation was not successful
+        alert('Failed to create post. Please try again.');
+      }
+    } catch (error) {
+      // Handle any errors that occur during the post creation process
+      console.error('Error creating post:', error);
+      alert('An error occurred while creating the post. Please try again.');
+    }
   }
 
   return (
