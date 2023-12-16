@@ -10,6 +10,7 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
   const handleChange = (event, value) => {
@@ -84,7 +85,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                 Date: {new Date(post.postDate).toLocaleDateString()}
               </Typography>
               <Typography variant="overline" display="block" gutterBottom sx ={{marginBottom: "0px"}}>
-                Like: {post.interactions}
+              <ThumbUpIcon sx={{ fontSize: "small", verticalAlign: "middle" }} /> Like: {post.interactions}
               </Typography>
             </CardContent>
           </Card>
