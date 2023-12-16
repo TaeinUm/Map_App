@@ -147,16 +147,19 @@ function Post() {
     </CardContent>
     <hr/>
 
-        <Paper
-          elevation={4}
-          sx={{ width: "auto", height: "auto", bgcolor: "grey" }}
-        >
-          <img
-            src={postInfo.postImages}
-            alt={postInfo.postName}
-            style={{ objectFit: "cover", width: "100%", height: "100%" }}
-          />
-        </Paper>
+    <Paper
+  elevation={4}
+  sx={{ width: "auto", height: "auto", bgcolor: "grey" }}
+>
+  {postInfo.postImages && (
+    <img
+      src={postInfo.postImages}
+      alt={postInfo.postName}
+      style={{ objectFit: "cover", width: "100%", height: "100%" }}
+    />
+  )}
+</Paper>
+
 
         <Typography variant="subtitle1" gutterBottom color="white" />
         <Typography
