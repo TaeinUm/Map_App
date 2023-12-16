@@ -158,7 +158,7 @@ function CommunityMain() {
   return (
     <>
       <Box sx={{ mt: "20px" }}>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
           Trending Map Graphics
         </Typography>
         <PaginatedPosts
@@ -170,7 +170,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -182,7 +182,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
           Map Graphics Ideas
         </Typography>
         <PaginatedPosts
@@ -203,7 +203,7 @@ const renderMapGraphics = () => {
 
   return (
     <>
-      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
         Trending Map Graphics
       </Typography>
       <PaginatedPosts
@@ -222,7 +222,7 @@ const renderMapGraphics = () => {
   
     return (
       <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -240,7 +240,7 @@ const renderMapGraphics = () => {
   
     return (
       <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
           Map Graphics Idea
         </Typography>
         <PaginatedPosts
@@ -306,6 +306,10 @@ const renderMapGraphics = () => {
           sx={{
             borderRadius: "5px",
             width: "85%",
+            height: "60px",
+            display: "flex",
+            justifyContent: "space-around"
+            
           }}
         >
           <StyledToolbar
@@ -325,7 +329,7 @@ const renderMapGraphics = () => {
               {whiteBar}
             </Typography> */}
             {/* Dropdown Menu for selecting categories */}
-            <Box sx={{ display: "flex", justifyContent: "space-between"}}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", height: "45px"}}>
               <Select
                 data-cy="community-select-bar"
                 labelId="demo-simple-select-label"
@@ -346,7 +350,7 @@ const renderMapGraphics = () => {
               </Select>
 
               {/* Search Bar */}
-              <Search>
+              <Search sx={{ bgcolor: "#D5D5D5" }}>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
@@ -355,13 +359,13 @@ const renderMapGraphics = () => {
                   inputProps={{ "aria-label": "search" }}
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  sx={{ width: "500px" }}
+                  sx={{ width: "550px" }}
                 />
               </Search>
             </Box>
           </StyledToolbar>
         </AppBar>
-        <Box sx={{ mt: "13px", mr: "20px" }}>
+        <Box sx={{ mt: "8px", mr: "20px" }}>
           <Button
             data-cy="community-make-post-button"
             component={Link}
@@ -369,6 +373,7 @@ const renderMapGraphics = () => {
             variant="contained"
             startIcon={<AddIcon />}
             disabled={authentification}
+            sx={{ fontSize: "17px" }}
           >
             Post
           </Button>

@@ -156,6 +156,34 @@ function File() {
   };
 
   useEffect(() => {
+    if (mapId) {
+      const fetchJsonData = async () => {
+        try {
+          const userdata = await mapServiceAPI.getMapGraphicData(userId, mapId);
+
+          const response = await fetch(userdata.mapData);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          setStyleSettings((prevSettings) => ({
+            ...prevSettings,
+            geojsonData: data.geojsonData,
+            lineColor: data.lineColor,
+            lineWidth: data.lineWidth,
+            lineOpacity: data.lineOpacity,
+          }));
+          setGeojsonData(data.geojsonData);
+        } catch (error) {
+          console.error("Could not fetch JSON data: ", error);
+        }
+      };
+
+      fetchJsonData();
+    }
+  }, []);
+
+  useEffect(() => {
     if (!map) {
       setIsMapLoaded(false);
       const newMap = new mapboxgl.Map({
@@ -174,16 +202,6 @@ function File() {
           type: "vector",
           url: "mapbox://mapbox.country-boundaries-v1",
         });
-
-        if (mapId) {
-          const data = await mapServiceAPI.getMapGraphicData(userId, mapId);
-
-          const response = await fetch(data.mapData);
-          //const mapLayer = JSON.parse(data.mapData);
-          const jsonData = await response.json();
-          setStyleSettings(jsonData);
-          setGeojsonData(jsonData.geojsonData);
-        }
 
         if (geojsonData && geojsonData.features) {
           geojsonData.features.forEach((feature, index) => {
@@ -334,7 +352,7 @@ function File() {
 
           setMap(newMap);
           setIsMapLoaded(true);
-        } else if (geojsonData) {
+        } else if (styleSettings.geojsonData) {
           setIsLine(true);
           newMap.addSource(sourceId, {
             type: "geojson",
