@@ -10,6 +10,7 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 
 const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
   const handleChange = (event, value) => {

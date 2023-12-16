@@ -3,6 +3,7 @@ import {
   Box,
   Typography,
   TextField,
+  CardContent,
   Button,
   Divider,
   Paper,
@@ -18,6 +19,7 @@ import CommunitySectionAPI from "../../api/CommunitySectionAPI";
 import { useParams } from "react-router-dom";
 import { CommunityContext } from "../../contexts/CommunityContextVerTwo";
 import { postInfo } from "./CommunityMain";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import { useContext } from "react";
 //const mongoose = require('mongoose');
 
@@ -104,33 +106,46 @@ function Post() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ minHeight: '100vh', p: 3, height: "100%" }}>
-      <Paper sx={{ my: 2, p: 2, backgroundColor: "#fff" }}>
-        <Typography variant="h4" gutterBottom color="black" sx={{marginBottom: "10px", marginTop: "20px"}}>
-          {postInfo.postName}
-        </Typography>
-        <Typography variant="h7" gutterBottom color="gray">
-          {postInfo.userId}
-        </Typography>
-        <br></br>
-        <Typography variant="h7" gutterBottom color="gray">
-        {new Date(postInfo.postDate).toLocaleString('en-US', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: false
-            }).replace(',', '').replace(/:/g, ':')}
-        </Typography>
-        <br></br>
-        <Typography variant="h7" gutterBottom color="gray">
-          {postInfo.postType}
-        </Typography>
+    <Container maxWidth="md" sx={{ minHeight: '100vh', p: 3, height: "100%"}}>
+  <Paper sx={{ my: 2, p: 2, backgroundColor: "#fff" }}>
+    
+  <CardContent sx={{ textAlign: 'left' }}> 
+    <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginBottom: "5px" }}>
+        <span style={{ fontWeight: 'normal', textTransform: 'uppercase' }}>{postInfo.postType}</span>
+    </Typography>
+</CardContent>
 
-        <br></br>
-        <br></br>
-        <hr/>
+
+    <Typography variant="h4" gutterBottom color="black" sx={{marginBottom: "5px", marginTop: "-10px"}}>
+      {postInfo.postName}
+    </Typography>
+    
+    <CardContent sx={{ textAlign: 'left' }}> 
+      
+      <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginBottom: "0px" }}>
+        <span style={{ fontWeight: 'normal' }}>{postInfo.userId}</span>
+      </Typography>
+
+      <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginBottom: "-50px" }}>
+      <span style={{ fontWeight: 'normal' }}>
+      {new Date(postInfo.postDate).toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        }).replace(',', '').replace(/:/g, ':')}
+      </span>
+      </Typography>
+    </CardContent>
+    <CardContent sx={{ textAlign: 'right' }}> 
+    <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginTop: "-15px", marginBottom: "-30px"}}>
+    <ThumbUpIcon sx={{ fontSize: "small", verticalAlign: "middle" }} /> Liked: <span style={{ fontWeight: 'normal' }}>{postInfo.interactions}</span>
+</Typography>
+
+    </CardContent>
+    <hr/>
 
         <Paper
           elevation={4}
@@ -151,15 +166,21 @@ function Post() {
             color: "black",
             padding: "1rem",
             textAlign: "left",
-            minHeight: "200px"
+            minHeight: "100px"
           }}
         >
+          <br></br>
+          
           {postInfo.content}
         </Typography>
         <Divider sx={{ my: 2, bgcolor: "black" }} />
         {/* <Typography variant="h4" gutterBottom color="white" sx={{ mt: 3 }}>
           Comments Section
         </Typography> */}
+
+        <Typography variant="h6" gutterBottom color="black" sx={{ textAlign: "left", ml: "10px", mb: "20px" }}>
+          Comments ({commentsBuffer.length})
+        </Typography>
 
         {/* <Typography variant="h6" gutterBottom color="black" sx={{ textAlign: "left", ml: "5px" }}>
           Comments ({commentsBuffer.length})
@@ -205,9 +226,7 @@ function Post() {
         ))} */}
         <br></br>
         <Divider sx={{ my: 2, bgcolor: "black" }} />
-        <Typography variant="h6" gutterBottom color="black" sx={{ textAlign: "left", ml: "10px", mb: "20px" }}>
-          Comments ({commentsBuffer.length})
-        </Typography>
+        
 
         {
   [...commentsBuffer] // Create a shallow copy of the array to avoid mutating the original array

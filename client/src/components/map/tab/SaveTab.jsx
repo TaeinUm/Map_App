@@ -159,6 +159,7 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
               value={exportFile}
               onChange={handleExportFileChange}
               sx={selectStyle}
+              role="select-export-type-flow-map"
               name="exportFile"
             >
               <MenuItem value="none">NONE</MenuItem>
@@ -189,6 +190,7 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
               onChange={handlePrivacySettingChange}
               sx={selectStyle}
               name="privacySetting"
+              role="select-privacy-type-flow-map"
             >
               <MenuItem value="private">Private</MenuItem>
               <MenuItem value="public">Public</MenuItem>
@@ -220,6 +222,7 @@ function SaveTab({ onSave, mapLayer, map, geojson }) {
           height: "40px",
           width: "100px",
         }}
+        role="savesubmitbutton"
         onClick={handleSave}
       >
         Save
