@@ -1,5 +1,6 @@
-import { Box, Button, Typography } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Box, Button, Typography, CardMedia } from "@mui/material";
+import { Link, NavLink } from "react-router-dom";
+import TerraCanvas from "../../assets/images/TerraCanvas.png";
 
 function Footer() {
   return (
@@ -10,21 +11,28 @@ function Footer() {
         alignItems: "center",
         background: "black",
         width: "100%",
+        height:"70px",
         px: 3,
         "@media (max-width: 768px)": {
           display: "none",
         },
       }}
     >
-      <Button
-        sx={{
-          color: "white",
-          fontSize: "40px",
-        }}
-        onClick={() => (window.location.href = "/")}
-      >
-        TERRACANVAS
-      </Button>
+      <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-start" }}>
+        <Link to="/">
+          <CardMedia
+            type="button"
+            image={TerraCanvas}
+            component="img"
+            alt="logo"
+            style={{
+              objectFit: "cover",
+              height: "40px",
+              width: "auto",
+            }}
+          />
+        </Link>
+      </Box>
       <Box>
         <Button
           component={NavLink}
