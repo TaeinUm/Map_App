@@ -44,8 +44,6 @@ router.get(
 // Get Question Post by title Text Matched
 router.get("/getQuestions/:searchText", searchController.searchQuestionByText);
 
-router.put("/likeMap/:postId", postController.likePost);
-
 // Get Idea Post by title Text Matched
 router.get("/getIdeas/:searchText", searchController.searchIdeaByText);
 
@@ -57,6 +55,8 @@ router.post("/newlikePost/:postId", postController.newlikePost);
 
 // UnLike Post
 router.put("/unlikeMap/:postId", postController.unlikePost);
+
+router.put("/likeMap/:postId", postController.likePost);
 
 router.get("/:postType/:postId", searchController.getPostDetailsFromDatabase);
 

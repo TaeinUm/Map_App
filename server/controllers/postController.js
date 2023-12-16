@@ -86,21 +86,6 @@ exports.deletePost = async (req, res) => {
   }
 };
 
-exports.likePost = async (req, res) => {
-  try {
-    const postId = req.params.postId;
-    // Increment the likes count
-    const updatedPost = await Post.findByIdAndUpdate(
-      postId,
-      { $inc: { interactions: 1 } },
-      { new: true }
-    );
-    res.json({ message: "Map liked successfully", updatedPost });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
 exports.newlikePost = async (req, res) => {
   try {
     const postId = req.params.postId;
@@ -137,7 +122,20 @@ exports.newlikePost = async (req, res) => {
 };
 
 
-
+exports.likePost = async (req, res) => {
+  try {
+    const postId = req.params.postId;
+    // Increment the likes count
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $inc: { interactions: 1 } },
+      { new: true }
+    );
+    res.json({ message: "Map liked successfully", updatedPost });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Unlike a map
 exports.unlikePost = async (req, res) => {
