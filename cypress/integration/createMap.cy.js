@@ -36,6 +36,9 @@ describe("SignIn Page", () => {
       cy.get('[role=savesubmitbutton]').click();
       cy.wait(2000);
       cy.contains("noSelectDataFileOne").should("exist");
+      cy.contains("logout").click()
+      cy.wait(2000);
+      cy.contains("sign in").should("exist");
       
       
 
