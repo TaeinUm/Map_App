@@ -123,7 +123,7 @@ function Post() {
     <CardContent sx={{ textAlign: 'left' }}> 
       
       <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginBottom: "0px" }}>
-        <span style={{ fontWeight: 'normal' }}>{postInfo.userId}</span>
+        <span style={{ fontWeight: 'normal' }}>{postInfo.userName}</span>
       </Typography>
 
       <Typography variant="subtitle1" gutterBottom color="gray" sx={{ fontWeight: 'bold', marginBottom: "-50px" }}>
