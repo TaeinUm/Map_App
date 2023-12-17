@@ -164,8 +164,7 @@ const CommunitySectionAPI = {
     }
   },
 
-  postComment: async (userID, postId, date, content) => {
-    const { isAuthenticated, userId, username } = AuthContext;
+  postComment: async (userID, postId, username, date, content) => {
 
     try {
       const response = await axios.post(
@@ -174,13 +173,14 @@ const CommunitySectionAPI = {
         {
           userId: userID,
           postId: postId,
+          userName: username,
           commentDate: date,
           commentContent: content,
         }
       );
       return response.data;
     } catch (error) {
-      console.error("cannot post a comment.");
+      console.error("Error posting the comment: ", error);
     }
   },
 

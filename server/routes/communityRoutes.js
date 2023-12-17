@@ -15,19 +15,13 @@ router.get("/getallComments", commentController.getAllComments);
 router.delete("/deleteComment/:commentId", commentController.deleteComment);
 
 // Remove all comments
-router.delete(
-  "/deleteAllComment/:postId",
-  commentController.deleteCommentsByPostId
-);
+router.delete("/deleteAllComment/:postId", commentController.deleteCommentsByPostId);
 
 // Remove post
 router.delete("/deletePost/:postId", postController.deletePost);
 
 // Get all comments regarding postID
-router.get(
-  "/getAllCommentsByPostID/:postId",
-  commentController.getAllCommentsByPostID
-);
+router.get("/getAllCommentsByPostID/:postId", commentController.getAllCommentsByPostID);
 
 // Write a post
 router.post("/post", postController.writePost);
@@ -36,10 +30,7 @@ router.post("/post", postController.writePost);
 router.get("/getAllPosts", postController.getAllPosts);
 
 // Get all posts regarding postID
-router.get(
-  "/getMapsByUsername/:userIden",
-  searchController.searchMapByUserName
-);
+router.get("/getMapsByUsername/:userIden", searchController.searchMapByUserName);
 
 // Get Question Post by title Text Matched
 router.get("/getQuestions/:searchText", searchController.searchQuestionByText);
