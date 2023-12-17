@@ -298,22 +298,27 @@ function File() {
               });
             } else if (feature.properties.source === "flow") {
               setIsLine(false);
-              const flowLayerId = `flow-layer-${index}`;
-              newMap.addLayer({
-                id: flowLayerId,
-                type: "line",
-                source: {
-                  type: "geojson",
-                  data: geojsonData,
-                },
-                paint: {
-                  "line-color": feature.properties.paint["line-color"],
-                  "line-width": feature.properties.paint["line-width"],
-                },
-                layout: {
-                  "line-join": feature.properties.layout["line-join"],
-                  "line-cap": feature.properties.layout["line-cap"],
-                },
+              geojsonData.features.forEach((feature, index) => {
+                const layerId = `flow-layer-${index}`;
+
+                if (!newMap.getLayer(layerId)) {
+                  newMap.addLayer({
+                    id: layerId,
+                    type: "line",
+                    source: {
+                      type: "geojson",
+                      data: feature,
+                    },
+                    paint: {
+                      "line-color": feature.properties.paint["line-color"],
+                      "line-width": feature.properties.paint["line-width"],
+                    },
+                    layout: {
+                      "line-join": feature.properties.layout["line-join"],
+                      "line-cap": feature.properties.layout["line-cap"],
+                    },
+                  });
+                }
               });
             } else if (feature.properties.source === "countries") {
               setIsLine(false);
