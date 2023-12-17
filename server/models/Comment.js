@@ -4,6 +4,7 @@ const commentSchema = new mongoose.Schema({
   _id: mongoose.Schema.Types.ObjectId,
   userId: mongoose.Schema.Types.ObjectId,
   postId: mongoose.Schema.Types.ObjectId,
+  userName: String,
   commentDate: Date,
   commentContent: String
 });

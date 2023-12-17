@@ -3,7 +3,7 @@ const Comment = require("../models/Comment");
 
 exports.writeComment = async (req, res) => {
   try {
-    const { userId, postId, commentContent } = req.body;
+    const { userId, postId, userName, commentContent } = req.body;
 
     if (!userId || !commentContent) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -13,6 +13,7 @@ exports.writeComment = async (req, res) => {
       _id: new mongoose.Types.ObjectId(),
       userId,
       postId,
+      userName,
       commentDate: new Date(),
       commentContent,
     });

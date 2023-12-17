@@ -305,7 +305,7 @@ const renderMapGraphics = () => {
           elevation={0}
           sx={{
             borderRadius: "5px",
-            width: "85%",
+            width: authentification ? '100%' : '85%',
             height: "60px",
             display: "flex",
             justifyContent: "space-around"
@@ -365,18 +365,31 @@ const renderMapGraphics = () => {
             </Box>
           </StyledToolbar>
         </AppBar>
-        <Box sx={{ mt: "8px", mr: "20px" }}>
-          <Button
+        <Box sx={{ mt: "4px", mr: "20px" }}>
+          {!authentification && (<Button
             data-cy="community-make-post-button"
             component={Link}
             to={`/PostMapGraphic/`}
             variant="contained"
             startIcon={<AddIcon />}
             disabled={authentification}
-            sx={{ fontSize: "17px" }}
+            sx={{
+              mx: 1,
+              fontSize: "17px",
+              backgroundColor: "#1565C0",
+              color: "#FFFFFF",
+              width: "110px",
+              height: "50px",
+              borderRadius: "20px",
+              "&:hover": {
+                backgroundColor: "#1976D2",
+                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
+              },
+            }}
           >
             Post
           </Button>
+          )}
         </Box>
       </Box>
       <Box>{content}</Box>
