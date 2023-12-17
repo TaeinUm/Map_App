@@ -64,7 +64,7 @@ function MapLanding() {
                 marginRight: "20px",
                 borderRadius: "20px",
                 "&:hover": {
-                  backgroundColor: "#363f4f",
+                  backgroundColor: "#1976D2",
                   boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
                 },
               }}
@@ -88,7 +88,7 @@ function MapLanding() {
                 height: "40px",
                 borderRadius: "20px",
                 "&:hover": {
-                  backgroundColor: "#363f4f",
+                  backgroundColor: "#1976D2",
                   boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
                 },
               }}
