@@ -59,7 +59,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
             <Card
               sx={{
                 margin: "10px",
-                height: "350px",
+                height: "400px",
                 width: "320px",
               }}
               onClick={() => handlePostClick(post)}
@@ -79,6 +79,9 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                 </Typography>
                 <Typography variant="overline" display="block" gutterBottom>
                   Date: {new Date(post.postDate).toLocaleDateString()}
+                </Typography>
+                <Typography variant="overline" display="block" gutterBottom>
+                  Likes: {post.interactions}
                 </Typography>
               </CardContent>
             </Card>
