@@ -33,24 +33,24 @@ describe("GET /api/top5graphics", () => {
 
 describe("User API Endpoints", () => {
 
-  // // Update User Details
-  // test("updates user details successfully", async () => {
-  //   const userId = "65488ef3fec19c23e9a3e06f";
-  //   const userData = {
-  //     email: "juyoung.um@stonybrook.edu",
-  //     userName: "Juyoung Um",
-  //     password: "1q2w3e4r!",
-  //   };
+  // Update User Details
+  test("updates user details successfully", async () => {
+    const userId = "65488ef3fec19c23e9a3e06f";
+    const userData = {
+      email: "juyoung.um@stonybrook.edu",
+      userName: "Juyoung Um",
+      password: "1q2w3e4r!",
+    };
 
-  //   const response = await request(app)
-  //     .put(`/api/users/updateDetails/${userId}`) // or .put(), depending on your API
-  //     .send(userData);
+    const response = await request(app)
+      .put(`/api/users/updateDetails/${userId}`) // or .put(), depending on your API
+      .send(userData);
 
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body).toMatchObject({
-  //     message: "User updated successfully",
-  //   });
-  // });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatchObject({
+      message: "User updated successfully",
+    });
+  });
 
   test("retrieves user email successfully", async () => {
     const userId = "65488ef3fec19c23e9a3e06f";

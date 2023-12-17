@@ -43,28 +43,28 @@ describe('API Endpoints', function() {
 });
 
 describe(' User API Endpoints', function() {
-    // it('updates user details successfully', function(done) {
-    //     const userId = '65488ef3fec19c23e9a3e06f';
-    //     const userData = {
-    //         email: 'juyoung.um@stonybrook.edu',
-    //         userName: 'Juyoung Um',
-    //         password: '1q2w3e4r!'
-    //     };
+    it('updates user details successfully', function(done) {
+        const userId = '65488ef3fec19c23e9a3e06f';
+        const userData = {
+            email: 'juyoung.um@stonybrook.edu',
+            userName: 'Juyoung Um',
+            password: '1q2w3e4r!'
+        };
 
-    //     request(app)
-    //         .put(`/api/users/${userId}`)
-    //         .send(userData)
-    //         .expect('Content-Type', /json/)
-    //         .expect(200)
-    //         .end(function(err, res) {
-    //             if (err) done(err);
-    //             else {
-    //                 expect(res.body).to.be.an('object');
-    //                 expect(res.body).to.have.property('message', 'User updated successfully');
-    //                 done();
-    //             }
-    //         });
-    // });
+        request(app)
+            .put(`/api/users/updateDetails/${userId}`)
+            .send(userData)
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .end(function(err, res) {
+                if (err) done(err);
+                else {
+                    expect(res.body).to.be.an('object');
+                    expect(res.body).to.have.property('message', 'User updated successfully');
+                    done();
+                }
+            });
+    });
 
     it('retrieves user email successfully', function(done) {
         const userId = '65488ef3fec19c23e9a3e06f';
