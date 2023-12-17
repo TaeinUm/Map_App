@@ -11,6 +11,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { FiTrash } from "react-icons/fi";
+import placeholder from "../../assets/images/TerraCanvas_placeholder_image.png"
 
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -179,9 +180,18 @@ const Profile = () => {
   };
 
   return (
-    <ResponsiveContainer>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+    <ResponsiveContainer
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start", // Align items to the start to prevent stretching to full viewport height
+        minHeight: "100vh", // Use minHeight instead of height
+        m: "30px",
+        mt: "50px",
+        mb: "50px",
+      }}>
+      <Grid container spacing={5}>
+        <Grid item xs={12} sm={6} paddingRight={"10px"}>
           {/**           Welcome, {user}  & create your map button    */}
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
             <CardContent>
@@ -266,10 +276,7 @@ const Profile = () => {
                     >
                       <CardMedia
                         onClick={() => handlePostClick(post._id, post.postType)}
-                        image={
-                          post.postImages ||
-                          "https://img.favpng.com/18/6/16/earth-globe-black-and-white-clip-art-png-favpng-wSZdMyWbDnwP5h9ds7LZzYwnU.jpg"
-                        }
+                        image={post.postImages || placeholder}
                         alt={`Post ${index}`}
                         sx={{
                           width: "80px",
