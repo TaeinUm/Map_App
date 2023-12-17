@@ -1,5 +1,55 @@
 const mongoose = require("mongoose");
 const Post = require("../models/Post");
+const AWS = require('aws-sdk');
+const path = require('path');
+const fs = require('fs');
+const nodemailer = require("nodemailer");
+const multer = require('multer');
+
+AWS.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_REGION
+});
+
+const s3 = new AWS.S3();
+const { v4: uuidv4 } = require('uuid');
+
+exports.uploadPostPicture = async (req, res) => {
+  const { postId } = req.params;
+  const { imageBase64 } = req.body;
+
+  try {
+    if (!imageBase64) {
+      return res.status(400).json({ message: "No image data provided" });
+    }
+
+    // Base64 문자열을 버퍼로 변환
+    const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
+    const fileType = imageBase64.split(";")[0].split("/")[1];
+
+    const fileKey = `postImages/${postId}-${Date.now()}.${fileType}`;
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: fileKey,
+      Body: buffer,
+      ContentType: `image/${fileType}`,
+      ACL: 'public-read',
+    };
+
+    const uploadResult = await s3.upload(params).promise();
+
+    // 업로드된 이미지 URL만 반환
+    res.status(200).json({ message: "Post image uploaded successfully", imageUrl: uploadResult.Location });
+  } catch (error) {
+    console.error("Error uploading post image:", error);
+    res.status(500).json({ message: "Error uploading post image: " + error.message });
+  }
+};
+
+
+
+
 
 exports.getTopPosts = async (req, res) => {
   try {

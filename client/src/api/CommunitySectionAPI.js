@@ -4,10 +4,36 @@ import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL =
-"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+"http://localhost:8080";
 
 const CommunitySectionAPI = {
   
+  uploadPostPicture: async (postId, imageBase64) => {
+    try {
+      const response = await axios.put(
+        `${API_BASE_URL}/api/community/${postId}/upload-post-picture`,
+        {
+          imageBase64: imageBase64 // Base64 인코딩된 이미지 데이터 전송
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading post image: ", error);
+      throw error;
+    }
+  },
+  
+  
+  
+
+
+
   newlikePost: async (userID, postId) => {
     
     
@@ -26,31 +52,9 @@ const CommunitySectionAPI = {
   
   
   //make a post
-  makePost: async (
-    userID,
-    username,
-    content,
-    likes,
-    types,
-    image,
-    title,
-    visibility,
-    attachedFile,
-    postDate
-  ) => {
+  makePost: async (postPayload) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
-        userId: userID,
-        userName: username,
-        content: content,
-        interactions: likes,
-        postType: types,
-        postImages: image,
-        postName: title,
-        visibility: visibility,
-        attachedFile: attachedFile,
-        postDate: postDate,
-      });
+      const response = await axios.post(`${API_BASE_URL}/api/community/post`, postPayload);
       return response.data;
     } catch (error) {
       console.error("Error making the post: ", error);
@@ -70,6 +74,7 @@ const CommunitySectionAPI = {
       console.error("cannot get sample posts.");
     }
   },
+
 
   getAllPosts: async () => {
     try {

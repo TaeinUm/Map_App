@@ -15,46 +15,111 @@ import {
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import AWS from 'aws-sdk';
 
+
+const s3 = new AWS.S3();
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState('Questions');
   const [privacyType, setPrivacyType] = useState('1');
   const { makePost } = CommunitySectionAPI;
+  const { uploadPostPicture } = CommunitySectionAPI;
   const navigate = useNavigate();
-
-  // Material-UI 테마 훅을 사용하여 현재 테마 접근
+  
   const theme = useTheme();
-  // 현재 화면이 모바일 크기인지 확인하는 미디어 쿼리 훅
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { username } = useContext(AuthContext);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  async function handlePostButton() {
-    try {
-      // Post button event handler logic
-      const currentTimeSec = new Date();
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    setSelectedImage(file)
+    console.log(file)
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const max_width = 800; // Set the maximum width
+          const scaleSize = max_width / img.width;
+          const canvas = document.createElement('canvas');
+          canvas.width = max_width;
+          canvas.height = img.height * scaleSize;
   
-      const response = await makePost(
-        localStorage.getItem('newUserid'),
-        username,
-        document.getElementById('shabi-content').value,
-        0,
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  
+          canvas.toBlob((blob) => {
+            const resizedImage = new File([blob], file.name, {
+              type: 'image/jpeg',
+              lastModified: Date.now()
+            });
+            setSelectedImage(resizedImage); // Set the resized image file
+            setImagePreview(URL.createObjectURL(resizedImage)); // Set the preview
+          }, 'image/jpeg', 0.85); // Adjust the quality parameter as needed
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  
+
+  const handleCancelImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+  };
+
+  function convertImageToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const handlePostButton = async () => {
+    try {
+      let imageUrl = '';
+  
+      if (selectedImage) {
+        // 이미지를 Base64로 변환
+        const imageBase64 = await convertImageToBase64(selectedImage);
+  
+        // 변환된 이미지를 업로드
+        const response = await uploadPostPicture(localStorage.getItem('newUserid'), imageBase64);
+  
+        if (response && response.imageUrl) {
+          imageUrl = response.imageUrl;
+        } else {
+          console.error('Error uploading image:', response);
+        }
+      }
+  
+      const postPayload = {
+        userId: localStorage.getItem('newUserid'),
+        userName: username,
+        content: document.getElementById('shabi-content').value,
+        interactions: 0,
         postType,
-        document.getElementById('shabi-file').files[0],
-        document.getElementById('shabi-title').value,
-        parseInt(privacyType),
-        document.getElementById('shabi-file').files[0],
-        currentTimeSec
-      );
+        postName: document.getElementById('shabi-title').value,
+        visibility: parseInt(privacyType),
+        postImages: imageUrl, // 업로드된 이미지 URL 사용
+        postDate: new Date().toISOString()
+      };
+  
+      const response = await makePost(postPayload);
       alert('Post created successfully!');
       navigate('/community');
-      
     } catch (error) {
-      // Handle any errors that occur during the post creation process
       console.error('Error creating post:', error);
       alert('An error occurred while creating the post. Please try again.');
     }
   }
+  
 
   return (
     <Box
@@ -68,15 +133,15 @@ function CommunityPostMapGraphic() {
         elevation={6}
         style={{
           padding: isMobile ? 0 : '2rem',
-          backgroundColor: 'white', // 배경색을 흰색으로 변경
-          color: 'black', // 텍스트 색상을 검은색으로 변경 (가독성을 위해)
+          backgroundColor: 'white', 
+          color: 'black', 
           width: isMobile ? '100%' : '70%',
           maxWidth: isMobile ? 'none' : '1000px',
           margin: 'auto',
           overflow: 'hidden',
         }}
       >
-        <Box padding={isMobile ? 1 : 3}> {/* 모바일에서는 패딩을 줄임 */}
+        <Box padding={isMobile ? 1 : 3}> 
           <Typography variant="h5" gutterBottom style={{ textAlign: 'left' }}>
             Title
           </Typography>
@@ -129,6 +194,31 @@ function CommunityPostMapGraphic() {
           />
           <br></br>
           <br></br>
+
+          <Box display="flex" justifyContent="space-between" marginTop="1rem">
+      <Button variant="contained" color="primary" style={{
+          backgroundColor: 'black',
+          color: 'white',
+        }} component="label">
+        Load Image From Local
+        <input
+          type="file"
+          hidden
+          onChange={handleFileChange}
+        />
+      </Button>
+    </Box>
+
+    {imagePreview && (
+      <Box marginTop="1rem">
+        <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+        <Button variant="contained" color="secondary" onClick={handleCancelImage} style={{ marginTop: '1rem' }}>
+          Cancel Image
+        </Button>
+      </Box>
+    )}
+
+
           <Box display="flex" justifyContent="space-between" marginTop="1rem">
            <Button variant="contained" color="primary" style={{
                backgroundColor: 'black',
