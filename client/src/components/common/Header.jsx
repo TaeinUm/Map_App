@@ -117,7 +117,7 @@ function Header() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             {navLinks.map(({ title, path }) => (
               <Button
-                sx={{ fontFamily: "Roboto", fontSize: "18px", justifyContent: "space-between", ml: "10px", mr: "10px", pb: 0 }}
+                sx={{ fontFamily: "Arial", fontSize: "18px", justifyContent: "space-between", ml: "10px", mr: "10px", pb: 0 }}
                 key={title}
                 size="large"
                 color="inherit"
