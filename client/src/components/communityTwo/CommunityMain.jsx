@@ -305,7 +305,7 @@ const renderMapGraphics = () => {
           elevation={0}
           sx={{
             borderRadius: "5px",
-            width: "85%",
+            width: authentification ? '100%' : '85%',
             height: "60px",
             display: "flex",
             justifyContent: "space-around"
@@ -366,7 +366,7 @@ const renderMapGraphics = () => {
           </StyledToolbar>
         </AppBar>
         <Box sx={{ mt: "4px", mr: "20px" }}>
-          <Button
+          {!authentification && (<Button
             data-cy="community-make-post-button"
             component={Link}
             to={`/PostMapGraphic/`}
@@ -389,6 +389,7 @@ const renderMapGraphics = () => {
           >
             Post
           </Button>
+          )}
         </Box>
       </Box>
       <Box>{content}</Box>
