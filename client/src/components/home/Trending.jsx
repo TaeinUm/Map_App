@@ -40,10 +40,9 @@ function Trending() {
           variant="h2"
           component="h3"
           sx={{
-            fontSize: "50px",
+            fontSize: "40px",
             color: "#FAFAFA",
             mb: 2,
-            ml: 5,
             display: "flex",
             flexGrow: "1",
             fontWeight: "bold",
