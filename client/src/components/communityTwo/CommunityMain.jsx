@@ -365,7 +365,7 @@ const renderMapGraphics = () => {
             </Box>
           </StyledToolbar>
         </AppBar>
-        <Box sx={{ mt: "8px", mr: "20px" }}>
+        <Box sx={{ mt: "4px", mr: "20px" }}>
           <Button
             data-cy="community-make-post-button"
             component={Link}
@@ -373,7 +373,19 @@ const renderMapGraphics = () => {
             variant="contained"
             startIcon={<AddIcon />}
             disabled={authentification}
-            sx={{ fontSize: "17px" }}
+            sx={{
+              mx: 1,
+              fontSize: "17px",
+              backgroundColor: "#1565C0",
+              color: "#FFFFFF",
+              width: "110px",
+              height: "50px",
+              borderRadius: "20px",
+              "&:hover": {
+                backgroundColor: "#363f4f",
+                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
+              },
+            }}
           >
             Post
           </Button>
