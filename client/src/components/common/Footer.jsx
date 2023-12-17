@@ -37,21 +37,21 @@ function Footer() {
         <Button
           component={NavLink}
           to="/termsconditions"
-          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+          sx={{ color: "white", textTransform: "none", marginRight: "30px", fontSize: "15px", fontFamily: "Vernada" }}
         >
           Terms and Conditions
         </Button>
         <Button
           component={NavLink}
           to="/privacypolicy"
-          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+          sx={{ color: "white", textTransform: "none", marginRight: "30px", fontSize: "15px", fontFamily: "Vernada" }}
         >
           Privacy Policy
         </Button>
         <Button
           component={NavLink}
           to="/contact"
-          sx={{ color: "white", textTransform: "none", marginRight: "40px" }}
+          sx={{ color: "white", textTransform: "none", fontSize: "15px", fontFamily: "Vernada"  }}
         >
           Contact
         </Button>
