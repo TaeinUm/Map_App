@@ -43,7 +43,7 @@ describe("User API Endpoints", () => {
     };
 
     const response = await request(app)
-      .put(`/api/users/${userId}`) // or .put(), depending on your API
+      .put(`/api/users/updateDetails/${userId}`) // or .put(), depending on your API
       .send(userData);
 
     expect(response.statusCode).toBe(200);

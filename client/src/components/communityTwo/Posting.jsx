@@ -15,10 +15,10 @@ import {
 import CommunitySectionAPI from '../../api/CommunitySectionAPI';
 import { AuthContext } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import AWS from 'aws-sdk';
+//import AWS from 'aws-sdk';
 
 
-const s3 = new AWS.S3();
+//const s3 = new AWS.S3();
 function CommunityPostMapGraphic() {
   const [postType, setPostType] = useState('Questions');
   const [privacyType, setPrivacyType] = useState('1');
