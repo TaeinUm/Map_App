@@ -16,6 +16,7 @@ exports.getTopPosts = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({});
+    console.log("This is for getting all posts");
     res.json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);

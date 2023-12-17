@@ -13,9 +13,9 @@ router.put(
 );
 
 // Update user details
-router.put("/:userId", userController.updateUserDetails);
+router.put("/updateDetails/:userId", userController.updateUserDetails);
 
-router.put("/updatePassword", userController.updateUserPassword)
+router.put("/updatePassword", userController.updateUserPassword);
 
 // Route to get email by userId
 router.get("/:userId/email", userController.getEmail);

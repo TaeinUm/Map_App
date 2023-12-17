@@ -22,8 +22,8 @@ const NewPasswordPage = () => {
     setConfirmPassword(event.target.value);
   };
 
-  const handleSubmit = () => {
-    updateUserPassword(email, confirmPassword);
+  const handleSubmit =  async () => {
+    const update = await updateUserPassword(email, confirmPassword);
     alert(`Password updated: ${password}`);
   };
 
