@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper } from "@mui/material";
 import { getTop5Trending } from "../../api/graphicsAPI";
 
+import placeholder from '../../assets/images/TerraCanvas_placeholder_image.png';
+
+
 function Trending() {
   /****   useState Section  ****/
   const [scrollAmount, setScrollAmount] = useState(0);
@@ -68,7 +71,7 @@ function Trending() {
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
             >
               <img
-                src={graphic.postImages}
+                src={graphic.postImages || placeholder}
                 alt={graphic.postName}
                 style={{ objectFit: "cover", width: "100%", height: "100%" }}
               />
