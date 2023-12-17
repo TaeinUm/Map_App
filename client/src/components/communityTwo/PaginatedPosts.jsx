@@ -71,19 +71,31 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                 alt={post.postName}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5">
+              <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  noWrap 
+                  sx={{
+                    width: '100%',
+                    overflow: 'hidden', 
+                    textOverflow: 'ellipsis', 
+                    whiteSpace: 'nowrap' 
+                  }}
+                >
                   {post.postName}
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
+                <Typography variant="overline" display="block" gutterBottom align="left">
                   Posted by {post.userName || "here! get author name"}
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
+                <Typography variant="overline" display="block" gutterBottom align="left">
                   Date: {new Date(post.postDate).toLocaleDateString()}
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
+                <Typography variant="overline" display="block" gutterBottom align="left">
                   Likes: {post.interactions}
                 </Typography>
               </CardContent>
+
             </Card>
           </Grid>
         ))}
