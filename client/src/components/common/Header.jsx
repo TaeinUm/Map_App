@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -57,6 +57,24 @@ function Header() {
     { title: "Sign Up", path: "/signup" },
   ];
 
+  const location = useLocation();
+
+  // Function to check if the current path matches or starts with a given path
+  const isActiveRoute = (path) => {
+    if (path === "/") {
+      // For the "Home" link, check if the path is exactly "/"
+      return location.pathname === path || location.pathname.startsWith("/sign")
+      || location.pathname.startsWith("/termsconditions") || location.pathname.startsWith("/privacypolicy")
+      || location.pathname.startsWith("/contact") || location.pathname.startsWith("/profile");
+    } else if (path === "/community") {
+      // For the "Community" link, check if the path starts with "/community" or "/posts"
+      return location.pathname.startsWith(path) || location.pathname.startsWith("/posts");
+    } else {
+      // For other links, check if the current path starts with the given path
+      return location.pathname.startsWith(path);
+    }
+  };  
+
   return (
     <AppBar
       position="static"
@@ -101,14 +119,14 @@ function Header() {
           <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
             {navLinks.map(({ title, path }) => (
               <Button
-                sx={{ fontFamily: "Roboto", fontSize: "18px", justifyContent: "space-between", ml: "10px", mr: "10px", pb: 0 }}
+                sx={{ fontFamily: "Arial", fontSize: "17px", justifyContent: "space-between", ml: "10px", mr: "10px", pb: 0 }}
                 key={title}
                 size="large"
                 color="inherit"
                 component={NavLink}
                 to={path}
                 style={({ isActive }) =>
-                  isActive ? { fontWeight: "bold", color: "white" } : undefined
+                isActive || isActiveRoute(path) ? { fontWeight: "bold", color: "white" } : undefined
                 }
               >
                 {title}

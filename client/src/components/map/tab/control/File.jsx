@@ -203,7 +203,12 @@ function File() {
           url: "mapbox://mapbox.country-boundaries-v1",
         });
 
-        if (geojsonData && geojsonData.features) {
+        if (
+          geojsonData &&
+          geojsonData.features &&
+          (geojsonData.type === "FeatureCollection" ||
+            geojsonData.type === "GeometryCollection")
+        ) {
           geojsonData.features.forEach((feature, index) => {
             const layerId = `layer-${index}`;
             if (feature.properties.source === "pointmap-data") {
@@ -293,22 +298,27 @@ function File() {
               });
             } else if (feature.properties.source === "flow") {
               setIsLine(false);
-              const flowLayerId = `flow-layer-${index}`;
-              newMap.addLayer({
-                id: flowLayerId,
-                type: "line",
-                source: {
-                  type: "geojson",
-                  data: geojsonData,
-                },
-                paint: {
-                  "line-color": feature.properties.paint["line-color"],
-                  "line-width": feature.properties.paint["line-width"],
-                },
-                layout: {
-                  "line-join": feature.properties.layout["line-join"],
-                  "line-cap": feature.properties.layout["line-cap"],
-                },
+              geojsonData.features.forEach((feature, index) => {
+                const layerId = `flow-layer-${index}`;
+
+                if (!newMap.getLayer(layerId)) {
+                  newMap.addLayer({
+                    id: layerId,
+                    type: "line",
+                    source: {
+                      type: "geojson",
+                      data: feature,
+                    },
+                    paint: {
+                      "line-color": feature.properties.paint["line-color"],
+                      "line-width": feature.properties.paint["line-width"],
+                    },
+                    layout: {
+                      "line-join": feature.properties.layout["line-join"],
+                      "line-cap": feature.properties.layout["line-cap"],
+                    },
+                  });
+                }
               });
             } else if (feature.properties.source === "countries") {
               setIsLine(false);
@@ -353,23 +363,28 @@ function File() {
           setMap(newMap);
           setIsMapLoaded(true);
         } else if (styleSettings.geojsonData) {
-          setIsLine(true);
-          newMap.addSource(sourceId, {
-            type: "geojson",
-            data: geojsonData,
-          });
+          if (
+            geojsonData.type === "FeatureCollection" ||
+            geojsonData.type === "GeometryCollection"
+          ) {
+            setIsLine(true);
+            newMap.addSource(sourceId, {
+              type: "geojson",
+              data: geojsonData,
+            });
 
-          newMap.addLayer({
-            id: layerId,
-            type: "line",
-            source: sourceId,
-            paint: {
-              "line-color": "#000000",
-              "line-width": 2,
-            },
-          });
-          setIsMapLoaded(true);
-          setMap(newMap);
+            newMap.addLayer({
+              id: layerId,
+              type: "line",
+              source: sourceId,
+              paint: {
+                "line-color": "#000000",
+                "line-width": 2,
+              },
+            });
+            setIsMapLoaded(true);
+            setMap(newMap);
+          }
         } else {
           setIsLine(false);
           setMap(newMap);

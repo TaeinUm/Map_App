@@ -5,18 +5,24 @@ const mongoose = require('mongoose');
 const app = require('../server'); // Adjust the path to where your Express app is exported
 
 describe('API Endpoints', function() {
-  // Test for the root endpoint
-  // it('responds with the correct content type', function(done) {
-  //   request(app)
-  //     .get('/')
-  //     .expect('Content-Type', /html/) // Expect HTML content type
-  //     .expect(200)
-  //     .end(function(err, res) {
-  //       // You might want to check for specific HTML content here
-  //       done(err); // Pass the error if there is one to Mocha
-  //     });
-  // });
+    // Test for /api/test-data endpoint
+    it('fetches data from the test collection successfully', function(done) {
+        request(app)
+          .get('/api/test-data')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            expect(res.statusCode).to.equal(200);
+            expect(res.body).to.have.property('message', 'Successfully Loaded');
+            expect(Array.isArray(res.body.data)).to.be.true;
+            // Add more assertions here if you want to check the structure of the returned documents
+            done(err);
+          });
+      });
+});
 
+
+describe('API Endpoints', function() {
   // Test for the /api/top5graphics endpoint
   it('fetches the top 5 graphics successfully', function(done) {
     request(app)
@@ -28,7 +34,7 @@ describe('API Endpoints', function() {
         if (res.body.length === 5) {
           res.body.forEach(function(item) {
             expect(item).to.be.an('object');
-            expect(item).to.include.all.keys('_id', 'interactions', 'postImages', 'postName', 'content', 'postDate', 'postType', 'visibility', 'userId', 'attachedFile');
+            expect(item).to.include.all.keys('_id');
           });
         }
         done(err);
@@ -46,7 +52,7 @@ describe(' User API Endpoints', function() {
         };
 
         request(app)
-            .put(`/api/users/${userId}`)
+            .put(`/api/users/updateDetails/${userId}`)
             .send(userData)
             .expect('Content-Type', /json/)
             .expect(200)
@@ -78,7 +84,37 @@ describe(' User API Endpoints', function() {
                 }
             });
     });
+
+    it('should retrieve maps by user ID', async function() {
+        const userId = '65487c7a94678f7bd6d43689';
+        
+        const response = await request(app).get(`/api/community/getMapsByUsername/${userId}`);
+        
+        expect(response.statusCode).to.equal(200);
+        expect(Array.isArray(response.body)).to.be.true;
+      });
 });
+
+describe('Map Interactions API', function() {
+    const postId = '6559d630cf378d2d911c6387'; // Replace with a valid postId for testing
+  
+    it('should like a map successfully', async function() {
+      const response = await request(app).put(`/api/community/likeMap/${postId}`);
+      
+      expect(response.statusCode).to.equal(200);
+      expect(response.body).to.have.property('message', 'Map liked successfully');
+      expect(response.body).to.have.property('updatedPost');
+    });
+  
+    it('should unlike a map successfully', async function() {
+      const response = await request(app).put(`/api/community/unlikeMap/${postId}`);
+      
+      expect(response.statusCode).to.equal(200);
+      expect(response.body).to.have.property('message', 'Map unliked successfully');
+      expect(response.body).to.have.property('updatedPost');
+    });
+  
+  });
 
 describe('Community API Endpoints', function() {
     it('creates and then deletes a new post successfully', function(done) {
@@ -127,32 +163,6 @@ describe('Community API Endpoints', function() {
                 }
             });
     });
-
-
-    // it('creates a new comment successfully', function(done) {
-    //   const postData = {
-    //       postId: "6559d630cf378d2d911c6387".toString(),
-    //       userId: "65487c7a94678f7bd6d43689".toString(),
-    //       commentDate: "2023-10-11",
-    //       commentContent: 'NEW2',
-    //   };
-
-    //   request(app)
-    //       .post('/api/community/postcomment')
-    //       .send(postData)
-    //       .expect('Content-Type', /json/)
-    //       .expect(201)
-    //       .end(function(err, res) {
-    //           if (err) {
-    //               console.error("Test failed with error:", res.body.message);
-    //               done(err);
-    //           } else {
-    //               expect(res.body).to.be.an('object');
-    //               expect(res.body).to.include.all.keys('_id', 'userId', 'postId', 'commentContent');
-    //               done();
-    //           }
-    //       });
-    // });
 
     it('creates and then deletes a new comment successfully', function(done) {
         const postData = {

@@ -4,13 +4,6 @@ const mongoose = require("mongoose");
 const app = require("../server"); // Adjust the path to where your Express app is exported
 
 describe("GET /", () => {
-  // test('responds with the correct content type', async () => {
-  //   const response = await request(app).get('/');
-  //   // Check if the content-type is HTML, since you're serving a React app
-  //   expect(response.headers['content-type']).toMatch(/html/);
-  //   // If you want to check for specific HTML content, you can do so here
-  //   expect(response.statusCode).toBe(200);
-  // });
 
   test("fetches data from the test collection successfully", async () => {
     const response = await request(app).get("/api/test-data");
@@ -39,18 +32,6 @@ describe("GET /api/top5graphics", () => {
 });
 
 describe("User API Endpoints", () => {
-  // // Update User Profile Image
-  // test('updates user profile image successfully', async () => {
-  //   const userId = '65488ef3fec19c23e9a3e06f';
-  //   const response = await request(app)
-  //     .put(`/api/users/${userId}/profile-picture`)
-  //     .attach('file', '/jest/testprofile.jpeg'); // Adjust path and field name as necessary
-
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body).toMatchObject({
-  //     message: 'Profile picture updated successfully'
-  //   });
-  // });
 
   // Update User Details
   test("updates user details successfully", async () => {
@@ -62,7 +43,7 @@ describe("User API Endpoints", () => {
     };
 
     const response = await request(app)
-      .put(`/api/users/${userId}`) // or .put(), depending on your API
+      .put(`/api/users/updateDetails/${userId}`) // or .put(), depending on your API
       .send(userData);
 
     expect(response.statusCode).toBe(200);
@@ -89,6 +70,30 @@ describe("User API Endpoints", () => {
 
     expect(response.statusCode).toBe(200);
     expect(Array.isArray(response.body)).toBeTruthy(); // Check if the response is an array of users
+  });
+});
+
+describe('Map Interactions API', () => {
+  const postId = '6559d630cf378d2d911c6387'; // Replace with a valid postId for testing
+
+  test('should like a map successfully', async () => {
+    const response = await request(app).put(`/api/community/likeMap/${postId}`);
+
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatchObject({
+      message: 'Map liked successfully',
+      updatedPost: expect.any(Object) // Assuming updatedPost is an object
+    });
+  });
+
+  test('should unlike a map successfully', async () => {
+    const response = await request(app).put(`/api/community/unlikeMap/${postId}`);
+    
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toMatchObject({
+      message: 'Map unliked successfully',
+      updatedPost: expect.any(Object) // Assuming updatedPost is an object
+    });
   });
 });
 

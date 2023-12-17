@@ -4,6 +4,7 @@ const AWS = require('aws-sdk');
 const path = require('path');
 const fs = require('fs');
 const nodemailer = require("nodemailer");
+const mongoose=require("mongoose");
 
 // Configure AWS
 AWS.config.update({
@@ -54,6 +55,7 @@ const updateProfilePicture = async (req, res) => {
 const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
   const { email, userName, password } = req.body;
+  console.log("I am in the updateUserDetails function");
 
   try {
     const user = await User.findById(userId);
@@ -68,6 +70,7 @@ const updateUserDetails = async (req, res) => {
     if (password) {
       const hashedPassword = await bcrypt.hash(password, 10);
       user.password = hashedPassword;
+      //await user.save();
     }
 
     // Save the updated user
@@ -84,23 +87,28 @@ const updateUserDetails = async (req, res) => {
 const updateUserPassword = async (req, res) => {
   
   const { email, password } = req.body;
+  console.log("I am within the updateUserPassword function");
 
   try {
-    const user = await User.find({email: email});
-    if (!user) {
+    const userArray = await User.find({email: email});
+    if (!userArray) {
       return res.status(404).json({ message: "User not found" });
     }
-    console.log("Do I find a user and if so who is it: "+user);
+    let actualUser = userArray[0];
+    console.log("Do I find a user and if so who is it: "+actualUser);
     // Update fields if they are provided
     // if (email) user.email = email;
     // if (userName) user.userName = userName;
+    let hashedPassword ="";
     if (password) {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
+      hashedPassword = await bcrypt.hash(password, 10);
+      actualUser.password = hashedPassword;
+      //await actualUser.save();
     }
 
+    const updatedUser = await actualUser.save();
     // Save the updated user
-    const updatedUser = await user.save();
+    //const updatedUser = await User.updateOne({email: user.email}, { $set: { password: hashedPassword } });
     res
       .status(200)
       .json({ message: "User updated successfully", user: updatedUser });
@@ -147,7 +155,7 @@ const getUsersByName = async (req, res) => {
     res.status(500).json({ message: "Error fetching users" });
   }
 };
-
+//
 const sendEmail=async ( req, res ) => {
   const {recipient_email, OTP} = req.body;
   return new Promise((resolve, reject) => {

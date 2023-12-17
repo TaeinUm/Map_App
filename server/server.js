@@ -9,7 +9,7 @@ const cors = require("cors");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const authenticateToken = require('./middleware/authenticateToken');
-
+const router = express.Router();
 // Import route handlers
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -48,6 +48,7 @@ app.use("/api/users", userRoutes); // Routes for user-related operations
 app.use("/api/community", communityRoutes); // Routes for community-related operations
 app.use("/api/mapgraphics", mapRoutes); // Routes for map graphics
 app.get("/api/test-data", testController.getDataFromTestCollection); // Route for fetching test data
+
 
 // Connect to MongoDB
 mongoose
@@ -95,6 +96,6 @@ if (require.main === module) {
     console.log(`Server is running on port ${PORT}`);
   });
 }
-
+module.exports = router;
 // Export the Express app for testing purposes
 module.exports = app;

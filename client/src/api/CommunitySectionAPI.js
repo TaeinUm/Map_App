@@ -4,39 +4,63 @@ import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL =
-  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+"http://localhost:8080";
 
 const CommunitySectionAPI = {
-  //make a post
-  makePost: async (
-    userID,
-    content,
-    likes,
-    types,
-    image,
-    title,
-    visibility,
-    attachedFile,
-    postDate
-  ) => {
+  
+  uploadPostPicture: async (postId, imageBase64) => {
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/community/post`, {
-        userId: userID,
-        content: content,
-        interactions: likes,
-        postType: types,
-        postImages: image,
-        postName: title,
-        visibility: visibility,
-        attachedFile: attachedFile,
-        postDate: postDate,
-      });
-
+      const response = await axios.put(
+        `${API_BASE_URL}/api/community/${postId}/upload-post-picture`,
+        {
+          imageBase64: imageBase64 // Base64 인코딩된 이미지 데이터 전송
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+  
       return response.data;
     } catch (error) {
-      console.error("cannot make a post.");
+      console.error("Error uploading post image: ", error);
+      throw error;
     }
   },
+  
+  
+  
+
+
+
+  newlikePost: async (userID, postId) => {
+    
+    
+    console.log("TEST", userID)
+    console.log("TEST", postId)
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/api/community/newlikePost/${postId}`,
+        { userId: userID }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("cannot like a post.");
+    }
+  },
+  
+  
+  //make a post
+  makePost: async (postPayload) => {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/community/post`, postPayload);
+      return response.data;
+    } catch (error) {
+      console.error("Error making the post: ", error);
+    }
+  },
+
   getSamplePosts: async () => {
     try {
       const response = await axios.get(
@@ -50,6 +74,8 @@ const CommunitySectionAPI = {
       console.error("cannot get sample posts.");
     }
   },
+
+
   getAllPosts: async () => {
     try {
       const response = await axios.get(
@@ -72,6 +98,7 @@ const CommunitySectionAPI = {
       console.error("cannot get a user's maps.");
     }
   },
+
   getPostsByUserId: async (userID) => {
     try {
       const response = await axios.get(
@@ -85,6 +112,7 @@ const CommunitySectionAPI = {
       console.error("cannot get a user's maps.");
     }
   },
+
   getQuestionsBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -98,6 +126,7 @@ const CommunitySectionAPI = {
       console.error("cannot get questions for a query.");
     }
   },
+
   getIdeasBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -111,6 +140,7 @@ const CommunitySectionAPI = {
       console.error("cannot get ideas for a query.");
     }
   },
+
   getMapsBySearch: async (searchText) => {
     try {
       const response = await axios.get(
@@ -124,6 +154,7 @@ const CommunitySectionAPI = {
       console.error("cannot get maps for a query.");
     }
   },
+  
   getCommentsForAPost: async (postID) => {
     try {
       const response = await axios.get(
@@ -138,8 +169,7 @@ const CommunitySectionAPI = {
     }
   },
 
-  postComment: async (userID, postId, date, content) => {
-    const { isAuthenticated, userId, username } = AuthContext;
+  postComment: async (userID, postId, username, date, content) => {
 
     try {
       const response = await axios.post(
@@ -148,13 +178,14 @@ const CommunitySectionAPI = {
         {
           userId: userID,
           postId: postId,
+          userName: username,
           commentDate: date,
           commentContent: content,
         }
       );
       return response.data;
     } catch (error) {
-      console.error("cannot post a comment.");
+      console.error("Error posting the comment: ", error);
     }
   },
 
@@ -173,6 +204,7 @@ const CommunitySectionAPI = {
       console.error("cannot like a map.");
     }
   },
+  
   unlikeMap: async (userID, postId) => {
     const { isAuthenticated, userId, username } = AuthContext;
 

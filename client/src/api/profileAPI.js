@@ -8,7 +8,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext";
 
 const BASE_URL =
-  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+"http://localhost:8080";
 
 const profileAPI = {
   //upate profile image
@@ -37,7 +37,7 @@ const profileAPI = {
   //update user details info, if not changed, x change those info
   updateUserDetails: async (userId, newEmail, newUsername, newPassword) => {
     try {
-      const response = await axios.put(`${BASE_URL}/api/users/${userId}`, {
+      const response = await axios.put(`${BASE_URL}/api/users/updateDetails/${userId}`, {
         email: newEmail,
         userName: newUsername,
         password: newPassword,

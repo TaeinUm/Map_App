@@ -1,5 +1,6 @@
 const express = require('express');
 const authController = require('../controllers/authController'); // Adjust the path according to your structure
+const userController = require('../controllers/userController');
 
 const router = express.Router();
 
@@ -17,6 +18,9 @@ router.get('/getLoggedIn/:userId', authController.getLoggedIn);
 
 //getUserData route
 router.get('/getUserData/:email', authController.getUserData);
+
+//change password
+//router.put('/updatePassword', userController.updateUserPassword);
 
 module.exports = router;
 

@@ -73,8 +73,7 @@ function Instruction() {
         }}
       >
         <Typography
-          variant="h3"
-          style={{ fontWeight: "bold", color: "#fafafa", marginBottom: "40px" }}
+          style={{ fontWeight: "bold", color: "#fafafa", marginBottom: "40px", fontSize: "40px" }}
         >
           How to Use TerraCanvas?
         </Typography>

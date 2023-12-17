@@ -10,6 +10,8 @@ import {
   Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import placeholder from '../../assets/images/TerraCanvas_placeholder_image.png';
 
 const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
   const handleChange = (event, value) => {
@@ -57,7 +59,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
             <Card
               sx={{
                 margin: "10px",
-                height: "350px",
+                height: "400px",
                 width: "320px",
               }}
               onClick={() => handlePostClick(post)}
@@ -65,20 +67,35 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
               <CardMedia
                 component="img"
                 height="200"
-                image={post.postImages || "https://via.placeholder.com/140"}
+                image={post.postImages || placeholder}
                 alt={post.postName}
               />
               <CardContent>
-                <Typography gutterBottom variant="h5">
+              <Typography
+                  gutterBottom
+                  variant="h5"
+                  component="div"
+                  noWrap 
+                  sx={{
+                    width: '100%',
+                    overflow: 'hidden', 
+                    textOverflow: 'ellipsis', 
+                    whiteSpace: 'nowrap' 
+                  }}
+                >
                   {post.postName}
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
-                  Author: {post.userId || "here! get author name"}
+                <Typography variant="overline" display="block" gutterBottom align="left">
+                  Posted by {post.userName || "here! get author name"}
                 </Typography>
-                <Typography variant="overline" display="block" gutterBottom>
+                <Typography variant="overline" display="block" gutterBottom align="left">
                   Date: {new Date(post.postDate).toLocaleDateString()}
                 </Typography>
+                <Typography variant="overline" display="block" gutterBottom align="left">
+                  Likes: {post.interactions}
+                </Typography>
               </CardContent>
+
             </Card>
           </Grid>
         ))}

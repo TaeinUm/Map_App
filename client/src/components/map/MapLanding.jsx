@@ -19,6 +19,8 @@ import LoadFile from "./modal/LoadFile";
 import MapList from "./landing/MapList";
 import MapMobile from "./landing/MapMobile";
 import SearchBar from "./landing/SearchBar";
+import AddIcon from "@mui/icons-material/Add"; // Import Add icon
+import FolderOpenIcon from "@mui/icons-material/FolderOpen"; // Import FolderOpen icon
 
 function MapLanding() {
   /****       useState, handler for modals     ****/
@@ -45,52 +47,60 @@ function MapLanding() {
   return (
     <div>
       {isDesktop && (
-        <Container maxWidth="xl" sx={{ height: "90vh" }}>
+        <Container sx={{ height: "95vh" }}>
           <Box
-            sx={{ display: "flex", justifyContent: "flex-end", mt: 3, mb: 4 }}
+            sx={{ display: "flex", justifyContent: "flex-end", mt: 4, mb: 2 }}
           >
-            <Box>
-              {/****       Buttons for Modals    ****/}
-              <Button
-                onClick={handleGraphicOpen}
-                variant="contained"
-                sx={{
-                  mx: 1,
-                  backgroundColor: "#FAFAFA",
-                  color: "black",
-                  width: "140px",
-                  height: "40px",
-                  marginRight: "20px",
-                }}
-                role="presentation"
-              >
-                Create New
-              </Button>
-              <Modal open={openGraphic} onClose={handleGraphicClose}>
-                <Box>
-                  <MapGraphics open={openGraphic} />
-                </Box>
-              </Modal>
-              <Button
-                onClick={handleFileOpen}
-                variant="contained"
-                sx={{
-                  mx: 1,
-                  backgroundColor: "#FAFAFA",
-                  color: "black",
-                  width: "140px",
-                  height: "40px",
-                }}
-                role="presentation"
-              >
-                Load File
-              </Button>
-              <Modal open={openFile} onClose={handleFileClose}>
-                <Box>
-                  <LoadFile open={openFile} />
-                </Box>
-              </Modal>
-            </Box>
+            <Button
+              onClick={handleGraphicOpen}
+              variant="contained"
+              startIcon={<AddIcon />} // Replace with your desired icon
+              sx={{
+                mx: 1,
+                backgroundColor: "#1565C0",
+                color: "#FFFFFF",
+                width: "155px",
+                height: "40px",
+                marginRight: "20px",
+                borderRadius: "20px",
+                "&:hover": {
+                  backgroundColor: "#1976D2",
+                  boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
+                },
+              }}
+              role="presentation"
+            >
+              Create New
+            </Button>
+            <Modal open={openGraphic} onClose={handleGraphicClose}>
+              <Box>
+                <MapGraphics open={openGraphic} />
+              </Box>
+            </Modal>
+            <Button
+              onClick={handleFileOpen}
+              variant="contained"
+              startIcon={<FolderOpenIcon />} // Replace with your desired icon
+              sx={{
+                backgroundColor: "#1565C0",
+                color: "#FFFFFF",
+                width: "140px",
+                height: "40px",
+                borderRadius: "20px",
+                "&:hover": {
+                  backgroundColor: "#1976D2",
+                  boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
+                },
+              }}
+              role="presentation"
+            >
+              Load File
+            </Button>
+            <Modal open={openFile} onClose={handleFileClose}>
+              <Box>
+                <LoadFile open={openFile} />
+              </Box>
+            </Modal>
           </Box>
 
           {/****       My graphics components     ****/}
