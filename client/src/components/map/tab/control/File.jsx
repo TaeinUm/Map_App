@@ -203,7 +203,12 @@ function File() {
           url: "mapbox://mapbox.country-boundaries-v1",
         });
 
-        if (geojsonData && geojsonData.features) {
+        if (
+          geojsonData &&
+          geojsonData.features &&
+          (geojsonData.type === "FeatureCollection" ||
+            geojsonData.type === "GeometryCollection")
+        ) {
           geojsonData.features.forEach((feature, index) => {
             const layerId = `layer-${index}`;
             if (feature.properties.source === "pointmap-data") {
@@ -353,23 +358,28 @@ function File() {
           setMap(newMap);
           setIsMapLoaded(true);
         } else if (styleSettings.geojsonData) {
-          setIsLine(true);
-          newMap.addSource(sourceId, {
-            type: "geojson",
-            data: geojsonData,
-          });
+          if (
+            geojsonData.type === "FeatureCollection" ||
+            geojsonData.type === "GeometryCollection"
+          ) {
+            setIsLine(true);
+            newMap.addSource(sourceId, {
+              type: "geojson",
+              data: geojsonData,
+            });
 
-          newMap.addLayer({
-            id: layerId,
-            type: "line",
-            source: sourceId,
-            paint: {
-              "line-color": "#000000",
-              "line-width": 2,
-            },
-          });
-          setIsMapLoaded(true);
-          setMap(newMap);
+            newMap.addLayer({
+              id: layerId,
+              type: "line",
+              source: sourceId,
+              paint: {
+                "line-color": "#000000",
+                "line-width": 2,
+              },
+            });
+            setIsMapLoaded(true);
+            setMap(newMap);
+          }
         } else {
           setIsLine(false);
           setMap(newMap);
