@@ -96,7 +96,6 @@ function Post() {
   const handleSubmit = async () => {
     const currentTimeSec = new Date();
     try {
-      console.log("Name?: ", username);
       await postComment(
         localStorage.getItem("newUserid"),
         postId,
@@ -134,8 +133,8 @@ function Post() {
     try {
       const userId = localStorage.getItem("newUserid");
       await CommunitySectionAPI.newlikePost(userId, postId);
-      console.log(userId);
-      console.log(isLiked);
+      // console.log(userId);
+      // console.log(isLiked);
       setIsLiked(!isLiked);
       if (isLiked) {
         // 이미 좋아요를 눌렀다면, 좋아요 제거
