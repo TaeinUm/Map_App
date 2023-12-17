@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import placeholder from '../../assets/images/TerraCanvas_placeholder_image.png';
 
 const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
   const handleChange = (event, value) => {
@@ -66,7 +67,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
               <CardMedia
                 component="img"
                 height="200"
-                image={post.postImages || "https://via.placeholder.com/140"}
+                image={post.postImages || placeholder}
                 alt={post.postName}
               />
               <CardContent>
