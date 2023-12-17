@@ -65,7 +65,7 @@ function Header() {
       // For the "Home" link, check if the path is exactly "/"
       return location.pathname === path || location.pathname.startsWith("/sign")
       || location.pathname.startsWith("/termsconditions") || location.pathname.startsWith("/privacypolicy")
-      || location.pathname.startsWith("/contact");;
+      || location.pathname.startsWith("/contact") || location.pathname.startsWith("/profile");
     } else if (path === "/community") {
       // For the "Community" link, check if the path starts with "/community" or "/posts"
       return location.pathname.startsWith(path) || location.pathname.startsWith("/posts");

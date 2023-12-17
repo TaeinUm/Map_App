@@ -196,13 +196,13 @@ const Profile = () => {
           <Card sx={{ backgroundColor: "#465065", borderRadius: "20px" }}>
             <CardContent>
               <Typography
-                variant="h5"
                 gutterBottom
                 sx={{
                   fontWeight: "bold",
                   color: "#FAFAFA",
                   marginBottom: "30px",
                   marginTop: "30px",
+                  fontSize: "35px",
                 }}
               >
                 Welcome, {username}
@@ -361,13 +361,13 @@ const Profile = () => {
             }}
           >
             <Typography
-              variant="h6"
               sx={{
                 mb: 2,
                 fontWeight: "bold",
                 fontSize: "38px",
                 textAlign: "left",
                 color: "#FAFAFA",
+                fontSize: "30px",
               }}
             >
               Profile Edit
@@ -433,7 +433,7 @@ const Profile = () => {
               type="submit"
               onClick={handleSaveChanges}
               variant="contained"
-              sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931" }}
+              sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931", p: 1 }}
             >
               Save Changes
             </Button>
