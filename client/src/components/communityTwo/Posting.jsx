@@ -46,14 +46,9 @@ function CommunityPostMapGraphic() {
         document.getElementById('shabi-file').files[0],
         currentTimeSec
       );
-  
-      if (response && response.success) {
-        alert('Post created successfully!');
-        navigate('/community');
-      } else {
-        // Handle the case where the post creation was not successful
-        alert('Failed to create post. Please try again.');
-      }
+      alert('Post created successfully!');
+      navigate('/community');
+      
     } catch (error) {
       // Handle any errors that occur during the post creation process
       console.error('Error creating post:', error);
