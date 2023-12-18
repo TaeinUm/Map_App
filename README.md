@@ -9,12 +9,27 @@ The goal for this project is to create a web application that develops how users
     - Heroku
 
 ### Dependencies
-    - mapbox/mapbox-gl-geocoder : 5.0.1
-    - mapbox/togeojson : 0.16.0
-    - mui/icons-material : 5.14.16
-    - express : 4.18.2
-    - express-session : 1.17.3
-    - ...
+    - @mapbox/mapbox-gl-geocoder: ^5.0.1
+    - @mapbox/togeojson: ^0.16.0
+    - @mui/icons-material: ^5.14.16
+    - express: ^4.18.2
+    - express-session: ^1.17.3
+    - aws-sdk: ^2.1510.0
+    - bcrypt: ^5.1.1
+    - chai: ^4.3.10
+    - cors: ^2.8.5
+    - dotenv: ^16.3.1
+    - jest: ^29.7.0
+    - mongodb: ^6.2.0
+    - mongoose: ^8.0.0
+    - nodemailer: ^6.9.7
+    - react: ^18.2.0
+    - react-dom: ^18.2.0
+    - react-router-dom: ^6.17.0
+    - sharp: ^0.32.6
+    - shpjs: ^4.0.4
+    - togeojson: ^0.16.0
+    
 More details are in package.json
 
 ### Structures
@@ -74,13 +89,28 @@ More details are in package.json
 
 ### Testing
   - Backend Test (Jest/SuperTest)
+    (21 Test Cases - Jest)
+    (21 Test Cases - SuperTest)
 
         cd server
         npm test
 
+    #### SuperTest Results
+    <img width="661" alt="스크린샷 2023-12-16 오후 6 01 37" src="https://github.com/JuyeeMyeong/CSE416_project/assets/87653966/238610f4-efe4-4dcc-a811-c8fb2c7048f6">
+
+    #### Jest Results
+    <img width="570" alt="스크린샷 2023-12-16 오후 6 03 00" src="https://github.com/JuyeeMyeong/CSE416_project/assets/87653966/727d975e-e5fa-491e-a0ea-979a240e75dc">
+
+
+    <br><br>
+    
   - Frontend Test (Cypress)
+    (66 Test Cases)
       
         npm run cypress:run
+
+    #### Cypress Results
+    <img width="713" alt="스크린샷 2023-12-16 오후 5 22 10" src="https://github.com/JuyeeMyeong/CSE416_project/assets/87653966/4490cc6c-a984-4105-8930-557f15926713">
 
 
 ### CI/CD
