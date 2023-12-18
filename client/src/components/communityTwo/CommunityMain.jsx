@@ -313,23 +313,10 @@ const renderMapGraphics = () => {
           }}
         >
           <StyledToolbar
-            sx={{ color: "black" }}
+            sx={{ color: "black", width: "100%" }}
           >
-            {/* <Typography
-              data-cy="current-category"
-              variant="h6"
-              noWrap
-              sx={{
-                display: { xs: "none", sm: "block" },
-                color: "black",
-                width: "300px",
-                textAlign: "left",
-              }}
-            >
-              {whiteBar}
-            </Typography> */}
             {/* Dropdown Menu for selecting categories */}
-            <Box sx={{ display: "flex", justifyContent: "space-between", height: "45px"}}>
+            <Box sx={{ display: "flex", height: "45px", width: "100%"}}>
               <Select
                 data-cy="community-select-bar"
                 labelId="demo-simple-select-label"
@@ -350,7 +337,7 @@ const renderMapGraphics = () => {
               </Select>
 
               {/* Search Bar */}
-              <Search sx={{ bgcolor: "#D5D5D5" }}>
+              <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
                 </SearchIconWrapper>
@@ -359,7 +346,6 @@ const renderMapGraphics = () => {
                   inputProps={{ "aria-label": "search" }}
                   value={searchTerm}
                   onChange={handleSearchChange}
-                  sx={{ width: "550px" }}
                 />
               </Search>
             </Box>
@@ -376,8 +362,8 @@ const renderMapGraphics = () => {
             sx={{
               mx: 1,
               fontSize: "17px",
-              backgroundColor: "#1565C0",
-              color: "#FFFFFF",
+              backgroundColor: "#FAFAFA",
+              color: "black",
               width: "110px",
               height: "50px",
               borderRadius: "20px",
