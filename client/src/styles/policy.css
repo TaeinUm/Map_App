@@ -1,3 +1,11 @@
+.contact {
+    font-family: 'Arial', sans-serif;
+    color: white;
+    line-height: 1.6;
+    padding: 20px;
+    text-align: left;
+    margin-left: auto;
+}
 .terms-conditions {
     font-family: 'Arial', sans-serif;
     color: white;
@@ -6,6 +14,7 @@
     text-align: left;
     margin-left: auto;
 }
+
 
 .privacy-policy {
     font-family: 'Arial', sans-serif;
