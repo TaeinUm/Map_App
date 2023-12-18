@@ -114,12 +114,33 @@ function Post() {
     }
   };
 
+  // const handleDownloadJson = () => {
+  //   if (postInfo.attachedFile) {
+  //     try {
+  //       // 맵 데이터를 JSON 형식으로 변환
+  //       const mapData = postInfo.attachedFile;
+  //       const blob = new Blob([JSON.stringify(mapData, null, 2)], {
+  //         type: "application/json",
+  //       });
+  //       const url = window.URL.createObjectURL(blob);
+  //       triggerDownload(url, "mapData.json");
+  //     } catch (error) {
+  //       console.error("Error downloading JSON data:", error);
+  //     }
+  //   }
+  // };
+
   const handleDownloadJson = () => {
     if (postInfo.attachedFile) {
       try {
-        // 맵 데이터를 JSON 형식으로 변환
-        const mapData = postInfo.attachedFile;
-        const blob = new Blob([JSON.stringify(mapData, null, 2)], {
+        // attachedFile 안에서 mapData와 mapType 추출
+        const { mapData, mapType } = postInfo.attachedFile;
+        const dataToDownload = {
+          mapData: JSON.parse(mapData), // 문자열로 저장된 mapData를 객체로 변환
+          mapType
+        };
+  
+        const blob = new Blob([JSON.stringify(dataToDownload, null, 2)], {
           type: "application/json",
         });
         const url = window.URL.createObjectURL(blob);
@@ -129,6 +150,8 @@ function Post() {
       }
     }
   };
+
+  
 
   const triggerDownload = (url, filename) => {
     const a = document.createElement("a");
@@ -296,9 +319,10 @@ function Post() {
           >
             <CloudDownloadIcon />
             <Typography variant="body1" sx={{ marginLeft: "10px"}}>
-            DOWNLOAD FILE
+            DOWNLOAD MAP DATA
           </Typography>
           </Button>
+          
         </Box>
       )}
 
