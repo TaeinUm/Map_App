@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Card,
   CardContent,
   Typography,
   CardMedia,
-  IconButton,
-  Pagination,
   Grid,
+  Pagination,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import placeholder from '../../assets/images/TerraCanvas_placeholder_image.png';
 
 const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
@@ -24,7 +22,9 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
     navigate(`/posts/${post.postType}/${post._id}`);
   };
 
-  const sortedPosts = posts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+  const filteredPosts = posts.filter((post) => post.visibility === 1);
+
+  const sortedPosts = filteredPosts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
 
   const startIndex = (page - 1) * itemsPerPage;
   const paginatedPosts = sortedPosts.slice(startIndex, startIndex + itemsPerPage);
@@ -39,12 +39,6 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
         marginBottom: "50px",
       }}
     >
-      {/* <Typography
-        sx={{ color: "#fafafa", fontSize: "38px", marginBottom: "20px" }}
-      >
-        Title Here
-      </Typography> */}
-
       <Grid
         container
         spacing={2}
@@ -71,7 +65,7 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                 alt={post.postName}
               />
               <CardContent>
-              <Typography
+                <Typography
                   gutterBottom
                   variant="h5"
                   component="div"
@@ -95,13 +89,12 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
                   Likes: {post.interactions}
                 </Typography>
               </CardContent>
-
             </Card>
           </Grid>
         ))}
       </Grid>
       <Pagination
-        count={Math.ceil(posts.length / itemsPerPage)}
+        count={Math.ceil(filteredPosts.length / itemsPerPage)}
         page={page}
         onChange={handleChange}
         color="primary"
@@ -110,14 +103,12 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
         sx={{
           '& .MuiPaginationItem-root': {
             color: 'white',
-            '&.Mui-selected': {
-              // backgroundColor: '#ffccbc',
-              // color: '#d84315',
-            },
+            '&.Mui-selected': {},
           },
         }}
       />
     </Box>
   );
 };
+
 export default PaginatedPosts;
