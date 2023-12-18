@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const BASE_URL =
-  "http://localhost:8080";
+"https://terracanvas-fb4c23ffbf5d.herokuapp.com" ||  "http://localhost:8080";
 
 //get 5 trending map graphics for Home page
 export const getTop5Trending = async () => {
