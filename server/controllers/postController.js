@@ -47,13 +47,9 @@ exports.uploadPostPicture = async (req, res) => {
   }
 };
 
-
-
-
-
 exports.getTopPosts = async (req, res) => {
   try {
-    const topPosts = await Post.find({})
+    const topPosts = await Post.find({ postType: 'map' })
       .sort({ interactions: -1 }) // Sort by likes in descending order
       .limit(5); // Limit to top 5
     res.json(topPosts);
