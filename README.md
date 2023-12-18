@@ -80,8 +80,7 @@ More details are in package.json
 
   - Frontend Test (Cypress)
       
-        cd cypress
-        npm test
+        npm run cypress:run
 
 
 ### CI/CD
