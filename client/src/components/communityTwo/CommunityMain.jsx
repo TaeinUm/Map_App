@@ -142,87 +142,131 @@ function CommunityMain() {
   };
 
   const searchPosts = (posts) => {
-    return posts.filter((post) =>
-      post.postName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.userName.toLowerCase().includes(searchTerm.toLowerCase())
+    return posts.filter(
+      (post) =>
+        post.postName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.userName.toLowerCase().includes(searchTerm.toLowerCase())
       // You can add more conditions here to search in other fields
     );
   };
 
   const renderAllPosts = () => {
-  // Filter posts for each category based on the search term
-  const filteredUserGraphics = searchPosts(userGraphics);
-  const filteredQuestionBuffer = searchPosts(questionBuffer);
-  const filteredIdeasBuffer = searchPosts(ideasBuffer);
+    // Filter posts for each category based on the search term
+    const filteredUserGraphics = searchPosts(userGraphics);
+    const filteredQuestionBuffer = searchPosts(questionBuffer);
+    const filteredIdeasBuffer = searchPosts(ideasBuffer);
 
-  return (
-    <>
-      <Box sx={{ mt: "20px" }}>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
+    return (
+      <>
+        <Box sx={{ mt: "20px" }}>
+          <Typography
+            sx={{
+              color: "white",
+              textAlign: "left",
+              ml: "30px",
+              fontSize: "30px",
+              fontWeight: "bold",
+              fontFamily: "Arial",
+            }}
+          >
+            User Map Graphics
+          </Typography>
+          <PaginatedPosts
+            data-cy="all-posts-trending"
+            posts={filteredUserGraphics}
+            page={userGraphicsPage}
+            setPage={setUserGraphicsPage}
+            itemsPerPage={3}
+          />
+        </Box>
+        <Box>
+          <Typography
+            sx={{
+              color: "white",
+              textAlign: "left",
+              ml: "30px",
+              fontSize: "30px",
+              fontWeight: "bold",
+              fontFamily: "Arial",
+            }}
+          >
+            Questions
+          </Typography>
+          <PaginatedPosts
+            data-cy="all-posts-questions"
+            posts={filteredQuestionBuffer}
+            page={questionPage}
+            setPage={setQuestionPage}
+            itemsPerPage={3}
+          />
+        </Box>
+        <Box>
+          <Typography
+            sx={{
+              color: "white",
+              textAlign: "left",
+              ml: "30px",
+              fontSize: "30px",
+              fontWeight: "bold",
+              fontFamily: "Arial",
+            }}
+          >
+            Map Graphics Ideas
+          </Typography>
+          <PaginatedPosts
+            data-cy="all-posts-ideas"
+            posts={filteredIdeasBuffer}
+            page={ideasPage}
+            setPage={setIdeasPage}
+            itemsPerPage={3}
+          />
+        </Box>
+      </>
+    );
+  };
+
+  const renderMapGraphics = () => {
+    const filteredMapGraphics = searchPosts(userGraphics);
+
+    return (
+      <Box marginTop={"20px"}>
+        <Typography
+          sx={{
+            color: "white",
+            textAlign: "left",
+            ml: "30px",
+            fontSize: "30px",
+            fontWeight: "bold",
+            fontFamily: "Arial",
+          }}
+        >
           User Map Graphics
         </Typography>
         <PaginatedPosts
-          data-cy="all-posts-trending"
-          posts={filteredUserGraphics}
+          posts={filteredMapGraphics}
           page={userGraphicsPage}
-          setPage={setUserGraphicsPage}
-          itemsPerPage={3}
+          setPage={setTrendingPage}
+          itemsPerPage={9}
         />
       </Box>
-      <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
-          Questions
-        </Typography>
-        <PaginatedPosts
-          data-cy="all-posts-questions"
-          posts={filteredQuestionBuffer}
-          page={questionPage}
-          setPage={setQuestionPage}
-          itemsPerPage={3}
-        />
-      </Box>
-      <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
-          Map Graphics Ideas
-        </Typography>
-        <PaginatedPosts
-          data-cy="all-posts-ideas"
-          posts={filteredIdeasBuffer}
-          page={ideasPage}
-          setPage={setIdeasPage}
-          itemsPerPage={3}
-        />
-      </Box>
-    </>
-  );
-};
-
-
-const renderMapGraphics = () => {
-  const filteredMapGraphics = searchPosts(userGraphics);
-
-  return (
-    <Box marginTop={ "20px" }>
-      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
-        User Map Graphics
-      </Typography>
-      <PaginatedPosts
-        posts={filteredMapGraphics}
-        page={userGraphicsPage}
-        setPage={setTrendingPage}
-        itemsPerPage={9}
-      />
-    </Box>
-  );
-};
-
+    );
+  };
 
   const renderQuestion = () => {
     const filteredQuestions = searchPosts(questionBuffer);
-  
+
     return (
-      <Box marginTop={ "20px" }>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
+      <Box marginTop={"20px"}>
+        <Typography
+          sx={{
+            color: "white",
+            textAlign: "left",
+            ml: "30px",
+            fontSize: "30px",
+            fontWeight: "bold",
+            fontFamily: "Arial",
+          }}
+        >
           Questions
         </Typography>
         <PaginatedPosts
@@ -237,10 +281,19 @@ const renderMapGraphics = () => {
 
   const renderIdeas = () => {
     const filteredIdeas = searchPosts(ideasBuffer);
-  
+
     return (
-      <Box marginTop={ "20px" }>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
+      <Box marginTop={"20px"}>
+        <Typography
+          sx={{
+            color: "white",
+            textAlign: "left",
+            ml: "30px",
+            fontSize: "30px",
+            fontWeight: "bold",
+            fontFamily: "Arial",
+          }}
+        >
           Map Graphics Idea
         </Typography>
         <PaginatedPosts
@@ -252,7 +305,6 @@ const renderMapGraphics = () => {
       </Box>
     );
   };
-  
 
   const renderAllUserName = () => (
     <PaginatedPosts
@@ -289,7 +341,7 @@ const renderMapGraphics = () => {
     <Container
       sx={{
         mt: "10px",
-        minHeight: "100vh"
+        minHeight: "100vh",
       }}
     >
       <Box
@@ -305,18 +357,15 @@ const renderMapGraphics = () => {
           elevation={0}
           sx={{
             borderRadius: "5px",
-            width: authentification ? '100%' : '85%',
+            width: authentification ? "100%" : "85%",
             height: "60px",
             display: "flex",
-            justifyContent: "space-around"
-            
+            justifyContent: "space-around",
           }}
         >
-          <StyledToolbar
-            sx={{ color: "black", width: "100%" }}
-          >
+          <StyledToolbar sx={{ color: "black", width: "100%" }}>
             {/* Dropdown Menu for selecting categories */}
-            <Box sx={{ display: "flex", height: "45px", width: "100%"}}>
+            <Box sx={{ display: "flex", height: "45px", width: "100%" }}>
               <Select
                 data-cy="community-select-bar"
                 labelId="demo-simple-select-label"
@@ -325,14 +374,26 @@ const renderMapGraphics = () => {
                 onChange={handleCategoryChange}
                 displayEmpty
                 inputProps={{ "aria-label": "Select category" }}
-                sx={{ mr: "50px", bgcolor: "white", width: "250px", textAlign: "left" }}
+                sx={{
+                  mr: "50px",
+                  bgcolor: "white",
+                  width: "250px",
+                  textAlign: "left",
+                }}
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Trending Map Graphics">
                   User Map Graphics
                 </MenuItem>
-                <MenuItem data-cy="community-selector-questions" value="Questions">Questions</MenuItem>
-                <MenuItem data-cy="community-selector-ideas" value="Map Ideas">Map Graphics Idea</MenuItem>
+                <MenuItem
+                  data-cy="community-selector-questions"
+                  value="Questions"
+                >
+                  Questions
+                </MenuItem>
+                <MenuItem data-cy="community-selector-ideas" value="Map Ideas">
+                  Map Graphics Idea
+                </MenuItem>
               </Select>
 
               {/* Search Bar */}
@@ -341,6 +402,7 @@ const renderMapGraphics = () => {
                   <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
+                  data-cy="community-search-bar"
                   placeholder="Search…"
                   inputProps={{ "aria-label": "search" }}
                   value={searchTerm}
@@ -351,29 +413,30 @@ const renderMapGraphics = () => {
           </StyledToolbar>
         </AppBar>
         <Box sx={{ mt: "4px", mr: "20px" }}>
-          {!authentification && (<Button
-            data-cy="community-make-post-button"
-            component={Link}
-            to={`/PostMapGraphic/`}
-            variant="contained"
-            startIcon={<AddIcon />}
-            disabled={authentification}
-            sx={{
-              mx: 1,
-              fontSize: "17px",
-              backgroundColor: "#FAFAFA",
-              color: "black",
-              width: "110px",
-              height: "50px",
-              borderRadius: "20px",
-              "&:hover": {
-                backgroundColor: "#1976D2",
-                boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
-              },
-            }}
-          >
-            Post
-          </Button>
+          {!authentification && (
+            <Button
+              data-cy="community-make-post-button"
+              component={Link}
+              to={`/PostMapGraphic/`}
+              variant="contained"
+              startIcon={<AddIcon />}
+              disabled={authentification}
+              sx={{
+                mx: 1,
+                fontSize: "17px",
+                backgroundColor: "#FAFAFA",
+                color: "black",
+                width: "110px",
+                height: "50px",
+                borderRadius: "20px",
+                "&:hover": {
+                  backgroundColor: "#1976D2",
+                  boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2)",
+                },
+              }}
+            >
+              Post
+            </Button>
           )}
         </Box>
       </Box>

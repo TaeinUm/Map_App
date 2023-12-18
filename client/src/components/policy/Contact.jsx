@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 
 function Contact() {
@@ -7,7 +6,7 @@ function Contact() {
   }, []);
 
   return (
-    <div className="terms-conditions" style={{ height: "100vh" }}>
+    <div className="contact" style={{ height: "100vh" }}>
       <h1>
         <b>Contact TerraCanvas</b>
       </h1>
