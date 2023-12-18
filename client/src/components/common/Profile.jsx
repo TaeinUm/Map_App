@@ -11,7 +11,7 @@ import {
   CardContent,
 } from "@mui/material";
 import { FiTrash } from "react-icons/fi";
-import placeholder from "../../assets/images/TerraCanvas_placeholder_image.png"
+import placeholder from "../../assets/images/TerraCanvas_placeholder_image.png";
 
 import { styled } from "@mui/system";
 import { AuthContext } from "../../contexts/AuthContext";
@@ -189,7 +189,8 @@ const Profile = () => {
         m: "30px",
         mt: "50px",
         mb: "50px",
-      }}>
+      }}
+    >
       <Grid container spacing={5}>
         <Grid item xs={12} sm={6} paddingRight={"10px"}>
           {/**           Welcome, {user}  & create your map button    */}
@@ -327,7 +328,7 @@ const Profile = () => {
                           <Typography
                             sx={{ color: "#fafafa", textAlign: "left" }}
                           >
-                            comments: {post.interactions}
+                            likes: {post.interactions}
                           </Typography>
                         </Box>
                         <Button
@@ -433,7 +434,13 @@ const Profile = () => {
               type="submit"
               onClick={handleSaveChanges}
               variant="contained"
-              sx={{ width: "100%", mt: 3, mb: 2, backgroundColor: "#262931", p: 1 }}
+              sx={{
+                width: "100%",
+                mt: 3,
+                mb: 2,
+                backgroundColor: "#262931",
+                p: 1,
+              }}
             >
               Save Changes
             </Button>
