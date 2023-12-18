@@ -10,7 +10,7 @@ import {
   Checkbox,
 } from "@mui/material";
 import { register } from "../../api/authAPI";
-import SignUpImage from '../../assets/images/SignUpImage.png';
+import SignUpImage from "../../assets/images/SignUpImage.png";
 
 function SignUp() {
   /****       useState section      ****/
@@ -148,7 +148,11 @@ function SignUp() {
         flex="1"
         bgcolor="white"
       >
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: "bold", mb: "60px" }}>
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{ fontWeight: "bold", mb: "60px" }}
+        >
           TerraCanvas
         </Typography>
         <Box width="70%">
@@ -191,7 +195,7 @@ function SignUp() {
           <FormControlLabel
             sx={{ marginBottom: "20px" }}
             control={<Checkbox name="agreement" />}
-            label="I agree with Dribbble's Terms of Service, Privacy Policy, and default Notification Settings."
+            label="I agree with TerraCanvas's Terms of Service, Privacy Policy, and default Notification Settings."
             onChange={handleAgreementChange}
           />
           {/**        register button        **/}
