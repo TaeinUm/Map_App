@@ -82,6 +82,7 @@ function MapList({ searchQuery }) {
           type="button"
           onClick={toLoginPage}
           sx={{
+            display: "flex",
             backgroundColor: "black",
             color: "#fafafa",
             width: "180px",
