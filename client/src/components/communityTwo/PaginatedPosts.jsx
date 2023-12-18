@@ -22,7 +22,6 @@ const PaginatedPosts = ({ posts, page, setPage, itemsPerPage }) => {
     navigate(`/posts/${post.postType}/${post._id}`);
   };
 
-  // 필터링하여 privacy가 1인 포스트만 포함
   const filteredPosts = posts.filter((post) => post.visibility === 1);
 
   const sortedPosts = filteredPosts.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));

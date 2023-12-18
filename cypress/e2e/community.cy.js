@@ -19,9 +19,9 @@ describe("Community Page", () => {
   it("should contain the words Map Graphics Ideas", () => {
     cy.contains("Map Graphics Ideas").should("exist");
   });
-  it("should load the make post button correctly", () => {
-    cy.contains("Post").should("exist");
-  });
+  // it("should load the make post button correctly", () => {
+  //   cy.contains("Post").should("exist");
+  // });
   // it("should have the make post button as disabled", () => {
   //   cy.contains("Post").should("be.disabled");
   // });

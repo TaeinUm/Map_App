@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import { getTop5Trending } from "../../api/graphicsAPI";
 
-import placeholder from '../../assets/images/TerraCanvas_placeholder_image.png';
-
+import placeholder from "../../assets/images/TerraCanvas_placeholder_image.png";
 
 function Trending() {
   /****   useState Section  ****/
   const [scrollAmount, setScrollAmount] = useState(0);
   const [topGraphics, setTopGraphics] = useState([]);
+
+  const navigate = useNavigate();
+
+  const handlePostClick = (post) => {
+    navigate(`/posts/${post.postType}/${post._id}`);
+  };
 
   /****   useEffect Section  ****/
   useEffect(() => {
@@ -68,6 +74,7 @@ function Trending() {
               elevation={4}
               data-cy="trending-graphic"
               sx={{ width: "500px", height: "400px", bgcolor: "grey" }}
+              onClick={() => handlePostClick(graphic)}
             >
               <img
                 src={graphic.postImages || placeholder}

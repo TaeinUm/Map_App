@@ -86,10 +86,7 @@ function CommunityPostMapGraphic() {
       let imageUrl = '';
   
       if (selectedImage) {
-        // 이미지를 Base64로 변환
         const imageBase64 = await convertImageToBase64(selectedImage);
-  
-        // 변환된 이미지를 업로드
         const response = await uploadPostPicture(localStorage.getItem('newUserid'), imageBase64);
   
         if (response && response.imageUrl) {
@@ -107,7 +104,7 @@ function CommunityPostMapGraphic() {
         postType,
         postName: document.getElementById('shabi-title').value,
         visibility: parseInt(privacyType),
-        postImages: imageUrl, // 업로드된 이미지 URL 사용
+        postImages: imageUrl,
         postDate: new Date().toISOString()
       };
   
@@ -119,7 +116,6 @@ function CommunityPostMapGraphic() {
       alert('An error occurred while creating the post. Please try again.');
     }
   }
-  
 
   return (
     <Box
@@ -127,7 +123,7 @@ function CommunityPostMapGraphic() {
       alignItems="center"
       justifyContent="center"
       minHeight="100vh"
-      p={isMobile ? 0 : 3} // 모바일에서 패딩 제거
+      p={isMobile ? 0 : 3}
     >
       <Paper
         elevation={6}
@@ -210,12 +206,14 @@ function CommunityPostMapGraphic() {
     </Box>
 
     {imagePreview && (
+      
       <Box marginTop="1rem">
-        <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px' }} />
+        <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '300px', marginRight: "20px" }} />
         <Button variant="contained" color="secondary" onClick={handleCancelImage} style={{ marginTop: '1rem' }}>
           Cancel Image
         </Button>
       </Box>
+      
     )}
 
 

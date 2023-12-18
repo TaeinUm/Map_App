@@ -57,8 +57,8 @@ function MapLanding() {
               startIcon={<AddIcon />} // Replace with your desired icon
               sx={{
                 mx: 1,
-                backgroundColor: "#1565C0",
-                color: "#FFFFFF",
+                backgroundColor: "#FAFAFA",
+                color: "black",
                 width: "155px",
                 height: "40px",
                 marginRight: "20px",
@@ -82,8 +82,8 @@ function MapLanding() {
               variant="contained"
               startIcon={<FolderOpenIcon />} // Replace with your desired icon
               sx={{
-                backgroundColor: "#1565C0",
-                color: "#FFFFFF",
+                backgroundColor: "#FAFAFA",
+                color: "black",
                 width: "140px",
                 height: "40px",
                 borderRadius: "20px",
