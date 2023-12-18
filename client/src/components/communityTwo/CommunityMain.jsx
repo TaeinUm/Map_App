@@ -158,7 +158,7 @@ function CommunityMain() {
   return (
     <>
       <Box sx={{ mt: "20px" }}>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           User Map Graphics
         </Typography>
         <PaginatedPosts
@@ -170,7 +170,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -182,7 +182,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Map Graphics Ideas
         </Typography>
         <PaginatedPosts
@@ -202,8 +202,8 @@ const renderMapGraphics = () => {
   const filteredMapGraphics = searchPosts(userGraphics);
 
   return (
-    <>
-      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+    <Box marginTop={ "20px" }>
+      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
         User Map Graphics
       </Typography>
       <PaginatedPosts
@@ -212,7 +212,7 @@ const renderMapGraphics = () => {
         setPage={setTrendingPage}
         itemsPerPage={9}
       />
-    </>
+    </Box>
   );
 };
 
@@ -221,8 +221,8 @@ const renderMapGraphics = () => {
     const filteredQuestions = searchPosts(questionBuffer);
   
     return (
-      <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+      <Box marginTop={ "20px" }>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -231,7 +231,7 @@ const renderMapGraphics = () => {
           setPage={setQuestionPage}
           itemsPerPage={9}
         />
-      </>
+      </Box>
     );
   };
 
@@ -239,8 +239,8 @@ const renderMapGraphics = () => {
     const filteredIdeas = searchPosts(ideasBuffer);
   
     return (
-      <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+      <Box marginTop={ "20px" }>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Map Graphics Idea
         </Typography>
         <PaginatedPosts
@@ -249,7 +249,7 @@ const renderMapGraphics = () => {
           setPage={setIdeasPage}
           itemsPerPage={9}
         />
-      </>
+      </Box>
     );
   };
   
