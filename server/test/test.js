@@ -44,11 +44,11 @@ describe('API Endpoints', function() {
 
 describe(' User API Endpoints', function() {
     it('updates user details successfully', function(done) {
-        const userId = '65488ef3fec19c23e9a3e06f';
+        const userId = '657d59223a1a1de5041052d3';
         const userData = {
-            email: 'juyoung.um@stonybrook.edu',
-            userName: 'Juyoung Um',
-            password: '1q2w3e4r!'
+            email: 'daniel.juyyun2@gmail.com',
+            userName: 'Daniel Yun X',
+            password: '!dbswndud123'
         };
 
         request(app)
@@ -67,8 +67,8 @@ describe(' User API Endpoints', function() {
     });
 
     it('retrieves user email successfully', function(done) {
-        const userId = '65488ef3fec19c23e9a3e06f';
-        const username = 'Juyoung Um';
+        const userId = '657d59223a1a1de5041052d3';
+        const username = 'Daniel Yun X';
 
         request(app)
             .get(`/api/users/${userId}/email`)
