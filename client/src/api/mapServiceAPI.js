@@ -8,8 +8,8 @@
 import axios from "axios";
 
 const API_BASE_URL =
-"http://localhost:8080";
-//"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || 
+"https://terracanvas-fb4c23ffbf5d.herokuapp.com" || "http://localhost:8080";
+
 const mapServiceAPI = {
   //get user's all saved map graphics
   getUserMapGraphics: async (userId) => {
