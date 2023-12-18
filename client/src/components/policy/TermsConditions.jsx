@@ -10,18 +10,20 @@ function Termsconditions() {
   
   return (
     <div className="terms-conditions"  style={{ height: "100vh" }}>
-      <h1><b>Terms and Conditions (EXAMPLE)</b></h1>
-      <p>Last updated: 2023.11.12</p>
+      <h1><b>Terms and Conditions</b></h1>
+      <p>Last updated: 2023.12.110</p>
+
       <p>Please red these terms and conditions of use carefully before accessing, 
         using or obtaining any materials, information, products or services.</p>
       <br></br>
-      
+      <br></br>
       <h2>Agreement to our Legal Terms</h2>
+      <br></br>
       <br></br>
       <p>We are ‘TerraCanvas.’</p>
       <p>We operate the website to provide map graphics and community services, 
         as well as any other related products and services that refer or link to these legal terms.</p>
-      <p>You can contact us by email at _________ or by mail to _________.</p>
+      {/* <p>You can contact us by email at _________ or by mail to _________.</p> */}
       <br></br>
       <p>These Legal Terms constitute a legally binding agreement made between you, 
         whether personally or on behalf of an entity ("you"), and TerraCanvas, concerning your access to 
