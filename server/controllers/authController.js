@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/User"); // Adjust the path according to your structure
-const jwt = require('jsonwebtoken');
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 // Register a new user
 const registerUser = async (req, res) => {
@@ -48,7 +48,7 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       { userId: user._id, email: user.email },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' } // Token expires in 1 hour
+      { expiresIn: "1h" } // Token expires in 1 hour
     );
 
     res.json({ message: "Logged in successfully", token });

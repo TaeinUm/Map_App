@@ -1,19 +1,19 @@
 const mongoose = require("mongoose");
 const Post = require("../models/Post");
-const AWS = require('aws-sdk');
-const path = require('path');
-const fs = require('fs');
+const AWS = require("aws-sdk");
+const path = require("path");
+const fs = require("fs");
 const nodemailer = require("nodemailer");
-const multer = require('multer');
+const multer = require("multer");
 
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
+  region: process.env.AWS_REGION,
 });
 
 const s3 = new AWS.S3();
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 exports.uploadPostPicture = async (req, res) => {
   const { postId } = req.params;
@@ -24,8 +24,11 @@ exports.uploadPostPicture = async (req, res) => {
       return res.status(400).json({ message: "No image data provided" });
     }
 
-    // Base64 문자열을 버퍼로 변환
-    const buffer = Buffer.from(imageBase64.replace(/^data:image\/\w+;base64,/, ""), "base64");
+    // Convert to Base64 String buffer
+    const buffer = Buffer.from(
+      imageBase64.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    );
     const fileType = imageBase64.split(";")[0].split("/")[1];
 
     const fileKey = `postImages/${postId}-${Date.now()}.${fileType}`;
@@ -34,22 +37,29 @@ exports.uploadPostPicture = async (req, res) => {
       Key: fileKey,
       Body: buffer,
       ContentType: `image/${fileType}`,
-      ACL: 'public-read',
+      ACL: "public-read",
     };
 
     const uploadResult = await s3.upload(params).promise();
 
-    // 업로드된 이미지 URL만 반환
-    res.status(200).json({ message: "Post image uploaded successfully", imageUrl: uploadResult.Location });
+    // Fetch image url
+    res
+      .status(200)
+      .json({
+        message: "Post image uploaded successfully",
+        imageUrl: uploadResult.Location,
+      });
   } catch (error) {
     console.error("Error uploading post image:", error);
-    res.status(500).json({ message: "Error uploading post image: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error uploading post image: " + error.message });
   }
 };
 
 exports.getTopPosts = async (req, res) => {
   try {
-    const topPosts = await Post.find({ postType: 'map' })
+    const topPosts = await Post.find({ postType: "map" })
       .sort({ interactions: -1 }) // Sort by likes in descending order
       .limit(5); // Limit to top 5
     res.json(topPosts);
@@ -62,7 +72,6 @@ exports.getTopPosts = async (req, res) => {
 exports.getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({});
-    console.log("This is for getting all posts");
     res.json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
@@ -136,15 +145,14 @@ exports.deletePost = async (req, res) => {
 exports.newlikePost = async (req, res) => {
   try {
     const postId = req.params.postId;
-    const userId = req.body.userId; 
+    const userId = req.body.userId;
 
-    if (!mongoose.Types.ObjectId.isValid(postId) || !mongoose.Types.ObjectId.isValid(userId)) {
+    if (
+      !mongoose.Types.ObjectId.isValid(postId) ||
+      !mongoose.Types.ObjectId.isValid(userId)
+    ) {
       return res.status(400).json({ message: "Invalid post ID or user ID" });
     }
-
-    console.log("TEST")
-    console.log(postId)
-    console.log(userId)
 
     const post = await Post.findById(postId);
 
@@ -154,20 +162,23 @@ exports.newlikePost = async (req, res) => {
 
     const isLiked = post.likes.includes(userId);
     const update = isLiked
-      ? { $pull: { likes: userId } } 
-      : { $push: { likes: userId } }; 
+      ? { $pull: { likes: userId } }
+      : { $push: { likes: userId } };
 
-    const updatedPost = await Post.findByIdAndUpdate(postId, update, { new: true });
+    const updatedPost = await Post.findByIdAndUpdate(postId, update, {
+      new: true,
+    });
     res.json({
-      message: isLiked ? "Like removed successfully" : "Like added successfully",
-      updatedPost
+      message: isLiked
+        ? "Like removed successfully"
+        : "Like added successfully",
+      updatedPost,
     });
   } catch (error) {
     console.error("Error in likePost:", error);
     res.status(500).json({ message: error.message });
   }
 };
-
 
 exports.likePost = async (req, res) => {
   try {

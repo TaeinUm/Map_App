@@ -4,7 +4,6 @@ const Comment = require("../models/Comment");
 exports.writeComment = async (req, res) => {
   try {
     const { userId, postId, userName, commentContent } = req.body;
-
     if (!userId || !commentContent) {
       return res.status(400).json({ message: "Missing required fields" });
     }
@@ -17,6 +16,7 @@ exports.writeComment = async (req, res) => {
       commentDate: new Date(),
       commentContent,
     });
+
     await newComment.save();
     res.status(201).json(newComment);
   } catch (error) {
@@ -40,7 +40,6 @@ exports.deleteComment = async (req, res) => {
     if (!deletedComment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-
     res
       .status(200)
       .json({ message: "Comment deleted successfully", deletedComment });

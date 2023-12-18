@@ -2,7 +2,6 @@ const Post = require("../models/Post");
 
 exports.searchMapByUserName = async (req, res) => {
   try {
-    //const {userId} = req.query;
     const userId = req.params.userIden;
 
     const maps = await Post.find({

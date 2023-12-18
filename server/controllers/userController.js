@@ -1,16 +1,15 @@
 const bcrypt = require("bcrypt");
 const User = require("../models/User"); // Adjust the path according to your structure
-const AWS = require('aws-sdk');
-const path = require('path');
-const fs = require('fs');
+const AWS = require("aws-sdk");
+const path = require("path");
+const fs = require("fs");
 const nodemailer = require("nodemailer");
-const mongoose=require("mongoose");
 
 // Configure AWS
 AWS.config.update({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
+  region: process.env.AWS_REGION,
 });
 
 const s3 = new AWS.S3();
@@ -22,15 +21,19 @@ const updateProfilePicture = async (req, res) => {
 
   try {
     // Generate a filename
-    const fileName = `profileImages/${userId}-${Date.now()}${path.extname(file.originalname)}`;
+    const fileName = `profileImages/${userId}-${Date.now()}${path.extname(
+      file.originalname
+    )}`;
 
     // Upload to S3
-    const s3Response = await s3.upload({
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: fileName,
-      Body: fs.createReadStream(file.path),
-      ACL: 'public-read' // or another ACL as per your requirements
-    }).promise();
+    const s3Response = await s3
+      .upload({
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: fileName,
+        Body: fs.createReadStream(file.path),
+        ACL: "public-read",
+      })
+      .promise();
 
     // Find the user and update their profile picture URL
     const user = await User.findById(userId);
@@ -44,10 +47,17 @@ const updateProfilePicture = async (req, res) => {
     // Delete the local file after uploading to S3
     fs.unlinkSync(file.path);
 
-    res.status(200).json({ message: "Profile picture updated successfully", imageUrl: s3Response.Location });
+    res
+      .status(200)
+      .json({
+        message: "Profile picture updated successfully",
+        imageUrl: s3Response.Location,
+      });
   } catch (error) {
     console.error("Error updating profile picture:", error);
-    res.status(500).json({ message: "Error updating profile picture: " + error.message });
+    res
+      .status(500)
+      .json({ message: "Error updating profile picture: " + error.message });
   }
 };
 
@@ -55,7 +65,6 @@ const updateProfilePicture = async (req, res) => {
 const updateUserDetails = async (req, res) => {
   const { userId } = req.params;
   const { email, userName, password } = req.body;
-  console.log("I am in the updateUserDetails function");
 
   try {
     const user = await User.findById(userId);
@@ -63,7 +72,6 @@ const updateUserDetails = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Do I actually use this function");
     // Update fields if they are provided
     if (email) user.email = email;
     if (userName) user.userName = userName;
@@ -85,25 +93,18 @@ const updateUserDetails = async (req, res) => {
 
 // Update user details
 const updateUserPassword = async (req, res) => {
-  
   const { email, password } = req.body;
-  console.log("I am within the updateUserPassword function");
 
   try {
-    const userArray = await User.find({email: email});
+    const userArray = await User.find({ email: email });
     if (!userArray) {
       return res.status(404).json({ message: "User not found" });
     }
     let actualUser = userArray[0];
-    console.log("Do I find a user and if so who is it: "+actualUser);
-    // Update fields if they are provided
-    // if (email) user.email = email;
-    // if (userName) user.userName = userName;
-    let hashedPassword ="";
+    let hashedPassword = "";
     if (password) {
       hashedPassword = await bcrypt.hash(password, 10);
       actualUser.password = hashedPassword;
-      //await actualUser.save();
     }
 
     const updatedUser = await actualUser.save();
@@ -113,7 +114,12 @@ const updateUserPassword = async (req, res) => {
       .status(200)
       .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    res.status(500).json({ message: "Error updating user: " + error.message, change: password });
+    res
+      .status(500)
+      .json({
+        message: "Error updating user: " + error.message,
+        change: password,
+      });
   }
 };
 
@@ -155,9 +161,9 @@ const getUsersByName = async (req, res) => {
     res.status(500).json({ message: "Error fetching users" });
   }
 };
-//
-const sendEmail=async ( req, res ) => {
-  const {recipient_email, OTP} = req.body;
+
+const sendEmail = async (req, res) => {
+  const { recipient_email, OTP } = req.body;
   return new Promise((resolve, reject) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
@@ -172,46 +178,46 @@ const sendEmail=async ( req, res ) => {
       to: recipient_email,
       subject: "KODING 101 PASSWORD RECOVERY",
       html: `<!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>CodePen - OTP Email Template</title>
-  
+            <html lang="en" >
+            <head>
+              <meta charset="UTF-8">
+              <title>CodePen - OTP Email Template</title>
+              
 
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-  <div style="margin:50px auto;width:70%;padding:20px 0">
-    <div style="border-bottom:1px solid #eee">
-      <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Koding 101</a>
-    </div>
-    <p style="font-size:1.1em">Hi,</p>
-    <p>Thank you for choosing Koding 101. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
-    <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
-    <p style="font-size:0.9em;">Regards,<br />Koding 101</p>
-    <hr style="border:none;border-top:1px solid #eee" />
-    <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-      <p>Koding 101 Inc</p>
-      <p>1600 Amphitheatre Parkway</p>
-      <p>California</p>
-    </div>
-  </div>
-</div>
-<!-- partial -->
-  
-</body>
-</html>`,
+            </head>
+            <body>
+            <!-- partial:index.partial.html -->
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                <div style="border-bottom:1px solid #eee">
+                  <a href="" style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">Koding 101</a>
+                </div>
+                <p style="font-size:1.1em">Hi,</p>
+                <p>Thank you for choosing Koding 101. Use the following OTP to complete your Password Recovery Procedure. OTP is valid for 5 minutes</p>
+                <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">${OTP}</h2>
+                <p style="font-size:0.9em;">Regards,<br />Koding 101</p>
+                <hr style="border:none;border-top:1px solid #eee" />
+                <div style="float:right;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                  <p>Koding 101 Inc</p>
+                  <p>1600 Amphitheatre Parkway</p>
+                  <p>California</p>
+                </div>
+              </div>
+            </div>
+            <!-- partial -->
+              
+            </body>
+            </html>`,
     };
     transporter.sendMail(mail_configs, function (error, info) {
       if (error) {
-        console.log(error);
+        console.error("Error!: ", error);
         return reject({ message: `An error has occured` });
       }
       return resolve({ message: "Email sent succesfuly" });
     });
   });
-}
+};
 
 module.exports = {
   updateProfilePicture,

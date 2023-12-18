@@ -3,14 +3,10 @@ const multer = require("multer");
 const userController = require("../controllers/userController");
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" }); // Adjust the destination as needed
+const upload = multer({ dest: "uploads/" });
 
 // Update profile picture
-router.put(
-  "/:userId/profile-picture",
-  upload.single("image"),
-  userController.updateProfilePicture
-);
+router.put("/:userId/profile-picture", upload.single("image"), userController.updateProfilePicture);
 
 // Update user details
 router.put("/updateDetails/:userId", userController.updateUserDetails);
