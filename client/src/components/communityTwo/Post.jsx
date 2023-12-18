@@ -23,6 +23,8 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import mapboxgl from 'mapbox-gl';
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#333",
@@ -160,8 +162,6 @@ function Post() {
     try {
       const userId = localStorage.getItem("newUserid");
       await CommunitySectionAPI.newlikePost(userId, postId);
-      // console.log(userId);
-      // console.log(isLiked);
       setIsLiked(!isLiked);
       if (isLiked) {
         
@@ -357,7 +357,13 @@ function Post() {
                 color: "white",
               }}
             >
-              {isLiked ? "Unlike Post" : "Like Post"}
+               {isLiked ? <ThumbDownIcon/> : <ThumbUpIcon/>} 
+               <Typography
+            sx={{textAlign: "left", marginLeft: "10px" }}
+          >
+             {isLiked ? "CANCEL LIKE" : "Like Post"}
+          </Typography>
+             
             </Button>
           </Box>
 

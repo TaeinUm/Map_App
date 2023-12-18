@@ -50,12 +50,11 @@ function CommunityPostMapGraphic() {
 
     try {
       const userInfo = await mapServiceAPI.getUserMapGraphics(userId);
-      console.log("Hello")
-      console.log(userInfo)
       
+
       if (Array.isArray(userInfo)) {
         setMapListData(userInfo);
-        console.log(userInfo)
+        
       }
     } catch (error) {
       console.error("Error fetching map graphics:", error);
@@ -69,15 +68,13 @@ function CommunityPostMapGraphic() {
     setSelectedMap(mapItem); // 선택된 맵 데이터 저장
     
     const jsonDownloadLink = createJSONDownloadLink(mapItem); // 맵 데이터를 JSON으로 변환하고 URL 생성
-    console.log("Selected Map:", mapItem);
-    console.log("JSON Download Link:", jsonDownloadLink);
-  
+    
     const imageUrl = mapItem.image; // 맵 이미지 URL
     if (imageUrl) {
       setImagePreview(imageUrl); // 이미지 프리뷰 설정
-      console.log(imageUrl)
+      
       setSelectedImage(imageUrl)
-      console.log("Selected: ", selectedImage)
+     
       setSelectedImage__(1)
     }
 
@@ -95,7 +92,7 @@ function CommunityPostMapGraphic() {
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     setSelectedImage(file)
-    console.log(file)
+    
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -268,7 +265,7 @@ function convertImageToBase64(file) {
             variant="outlined"
             placeholder="Enter the content of your post here"
             style={{ backgroundColor: 'white' }}
-            value={postContent} // 상태와 연결
+            value={postContent} 
             onChange={(e) => setPostContent(e.target.value)}
           />
           <br></br>
@@ -351,7 +348,7 @@ function convertImageToBase64(file) {
 </Dialog>
 
 
-          <Box display="flex" justifyContent="space-between" marginTop="1rem">
+          {/* <Box display="flex" justifyContent="space-between" marginTop="1rem">
             <Button variant="contained" color="primary" style={{
                 backgroundColor: 'black',
                 color: 'white', 
@@ -364,7 +361,7 @@ function convertImageToBase64(file) {
               
               <input id="shabi-file" type="file" hidden />
             </Button>
-          </Box>
+          </Box> */}
           <br></br>
           <br></br>
           <Box display="flex" justifyContent="center" marginTop="1rem">
