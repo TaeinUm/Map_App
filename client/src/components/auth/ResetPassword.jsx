@@ -24,7 +24,8 @@ const NewPasswordPage = () => {
 
   const handleSubmit =  async () => {
     const update = await updateUserPassword(email, confirmPassword);
-    alert(`Password updated: ${password}`);
+    alert("Password updated");
+    
   };
 
   return (
