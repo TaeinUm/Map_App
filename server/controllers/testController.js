@@ -3,7 +3,6 @@ const Test = require('../models/Test');
 exports.getDataFromTestCollection = async (req, res) => {
   try {
     const data = await Test.find({});
-    console.log('Successfully Loaded'); // Log success message
     res.json({
       message: 'Successfully Loaded', // Success message
       data: data

@@ -3,7 +3,7 @@ const multer = require("multer");
 const postController = require("../controllers/postController");
 const commentController = require("../controllers/commentController");
 const searchController = require("../controllers/searchController");
-const upload = multer({ dest: "uploads/" }); // Adjust the destination as needed
+const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
 // Write a comment
@@ -34,9 +34,9 @@ router.get("/getAllPosts", postController.getAllPosts);
 router.get("/getMapsByUsername/:userIden", searchController.searchMapByUserName);
 
 router.put(
-    "/:postId/upload-post-picture", // 엔드포인트 URL 변경
-    upload.single("postImage"), // 이 부분은 이미지 필드명을 맞춰야 합니다.
-    postController.uploadPostPicture // 엔드포인트 컨트롤러 함수 변경
+    "/:postId/upload-post-picture", // endpoint URL change
+    upload.single("postImage"), // upload to S3 bucket
+    postController.uploadPostPicture
 );
 
 // Get Question Post by title Text Matched

@@ -111,14 +111,14 @@ function CommunityMain() {
   useEffect(() => {
     const fetchAllPosts = async () => {
       try {
-        const topGraphics = await getTop5Trending();
-        setUserGraphics(topGraphics);
+        // const topGraphics = await getTop5Trending();
+        // setUserGraphics(topGraphics);
 
         const data = await CommunitySectionAPI.getAllPosts();
 
         setAllPostings(data);
+        setUserGraphics(data.filter((post) => post.postType === "map"));
         setQuestionBuffer(data.filter((post) => post.postType === "Questions"));
-        setTrendingBuffer(data.filter((post) => post.postType === "map"));
         setIdeasBuffer(data.filter((post) => post.postType === "Map Ideas"));
       } catch (error) {
         console.error("Error fetching posts:", error);
@@ -143,7 +143,8 @@ function CommunityMain() {
 
   const searchPosts = (posts) => {
     return posts.filter((post) =>
-      post.postName.toLowerCase().includes(searchTerm.toLowerCase())
+      post.postName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.userName.toLowerCase().includes(searchTerm.toLowerCase())
       // You can add more conditions here to search in other fields
     );
   };
@@ -152,14 +153,13 @@ function CommunityMain() {
   // Filter posts for each category based on the search term
   const filteredUserGraphics = searchPosts(userGraphics);
   const filteredQuestionBuffer = searchPosts(questionBuffer);
-  const filteredTrendingBuffer = searchPosts(trendingBuffer);
   const filteredIdeasBuffer = searchPosts(ideasBuffer);
 
   return (
     <>
       <Box sx={{ mt: "20px" }}>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
-          Trending Map Graphics
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
+          User Map Graphics
         </Typography>
         <PaginatedPosts
           data-cy="all-posts-trending"
@@ -170,7 +170,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -182,7 +182,7 @@ function CommunityMain() {
         />
       </Box>
       <Box>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Map Graphics Ideas
         </Typography>
         <PaginatedPosts
@@ -199,20 +199,20 @@ function CommunityMain() {
 
 
 const renderMapGraphics = () => {
-  const filteredMapGraphics = searchPosts(trendingBuffer);
+  const filteredMapGraphics = searchPosts(userGraphics);
 
   return (
-    <>
-      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
-        Trending Map Graphics
+    <Box marginTop={ "20px" }>
+      <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
+        User Map Graphics
       </Typography>
       <PaginatedPosts
         posts={filteredMapGraphics}
-        page={trendingPage}
+        page={userGraphicsPage}
         setPage={setTrendingPage}
         itemsPerPage={9}
       />
-    </>
+    </Box>
   );
 };
 
@@ -221,8 +221,8 @@ const renderMapGraphics = () => {
     const filteredQuestions = searchPosts(questionBuffer);
   
     return (
-      <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+      <Box marginTop={ "20px" }>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Questions
         </Typography>
         <PaginatedPosts
@@ -231,7 +231,7 @@ const renderMapGraphics = () => {
           setPage={setQuestionPage}
           itemsPerPage={9}
         />
-      </>
+      </Box>
     );
   };
 
@@ -239,8 +239,8 @@ const renderMapGraphics = () => {
     const filteredIdeas = searchPosts(ideasBuffer);
   
     return (
-      <>
-        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Roboto" }}>
+      <Box marginTop={ "20px" }>
+        <Typography sx={{ color: "white", textAlign: "left", ml: "30px", fontSize: "30px", fontWeight: "bold", fontFamily: "Arial" }}>
           Map Graphics Idea
         </Typography>
         <PaginatedPosts
@@ -249,7 +249,7 @@ const renderMapGraphics = () => {
           setPage={setIdeasPage}
           itemsPerPage={9}
         />
-      </>
+      </Box>
     );
   };
   
@@ -329,11 +329,10 @@ const renderMapGraphics = () => {
               >
                 <MenuItem value="All">All</MenuItem>
                 <MenuItem value="Trending Map Graphics">
-                  Trending Map Graphics
+                  User Map Graphics
                 </MenuItem>
                 <MenuItem data-cy="community-selector-questions" value="Questions">Questions</MenuItem>
                 <MenuItem data-cy="community-selector-ideas" value="Map Ideas">Map Graphics Idea</MenuItem>
-                <MenuItem value="User Name">User Name</MenuItem>
               </Select>
 
               {/* Search Bar */}
