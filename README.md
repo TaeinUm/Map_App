@@ -66,23 +66,37 @@ More details are in package.json
 #### Heat Map
 <img width="1409" alt="스크린샷 2023-12-18 오후 12 25 46" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/58df67f8-48f9-45dd-999e-797a1cecb1ce">
 <br><br>
+This type of map visualizes data through variations in coloring.
+<br><br>
 
 #### Point Map
 <img width="1409" alt="스크린샷 2023-12-18 오후 12 26 59" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/32466f88-cff6-4e9d-8944-3521681f1b1b">
 <br><br>
+This map is used to represent individual data points on a geographical background.
+<br><br>
 
 #### Regional Map
 <img width="1412" alt="스크린샷 2023-12-18 오후 12 27 28" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/13efd74f-ccf6-4ebd-8979-2c2c10d70db1">
+<br><br>
+Regional maps emphasize areas or regions based on certain criteria like political boundaries.
+<br><br>
 
 #### Flow Map
 <img width="1408" alt="스크린샷 2023-12-18 오후 12 28 28" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/536c8c74-6550-4ddd-82a8-e89e0fd3b6f5">
+<br><br>
+A flow map illustrates the movement between places. It's often used to represent the volume of migration, trade, or communication between different locations (cities).
+<br><br>
 
 #### 3D-Bar Map
 <img width="1414" alt="스크린샷 2023-12-18 오후 12 29 10" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/c7482d59-6e97-4635-ab65-3c33d5256345">
 <br><br>
+This type of map shows bars rising from the geographical map, where the height of each bar represents a quantitative value.
+<br><br>
 
 #### Basic Map
 <img width="1408" alt="스크린샷 2023-12-18 오후 12 31 45" src="https://github.com/JuyeeMyeong/CSE416_project/assets/131139887/81f4efd1-0ba3-45d9-9ebe-8968e47532e3">
+<br><br>
+A basic map displays geographical information with simple styling. It shows boundaries, labels, and possibly other features like roads or rivers. This map allows for customization of styles and labels.
 <br><br>
 
 ### Map Editing
