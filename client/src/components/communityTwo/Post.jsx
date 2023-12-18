@@ -22,6 +22,7 @@ import { postInfo } from "./CommunityMain";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
 const StyledAppBar = styled(AppBar)({
   backgroundColor: "#333",
@@ -111,6 +112,32 @@ function Post() {
     }
   };
 
+  const handleDownloadJson = () => {
+    if (postInfo.attachedFile) {
+      try {
+        // 맵 데이터를 JSON 형식으로 변환
+        const mapData = postInfo.attachedFile;
+        const blob = new Blob([JSON.stringify(mapData, null, 2)], {
+          type: "application/json",
+        });
+        const url = window.URL.createObjectURL(blob);
+        triggerDownload(url, "mapData.json");
+      } catch (error) {
+        console.error("Error downloading JSON data:", error);
+      }
+    }
+  };
+
+  const triggerDownload = (url, filename) => {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  };
+
   const fetchPostDetails = async () => {
     try {
       const response = await CommunitySectionAPI.getPostDetails(
@@ -137,10 +164,10 @@ function Post() {
       // console.log(isLiked);
       setIsLiked(!isLiked);
       if (isLiked) {
-        // 이미 좋아요를 눌렀다면, 좋아요 제거
+        
         await CommunitySectionAPI.unlikeMap(userId, postId);
       } else {
-        // 좋아요를 누르지 않았다면, 좋아요 추가
+        
         await CommunitySectionAPI.likeMap(userId, postId);
       }
 
@@ -254,6 +281,27 @@ function Post() {
 
           {postInfo.content}
         </Typography>
+
+        {postInfo.attachedFile && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleDownloadJson}
+            sx={{ mt: 2 }}
+            style={{
+              backgroundColor: "black",
+              color: "white",
+            }}
+          >
+            <CloudDownloadIcon />
+            <Typography variant="body1" sx={{ marginLeft: "10px"}}>
+            DOWNLOAD FILE
+          </Typography>
+          </Button>
+        </Box>
+      )}
+
         <Divider sx={{ my: 2, bgcolor: "black" }} />
         {/* <Typography variant="h4" gutterBottom color="white" sx={{ mt: 3 }}>
           Comments Section

@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { CommunityContext } from "../contexts/CommunityContextVerTwo";
 
 const API_BASE_URL =
-  "https://terracanvas-fb4c23ffbf5d.herokuapp.com" ||  "http://localhost:8080";
+  "http://localhost:8080";
 
 const CommunitySectionAPI = {
   
@@ -28,17 +28,9 @@ const CommunitySectionAPI = {
       throw error;
     }
   },
-  
-  
-  
-
-
 
   newlikePost: async (userID, postId) => {
     
-    
-    console.log("TEST", userID)
-    console.log("TEST", postId)
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/community/newlikePost/${postId}`,
