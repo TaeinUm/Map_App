@@ -43,6 +43,7 @@ function CommunityPostMapGraphic() {
   const [mapListData, setMapListData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태
   const { userId } = useContext(AuthContext);
+  const [postContent, setPostContent] = useState("");
 
   const handleOpenModal =  async () => {
     setIsModalOpen(true);
@@ -149,6 +150,12 @@ function convertImageToBase64(file) {
 
 
   const handlePostButton = async () => {
+    
+    if (!postContent.trim()) {
+      alert('Please enter some content for your post.');
+      return;
+    }
+    
     try {
       let imageUrl = '';
       if (selectedImage__ === 1){
@@ -261,6 +268,8 @@ function convertImageToBase64(file) {
             variant="outlined"
             placeholder="Enter the content of your post here"
             style={{ backgroundColor: 'white' }}
+            value={postContent} // 상태와 연결
+            onChange={(e) => setPostContent(e.target.value)}
           />
           <br></br>
           <br></br>
